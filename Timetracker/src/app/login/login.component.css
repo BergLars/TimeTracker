@@ -1,0 +1,13 @@
+.app-content {
+  padding: 20px;
+}
+
+.app-content md-card {
+  margin: 20px;
+}
+.app-input-icon {
+  font-size: 16px;
+}
+.app-toolbar-filler {
+  flex: 1 1 auto;
+}
