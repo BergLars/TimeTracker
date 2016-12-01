@@ -1,3 +1,11 @@
+<md-toolbar color="primary">
+  <span>Application Title</span>
+
+  <!-- This fills the remaining space of the current row -->
+  <span class="example-fill-remaining-space"></span>
+
+  <span>Right Aligned Text</span>
+</md-toolbar>
 <md-card [style.background]="'yellow'">
     <md-card class="demo-card demo-basic">
         <md-toolbar color="primary">Basic</md-toolbar>
@@ -29,6 +37,16 @@
         </md-card>
     </md-card>
 </md-card>
+<md-tab-group>
+  <md-tab label="One">
+    <h1>Some tab content</h1>
+    <p>...</p>
+  </md-tab>
+  <md-tab label="Two">
+    <h1>Some more tab content</h1>
+    <p>...</p>
+  </md-tab>
+</md-tab-group>
 <!-- two line list -->
 <!-- <md-card>
     <md-card-content>
