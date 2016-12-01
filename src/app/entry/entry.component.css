@@ -1,0 +1,7 @@
+td {
+	border-color: black;
+	border: 1px solid;
+}
+#coll {
+	border-collapse: collapse;
+}

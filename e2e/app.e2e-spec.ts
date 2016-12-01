@@ -1,10 +1,10 @@
-import { HedwigPage } from './app.po';
+import { TimetrackerPage } from './app.po';
 
-describe('hedwig App', function() {
-  let page: HedwigPage;
+describe('timetracker App', function() {
+  let page: TimetrackerPage;
 
   beforeEach(() => {
-    page = new HedwigPage();
+    page = new TimetrackerPage();
   });
 
   it('should display message saying app works', () => {

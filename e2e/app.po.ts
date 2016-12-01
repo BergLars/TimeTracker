@@ -1,6 +1,6 @@
 import { browser, element, by } from 'protractor';
 
-export class HedwigPage {
+export class TimetrackerPage {
   navigateTo() {
     return browser.get('/');
   }
