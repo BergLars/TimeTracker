@@ -1,3 +1,14 @@
-md-sidenav {
-    width: 200px;
+.btn-sidebar,
+.dropdown,
+.dropdown-menu {
+    width: 100%;
+}
+
+.caret {
+    margin-top: 7.5px;
+    float: right;
+}
+
+.right-align {
+    float: right;
 }

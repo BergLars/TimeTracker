@@ -13,6 +13,9 @@ import { ExportComponent } from './export/export.component';
 import { EntryComponent } from './entry/entry.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { EntriesComponent } from './entries/entries.component';
+import { AlertModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 @NgModule({
   declarations: [
@@ -29,8 +32,11 @@ import { EntriesComponent } from './entries/entries.component';
     BrowserModule,
     FormsModule,
     HttpModule,
-    [MaterialModule.forRoot()],
-    MyDatePickerModule
+    MaterialModule.forRoot(),
+    MyDatePickerModule,
+    AlertModule,
+    DropdownModule,
+    ModalModule
   ],
   providers: [],
   bootstrap: [AppComponent]
