@@ -1,1 +1,17 @@
-<button md-raised-button color="primary">SEARCH</button>
+<!-- control modal from parent component -->
+<button type="button" class="btn btn-primary btn-sidebar" (click)="showChildModal()">SEARCH</button>
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-label="Close" (click)="hideChildModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">SEARCH</h4>
+            </div>
+            <div class="modal-body">
+                Add here fields from and to and buttons ok and cancel
+            </div>
+        </div>
+    </div>
+</div>

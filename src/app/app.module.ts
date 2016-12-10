@@ -1,9 +1,15 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { MyDatePickerModule } from 'mydatepicker';
+import { DataTableModule } from "angular2-datatable";
+import { AlertModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { TimepickerModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { TabsModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -13,9 +19,10 @@ import { ExportComponent } from './export/export.component';
 import { EntryComponent } from './entry/entry.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { EntriesComponent } from './entries/entries.component';
-import { AlertModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { DialogComponent } from './dialog/dialog.component';
+import { TimepickerComponent } from './timepicker/timepicker.component';
+import { DatepickerComponent } from './datepicker/datepicker.component';
+import { TableComponent } from './table/table.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +33,11 @@ import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
     ExportComponent,
     EntryComponent,
     SidebarComponent,
-    EntriesComponent
+    EntriesComponent,
+    DialogComponent,
+    TimepickerComponent,
+    DatepickerComponent,
+    TableComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +47,10 @@ import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
     MyDatePickerModule,
     AlertModule,
     DropdownModule,
-    ModalModule
+    ModalModule,
+    TimepickerModule,
+    DataTableModule,
+    TabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -45,3 +45,12 @@ body {
 .inputdemoIcons md-input-container.md-input-invalid > md-icon.name {
     color: red;
 }
+
+.btn-sidebar {
+    width: 100%;
+}
+
+.modal-header {
+    background-color: #337ab7;
+    text-align: center;
+}

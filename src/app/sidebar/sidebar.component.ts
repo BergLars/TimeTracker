@@ -6,20 +6,10 @@ import { Component, ViewChild} from '@angular/core';
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent {
-
   public disabled:boolean = false;
   public status:{isopen:boolean} = {isopen: false};
   public items:Array<string> = ['The first choice!',
     'And another choice for you.', 'but wait! A third!'];
-    // @ViewChild('childModal') public childModal:ModalDirective;
- 
-  public showChildModal():void {
-    // this.childModal.show();
-  }
- 
-  public hideChildModal():void {
-    // this.childModal.hide();
-  }
  
   public toggled(open:boolean):void {
     console.log('Dropdown is now: ', open);

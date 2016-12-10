@@ -3,13 +3,13 @@ import { Component, ViewChild } from '@angular/core';
 // todo: change to ng2-bootstrap
 import { ModalDirective } from 'ng2-bootstrap/ng2-bootstrap';
 // webpack html imports
-let template = require('./export.component.html');
+let template = require('./dialog.component.html');
  
 @Component({
-  selector: 'app-export',
+  selector: 'modal-demo',
   template: template
 })
-export class ExportComponent {
+export class DialogComponent {
   @ViewChild('childModal') public childModal:ModalDirective;
  
   public showChildModal():void {
@@ -21,3 +21,4 @@ export class ExportComponent {
     this.childModal.hide();
   }
 }
+

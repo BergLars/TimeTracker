@@ -1,17 +1,28 @@
-<hr/>
-<md-toolbar color="primary">This week: &nbsp;<textarea class="right-align" placeholder="25"></textarea></md-toolbar>
-<md-toolbar color="primary">This month: &nbsp;<textarea class="right-align" placeholder="25"></textarea></md-toolbar>
-<md-toolbar color="primary">Over/Under Time: &nbsp;<textarea class="right-align" placeholder="25"></textarea></md-toolbar>
-<hr/>
-<md-toolbar color="primary">Taken vacations Day: &nbsp;<textarea placeholder="25"></textarea></md-toolbar>
-<md-toolbar color="primary">Rest of vacations Day: &nbsp;<textarea placeholder="25"></textarea></md-toolbar>
 <div (click)="$event.preventDefault()">
-    <hr/>
-    <button type="button" class="btn-sidebar btn btn-primary" (click)="toggleDropdown($event)">SEARCH&nbsp;
-    </button>
-    <hr/>
+    <tabset [justified]="true">
+        <tab heading="Hours">
+            <tabset [vertical]="true" type="pills">
+                <tab heading="This week">
+                    <span class="result">12</span>
+                </tab>
+                <tab heading="This month">
+                    <span class="result">50</span>
+                </tab>
+            </tabset>
+        </tab>
+        <tab heading="Vacations day">
+            <tabset [vertical]="true" type="pills">
+                <tab heading="Taken">
+                    <span class="result">6</span>
+                </tab>
+                <tab heading="Rest">
+                    <span class="result">17</span>
+                </tab>
+            </tabset>
+        </tab>
+    </tabset>
     <!-- Single button with keyboard nav -->
-    <div class="btn-group " dropdown keyboardNav="true">
+    <!-- <div class="btn-group " dropdown keyboardNav="true">
         <button id="simple-btn-keyboard-nav" type="button" class="btn-sidebar btn btn-primary" dropdownToggle>
             Export&nbsp;<span class="caret"></span>
         </button>
@@ -24,6 +35,9 @@
             <li class="divider dropdown-divider"></li>
             <li role="menuitem"><a class="dropdown-item" href="#">WORD</a></li>
         </ul>
-    </div>
-    <hr/>
+    </div> -->
 </div>
+<hr/>
+<app-export></app-export>
+<hr/>
+<app-search></app-search>
