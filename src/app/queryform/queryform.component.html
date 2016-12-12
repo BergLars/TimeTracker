@@ -1,0 +1,6 @@
+<div class='container-fluid'>
+    <!-- Static arrays -->
+    <h4>Static arrays</h4>
+    <pre class="card card-block card-header">Model: {{selected | json}}</pre>
+    <input [(ngModel)]="selected" [typeahead]="states" (typeaheadOnSelect)="typeaheadOnSelect($event)" class="form-control">
+</div>

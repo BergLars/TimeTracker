@@ -5,15 +5,36 @@
         <!-- modal-sm -->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" aria-label="Close" (click)="hideChildModal()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
                 <h4 class="modal-title">
                 <span>EXPORT</span>
                 </h4>
             </div>
             <div class="modal-body">
-                Here a checkbox for format to be send per email csv, excel! Buttons Today and This month than send per email
+                <p class="btn-radio">
+                    <md-radio-group>
+                        <md-radio-button checked="true" value="excel">EXCEL</md-radio-button>
+                        <md-radio-button value="pdf">PDF</md-radio-button>
+                        <md-radio-button value="csv">CSV</md-radio-button>
+                    </md-radio-group>
+                </p>
+                <div (click)="$event.preventDefault()">
+                    <tabset [justified]="true">
+                        <tab heading="From">
+                            <tabset [vertical]="true" type="pills">
+                                <app-datepicker></app-datepicker>
+                            </tabset>
+                        </tab>
+                        <tab heading="To">
+                            <tabset [vertical]="true" type="pills">
+                                <app-datepicker></app-datepicker>
+                            </tabset>
+                        </tab>
+                    </tabset>
+                </div>
+                <p class="btn-footer">
+                    <button md-button>SEND EMAIL</button>
+                    <button md-button (click)="hideChildModal()">CANCEL</button>
+                </p>
             </div>
         </div>
     </div>

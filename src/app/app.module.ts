@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { MyDatePickerModule } from 'mydatepicker';
@@ -10,6 +10,8 @@ import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { TimepickerModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { TabsModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { DatepickerModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { TypeaheadModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -23,6 +25,7 @@ import { DialogComponent } from './dialog/dialog.component';
 import { TimepickerComponent } from './timepicker/timepicker.component';
 import { DatepickerComponent } from './datepicker/datepicker.component';
 import { TableComponent } from './table/table.component';
+import { QueryformComponent } from './queryform/queryform.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,8 @@ import { TableComponent } from './table/table.component';
     DialogComponent,
     TimepickerComponent,
     DatepickerComponent,
-    TableComponent
+    TableComponent,
+    QueryformComponent
   ],
   imports: [
     BrowserModule,
@@ -50,7 +54,9 @@ import { TableComponent } from './table/table.component';
     ModalModule,
     TimepickerModule,
     DataTableModule,
-    TabsModule
+    TabsModule,
+    DatepickerModule,
+    TypeaheadModule
   ],
   providers: [],
   bootstrap: [AppComponent]

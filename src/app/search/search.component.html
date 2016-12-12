@@ -2,15 +2,32 @@
 <button type="button" class="btn btn-primary btn-sidebar" (click)="showChildModal()">SEARCH</button>
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog">
+        <!-- modal-sm -->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" aria-label="Close" (click)="hideChildModal()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">SEARCH</h4>
+                <h4 class="modal-title">
+                <span>SEARCH</span>
+                </h4>
             </div>
             <div class="modal-body">
-                Add here fields from and to and buttons ok and cancel
+                <div (click)="$event.preventDefault()">
+                    <tabset [justified]="true">
+                        <tab heading="From">
+                            <tabset [vertical]="true" type="pills">
+                                <app-datepicker></app-datepicker>
+                            </tabset>
+                        </tab>
+                        <tab heading="To">
+                            <tabset [vertical]="true" type="pills">
+                                <app-datepicker></app-datepicker>
+                            </tabset>
+                        </tab>
+                    </tabset>
+                </div>
+                <p class="btn-footer">
+                    <button md-button>OK</button>
+                    <button md-button (click)="hideChildModal()">CANCEL</button>
+                </p>
             </div>
         </div>
     </div>
