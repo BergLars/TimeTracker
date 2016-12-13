@@ -7,13 +7,18 @@
         </md-grid-tile>
         <md-grid-tile colspan="4" rowspan="1">
             <app-login></app-login>
+        </md-grid-tile>        
+        <md-grid-tile colspan="4" rowspan="3" [style.background]="'lightblue'">
+        <button md-raised-button color="primary">NEW ENTRY</button>
+            <md-card>
+                <app-entries> 
+                </app-entries>
+            </md-card>
         </md-grid-tile>
-        <md-grid-tile colspan="3" rowspan="3">
-            <app-entries> 
-            </app-entries>
-        </md-grid-tile>
-        <md-grid-tile colspan="3" rowspan="3">
-            <app-sidebar></app-sidebar>
+        <md-grid-tile colspan="2" rowspan="3" [style.background]="'lightblue'">
+            <md-card>
+                <app-sidebar></app-sidebar>
+            </md-card>
         </md-grid-tile>
     </md-grid-list>
 </md-card>
