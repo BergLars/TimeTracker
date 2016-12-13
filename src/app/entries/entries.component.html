@@ -1,11 +1,7 @@
-<table id="coll">
-	<tr>
-		<th class="project">Project</th>
-		<th class="task">Task</th>
-		<th class="timespend">Time spend</th>
-	</tr>
-	<tr app-entry></tr>
-	<tr app-entry></tr>
-</table>
-
-
+<button md-raised-button color="primary" class="buttonplacement">NEW ENTRY</button>
+<div class="material resizeable">
+    <swui-datatable
+        [rows]="rows"
+        [columns]="columns">
+    </swui-datatable>
+</div>

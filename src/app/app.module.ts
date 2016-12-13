@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { MyDatePickerModule } from 'mydatepicker';
-
+import { Angular2DataTableModule } from 'angular2-data-table';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { DateComponent } from './date/date.component';
@@ -26,6 +26,7 @@ import { EntriesComponent } from './entries/entries.component';
     EntriesComponent
   ],
   imports: [
+    Angular2DataTableModule,
     BrowserModule,
     FormsModule,
     HttpModule,

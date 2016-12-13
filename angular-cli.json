@@ -18,7 +18,9 @@
       "prefix": "app",
       "mobile": false,
       "styles": [
-        "styles.css"
+        "../node_modules/angular2-data-table/release/datatable.css",
+        "../node_modules/angular2-data-table/release/material.css",
+        "styles.scss"
       ],
       "scripts": [],
       "environments": {
@@ -41,7 +43,7 @@
     }
   },
   "defaults": {
-    "styleExt": "css",
+    "styleExt": "scss",
     "prefixInterfaces": false,
     "inline": {
       "style": false,
