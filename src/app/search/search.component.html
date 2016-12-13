@@ -1,1 +1,34 @@
-<button md-raised-button color="primary">SEARCH</button>
+<!-- control modal from parent component -->
+<button type="button" class="btn btn-primary btn-sidebar" (click)="showChildModal()">SEARCH</button>
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <!-- modal-sm -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                <span>SEARCH</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div (click)="$event.preventDefault()">
+                    <tabset [justified]="true">
+                        <tab heading="From">
+                            <tabset [vertical]="true" type="pills">
+                                <app-datepicker></app-datepicker>
+                            </tabset>
+                        </tab>
+                        <tab heading="To">
+                            <tabset [vertical]="true" type="pills">
+                                <app-datepicker></app-datepicker>
+                            </tabset>
+                        </tab>
+                    </tabset>
+                </div>
+                <p class="btn-footer">
+                    <button md-button>OK</button>
+                    <button md-button (click)="hideChildModal()">CANCEL</button>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

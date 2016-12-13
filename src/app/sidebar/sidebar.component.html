@@ -1,0 +1,29 @@
+
+<div (click)="$event.preventDefault()">
+    <tabset [justified]="true">
+        <tab heading="Hours">
+            <tabset [vertical]="true" type="pills">
+                <tab heading="This week">
+                    <span class="result">12</span>
+                </tab>
+                <tab heading="This month">
+                    <span class="result">50</span>
+                </tab>
+            </tabset>
+        </tab>
+        <tab heading="Vacations day">
+            <tabset [vertical]="true" type="pills">
+                <tab heading="Taken">
+                    <span class="result">6</span>
+                </tab>
+                <tab heading="Rest">
+                    <span class="result">17</span>
+                </tab>
+            </tabset>
+        </tab>
+    </tabset>
+</div>
+<hr/>
+<app-export></app-export>
+<hr/>
+<app-search></app-search>

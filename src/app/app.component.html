@@ -1,21 +1,18 @@
 <md-card>
-    <md-grid-list cols="6" [style.background]="'lightblue'">
-        <md-grid-tile colspan="2" rowspan="1" [style.background]="'lightgrey'">
+    <md-grid-list cols="6">
+        <md-grid-tile colspan="2" rowspan="1">
             <md-card>
                 <h4>{{title}}</h4>
             </md-card>
         </md-grid-tile>
-        <md-grid-tile colspan="4" rowspan="1" [style.background]="'lightgreen'">
+        <md-grid-tile colspan="4" rowspan="1">
             <app-login></app-login>
         </md-grid-tile>
-        <md-grid-tile colspan="6" [style.background]="'lightpink'">
-            <app-date></app-date>
-        </md-grid-tile>
-        <md-grid-tile colspan="3" rowspan="3" [style.background]="'lightblue'">
+        <md-grid-tile colspan="3" rowspan="3">
             <app-entries> 
             </app-entries>
         </md-grid-tile>
-        <md-grid-tile colspan="3" rowspan="3" [style.background]="'cyan'">
+        <md-grid-tile colspan="3" rowspan="3">
             <app-sidebar></app-sidebar>
         </md-grid-tile>
     </md-grid-list>

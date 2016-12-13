@@ -45,3 +45,36 @@ body {
 .inputdemoIcons md-input-container.md-input-invalid > md-icon.name {
     color: red;
 }
+
+.btn-sidebar {
+    width: 100%;
+}
+
+.modal-header {
+    background-color: #337ab7;
+    text-align: center;
+}
+
+.md-radio-outer-circle {
+    border: 0px !important;
+}
+
+.btn-footer {
+    text-align: right;
+}
+
+.btn-radio {
+    text-align: center;
+}
+
+pre.card.card-block.card-header {
+    padding: 0px !important;
+    text-align: center;
+}
+
+daypicker table {
+    margin-left: 25% !important;
+}
+.modal-dialog{
+  margin: 175px auto !important;
+}
