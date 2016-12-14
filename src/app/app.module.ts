@@ -1,3 +1,4 @@
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
@@ -14,6 +15,7 @@ import { TabsModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { DatepickerModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { TypeaheadModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { AppComponent } from './app.component';
+import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { DateComponent } from './date/date.component';
 import { SearchComponent } from './search/search.component';
@@ -27,6 +29,12 @@ import { DatepickerComponent } from './datepicker/datepicker.component';
 import { TableComponent } from './table/table.component';
 import { QueryformComponent } from './queryform/queryform.component';
 import { ContainerComponent } from './container/container.component';
+import { routes } from './routes';
+import { UserService } from './user.service';
+import { LoggedInGuard } from './logged-in-guard';
+import { ProfileService } from './profile.service';
+import { ProfileComponent } from './profile/profile.component';
+
 
 @NgModule({
   declarations: [
@@ -43,13 +51,15 @@ import { ContainerComponent } from './container/container.component';
     DatepickerComponent,
     TableComponent,
     QueryformComponent,
-    ContainerComponent
+    ContainerComponent,
+    ProfileComponent
   ],
   imports: [
     Angular2DataTableModule,
     BrowserModule,
     FormsModule,
     HttpModule,
+    RouterModule.forRoot(routes),
     MaterialModule.forRoot(),
     MyDatePickerModule,
     AlertModule,
@@ -61,7 +71,8 @@ import { ContainerComponent } from './container/container.component';
     DatepickerModule,
     TypeaheadModule
   ],
-  providers: [],
+  providers: [UserService, LoggedInGuard, ProfileService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+platformBrowserDynamic().bootstrapModule(AppModule);
