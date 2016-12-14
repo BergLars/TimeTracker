@@ -26,6 +26,7 @@ import { TimepickerComponent } from './timepicker/timepicker.component';
 import { DatepickerComponent } from './datepicker/datepicker.component';
 import { TableComponent } from './table/table.component';
 import { QueryformComponent } from './queryform/queryform.component';
+import { ContainerComponent } from './container/container.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { QueryformComponent } from './queryform/queryform.component';
     TimepickerComponent,
     DatepickerComponent,
     TableComponent,
-    QueryformComponent
+    QueryformComponent,
+    ContainerComponent
   ],
   imports: [
     Angular2DataTableModule,
