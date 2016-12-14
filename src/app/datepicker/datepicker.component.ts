@@ -4,7 +4,7 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-datepicker',
   templateUrl: './datepicker.component.html',
-  styleUrls: ['./datepicker.component.css']
+  styleUrls: ['./datepicker.component.scss']
 })
 
 export class DatepickerComponent {
