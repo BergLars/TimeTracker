@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TimeTrackingEntry} from '../data/timeTrackingEntry';
 
 @Component({
   selector: 'app-entries',
@@ -6,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./entries.component.scss']
 })
 export class EntriesComponent implements OnInit {
-	rows = [];
+	rows: Array<TimeTrackingEntry> = [];
   columns = [];
   editing = {};
 
@@ -20,23 +21,24 @@ export class EntriesComponent implements OnInit {
   updateValue(event, cell, cellValue, row) {
     this.editing[row.$$index + '-' + cell] = false;
     this.rows[row.$$index][cell] = event.target.value;
+    console.log(row, cell, cellValue);
   }
   private loadEntries() {
     this.rows = [
-      { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Molly', gender: 'Female', company: 'Burger King' }
+      new TimeTrackingEntry('FEC', 'Add translations to tutorialservice', 6.5),
+      new TimeTrackingEntry('Evita', 'Add Button to UI', 1),
+      new TimeTrackingEntry('FEC', 'Add deathdate to UI', 0.5)
     ];
     this.columns = [
-      { prop: 'name' },
-      { name: 'Gender' },
-      { name: 'Company' }
+      { prop: 'project' },
+      { name: 'task' },
+      { name: 'time' }
     ];
   }
 
   private newEntry() {
     this.rows.push(
-      { name: 'test', gender: 'fg', company: 'sdg'}
+      new TimeTrackingEntry('Choose your project', 'Enter Task here ', 0)
     );
   }
 }
