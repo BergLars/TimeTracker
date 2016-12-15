@@ -8,13 +8,19 @@ import { Component, OnInit } from '@angular/core';
 export class EntriesComponent implements OnInit {
 	rows = [];
   columns = [];
+  editing = {};
 
-  constructor() { }
+  constructor() {}
 
+ 
   ngOnInit() {
     this.loadEntries();
   }
 
+  updateValue(event, cell, cellValue, row) {
+    this.editing[row.$$index + '-' + cell] = false;
+    this.rows[row.$$index][cell] = event.target.value;
+  }
   private loadEntries() {
     this.rows = [
       { name: 'Austin', gender: 'Male', company: 'Swimlane' },
@@ -26,5 +32,11 @@ export class EntriesComponent implements OnInit {
       { name: 'Gender' },
       { name: 'Company' }
     ];
+  }
+
+  private newEntry() {
+    this.rows.push(
+      { name: 'test', gender: 'fg', company: 'sdg'}
+    );
   }
 }

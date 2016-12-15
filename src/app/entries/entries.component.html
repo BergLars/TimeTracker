@@ -1,7 +1,60 @@
-
-<div class="material resizeable">
-    <swui-datatable
-        [rows]="rows"
-        [columns]="columns">
-    </swui-datatable>
-</div>
+<button md-raised-button color="primary" (click)="newEntry()">NEW ENTRY</button>
+<md-card>
+	<div>
+	    <swui-datatable class="material"
+	        [rows]="rows"
+	        [columns]="columns">
+	        <swui-datatable-column name="Name">
+	        	<template swui-datatable-cell-template let-value="value" let-row="row">
+		            <span
+		              title="Double click to edit"
+		              (dblclick)="editing[row.$$index + '-name'] = true"
+		              *ngIf="!editing[row.$$index + '-name']">
+		              {{value}}
+		            </span>
+		            <input
+		              autofocus
+		              (blur)="updateValue($event, 'name', value, row)"
+		              *ngIf="editing[row.$$index + '-name']"
+		              type="text"
+		              [value]="value"
+		            />
+	          </template>
+	        </swui-datatable-column>
+	        <swui-datatable-column name="Gender">
+	        	<template swui-datatable-cell-template let-value="value" let-row="row">
+		            <span
+		              title="Double click to edit"
+		              (dblclick)="editing[row.$$index + '-name'] = true"
+		              *ngIf="!editing[row.$$index + '-name']">
+		              {{value}}
+		            </span>
+		            <input
+		              autofocus
+		              (blur)="updateValue($event, 'name', value, row)"
+		              *ngIf="editing[row.$$index + '-name']"
+		              type="text"
+		              [value]="value"
+		            />
+	          </template>
+	        </swui-datatable-column>
+	        <swui-datatable-column name="Company">
+	        	<template swui-datatable-cell-template let-value="value" let-row="row">
+		            <span
+		              title="Double click to edit"
+		              (dblclick)="editing[row.$$index + '-name'] = true"
+		              *ngIf="!editing[row.$$index + '-name']">
+		              {{value}}
+		            </span>
+		            <input
+		              autofocus
+		              (blur)="updateValue($event, 'name', value, row)"
+		              *ngIf="editing[row.$$index + '-name']"
+		              type="text"
+		              [value]="value"
+		            />
+	          </template>
+	        </swui-datatable-column>
+	    </swui-datatable>
+	</div>
+	</md-card>
