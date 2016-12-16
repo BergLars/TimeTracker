@@ -24,6 +24,7 @@ export class SearchComponent {
     this.childModal.hide();
   }
 
-  public submmitSeach():void {
+  public submitSearch():void {
+    this.childModal.hide();
   }
 }

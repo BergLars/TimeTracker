@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { MyDatePickerModule } from 'mydatepicker';
 import { Angular2DataTableModule } from 'angular2-data-table';
@@ -34,6 +35,8 @@ import { UserService } from './user.service';
 import { LoggedInGuard } from './logged-in-guard';
 import { ProfileService } from './profile.service';
 import { ProfileComponent } from './profile/profile.component';
+import { HomeComponent } from './home/home.component';
+import { UserComponent } from './user/user.component';
 
 
 @NgModule({
@@ -52,7 +55,9 @@ import { ProfileComponent } from './profile/profile.component';
     TableComponent,
     QueryformComponent,
     ContainerComponent,
-    ProfileComponent
+    ProfileComponent,
+    HomeComponent,
+    UserComponent
   ],
   imports: [
     Angular2DataTableModule,

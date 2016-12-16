@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Http, Response, RequestOptions, Headers } from '@angular/http';
 
 @Component({
   selector: 'app-entries',
@@ -6,25 +7,42 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./entries.component.scss']
 })
 export class EntriesComponent implements OnInit {
-	rows = [];
+  rows = [];
   columns = [];
+  http: Http;
+  data: Object;
+  loading: boolean;
 
-  constructor() { }
+  constructor(http: Http) {
+    this.http = http;
+  }
 
   ngOnInit() {
     this.loadEntries();
+    // this.makeRequest();
   }
 
   private loadEntries() {
-    this.rows = [
-      { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-      { name: 'Dany', gender: 'Male', company: 'KFC' },
-      { name: 'Molly', gender: 'Female', company: 'Burger King' }
-    ];
+
     this.columns = [
-      { prop: 'name' },
-      { name: 'Gender' },
-      { name: 'Company' }
+      { prop: 'id' },
+      { name: 'Person ID' },
+      { name: 'Task ID ' },
+      { name: 'Start Date' },
+      { name: 'End Date' }
     ];
+
+    this.rows = [
+      { id: 1, personId: 2, taskId: 2, startDate: '2016-12-18', endDate: 'null' },
+      { id: 1, personId: 2, taskId: 2, startDate: '2016-12-18', endDate: 'null' }
+    ];
+  }
+  makeRequest(): void {
+    this.loading = true;
+    this.http.request('http://localhost:4200/Entries')
+      .subscribe((res: Response) => {
+        this.data = res.json();
+        this.loading = false;
+      });
   }
 }

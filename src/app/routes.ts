@@ -12,13 +12,14 @@ import { TableComponent } from './table/table.component';
 import { ContainerComponent } from './container/container.component';
 import { LoggedInGuard } from './logged-in-guard';
 import { ProfileComponent } from './profile/profile.component';
+import { HomeComponent } from './home/home.component';
 
 export const routes = [
-	{ path: '', component: AppComponent, pathMatch: 'full' },
+	{ path: '', component: HomeComponent, pathMatch: 'full' },
 	{ path: 'login', component: LoginComponent },
 	{ path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard] }, 
-	{ path: 'search', component: AppComponent, pathMatch: 'full' },
-	{ path: 'export', component: LoginComponent },
+	{ path: 'search', component: SearchComponent },
+	{ path: 'export', component: ExportComponent },
 	{ path: 'entry', component: EntryComponent },
 	// { path: 'logout', component: LogoutComponent },
 	{ path: 'entries', component: EntriesComponent }
