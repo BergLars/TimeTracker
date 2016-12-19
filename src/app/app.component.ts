@@ -1,5 +1,6 @@
 import { Component, ViewContainerRef } from '@angular/core';
 import { ComponentsHelper } from 'ng2-bootstrap/ng2-bootstrap';
+import { environment } from '../environments/environment'
 
 @Component({
     selector: 'app-root',
@@ -8,7 +9,7 @@ import { ComponentsHelper } from 'ng2-bootstrap/ng2-bootstrap';
 })
 export class AppComponent {
     private viewContainerRef: ViewContainerRef;
-    title = 'Timetracker';
+    title = environment.title;
     public constructor(viewContainerRef: ViewContainerRef) {
         // You need this small hack in order to catch application root view container ref
         this.viewContainerRef = viewContainerRef;

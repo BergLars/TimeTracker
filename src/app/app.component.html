@@ -1,17 +1,17 @@
 <md-card>
     <md-grid-list cols="6">
         <md-grid-tile colspan="6" rowspan="1">
-            
-                <h1>{{title}}-</h1>
-            
+
+            <h1>{{title}}</h1>
+
         </md-grid-tile>
         <!--<md-grid-tile colspan="4" rowspan="1">
             <app-login></app-login>
-        </md-grid-tile> -->       
+        </md-grid-tile> -->
         <md-grid-tile colspan="4" rowspan="2" [style.background]="'lightblue'">
-        
+
             <md-card>
-                <app-entries> 
+                <app-entries>
                 </app-entries>
             </md-card>
         </md-grid-tile>
@@ -26,4 +26,3 @@
 <div class="container body-container">
     <router-outlet></router-outlet>
 </div>
-
