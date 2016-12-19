@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
-import { TimeTrackingEntryService, TimeTrackingEntry } from '../data';
+import { TimeTrackingEntryService, TimeTrackingEntry } from '../../../data';
 
 @Component({
   selector: 'app-entries',
