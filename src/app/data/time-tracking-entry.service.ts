@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { TimeTrackingEntry } from '.';
+import { environment } from '../../environments/environment';
+import { IDataservice, Project } from '.';
 
 @Injectable()
-export class TimeTrackingEntryService {
+export class TimeTrackingEntryService implements IDataservice {
+
+  public baseUrl: string = environment.apiBaseUrl;
 
   constructor() { }
 

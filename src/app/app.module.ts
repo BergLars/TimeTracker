@@ -38,7 +38,6 @@ import { HomeComponent } from './home/home.component';
 import { UserComponent } from './user/user.component';
 import { LoginComponent } from './login/login.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -78,5 +77,5 @@ import { LoginComponent } from './login/login.component';
   providers: [ProjectService, TaskService, TimeTrackingEntryService, UserService, LoggedInGuard, ProfileService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
 platformBrowserDynamic().bootstrapModule(AppModule);

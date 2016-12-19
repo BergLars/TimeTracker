@@ -5,6 +5,7 @@ export * from './model/time-tracking-entry';
 export * from './model/user';
 
 // Data services
+export * from './i-dataservice';
 export * from './project.service';
 export * from './task.service';
 export * from './time-tracking-entry.service';

@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
+import { environment } from '../../environments/environment';
+import { IDataservice, Project } from '.';
 
 @Injectable()
-export class UserService {
+export class UserService implements IDataservice {
+
+	public baseUrl: string = environment.apiBaseUrl;
+
 	private loggedIn = false;
 
 	constructor(private http: Http) {

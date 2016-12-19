@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Project } from '.';
+import { environment } from '../../environments/environment';
+import { IDataservice, Project } from '.';
 
 const ENDPOINT: string = 'Project';
 
 @Injectable()
-export class ProjectService {
+export class ProjectService implements IDataservice {
 
-  public baseUrl: string;
+  public baseUrl: string = environment.apiBaseUrl;
 
   constructor(private http: Http) {
 
