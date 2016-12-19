@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 
 @Component({
-	selector: '[app-entry]',
-	templateUrl: './entry.component.html',
-	styleUrls: ['./entry.component.scss']
+	selector: 'app-user',
+	templateUrl: './user.component.html',
+	styleUrls: ['./user.component.scss']
 })
-export class EntryComponent implements OnInit {
+export class UserComponent implements OnInit {
 	rows = [];
 	columns = [];
 	http: Http;
@@ -23,6 +23,7 @@ export class EntryComponent implements OnInit {
 	}
 
 	private loadEntries() {
+
 		this.columns = [
 			{ prop: 'id' },
 			{ name: 'Person ID' },
@@ -32,13 +33,13 @@ export class EntryComponent implements OnInit {
 		];
 
 		this.rows = [
-			{ id: 1, personId: 2, taskId: 2, startDate: 2016-12-18, endDate: null },
-			{ id: 1, personId: 2, taskId: 2, startDate: 2016-12-18, endDate: null }
+			{ id: 1, personId: 2, taskId: 2, startDate: '2016-12-18', endDate: 'null' },
+			{ id: 1, personId: 2, taskId: 2, startDate: '2016-12-18', endDate: 'null' }
 		];
 	}
 	makeRequest(): void {
 		this.loading = true;
-		this.http.request('http://localhost:4200/Entry/?id=1')
+		this.http.request('http://localhost:4200/Persons')
 			.subscribe((res: Response) => {
 				this.data = res.json();
 				this.loading = false;

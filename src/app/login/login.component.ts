@@ -1,15 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { UserService } from '.././user.service';
+
+// webpack html imports
+let template = require('./login.component.html');
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+	selector: 'app-login',
+	template: template
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
+	constructor(private userService: UserService, private router: Router) { }
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+	onSubmit(username, password) {
+		this.userService.login(username, password).subscribe((result) => {
+			if (result) {
+				this.router.navigate(['']);
+			}
+		});
+	}
 }

@@ -1,9 +1,7 @@
 <button md-raised-button color="primary" (click)="newEntry()">NEW ENTRY</button>
 <md-card class="tablesize">
 	<div>
-	    <swui-datatable class="material tablesize"
-	        [rows]="rows"
-	        [columns]="columns">
+	    <swui-datatable class="material tablesize">
 	        <swui-datatable-column name="Project">
 	        	<template swui-datatable-cell-template let-value="value" let-row="row">
 		            <span
@@ -60,3 +58,9 @@
 	    </swui-datatable>
 	</div>
 	</md-card>
+
+<!--<h2>Basic Request</h2>
+<button type="button" (click)="makeRequest()">Make Request</button>
+<div *ngIf="loading">loading...</div>
+<pre>{{data | json}}</pre>
+-->

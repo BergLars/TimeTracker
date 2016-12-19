@@ -20,4 +20,8 @@ export class ExportComponent {
   public hideChildModal():void {
     this.childModal.hide();
   }
+
+  public sendEmail():void {
+    this.childModal.hide();
+  }
 }

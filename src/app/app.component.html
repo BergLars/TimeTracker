@@ -1,23 +1,29 @@
 <md-card>
     <md-grid-list cols="6">
-        <md-grid-tile colspan="2" rowspan="1">
-            <md-card>
-                <h4>{{title}}</h4>
-            </md-card>
+        <md-grid-tile colspan="6" rowspan="1">
+            
+                <h1>{{title}}</h1>
+            
         </md-grid-tile>
-        <md-grid-tile colspan="4" rowspan="1">
+        <!--<md-grid-tile colspan="4" rowspan="1">
             <app-login></app-login>
-        </md-grid-tile>        
-        <md-grid-tile colspan="4" rowspan="3" [style.background]="'lightblue'">
+        </md-grid-tile> -->       
+        <md-grid-tile colspan="4" rowspan="2" [style.background]="'lightblue'">
+        
             <md-card>
                 <app-entries> 
                 </app-entries>
             </md-card>
         </md-grid-tile>
-        <md-grid-tile colspan="2" rowspan="3" [style.background]="'lightblue'">
+        <md-grid-tile colspan="2" rowspan="2" [style.background]="'lightblue'">
             <md-card>
                 <app-sidebar></app-sidebar>
             </md-card>
         </md-grid-tile>
     </md-grid-list>
 </md-card>
+
+<div class="container body-container">
+    <router-outlet></router-outlet>
+</div>
+
