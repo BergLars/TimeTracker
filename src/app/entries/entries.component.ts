@@ -39,7 +39,7 @@ export class EntriesComponent implements OnInit {
   }
   makeRequest(): void {
     this.loading = true;
-    this.http.request('http://localhost:4200/Entries')
+    this.http.get('http://mojito.dev.fluance.net:8080/timetracker/Entries')
       .subscribe((res: Response) => {
         this.data = res.json();
         this.loading = false;

@@ -2,16 +2,16 @@ import { Component, ViewContainerRef } from '@angular/core';
 import { ComponentsHelper } from 'ng2-bootstrap/ng2-bootstrap';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-	 private viewContainerRef: ViewContainerRef;
-   public constructor(viewContainerRef:ViewContainerRef) {
-    // You need this small hack in order to catch application root view container ref
-    this.viewContainerRef = viewContainerRef;
-  }
+    private viewContainerRef: ViewContainerRef;
+    public constructor(viewContainerRef: ViewContainerRef) {
+        // You need this small hack in order to catch application root view container ref
+        this.viewContainerRef = viewContainerRef;
+    }
 }
 
 // it should fix the issue for NG2 v2.2.1 until an official patch is released by NG2-bootstrap team

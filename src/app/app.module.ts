@@ -17,7 +17,6 @@ import { DatepickerModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { TypeaheadModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
 import { DateComponent } from './date/date.component';
 import { SearchComponent } from './search/search.component';
 import { ExportComponent } from './export/export.component';
@@ -31,12 +30,13 @@ import { TableComponent } from './table/table.component';
 import { QueryformComponent } from './queryform/queryform.component';
 import { ContainerComponent } from './container/container.component';
 import { routes } from './routes';
-import { UserService } from './user.service';
+import { ProjectService, TaskService, TimeTrackingEntryService, UserService } from './data';
 import { LoggedInGuard } from './logged-in-guard';
 import { ProfileService } from './profile.service';
 import { ProfileComponent } from './profile/profile.component';
 import { HomeComponent } from './home/home.component';
 import { UserComponent } from './user/user.component';
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({
@@ -56,8 +56,7 @@ import { UserComponent } from './user/user.component';
     QueryformComponent,
     ContainerComponent,
     ProfileComponent,
-    HomeComponent,
-    UserComponent
+    HomeComponent
   ],
   imports: [
     Angular2DataTableModule,
@@ -76,7 +75,7 @@ import { UserComponent } from './user/user.component';
     DatepickerModule,
     TypeaheadModule
   ],
-  providers: [UserService, LoggedInGuard, ProfileService],
+  providers: [ProjectService, TaskService, TimeTrackingEntryService, UserService, LoggedInGuard, ProfileService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

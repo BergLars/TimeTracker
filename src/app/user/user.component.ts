@@ -19,7 +19,7 @@ export class UserComponent implements OnInit {
 
 	ngOnInit() {
 		this.loadEntries();
-		this.makeRequest();
+		// this.makeRequest();
 	}
 
 	private loadEntries() {
@@ -39,7 +39,7 @@ export class UserComponent implements OnInit {
 	}
 	makeRequest(): void {
 		this.loading = true;
-		this.http.request('http://localhost:4200/Persons')
+		this.http.request('http://mojito.dev.fluance.net:8080/timetracker/Persons')
 			.subscribe((res: Response) => {
 				this.data = res.json();
 				this.loading = false;

@@ -13,7 +13,7 @@ exports.config = {
     'browserName': 'chrome'
   },
   directConnect: true,
-  baseUrl: 'http://localhost:4200/',
+  baseUrl: 'http://mojito.dev.fluance.net:8080/timetracker/',
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,
