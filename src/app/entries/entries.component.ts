@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TimeTrackingEntry } from '../data/timeTrackingEntry';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
+import { TimeTrackingEntryService, TimeTrackingEntry } from '../data';
 
 @Component({
   selector: 'app-entries',
@@ -9,19 +9,14 @@ import { Http, Response, RequestOptions, Headers } from '@angular/http';
 })
 export class EntriesComponent implements OnInit {
   rows: Array<TimeTrackingEntry> = [];
-  columns = [];
   editing = {};
-  http: Http;
-  data: Object;
   loading: boolean;
 
-  constructor(http: Http) {
-    this.http = http;
+  constructor(private timeTrackingEntryService: TimeTrackingEntryService) {
   }
 
   ngOnInit() {
     this.loadEntries();
-    // this.makeRequest();
   }
 
   updateValue(event, cell, cellValue, row) {
@@ -31,43 +26,23 @@ export class EntriesComponent implements OnInit {
   }
 
   private loadEntries() {
-    this.rows = [
-      new TimeTrackingEntry('FEC', 'Add translations to tutorialservice', 6.5),
-      new TimeTrackingEntry('Evita', 'Add Button to UI', 1),
-      new TimeTrackingEntry('FEC', 'Add deathdate to UI', 0.5)
-    ];
-    this.columns = [
-      { prop: 'project' },
-      { name: 'task' },
-      { name: 'time' }
-    ];
-
-    /*    this.columns = [
-          { prop: 'id' },
-          { name: 'Person ID' },
-          { name: 'Task ID ' },
-          { name: 'Start Date' },
-          { name: 'End Date' }
-    */
-    /*    this.rows = [
-          { id: 1, personId: 2, taskId: 2, startDate: '2016-12-18', endDate: 'null' },
-          { id: 1, personId: 2, taskId: 2, startDate: '2016-12-18', endDate: 'null' }
-        ];*/
-  }
-
-  makeRequest(): void {
     this.loading = true;
-    this.http.get('http://mojito.dev.fluance.net:8080/timetracker/Entries')
-      .subscribe((res: Response) => {
-        this.data = res.json();
+    this.timeTrackingEntryService
+      .getEntries()
+      .then(items => {
+        this.rows = items;
+        this.loading = false;
+      })
+      .catch(error => {
         this.loading = false;
       });
   }
 
+
   private newEntry() {
-    this.rows.push(
-      new TimeTrackingEntry('Choose your project', 'Enter Task here ', 0)
-    );
+    // this.rows.push(
+    //   new TimeTrackingEntry('Choose your project', 'Enter Task here ', 0)
+    // );
   }
 }
 
