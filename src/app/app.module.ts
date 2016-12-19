@@ -17,20 +17,20 @@ import { DatepickerModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { TypeaheadModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
-import { DateComponent } from './date/date.component';
+
+import { DateComponent, DatepickerComponent, DialogComponent, TimepickerComponent } from './common';
+import { ProjectService, TaskService, TimeTrackingEntryService, UserService } from './data';
+
+
 import { SearchComponent } from './search/search.component';
 import { ExportComponent } from './export/export.component';
 import { EntryComponent } from './entry/entry.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { EntriesComponent } from './entries/entries.component';
-import { DialogComponent } from './dialog/dialog.component';
-import { TimepickerComponent } from './timepicker/timepicker.component';
-import { DatepickerComponent } from './datepicker/datepicker.component';
 import { TableComponent } from './table/table.component';
 import { QueryformComponent } from './queryform/queryform.component';
 import { ContainerComponent } from './container/container.component';
 import { routes } from './routes';
-import { ProjectService, TaskService, TimeTrackingEntryService, UserService } from './data';
 import { LoggedInGuard } from './logged-in-guard';
 import { ProfileService } from './profile.service';
 import { ProfileComponent } from './profile/profile.component';
