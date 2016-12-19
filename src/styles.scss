@@ -1,33 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
 
-h1 {
-    color: #369;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 250%;
+// Material Design theme
+@import '~@angular/material/core/theming/prebuilt/indigo-pink.css';
+@import 'flexbox.scss';
+
+html, body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
 }
 
-h2,
-h3 {
-    color: #444;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-}
 
-body {
-    margin: 2em;
-}
 
-.inputdemoIcons {
-    /*
-.right-icon {
-  position: absolute;
-  top: 4px;
-  right: 2px;
-  left: auto;
-  margin-top: 0;
-}
-*/
-}
+// h1 {
+//     color: #369;
+//     font-family: Arial, Helvetica, sans-serif;
+//     font-size: 250%;
+// }
+
+// h2,
+// h3 {
+//     color: #444;
+//     font-family: Arial, Helvetica, sans-serif;
+//     font-weight: lighter;
+// }
+
+
+// .inputdemoIcons {
+//     .right-icon {
+//     position: absolute;
+//     top: 4px;
+//     right: 2px;
+//     left: auto;
+//     margin-top: 0;
+//     }
+// }
 
 .inputdemoIcons .inputIconDemo {
     min-height: 48px;

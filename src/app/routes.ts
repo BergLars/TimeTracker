@@ -1,6 +1,6 @@
 // app.routes.ts
 
-import { AppComponent } from './app.component';
+import { TimeTrackingComponent } from './time-tracking/time-tracking.component';
 import { LoginComponent } from './login/login.component';
 import { ExportComponent } from './time-tracking/components/export/export.component';
 import { SearchComponent } from './time-tracking/components/search/search.component';
@@ -10,7 +10,7 @@ import { LoggedInGuard } from './logged-in-guard';
 import { ProfileComponent } from './profile/profile.component';
 
 export const routes = [
-	{ path: '', component: AppComponent, pathMatch: 'full' },
+	{ path: '', component: TimeTrackingComponent, pathMatch: 'full' },
 	{ path: 'login', component: LoginComponent },
 	{ path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard] }, 
 	{ path: 'search', component: SearchComponent },

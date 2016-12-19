@@ -20,10 +20,7 @@ export class ProjectService implements IDataservice {
   public getProjects(): any {
     return this.http
       .get(this.baseUrl + '/Projects')
-      .map(result => {
-        let body = result.json();
-        return body.data || {};
-      })
+      .map(this.deserialize)
       .catch(this.handleError);
   }
 
@@ -43,15 +40,19 @@ export class ProjectService implements IDataservice {
 
   // ------------------------------------------------------------------------------- Helper methods
 
+  private toProject(item: any): Project {
+    return new Project(item.id, item.name);
+  }
   private deserialize(result: Response) {
-    
+    let body = result.json();
+    return (<Array<any>>body).map(i => { return this.toProject(i); });
   }
 
   private serialize(result: Response) {
-    
+
   }
 
-  private  insertProject(id: number): any {
+  private insertProject(id: number): any {
     return this.http
       .get(this.baseUrl + '/Project/' + id)
       .map(result => {
@@ -64,7 +65,7 @@ export class ProjectService implements IDataservice {
 
   // ------------------------------------------------------------------------------- Error handling
 
-  
+
 
   private handleError(error: Response | any) {
     // In a real world app, we might use a remote logging infrastructure

@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angul
 import { HttpModule } from '@angular/http';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { MaterialModule } from '@angular/material';
+// import { FlexLayoutModule } from '@angular/flex-layout';
 import { MyDatePickerModule } from 'mydatepicker';
 import { Angular2DataTableModule } from 'angular2-data-table';
 import { DataTableModule } from "angular2-datatable";
@@ -21,6 +22,7 @@ import { LoggedInGuard } from './logged-in-guard';
 import { ProfileService } from './profile.service';
 import { ProfileComponent } from './profile/profile.component';
 import { LoginComponent } from './login/login.component';
+import { TimeTrackingComponent } from './time-tracking/time-tracking.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,8 @@ import { LoginComponent } from './login/login.component';
     QueryformComponent,
     ContainerComponent,
     ProfileComponent,
+    TimeTrackingComponent,
+    TimeTrackingComponent,
   ],
   imports: [
     Angular2DataTableModule,
@@ -45,6 +49,7 @@ import { LoginComponent } from './login/login.component';
     HttpModule,
     RouterModule.forRoot(routes),
     MaterialModule.forRoot(),
+    // FlexLayoutModule.forRoot(),
     MyDatePickerModule,
     AlertModule,
     DropdownModule,
