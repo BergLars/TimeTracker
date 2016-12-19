@@ -8,34 +8,18 @@ import { MaterialModule } from '@angular/material';
 import { MyDatePickerModule } from 'mydatepicker';
 import { Angular2DataTableModule } from 'angular2-data-table';
 import { DataTableModule } from "angular2-datatable";
-import { AlertModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { TimepickerModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { TabsModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { DatepickerModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { TypeaheadModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { AlertModule, DropdownModule, ModalModule, TimepickerModule, TabsModule, DatepickerModule, TypeaheadModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
-
 import { DateComponent, DatepickerComponent, DialogComponent, TimepickerComponent } from './common';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService } from './data';
-
-
-import { SearchComponent } from './search/search.component';
-import { ExportComponent } from './export/export.component';
-import { EntryComponent } from './entry/entry.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { EntriesComponent } from './entries/entries.component';
-import { TableComponent } from './table/table.component';
+import { SearchComponent, ExportComponent, SidebarComponent, EntriesComponent } from './time-tracking';
 import { QueryformComponent } from './queryform/queryform.component';
 import { ContainerComponent } from './container/container.component';
 import { routes } from './routes';
 import { LoggedInGuard } from './logged-in-guard';
 import { ProfileService } from './profile.service';
 import { ProfileComponent } from './profile/profile.component';
-import { HomeComponent } from './home/home.component';
-import { UserComponent } from './user/user.component';
 import { LoginComponent } from './login/login.component';
 
 
@@ -46,17 +30,14 @@ import { LoginComponent } from './login/login.component';
     DateComponent,
     SearchComponent,
     ExportComponent,
-    EntryComponent,
     SidebarComponent,
     EntriesComponent,
     DialogComponent,
     TimepickerComponent,
     DatepickerComponent,
-    TableComponent,
     QueryformComponent,
     ContainerComponent,
     ProfileComponent,
-    HomeComponent
   ],
   imports: [
     Angular2DataTableModule,
