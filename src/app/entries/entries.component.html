@@ -1,8 +1,66 @@
-<div class="material resizeable">
-    <swui-datatable [rows]="rows" [columns]="columns">
-    </swui-datatable>
-</div>
-<h2>Basic Request</h2>
+<button md-raised-button color="primary" (click)="newEntry()">NEW ENTRY</button>
+<md-card class="tablesize">
+	<div>
+	    <swui-datatable class="material tablesize">
+	        <swui-datatable-column name="Project">
+	        	<template swui-datatable-cell-template let-value="value" let-row="row">
+		            <span
+		              title="Double click to edit"
+		              (dblclick)="editing[row.$$index + '-projectID'] = true"
+		              *ngIf="!editing[row.$$index + '-projectID']">
+		              {{value}}
+		            </span>
+		            <select
+			            *ngIf="editing[row.$$index + '-projectID']"
+			            (change)="updateValue($event, 'projectID', value, row)"
+			            [value]="value">
+			            <option value="chooseProject">Choose your Project</option>
+			            <option value="fec">Fluance eHealth Cockpit</option>
+			            <option value="evita">Evita</option>
+		            </select>
+	          </template>
+	        </swui-datatable-column>
+	        <swui-datatable-column name="Task">
+	        	<template swui-datatable-cell-template let-value="value" let-row="row">
+		            <span
+		              title="Double click to edit"
+		              (dblclick)="editing[row.$$index + '-task'] = true"
+		              *ngIf="!editing[row.$$index + '-task']">
+		              {{value}}
+		            </span>
+		            <input
+		              autofocus
+		              (blur)="updateValue($event, 'task', value, row)"
+		              *ngIf="editing[row.$$index + '-task']"
+		              type="text"
+		              [value]="value"
+		            />
+	          </template>
+	        </swui-datatable-column>
+	        <swui-datatable-column name="Time">
+	        	<template swui-datatable-cell-template let-value="value" let-row="row">
+		            <span
+		              title="Double click to edit"
+		              (dblclick)="editing[row.$$index + '-time'] = true"
+		              *ngIf="!editing[row.$$index + '-time']">
+		              {{value}}
+		            </span>
+		            <input
+		              autofocus
+		              (blur)="updateValue($event, 'time', value, row)"
+		              *ngIf="editing[row.$$index + '-time']"
+		              type="number"
+		              
+		              [value]="value"
+		            />
+	          </template>
+	        </swui-datatable-column>
+	    </swui-datatable>
+	</div>
+	</md-card>
+
+<!--<h2>Basic Request</h2>
 <button type="button" (click)="makeRequest()">Make Request</button>
 <div *ngIf="loading">loading...</div>
 <pre>{{data | json}}</pre>
+-->

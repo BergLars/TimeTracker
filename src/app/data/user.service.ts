@@ -7,7 +7,6 @@ export class UserService {
 
 	constructor(private http: Http) {
 		this.loggedIn = !!localStorage.getItem('auth_token');
-
 	}
 
 	login(username, password) {
