@@ -14,7 +14,7 @@ import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { DateComponent, DatepickerComponent, DialogComponent, TimepickerComponent } from './common';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService } from './data';
-import { SearchComponent, ExportComponent, SidebarComponent, EntriesComponent } from './time-tracking';
+import { SearchDialogComponent, ExportComponent, SidebarComponent, EntriesComponent } from './time-tracking';
 import { QueryformComponent } from './queryform/queryform.component';
 import { ContainerComponent } from './container/container.component';
 import { routes } from './routes';
@@ -29,7 +29,7 @@ import { TimeTrackingComponent } from './time-tracking/time-tracking.component';
     AppComponent,
     LoginComponent,
     DateComponent,
-    SearchComponent,
+    SearchDialogComponent,
     ExportComponent,
     SidebarComponent,
     EntriesComponent,
@@ -40,6 +40,9 @@ import { TimeTrackingComponent } from './time-tracking/time-tracking.component';
     ContainerComponent,
     ProfileComponent,
     TimeTrackingComponent
+  ],
+  entryComponents: [
+    SearchDialogComponent
   ],
   imports: [
     Angular2DataTableModule,
@@ -62,5 +65,5 @@ import { TimeTrackingComponent } from './time-tracking/time-tracking.component';
   providers: [ProjectService, TaskService, TimeTrackingEntryService, UserService, LoggedInGuard, ProfileService],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
 platformBrowserDynamic().bootstrapModule(AppModule);

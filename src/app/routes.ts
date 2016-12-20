@@ -3,7 +3,6 @@
 import { TimeTrackingComponent } from './time-tracking/time-tracking.component';
 import { LoginComponent } from './login/login.component';
 import { ExportComponent } from './time-tracking/components/export/export.component';
-import { SearchComponent } from './time-tracking/components/search/search.component';
 import { EntriesComponent } from './time-tracking/components/entries/entries.component';
 import { ContainerComponent } from './container/container.component';
 import { LoggedInGuard } from './logged-in-guard';
@@ -13,7 +12,6 @@ export const routes = [
 	{ path: '', component: TimeTrackingComponent, pathMatch: 'full' },
 	{ path: 'login', component: LoginComponent },
 	{ path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard] }, 
-	{ path: 'search', component: SearchComponent },
 	{ path: 'export', component: ExportComponent },
 	{ path: 'entries', component: EntriesComponent }
 	// { path: 'logout', component: LogoutComponent },

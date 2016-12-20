@@ -2,6 +2,7 @@
 export * from './model/project';
 export * from './model/task';
 export * from './model/time-tracking-entry';
+export * from './model/statistics';
 export * from './model/user';
 
 // Data services

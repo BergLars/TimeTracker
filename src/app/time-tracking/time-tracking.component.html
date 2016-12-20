@@ -1,9 +1,20 @@
-<div class="layout-row">
-  <md-card class="flex">
-    <app-entries [items]="entries" [projects]="projects"></app-entries>
-  </md-card>
+<div class="layout-column">
+  <md-toolbar color="primary">
+    <span>Today {{title}}</span>
+    <span class="flex"></span>
+    <span>
+      <button md-raised-button color="primary" (click)="showSearchDialog()">SEARCH</button>
+      <button md-raised-button color="primary" (click)="showExportDialog()">EXPORT</button>
+    </span>
+  </md-toolbar>
 
-  <md-card class="tt-sidebar">
-    <app-sidebar></app-sidebar>
-  </md-card>
+  <div class="layout-row flex">
+    <md-card class="flex">
+      <app-entries [items]="entries" [projects]="projects"></app-entries>
+    </md-card>
+
+    <md-card class="tt-sidebar">
+      <app-sidebar [statistics]="statistics"></app-sidebar>
+    </md-card>
+  </div>
 </div>
