@@ -39,8 +39,7 @@ import { TimeTrackingComponent } from './time-tracking/time-tracking.component';
     QueryformComponent,
     ContainerComponent,
     ProfileComponent,
-    TimeTrackingComponent,
-    TimeTrackingComponent,
+    TimeTrackingComponent
   ],
   imports: [
     Angular2DataTableModule,

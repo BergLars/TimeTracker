@@ -1,9 +1,9 @@
 export class Project {
 	id: number;
-	name: string;
+	projectName: string;
 	
 	constructor(id: number, name: string){
 		this.id = id;
-		this.name = name;
+		this.projectName = name;
 	}
 }

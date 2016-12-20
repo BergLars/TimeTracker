@@ -1,11 +1,11 @@
 export class Task {
 	id: number;
-	projectId: number;
-	description: string;
+	projectID: number;
+	taskDescription: string;
 	
 	constructor(id: number, projectId: number, description: string){
 		this.id = id;
-		this.projectId = projectId;
-		this.description = description;
+		this.projectID = projectId;
+		this.taskDescription = description;
 	}
 }

@@ -1,5 +1,5 @@
 <button md-raised-button color="primary" (click)="newEntry()">NEW ENTRY</button>
-<swui-datatable class="material tablesize" [rows]="rows">
+<swui-datatable class="material tablesize" [rows]="items">
 	<swui-datatable-column name="Project">
 		<template swui-datatable-cell-template let-value="value" let-row="row">
 			<span title="Double click to edit" (dblclick)="editing[row.$$index + '-projectID'] = true" *ngIf="!editing[row.$$index + '-projectID']">
@@ -15,7 +15,7 @@
 	<swui-datatable-column name="Task">
 		<template swui-datatable-cell-template let-value="value" let-row="row">
 			<span title="Double click to edit" (dblclick)="editing[row.$$index + '-task'] = true" *ngIf="!editing[row.$$index + '-task']">
-		              {{value}}
+		              {{value.taskDescription}}
 		            </span>
 			<input autofocus (blur)="updateValue($event, 'task', value, row)" *ngIf="editing[row.$$index + '-task']" type="text" [value]="value"
 			/>

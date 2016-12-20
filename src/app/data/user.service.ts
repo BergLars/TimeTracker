@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { environment } from '../../environments/environment';
-import { IDataservice, Project } from '.';
+import { store } from './datastore';
+import { IDataservice, User } from '.';
+
+const RESOURCE_NAME: string = 'person';
+const ENDPOINT_NAME: string = 'persons';
 
 @Injectable()
 export class UserService implements IDataservice {
@@ -11,6 +15,12 @@ export class UserService implements IDataservice {
 	private loggedIn = false;
 
 	constructor(private http: Http) {
+		// Define a Mapper for a "Project" resource
+		let resource = store.defineMapper(RESOURCE_NAME, {
+			basePath: this.baseUrl,
+			endpoint: ENDPOINT_NAME
+		});
+
 		this.loggedIn = !!localStorage.getItem('auth_token');
 	}
 
@@ -42,5 +52,9 @@ export class UserService implements IDataservice {
 
 	isLoggedIn() {
 		return this.loggedIn;
+	}
+
+	public getUser(id: number): Promise<User> {
+		return store.find(RESOURCE_NAME, id);
 	}
 }

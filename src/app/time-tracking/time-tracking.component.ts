@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjectService } from '../data';
+import { ProjectService, TaskService, TimeTrackingEntryService, UserService, Project, Task, TimeTrackingEntry, User } from '../data';
 
 @Component({
   selector: 'app-time-tracking',
@@ -8,11 +8,36 @@ import { ProjectService } from '../data';
 })
 export class TimeTrackingComponent implements OnInit {
 
-  constructor(private projectService: ProjectService) { }
+  public isLoading: Boolean = false;
+  private projects: Project[];
+  private tasks: Task[];
+  private entries: TimeTrackingEntry[];
+  private user: User;
+
+  constructor(private projectService: ProjectService, private taskService: TaskService, private timeTrackingEntryService: TimeTrackingEntryService, private userService: UserService) { }
 
   ngOnInit() {
-    this.projectService
-      .getProjects();
+    // Get all projects
+    this.projectService.getProjects()
+      .then(result => { this.projects = result; })
+
+      // Get all tasks
+      .then(() => { return this.taskService.getTasks(); })
+      .then(result => { this.tasks = result; })
+
+      // Get current user
+      .then(() => { return this.userService.getUser(1); })
+      .then(result => { return this.user = result; })
+
+      // Get user's time tracking entries
+      .then(() => { return this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.user); })
+      .then(result => {
+        this.isLoading = false;
+        return this.entries = result;
+      })
+      .catch(error => {
+        this.isLoading = false;
+      });
   }
 
 }
