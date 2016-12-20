@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
-import { TimeTrackingEntry } from '../../../data';
+import { TimeTrackingEntry, Project } from '../../../data';
 
 @Component({
   selector: 'app-entries',
@@ -9,6 +9,7 @@ import { TimeTrackingEntry } from '../../../data';
 })
 export class EntriesComponent implements OnInit {
   @Input() items: TimeTrackingEntry[] = [];
+  @Input() projects: Project[] = [];
   public editing = {};
 
   constructor() { }

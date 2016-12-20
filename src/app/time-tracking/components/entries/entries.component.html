@@ -2,14 +2,12 @@
 <swui-datatable class="material tablesize" [rows]="items">
 	<swui-datatable-column name="Project">
 		<template swui-datatable-cell-template let-value="value" let-row="row">
-			<span title="Double click to edit" (dblclick)="editing[row.$$index + '-projectID'] = true" *ngIf="!editing[row.$$index + '-projectID']">
+			<!--<span title="Double click to edit" (dblclick)="editing[row.$$index + '-projectID'] = true" *ngIf="!editing[row.$$index + '-projectID']">
 		              {{value}}
-		            </span>
-			<select *ngIf="editing[row.$$index + '-projectID']" (change)="updateValue($event, 'projectID', value, row)" [value]="value">
-			            <option value="chooseProject">Choose your Project</option>
-			            <option value="fec">Fluance eHealth Cockpit</option>
-			            <option value="evita">Evita</option>
-		            </select>
+		           </span>-->
+			<select (change)="updateValue($event, 'projectID', value, row)" >
+			            <option *ngFor="let project of projects" [value]="project.id">{{project.projectName}}</option>
+		             </select>
 		</template>
 	</swui-datatable-column>
 	<swui-datatable-column name="Task">
@@ -21,7 +19,7 @@
 			/>
 		</template>
 	</swui-datatable-column>
-	<swui-datatable-column name="Start Date">
+	<swui-datatable-column name="Start Time">
 		<template swui-datatable-cell-template let-value="value" let-row="row">
 			<span title="Double click to edit" (dblclick)="editing[row.$$index + '-startDate'] = true" *ngIf="!editing[row.$$index + '-startDate']">
 		              {{value}}
@@ -30,7 +28,7 @@
 				[value]="value" />
 		</template>
 	</swui-datatable-column>
-	<swui-datatable-column name="End Date">
+	<swui-datatable-column name="End Time">
 		<template swui-datatable-cell-template let-value="value" let-row="row">
 			<span title="Double click to edit" (dblclick)="editing[row.$$index + '-endDate'] = true" *ngIf="!editing[row.$$index + '-endDate']">
 		              {{value}}
