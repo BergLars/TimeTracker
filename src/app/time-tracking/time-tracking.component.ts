@@ -27,13 +27,13 @@ export class TimeTrackingComponent implements OnInit {
 
       // Get current user
       .then(() => { return this.userService.getUser(1); })
-      .then(result => { return this.user = result; })
+      .then(result => { this.user = result; })
 
       // Get user's time tracking entries
       .then(() => { return this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.user); })
       .then(result => {
+        this.entries = result;
         this.isLoading = false;
-        return this.entries = result;
       })
       .catch(error => {
         this.isLoading = false;
