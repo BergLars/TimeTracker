@@ -3,8 +3,8 @@ import { environment } from '../../environments/environment';
 import { store } from './datastore';
 import { IDataservice, TimeTrackingEntry, User } from '.';
 
-const RESOURCE_NAME: string = 'timeTrackingEntry';
-const ENDPOINT_NAME: string = 'entries';
+const RESOURCE_NAME: string = 'entry';
+const ENDPOINT_NAME: string = 'timeentries';
 
 @Injectable()
 export class TimeTrackingEntryService implements IDataservice {
@@ -15,20 +15,21 @@ export class TimeTrackingEntryService implements IDataservice {
     // Define a Mapper for a "Project" resource
     let resource = store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,
-      endpoint: ENDPOINT_NAME,
+      endpoint: ENDPOINT_NAME
+      // ,
 
-      relations: {
-        belongsTo: {
-          person: {
-            foreignKey: 'personID',
-            localField: 'user'
-          },
-          task: {
-            foreignKey: 'taskID',
-            localField: 'task'
-          }
-        }
-      }
+      // relations: {
+      //   belongsTo: {
+      //     userprofile: {
+      //       foreignKey: 'userID',
+      //       localField: 'user'
+      //     },
+      //     task: {
+      //       foreignKey: 'taskID',
+      //       localField: 'task'
+      //     }
+      //   }
+      // }
     });
   }
 
@@ -39,7 +40,7 @@ export class TimeTrackingEntryService implements IDataservice {
   }
 
   public getTimeTrackingEntriesByUser(user: User): Promise<TimeTrackingEntry[]> {
-    let endpoint = 'persons/' + user.id + '/' + ENDPOINT_NAME;
+    let endpoint = '/' + ENDPOINT_NAME + '/' + user.id + '/entries';
     return store.findAll(RESOURCE_NAME, {}, {
       endpoint: endpoint
     });
@@ -48,7 +49,6 @@ export class TimeTrackingEntryService implements IDataservice {
   public getTimeTrackingEntry(id: number): Promise<TimeTrackingEntry> {
     return store.find(RESOURCE_NAME, id);
   }
-
 
   public getEntries(): Promise<TimeTrackingEntry[]> {
     return Promise.resolve([

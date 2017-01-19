@@ -12,5 +12,4 @@ export class TimeTrackingEntry {
         this.startDate = startDate;
         this.endDate = endDate;
     }
-
 }

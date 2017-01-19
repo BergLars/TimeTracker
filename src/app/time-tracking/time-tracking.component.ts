@@ -15,7 +15,9 @@ export class TimeTrackingComponent implements OnInit {
   private projects: Project[];
   private tasks: Task[];
   private entries: TimeTrackingEntry[];
+  private entry: TimeTrackingEntry;
   private user: User;
+  private users: User[];
   private statistics: Statistics;
   private dialogRefSearch: MdDialogRef<SearchDialogComponent>;
 
@@ -25,7 +27,6 @@ export class TimeTrackingComponent implements OnInit {
     private taskService: TaskService,
     private timeTrackingEntryService: TimeTrackingEntryService,
     private userService: UserService) {
-
   }
 
   ngOnInit() {
@@ -35,18 +36,25 @@ export class TimeTrackingComponent implements OnInit {
 
     Promise.all([
       // Get current user                                                         // TODO: Get user from login
-      this.userService.getUser(1).then(result => { this.user = result; }),
+      this.userService.getUser(3).then(result => { this.user = result; }),
+
+      // Get an entry with id
+      this.timeTrackingEntryService.getTimeTrackingEntry(1).then(result => { this.entry = result; }),
 
       // Get all projects
       this.projectService.getProjects().then(result => { this.projects = result; }),
 
       // Get all tasks
       this.taskService.getTasks().then(result => { this.tasks = result; }),
+
+      // Get all users
+      this.userService.getUsers().then(result => { this.users = result })
     ])
+      .then(() => {
 
       // Get user's time tracking entries
-      .then(() => {
         return this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.user)
+      // return this.timeTrackingEntryService.getTimeTrackingEntries()
           .then(result => {
             this.entries = result;
           });
@@ -69,7 +77,7 @@ export class TimeTrackingComponent implements OnInit {
   // ------------------------------------------------------------------------------ Dialog handling
 
   public showSearchDialog() {
-    this.dialogRefSearch = this.dialog.open(SearchDialogComponent);
+    // this.dialogRefSearch = this.dialog.open(SearchDialogComponent);
 
     this.dialogRefSearch
       .afterClosed()
@@ -82,5 +90,4 @@ export class TimeTrackingComponent implements OnInit {
   public showExportDialog() {
 
   }
-
 }

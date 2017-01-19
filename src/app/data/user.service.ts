@@ -4,8 +4,8 @@ import { environment } from '../../environments/environment';
 import { store } from './datastore';
 import { IDataservice, User } from '.';
 
-const RESOURCE_NAME: string = 'person';
-const ENDPOINT_NAME: string = 'persons';
+const RESOURCE_NAME: string = 'user';
+const ENDPOINT_NAME: string = 'userprofiles';
 
 @Injectable()
 export class UserService implements IDataservice {
@@ -57,4 +57,8 @@ export class UserService implements IDataservice {
 	public getUser(id: number): Promise<User> {
 		return store.find(RESOURCE_NAME, id);
 	}
+
+	public getUsers(): Promise<User[]> {
+    return store.findAll(RESOURCE_NAME);
+  }
 }
