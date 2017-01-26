@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Statistics } from '../../../data';
+import { IStatistics } from '../../../data';
 
 @Component({
   selector: 'app-sidebar',
@@ -7,6 +7,5 @@ import { Statistics } from '../../../data';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent {
-
-  @Input() statistics: Statistics[] = [];
+  @Input() statistics: IStatistics[] = [];
 }

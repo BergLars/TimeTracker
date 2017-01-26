@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { ProjectService, TaskService, TimeTrackingEntryService, UserService, Project, Task, TimeTrackingEntry, User, Statistics } from '../data';
+import { ProjectService, TaskService, TimeTrackingEntryService, UserService, IProject, ITask, ITimeTrackingEntry, IUser, IStatistics } from '../data';
 import { SearchDialogComponent } from './components/search-dialog/search-dialog.component';
 
 @Component({
@@ -12,13 +12,14 @@ export class TimeTrackingComponent implements OnInit {
 
   public isLoading: Boolean = false;
 
-  private projects: Project[];
-  private tasks: Task[];
-  private entries: TimeTrackingEntry[];
-  private entry: TimeTrackingEntry;
-  private user: User;
-  private users: User[];
-  private statistics: Statistics;
+  private projects: IProject[];
+  private project: IProject;
+  private tasks: ITask[];
+  private entries: ITimeTrackingEntry[];
+  private entry: ITimeTrackingEntry;
+  private user: IUser;
+  private users: IUser[];
+  private statistics: IStatistics;
   private dialogRefSearch: MdDialogRef<SearchDialogComponent>;
 
   constructor(
@@ -53,8 +54,8 @@ export class TimeTrackingComponent implements OnInit {
       .then(() => {
 
       // Get user's time tracking entries
-        return this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.user)
-      // return this.timeTrackingEntryService.getTimeTrackingEntries()
+      // return this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.user)
+      return this.timeTrackingEntryService.getTimeTrackingEntries()
           .then(result => {
             this.entries = result;
           });
@@ -68,10 +69,10 @@ export class TimeTrackingComponent implements OnInit {
   }
 
   private getStatistics() {
-    this.statistics = new Statistics();
-    this.statistics.totalAvailableVacationDays = 18;
-    this.statistics.totalHousWorkedMonth = 69;
-    this.statistics.totalHousWorkedWeek = 21;
+    // TODO
+    // this.statistics.totalAvailableVacationDays = 18;
+    // this.statistics.totalHousWorkedMonth = 69;
+    // this.statistics.totalHousWorkedWeek = 21;
   }
 
   // ------------------------------------------------------------------------------ Dialog handling
@@ -88,6 +89,10 @@ export class TimeTrackingComponent implements OnInit {
   }
 
   public showExportDialog() {
+
+  }
+
+  public showVacationWorkedHoursDialog() {
 
   }
 }

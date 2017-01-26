@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { store } from './datastore';
-import { IDataservice, Project } from '.';
+import { IDataservice, IProject } from '.';
 
 const RESOURCE_NAME: string = 'project';
 const ENDPOINT_NAME: string = 'projects';
@@ -21,11 +21,11 @@ export class ProjectService implements IDataservice {
 
   // ------------------------------------------------------------------------------ CRUD operations
 
-  public getProjects(): Promise<Project[]> {
+  public getProjects(): Promise<IProject[]> {
     return store.findAll(RESOURCE_NAME);
   }
 
-  public getProject(id: number): Promise<Project> {
+  public getProject(id: number): Promise<IProject> {
     return store.find(RESOURCE_NAME, id);
   }
 

@@ -2,9 +2,9 @@
 <swui-datatable class="material tablesize" [rows]="items">
     <swui-datatable-column name="Description">
         <template swui-datatable-cell-template let-row="row">
-            <!--<span title="Double click to edit" (dblclick)="editing[row.$$index + '-projectID'] = true" *ngIf="!editing[row.$$index + '-projectID']">
+            <!-- <span title="Double click to edit" (dblclick)="editing[row.$$index + '-Description'] = true" *ngIf="!editing[row.$$index + '-Description']">
 		              {{value}}
-		           </span>-->
+		           </span> -->
             <!-- <select (change)="updateValue($event, 'projectID', value, row)">
                 <option *ngFor="let project of projects" [value]="project.id">{{project.projectName}}</option>
             </select> -->
@@ -23,29 +23,51 @@
                 <li *ngFor="let project of projects"> {{ item.projectID}}</li>
             </ul> -->
             <div>
-                {{ row.projectID }}
+                {{ row.projectName() }}
             </div>
         </template>
-    </swui-datatable-column>
-    <swui-datatable-column name="Start Date">
+    </swui-datatable-column>  
+    <swui-datatable-column name="Task">
         <template swui-datatable-cell-template let-value="value" let-row="row">
             <!-- span title="Double click to edit" (dblclick)="editing[row.$$index + '-startDate'] = true" *ngIf="!editing[row.$$index + '-startDate']">
                 {{value}}
                 </span>
                 <input autofocus (blur)="updateValue($event, 'startDate', value, row)" *ngIf="editing[row.$$index + '-startDate']" type="datetime-local" [value]="value" /> -->
             <div>
-                {{ row.startDate }}
+                {{ row.taskDescription() }}
             </div>
         </template>
     </swui-datatable-column>
-    <swui-datatable-column name="End Date">
+    <swui-datatable-column name="Date">
+        <template swui-datatable-cell-template let-value="value" let-row="row">
+            <!-- span title="Double click to edit" (dblclick)="editing[row.$$index + '-startDate'] = true" *ngIf="!editing[row.$$index + '-startDate']">
+                {{value}}
+                </span>
+                <input autofocus (blur)="updateValue($event, 'startDate', value, row)" *ngIf="editing[row.$$index + '-startDate']" type="datetime-local" [value]="value" /> -->
+            <div>
+                {{ row.date() }}
+            </div>
+        </template>
+    </swui-datatable-column>
+      <swui-datatable-column name="Start time">
+        <template swui-datatable-cell-template let-value="value" let-row="row">
+            <!-- span title="Double click to edit" (dblclick)="editing[row.$$index + '-startDate'] = true" *ngIf="!editing[row.$$index + '-startDate']">
+                {{value}}
+                </span>
+                <input autofocus (blur)="updateValue($event, 'startDate', value, row)" *ngIf="editing[row.$$index + '-startDate']" type="datetime-local" [value]="value" /> -->
+            <div>
+                {{ row.startTime()}}
+            </div>
+        </template>
+    </swui-datatable-column>
+    <swui-datatable-column name="End time">
         <template swui-datatable-cell-template let-value="value" let-row="row">
             <!-- <span title="Double click to edit" (dblclick)="editing[row.$$index + '-endDate'] = true" *ngIf="!editing[row.$$index + '-endDate']">
 		              {{value}}
 		            </span>
             <input autofocus (blur)="updateValue($event, 'endDate', value, row)" *ngIf="editing[row.$$index + '-endDate']" type="datetime-local" [value]="value" /> -->
             <div>
-                {{ row.endDate }}
+                {{ row.endTime() }}
             </div>
         </template>
     </swui-datatable-column>

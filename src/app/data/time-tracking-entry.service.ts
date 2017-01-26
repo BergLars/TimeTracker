@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { store } from './datastore';
-import { IDataservice, TimeTrackingEntry, User } from '.';
+import { IDataservice, ITimeTrackingEntry, IUser, IProject, ITask } from '.';
 
 const RESOURCE_NAME: string = 'entry';
 const ENDPOINT_NAME: string = 'timeentries';
@@ -12,50 +12,75 @@ export class TimeTrackingEntryService implements IDataservice {
   public baseUrl: string = environment.apiBaseUrl;
 
   constructor() {
-    // Define a Mapper for a "Project" resource
+    // Define a Mapper for a "Project - User - Task" resource
     let resource = store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,
-      endpoint: ENDPOINT_NAME
-      // ,
+      endpoint: ENDPOINT_NAME,
 
-      // relations: {
-      //   belongsTo: {
-      //     userprofile: {
-      //       foreignKey: 'userID',
-      //       localField: 'user'
-      //     },
-      //     task: {
-      //       foreignKey: 'taskID',
-      //       localField: 'task'
-      //     }
-      //   }
-      // }
+      methods:{
+        projectName: function(){
+          return (this.project) ? this.project.projectName : '-';
+        },
+        taskDescription: function(){
+          return (this.task) ? this.task.taskDescription : '-';
+        },
+        date: function(){
+          var str = this.startDate;
+          return str.substring(0,10);
+        },
+        startTime: function(){
+          var str = this.startDate;
+          return str.substring(11,19);
+        },
+        endTime: function(){
+          var str = this.endDate;
+          return str.substring(11,19);
+        }
+      },
+
+      relations: {
+        belongsTo: {
+          user: {
+            foreignKey: 'userID',
+            localField: 'user'
+          },
+          project: {
+            foreignKey: 'projectID',
+            localField: 'project'
+          },
+          task: {
+            foreignKey: 'taskID',
+            localField: 'task'
+          }
+        }
+      }
     });
   }
 
   // ------------------------------------------------------------------------------ CRUD operations
 
-  public getTimeTrackingEntries(): Promise<TimeTrackingEntry[]> {
+  public getTimeTrackingEntries(): Promise<ITimeTrackingEntry[]> {
     return store.findAll(RESOURCE_NAME);
   }
 
-  public getTimeTrackingEntriesByUser(user: User): Promise<TimeTrackingEntry[]> {
+  public getTimeTrackingEntriesByUser(user: IUser): Promise<ITimeTrackingEntry[]> {
     let endpoint = '/' + ENDPOINT_NAME + '/' + user.id + '/entries';
     return store.findAll(RESOURCE_NAME, {}, {
       endpoint: endpoint
     });
   }
 
-  public getTimeTrackingEntry(id: number): Promise<TimeTrackingEntry> {
+  public getTimeTrackingEntry(id: number): Promise<ITimeTrackingEntry> {
     return store.find(RESOURCE_NAME, id);
   }
 
-  public getEntries(): Promise<TimeTrackingEntry[]> {
-    return Promise.resolve([
-      new TimeTrackingEntry(1, 1, 1, new Date(), new Date()),
-      new TimeTrackingEntry(2, 2, 1, new Date(), new Date()),
-      new TimeTrackingEntry(3, 3, 1, new Date(), new Date()),
-      new TimeTrackingEntry(4, 1, 2, new Date(), new Date())
-    ]);
+  public deleteTimeTrackingEntry(id: number) {
+    // TODO
+    return store.destroy(RESOURCE_NAME, id);
+  }
+
+  public updateTimeTrackingEntry(id: number, description: string, taskDescription: string, endTime: string): Promise<ITimeTrackingEntry>  {
+    // TODO
+    return store.update(RESOURCE_NAME, id, {});
   }
 }

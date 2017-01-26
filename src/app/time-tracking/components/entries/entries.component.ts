@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
-import { TimeTrackingEntry, Project, Task, ProjectService, TaskService, TimeTrackingEntryService } from '../../../data';
+import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeTrackingEntryService } from '../../../data';
 
 @Component({
   selector: 'app-entries',
@@ -8,17 +8,15 @@ import { TimeTrackingEntry, Project, Task, ProjectService, TaskService, TimeTrac
   styleUrls: ['./entries.component.scss']
 })
 export class EntriesComponent implements OnInit {
-  @Input() items: TimeTrackingEntry[] = [];
-  @Input() projects: Project[] = [];
-  @Input() tasks: Task[] = [];
+  @Input() items: ITimeTrackingEntry[] = [];
+  @Input() projects: IProject[] = [];
+  @Input() tasks: ITask[] = [];
 
   public editing = {};
 
   constructor(public projectService: ProjectService, public timeTrackingEntryService: TimeTrackingEntryService, public taskService: TaskService) { }
 
   ngOnInit() { 
-    this.projectService.getProjects().then((projects) => { this.projects = projects; 
-  });
     this.timeTrackingEntryService.getTimeTrackingEntries().then((items) => { this.items = items; 
   });
     this.taskService.getTasks().then((tasks) => { this.tasks = tasks; 
@@ -29,10 +27,6 @@ export class EntriesComponent implements OnInit {
     this.editing[row.$$index + '-' + cell] = false;
     this.items[row.$$index][cell] = event.target.value;
     console.log(row, cell, cellValue);
-  }
-
-  public getProjectName(projectID: number) {
-    
   }
 
   private newEntry() {

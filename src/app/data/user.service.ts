@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { environment } from '../../environments/environment';
 import { store } from './datastore';
-import { IDataservice, User } from '.';
+import { IDataservice, IUser } from '.';
 
 const RESOURCE_NAME: string = 'user';
 const ENDPOINT_NAME: string = 'userprofiles';
@@ -54,11 +54,11 @@ export class UserService implements IDataservice {
 		return this.loggedIn;
 	}
 
-	public getUser(id: number): Promise<User> {
+	public getUser(id: number): Promise<IUser> {
 		return store.find(RESOURCE_NAME, id);
 	}
 
-	public getUsers(): Promise<User[]> {
+	public getUsers(): Promise<IUser[]> {
     return store.findAll(RESOURCE_NAME);
   }
 }

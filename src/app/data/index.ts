@@ -1,9 +1,9 @@
 // Model types
-export * from './model/project';
-export * from './model/task';
-export * from './model/time-tracking-entry';
-export * from './model/statistics';
-export * from './model/user';
+export * from './model/i-project';
+export * from './model/i-task';
+export * from './model/i-time-tracking-entry';
+export * from './model/i-statistics';
+export * from './model/i-user';
 
 // Data services
 export * from './i-dataservice';
