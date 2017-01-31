@@ -75,11 +75,11 @@ export class TimeTrackingEntryService implements IDataservice {
   }
 
   public deleteTimeTrackingEntry(id: number) {
-    // TODO
-    return store.destroy(RESOURCE_NAME, id);
+    return store.destroy(RESOURCE_NAME, id,{
+    });
   }
 
-  public updateTimeTrackingEntry(id: number, description: string, taskDescription: string, endTime: string): Promise<ITimeTrackingEntry>  {
+  public updateTimeTrackingEntry(id: number, description: string, projectName: string, taskDescription: string, startTime: string, endTime: string): Promise<ITimeTrackingEntry>  {
     // TODO
     return store.update(RESOURCE_NAME, id, {});
   }
