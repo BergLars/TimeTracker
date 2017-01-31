@@ -52,7 +52,8 @@
             <div [hidden]="!isSelected(row)">
                 <div [hidden]="editMode">
                     <span (click)=onUpdate()><md-icon>update</md-icon></span>
-                    <span (click)="onDelete(row)"><md-icon>delete_forever</md-icon></span>
+                    <span (click)="openDeleteDialog(row)"><md-icon>delete_forever</md-icon></span>
+                    <!-- <span (click)="onDelete(row)"><md-icon>delete_forever</md-icon></span> -->
                 </div>
                 <div [hidden]="!editMode">
                     <span><md-icon>check</md-icon></span>

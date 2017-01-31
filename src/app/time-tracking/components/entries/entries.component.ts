@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeTrackingEntryService } from '../../../data';
-import { EntryDialogComponent } from './entry-dialog/entry-dialog.component';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
+import { DeleteEntryService } from './delete-entry/delete-entry.service';
 
 @Component({
   selector: 'app-entries',
@@ -26,10 +26,12 @@ export class EntriesComponent implements OnInit {
   public result: any;
 
   constructor(
+<<<<<<< HEAD
     public projectService: ProjectService, 
     public timeTrackingEntryService: TimeTrackingEntryService, 
     public taskService: TaskService, 
     private entryDialogService: EntryDialogService, 
+    private deleteEntryService: DeleteEntryService, 
     private viewContainerRef: ViewContainerRef) { }
 
   ngOnInit() { 
@@ -109,5 +111,11 @@ export class EntriesComponent implements OnInit {
 
   getSelectedIx() {
     return this.selected[0]['$$index'];
+  }
+
+   public openDeleteDialog(row) {
+    this.deleteEntryService
+      .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
+      .subscribe(res => this.result = res);
   }
 }

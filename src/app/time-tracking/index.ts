@@ -4,3 +4,5 @@ export * from './components/search-dialog/search-dialog.component';
 export * from './components/sidebar/sidebar.component';
 export * from './components/entries/entry-dialog/entry-dialog.component';
 export * from './components/entries/entry-dialog/entry-dialog.service';
+export * from './components/entries/delete-entry/delete-entry.component';
+export * from './components/entries/delete-entry/delete-entry.service';
