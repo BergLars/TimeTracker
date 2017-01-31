@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeTrackingEntryService } from '../../../data';
+import { DeleteEntryService } from './delete-entry/delete-entry.service';
 
 @Component({
   selector: 'app-entries',
@@ -20,8 +21,14 @@ export class EntriesComponent implements OnInit {
   editMode: boolean = false;
 
   public editing = {};
+  public result: any;
 
-  constructor(public projectService: ProjectService, public timeTrackingEntryService: TimeTrackingEntryService, public taskService: TaskService) { }
+  constructor(
+    public projectService: ProjectService,
+    public timeTrackingEntryService: TimeTrackingEntryService,
+    public taskService: TaskService,
+    private deleteEntryService: DeleteEntryService, 
+    private viewContainerRef: ViewContainerRef) { }
 
   ngOnInit() { 
     this.timeTrackingEntryService.getTimeTrackingEntries().then((items) => { this.items = items; 
@@ -96,9 +103,9 @@ export class EntriesComponent implements OnInit {
     return this.selected[0]['$$index'];
   }
 
-  private newEntry() {
-    // this.items.push(
-    //   new TimeTrackingEntry('Choose your project', 'Enter Task here ', 0)
-    // );
+   public openDeleteDialog(row) {
+    this.deleteEntryService
+      .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
+      .subscribe(res => this.result = res);
   }
 }

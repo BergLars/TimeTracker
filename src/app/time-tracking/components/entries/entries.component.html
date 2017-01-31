@@ -1,4 +1,4 @@
-<button md-raised-button color="primary" (click)="newEntry()">NEW ENTRY</button>
+<!-- <button md-raised-button color="primary" (click)="newEntry()">NEW ENTRY</button> -->
 <swui-datatable class="material tablesize" [rows]="items" [columnMode]="'force'" [columns]="columns" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="5" [selected]="selected" [selectionType]="'single'" (activate)="onActivate($event)" (select)='onSelect($event)'>
     <swui-datatable-column name="Description">
         <template swui-datatable-cell-template let-row="row">
@@ -52,7 +52,8 @@
             <div [hidden]="!isSelected(row)">
                 <div [hidden]="editMode">
                     <span (click)=onUpdate()><md-icon>update</md-icon></span>
-                    <span (click)="onDelete(row)"><md-icon>delete_forever</md-icon></span>
+                    <span (click)="openDeleteDialog(row)"><md-icon>delete_forever</md-icon></span>
+                    <!-- <span (click)="onDelete(row)"><md-icon>delete_forever</md-icon></span> -->
                 </div>
                 <div [hidden]="!editMode">
                     <span><md-icon>check</md-icon></span>
