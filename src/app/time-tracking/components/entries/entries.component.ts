@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeTrackingEntryService } from '../../../data';
-import { EntryDialogComponent } from '../entry-dialog/entry-dialog.component';
+import { EntryDialogComponent } from './entry-dialog/entry-dialog.component';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { EntryDialogService } from '../entry-dialog/entry-dialog.service';
+import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 
 @Component({
   selector: 'app-entries',

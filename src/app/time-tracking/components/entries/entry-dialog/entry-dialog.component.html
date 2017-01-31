@@ -1,0 +1,17 @@
+<h1>{{ title }}</h1> 
+Description:<br> 
+<form action="#">
+	<label> Project: 	
+		<select>
+                <option [ngValue]="project">{{ projects.projectName }}</option>
+            </select>
+	</label>
+</form>
+    <br> Task:
+    <br> Date:
+    <br> Start time:
+    <br> End time:
+    <br>
+    <button type="button" md-raised-button (click)="dialogRef.close(true)">OK</button>
+    <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
+
