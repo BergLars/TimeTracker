@@ -9,14 +9,18 @@ import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeT
 export class EntryDialogComponent implements OnInit {
 	@Input() projects: IProject[] = [];
 	public title: string;
+  public items: any;
 
 
   constructor(
   	public dialogRef: MdDialogRef<EntryDialogComponent>,
-  	public projectService: ProjectService) { }
+  	public projectService: ProjectService) { 
+    this.items = this.projectService.getProjects();
+  }
 
-  ngOnInit(
-  	this) {
+  
+  ngOnInit(this) {
+   // console.log(this.items[0].projectName);
   }
 
 }

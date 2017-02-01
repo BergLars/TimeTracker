@@ -26,7 +26,6 @@ export class EntriesComponent implements OnInit {
   public result: any;
 
   constructor(
-<<<<<<< HEAD
     public projectService: ProjectService, 
     public timeTrackingEntryService: TimeTrackingEntryService, 
     public taskService: TaskService, 

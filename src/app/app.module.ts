@@ -45,7 +45,7 @@ import { TimeTrackingComponent } from './time-tracking/time-tracking.component';
   ],
   entryComponents: [
     SearchDialogComponent,
-    EntryDialogComponent
+    EntryDialogComponent,
     DeleteEntryComponent
   ],
   imports: [

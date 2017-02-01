@@ -1,17 +1,38 @@
 <h1>{{ title }}</h1> 
-Description:<br> 
-<form action="#">
-	<label> Project: 	
-		<select>
-                <option [ngValue]="project">{{ projects.projectName }}</option>
-            </select>
-	</label>
-</form>
-    <br> Task:
-    <br> Date:
-    <br> Start time:
-    <br> End time:
+<table>
+    <tr>
+        <td>Description:</td>
+        <td><input type="text" name="description"></td>
+    </tr>
     <br>
-    <button type="button" md-raised-button (click)="dialogRef.close(true)">OK</button>
-    <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
+    <tr>
+        <td>Project:</td>
+        <td>
+            <select>
+                <option *ngFor="let project of projects" [ngValue]="project">{{ project.projectName }}</option>
+            </select>
+        </td>
+    </tr>
+    <br>
+    <tr>
+        <td>Task:</td>
+        <td><input type="text" name="task"></td>
+    </tr>
+    <br>
+    <tr>
+        <td>Date:</td>
+        <td><input type="date" name="date"></td>
+    </tr>
+    <br>
+    <tr>
+        <td>Start time:</td>
+        <td><input type="time" name="starttime"></td>
+        <td>&nbsp;</td>
+        <td>End time:</td>
+        <td><input type="time" name="endtime"></td>
+    </tr>   
+</table>
+<br>
+<button type="button" md-button (click)="dialogRef.close(true)">OK</button>
+<button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 
