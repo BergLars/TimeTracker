@@ -30,11 +30,11 @@ export class TimeTrackingEntryService implements IDataservice {
         },
         startTime: function(){
           var str = this.startDate;
-          return str.substring(11,19);
+          return str.substring(11,16);
         },
         endTime: function(){
           var str = this.endDate;
-          return str.substring(11,19);
+          return str.substring(11,16);
         }
       },
 

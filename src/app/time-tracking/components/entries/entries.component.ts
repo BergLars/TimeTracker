@@ -34,6 +34,8 @@ export class EntriesComponent implements OnInit {
     private viewContainerRef: ViewContainerRef) { }
 
   ngOnInit() { 
+    this.projectService.getProjects().then((projects) => { this.projects = projects; 
+  });
     this.timeTrackingEntryService.getTimeTrackingEntries().then((items) => { this.items = items; 
   });
     this.taskService.getTasks().then((tasks) => { this.tasks = tasks; 

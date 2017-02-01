@@ -1,8 +1,10 @@
-<h1>{{ title }}</h1> 
+<h1>{{ title }}</h1>
 <table>
     <tr>
         <td>Description:</td>
-        <td><input type="text" name="description"></td>
+        <td>
+            <input type="text" name="description">
+        </td>
     </tr>
     <br>
     <tr>
@@ -16,23 +18,32 @@
     <br>
     <tr>
         <td>Task:</td>
-        <td><input type="text" name="task"></td>
+        <td>
+            <select>
+                <option *ngFor="let task of tasks" [ngValue]="task">{{ task.taskDescription }}</option>
+            </select>
+        </td>
     </tr>
     <br>
     <tr>
         <td>Date:</td>
-        <td><input type="date" name="date"></td>
+        <td>
+            <input type="date" name="date">
+        </td>
     </tr>
     <br>
     <tr>
         <td>Start time:</td>
-        <td><input type="time" name="starttime"></td>
+        <td>
+            <input type="time" name="starttime">
+        </td>
         <td>&nbsp;</td>
         <td>End time:</td>
-        <td><input type="time" name="endtime"></td>
-    </tr>   
+        <td>
+            <input type="time" name="endtime">
+        </td>
+    </tr>
 </table>
 <br>
 <button type="button" md-button (click)="dialogRef.close(true)">OK</button>
 <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
-
