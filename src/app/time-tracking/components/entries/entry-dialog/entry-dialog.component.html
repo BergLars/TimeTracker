@@ -13,8 +13,8 @@
                 <select>
                     <option *ngFor="let project of projects" [ngValue]="project">{{ project.projectName }}</option>
                 </select>
-                  <form>
-                <!-- <md-select placeholder="Project">
+                 <!-- <form>
+                 <md-select placeholder="Project">
                     <md-option *ngFor="let project of projects" [value]="project">{{ project.projectName }}</md-option>
                 </md-select> </form>  -->
             </td>
@@ -45,3 +45,4 @@
     <button type="button" md-button (click)="dialogRef.close(true)">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>
+

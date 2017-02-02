@@ -51,14 +51,14 @@
         <template swui-datatable-cell-template let-value="value" let-row="row">
             <div [hidden]="!isSelected(row)">
                 <div [hidden]="editMode">
-                    <span (click)=onUpdate()><md-icon>update</md-icon></span>
+                    <span (click)=openDialog()><md-icon>update</md-icon></span>
                     <span (click)="openDeleteDialog(row)"><md-icon>delete_forever</md-icon></span>
                     <!-- <span (click)="onDelete(row)"><md-icon>delete_forever</md-icon></span> -->
                 </div>
-                <div [hidden]="!editMode">
+                <!-- <div [hidden]="!editMode">
                     <span><md-icon>check</md-icon></span>
                     <span (click)=discardChange()><md-icon>cancel</md-icon></span>
-                </div>
+                </div> -->
             </div>
         </template>
     </swui-datatable-column>
