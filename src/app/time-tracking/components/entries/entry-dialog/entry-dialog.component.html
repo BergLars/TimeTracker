@@ -1,38 +1,47 @@
-<h1>{{ title }}</h1> 
-<table>
-    <tr>
-        <td>Description:</td>
-        <td><input type="text" name="description"></td>
-    </tr>
+<h1 md-dialog-title>{{ title }}</h1> 
+<div md-dialog-content>
+    <table>
+        <tr>
+            <td>
+                <md-input placeholder="Description"></md-input> 
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td>Project:</td>
+            <td>
+                <select>
+                    <option *ngFor="let project of projects" [ngValue]="project">{{ project.projectName }}</option>
+                </select>
+                  <form>
+                <!-- <md-select placeholder="Project">
+                    <md-option *ngFor="let project of projects" [value]="project">{{ project.projectName }}</md-option>
+                </md-select> </form>  -->
+            </td>
+       </tr>
+        <br>
+        <tr>
+            <td>Task:</td>
+            <td>
+                <select>
+                    <option *ngFor="let task of tasks" [ngValue]="task">{{ task.taskDescription }}</option>
+                </select>
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td><md-input placeholder="Date" type="date"></md-input></td>
+        </tr>
+        <br>
+        <tr>
+            <td><md-input placeholder="Start Time" type="time"></md-input></td>
+            <td>&nbsp;</td>
+            <td><md-input placeholder="End Time" type="time"></md-input></td>
+        </tr>   
+    </table>
     <br>
-    <tr>
-        <td>Project:</td>
-        <td>
-            <select>
-                <option *ngFor="let project of projects" [ngValue]="project">{{ project.projectName }}</option>
-            </select>
-        </td>
-    </tr>
-    <br>
-    <tr>
-        <td>Task:</td>
-        <td><input type="text" name="task"></td>
-    </tr>
-    <br>
-    <tr>
-        <td>Date:</td>
-        <td><input type="date" name="date"></td>
-    </tr>
-    <br>
-    <tr>
-        <td>Start time:</td>
-        <td><input type="time" name="starttime"></td>
-        <td>&nbsp;</td>
-        <td>End time:</td>
-        <td><input type="time" name="endtime"></td>
-    </tr>   
-</table>
-<br>
-<button type="button" md-button (click)="dialogRef.close(true)">OK</button>
-<button type="button" md-button (click)="dialogRef.close()">Cancel</button>
-
+</div>
+<div md-dialog-actions>
+    <button type="button" md-button (click)="dialogRef.close(true)">OK</button>
+    <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
+</div>
