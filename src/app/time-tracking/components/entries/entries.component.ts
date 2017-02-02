@@ -131,6 +131,7 @@ export class EntriesComponent implements OnInit {
     this.entryDialogService
       .confirm('Update Entry', this.viewContainerRef, row)
       .subscribe(res => this.result = res);
+      console.log(row.projectName());
   }
 
   public openDeleteDialog(row) {
