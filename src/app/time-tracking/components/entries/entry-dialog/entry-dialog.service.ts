@@ -2,13 +2,14 @@ import { Observable } from 'rxjs/Rx';
 import { Injectable, ViewContainerRef } from '@angular/core';
 import { EntryDialogComponent } from './entry-dialog.component';
 import { MdDialogRef, MdDialog, MdDialogConfig } from '@angular/material';
+import { ITimeTrackingEntry } from '../../../../data';
 
 @Injectable()
 export class EntryDialogService {
 
   constructor(private dialog: MdDialog) { }
 
-  public confirm(title: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
+  public confirm(title: string, viewContainerRef: ViewContainerRef, row: any): Observable<boolean> {
 
   	let dialogRef: MdDialogRef<EntryDialogComponent>;
     let config = new MdDialogConfig();
@@ -17,8 +18,8 @@ export class EntryDialogService {
     dialogRef = this.dialog.open(EntryDialogComponent, config);
 
     dialogRef.componentInstance.title = title;
+    dialogRef.componentInstance.selectedDescription = row.description;
 
     return dialogRef.afterClosed();
   }
-
 }

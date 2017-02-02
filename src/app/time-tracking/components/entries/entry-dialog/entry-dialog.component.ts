@@ -10,13 +10,13 @@ export class EntryDialogComponent implements OnInit {
 	@Input() projects: IProject[] = [];
   @Input() tasks: ITask[] = [];
 	public title: string;
-  // public items: any;
-
+  public selectedDescription: string;
 
   constructor(
   	public dialogRef: MdDialogRef<EntryDialogComponent>,
   	public projectService: ProjectService, public taskService: TaskService) { 
-    // this.items = this.projectService.getProjects();
+    
+    // this.selectedModule = this.projects[0].projectName;
   }
 
   ngOnInit() {
@@ -25,5 +25,4 @@ export class EntryDialogComponent implements OnInit {
     this.taskService.getTasks().then((tasks) => { this.tasks = tasks; 
   });
   }
-
 }
