@@ -3,7 +3,7 @@
     <table>
         <tr>
             <td>
-                <md-input placeholder="Description"></md-input> 
+                <md-input name="description" placeholder="Description"></md-input> 
             </td>
         </tr>
         <br>
@@ -11,7 +11,7 @@
             <td>Project:</td>
             <td>
                 <select>
-                    <option *ngFor="let project of projects" [ngValue]="project">{{ project.projectName }}</option>
+                    <option *ngFor="let project of projects" name="project" [ngValue]="project">{{ project.projectName }}</option>
                 </select>
                  <!-- <form>
                  <md-select placeholder="Project">

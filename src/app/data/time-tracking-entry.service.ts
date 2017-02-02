@@ -74,6 +74,18 @@ export class TimeTrackingEntryService implements IDataservice {
     return store.find(RESOURCE_NAME, id);
   }
 
+  public createTimeTrackingEntry(id:number, userProfileID: IUser, taskDescription: string, projectName: string, description: string, startTime: string, endTime: string): Promise<ITimeTrackingEntry> {
+    return store.create({
+      id: '',
+      userProfileID: user.id,
+      taskDescription: '',
+      projectName: '',
+      description: '',
+      startTime: '',
+      endTime: ''
+    })
+  }
+
   public deleteTimeTrackingEntry(id: number) {
     return store.destroy(RESOURCE_NAME, id,{
     });
