@@ -18,7 +18,7 @@ export class TaskService implements IDataservice {
       endpoint: ENDPOINT_NAME,
 
       relations: {
-        belongsTo: {
+        hasOne: {
           project: {
             foreignKey: 'projectID',
             localField: 'project'

@@ -2,56 +2,74 @@
 <swui-datatable class="material tablesize" [rows]="items" [columnMode]="'force'" [columns]="columns" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="5" [selected]="selected" [selectionType]="'single'" (activate)="onActivate($event)" (select)='onSelect($event)'>
     <swui-datatable-column name="Description">
         <template swui-datatable-cell-template let-row="row">
-            <span title="Double click to edit" (dblclick)="editing[row.$$index + '-description'] = true" *ngIf="!editing[row.$$index + '-description']">{{ row.description }}</span>
-            <input autofocus (blur)="updateValue($event, 'description', value, row)" *ngIf="editing[row.$$index + '-description']" type="text" [value]="value" />
+           <!--  <span title="Double click to edit" (dblclick)="editing[row.$$index + '-description'] = true" *ngIf="!editing[row.$$index + '-description']">{{ row.description }}</span>
+            <input autofocus (blur)="updateValue($event, 'description', value, row)" *ngIf="editing[row.$$index + '-description']" type="text" [value]="value" /> -->
+            <div>
+                {{ row.description }}
+            </div>
         </template>
     </swui-datatable-column>
     <swui-datatable-column name="Project">
         <template swui-datatable-cell-template let-row="row">
-            <span title="Double click to edit" (dblclick)="editing[row.$$index + '-project'] = true" *ngIf="!editing[row.$$index + '-project']">
+           <!--  <span title="Double click to edit" (dblclick)="editing[row.$$index + '-project'] = true" *ngIf="!editing[row.$$index + '-project']">
               {{ row.projectName() }}
             </span>
             <select *ngIf="editing[row.$$index + '-project']" (change)="updateValue($event, 'project', value, row)" [value]="value">
                 <option *ngFor="let project of projects" [ngValue]="project">{{ project.projectName }}</option>
-            </select>
+            </select> -->
+            <div>
+                {{ row.projectName() }}
+            </div>
         </template>
     </swui-datatable-column>
     <swui-datatable-column name="Task">
         <template swui-datatable-cell-template let-value="value" let-row="row">
-            <span title="Double click to edit" (dblclick)="editing[row.$$index + '-task'] = true" *ngIf="!editing[row.$$index + '-task']">
+           <!--  <span title="Double click to edit" (dblclick)="editing[row.$$index + '-task'] = true" *ngIf="!editing[row.$$index + '-task']">
               {{ row.taskDescription() }}
             </span>
             <select *ngIf="editing[row.$$index + '-task']" (change)="updateValue($event, 'task', value, row)" [value]="value">
                 <option *ngFor="let task of tasks" [ngValue]="task">{{ task.taskDescription }}</option>
-            </select>
+            </select> -->
+            <div>
+                {{ row.taskDescription() }}
+            </div>
         </template>
     </swui-datatable-column>
     <swui-datatable-column name="Date">
         <template swui-datatable-cell-template let-value="value" let-row="row">
-            <span title="Double click to edit" (dblclick)="editing[row.$$index + '-date()'] = true" *ngIf="!editing[row.$$index + '-date()']">
+            <!-- <span title="Double click to edit" (dblclick)="editing[row.$$index + '-date()'] = true" *ngIf="!editing[row.$$index + '-date()']">
                 {{ row.date() }}</span>
-            <input autofocus (blur)="updateValue($event, 'description', value, row)" *ngIf="editing[row.$$index + '-date()']" type="datetime-local" [value]="value" />
+            <input autofocus (blur)="updateValue($event, 'description', value, row)" *ngIf="editing[row.$$index + '-date()']" type="datetime-local" [value]="value" /> -->
+            <div>
+                {{ row.date() }}
+            </div>
         </template>
     </swui-datatable-column>
     <swui-datatable-column name="Start time">
         <template swui-datatable-cell-template let-value="value" let-row="row">
-            <span title="Double click to edit" (dblclick)="editing[row.$$index + '-startTime()'] = true" *ngIf="!editing[row.$$index + '-startTime()']">
+            <!-- <span title="Double click to edit" (dblclick)="editing[row.$$index + '-startTime()'] = true" *ngIf="!editing[row.$$index + '-startTime()']">
                 {{ row.startTime()}}</span>
-            <input autofocus (blur)="updateValue($event, 'startTime()', value, row)" *ngIf="editing[row.$$index + '-startTime()']" type="datetime-local" [value]="value" />
+            <input autofocus (blur)="updateValue($event, 'startTime()', value, row)" *ngIf="editing[row.$$index + '-startTime()']" type="datetime-local" [value]="value" /> -->
+            <div>
+                {{ row.startTime() }}
+            </div>
         </template>
     </swui-datatable-column>
     <swui-datatable-column name="End time">
         <template swui-datatable-cell-template let-value="value" let-row="row">
-            <span title="Double click to edit" (dblclick)="editing[row.$$index + '-endTime()'] = true" *ngIf="!editing[row.$$index + '-endTime()']">
+           <!--  <span title="Double click to edit" (dblclick)="editing[row.$$index + '-endTime()'] = true" *ngIf="!editing[row.$$index + '-endTime()']">
                 {{ row.endTime() }}</span>
-            <input autofocus (blur)="updateValue($event, 'endTime()', value, row)" *ngIf="editing[row.$$index + '-endTime()']" type="datetime-local" [value]="value" />
+            <input autofocus (blur)="updateValue($event, 'endTime()', value, row)" *ngIf="editing[row.$$index + '-endTime()']" type="datetime-local" [value]="value" /> -->
+            <div>
+                {{ row.endTime() }}
+            </div>
         </template>
     </swui-datatable-column>
     <swui-datatable-column name="Actions">
         <template swui-datatable-cell-template let-value="value" let-row="row">
             <div [hidden]="!isSelected(row)">
                 <div [hidden]="editMode">
-                    <span (click)=openDialog()><md-icon>update</md-icon></span>
+                    <span (click)=openUpdateDialog(row)><md-icon>update</md-icon></span>
                     <span (click)="openDeleteDialog(row)"><md-icon>delete_forever</md-icon></span>
                     <!-- <span (click)="onDelete(row)"><md-icon>delete_forever</md-icon></span> -->
                 </div>
