@@ -11,6 +11,12 @@ export class EntryDialogComponent implements OnInit {
   @Input() tasks: ITask[] = [];
 	public title: string;
   public selectedDescription: string;
+  public selectedProjectName: string;
+  public selectedTaskDescription: string;
+  public selectedDate: string;
+  public selectedStartTime: string;
+  public selectedEndTime: string;
+
 
   constructor(
   	public dialogRef: MdDialogRef<EntryDialogComponent>,

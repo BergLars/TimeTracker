@@ -19,6 +19,11 @@ export class EntryDialogService {
 
     dialogRef.componentInstance.title = title;
     dialogRef.componentInstance.selectedDescription = row.description;
+    dialogRef.componentInstance.selectedProjectName = row.projectID;
+    dialogRef.componentInstance.selectedTaskDescription = row.taskID;
+    dialogRef.componentInstance.selectedDate = row.startDate;
+    dialogRef.componentInstance.selectedStartTime = row.startTime();
+    dialogRef.componentInstance.selectedEndTime = row.endTime();
 
     return dialogRef.afterClosed();
   }
