@@ -3,7 +3,7 @@
     <table>
         <tr>
             <td>
-                <md-input placeholder="Description" [value]="selectedDescription"></md-input>
+                <md-input name="description" placeholder="Description" [value]="selectedDescription"></md-input>
             </td>
         </tr>
         <br>
@@ -11,7 +11,7 @@
             <td>Project:</td>
             <td>
                 <select>
-                    <option *ngFor="let project of projects" [ngValue]="project">{{ project.projectName }}</option>
+                    <option *ngFor="let project of projects" name="project" [ngValue]="project">{{ project.projectName }}</option>
                 </select>
                 <!-- <form>
                  <md-select placeholder="Project">
@@ -24,24 +24,24 @@
             <td>Task:</td>
             <td>
                 <select>
-                    <option *ngFor="let task of tasks" [ngValue]="task">{{ task.taskDescription }}</option>
+                    <option *ngFor="let task of tasks" name="task" [ngValue]="task">{{ task.taskDescription }}</option>
                 </select>
             </td>
         </tr>
         <br>
         <tr>
             <td>
-                <md-input placeholder="Date" [value]="selectedDate"></md-input>
+                <md-input placeholder="Date" name="date" type="date" [value]="selectedDate"></md-input>
             </td>
         </tr>
         <br>
         <tr>
             <td>
-                <md-input placeholder="Start Time"></md-input>
+                <md-input placeholder="Start Time" name="starttime" type="time"></md-input>
             </td>
             <td>&nbsp;</td>
             <td>
-                <md-input placeholder="End Time"></md-input>
+                <md-input placeholder="End Time" name="endtime" type="time"></md-input>
             </td>
         </tr>
     </table>
@@ -49,5 +49,6 @@
 </div>
 <div md-dialog-actions>
     <button type="button" md-button (click)="dialogRef.close(true)">OK</button>
+    <!-- <button type="button" md-button (click)="createEntry();dialogRef.close(true)">OK</button> -->
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>

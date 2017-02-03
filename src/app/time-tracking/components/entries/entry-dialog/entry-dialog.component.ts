@@ -20,10 +20,17 @@ export class EntryDialogComponent implements OnInit {
 
   constructor(
   	public dialogRef: MdDialogRef<EntryDialogComponent>,
-  	public projectService: ProjectService, public taskService: TaskService) { 
+  	public projectService: ProjectService, 
+    public taskService: TaskService,
+    public timeTrackingEntryService: TimeTrackingEntryService) { 
     
     // this.selectedModule = this.projects[0].projectName;
   }
+
+
+   //createEntry(){
+     // this.timeTrackingEntryService.createTimeTrackingEntry(description, projectName, taskDescriptopm, date, startTime, endTime);
+    //}
 
   ngOnInit() {
    this.projectService.getProjects().then((projects) => { this.projects = projects;
