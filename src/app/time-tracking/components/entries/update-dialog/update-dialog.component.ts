@@ -3,10 +3,10 @@ import { MdDialogRef } from '@angular/material';
 import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeTrackingEntryService } from '../../../../data';
 
 @Component({
-  selector: 'app-update-entry',
-  templateUrl: './update-entry.component.html'
+  selector: 'app-update-dialog',
+  templateUrl: './update-dialog.component.html'
 })
-export class UpdateEntryComponent implements OnInit {
+export class UpdateDialogComponent implements OnInit {
   @Input() projects: IProject[] = [];
   @Input() tasks: ITask[] = [];
   public title: string;
@@ -41,7 +41,7 @@ export class UpdateEntryComponent implements OnInit {
   }
 
   constructor(
-    public dialogRef: MdDialogRef<UpdateEntryComponent>,
+    public dialogRef: MdDialogRef<UpdateDialogComponent>,
     public projectService: ProjectService, 
     public taskService: TaskService,
     public timeTrackingEntryService: TimeTrackingEntryService) { 

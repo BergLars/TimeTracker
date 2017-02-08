@@ -4,7 +4,7 @@ import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeT
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
-import { UpdateEntryService } from './update-entry/update-entry.service';
+import { UpdateDialogService } from './update-dialog/update-dialog.service';
 @Component({
   selector: 'app-entries',
   templateUrl: './entries.component.html',
@@ -40,7 +40,7 @@ export class EntriesComponent implements OnInit {
     public taskService: TaskService, 
     private entryDialogService: EntryDialogService, 
     private deleteEntryService: DeleteEntryService, 
-    private updateEntryService: UpdateEntryService, 
+    private updateEntryService: UpdateDialogService, 
     private viewContainerRef: ViewContainerRef) { }
 
   ngOnInit() { 
@@ -134,6 +134,7 @@ export class EntriesComponent implements OnInit {
     this.updateEntryService
       .confirm('Update Entry', this.viewContainerRef, row)
       .subscribe(res => this.result = res);
+      console.log(row.projectName());
   }
 
   public openDeleteDialog(row) {
