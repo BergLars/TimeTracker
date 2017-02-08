@@ -23,19 +23,16 @@ export class EntryDialogComponent implements OnInit {
   	public projectService: ProjectService, 
     public taskService: TaskService,
     public timeTrackingEntryService: TimeTrackingEntryService) { 
-    
-    // this.selectedModule = this.projects[0].projectName;
   }
-
-
-   //createEntry(){
-     // this.timeTrackingEntryService.createTimeTrackingEntry(description, projectName, taskDescriptopm, date, startTime, endTime);
-    //}
 
   ngOnInit() {
    this.projectService.getProjects().then((projects) => { this.projects = projects;
   });
     this.taskService.getTasks().then((tasks) => { this.tasks = tasks; 
   });
+  }
+
+  onUpdate(){
+  // this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.description, row.projectID.getProjectName(), row.taskID.getTaskDecription(), row.startDate.substring(0,10), row.startDate.substring(11,16), row.endDate.substring(11,16));
   }
 }

@@ -75,12 +75,12 @@ export class EntriesComponent implements OnInit {
 
   onSelect({ selected }) {
     this.selectedRow = selected[0]; 
-    this.selectedDescription = this.selectedRow.description;
-    this.selectedProject = this.selectedRow.projectName();
-    this.selectedTask = this.selectedRow.taskDescription();
-    this.selectedDate = this.selectedRow.date();
-    this.selectedStartTime = this.selectedRow.startTime();
-    this.selectedEndTime = this.selectedRow.endTime();
+    // this.selectedDescription = this.selectedRow.description;
+    // this.selectedProject = this.selectedRow.projectName();
+    // this.selectedTask = this.selectedRow.taskDescription();
+    // this.selectedDate = this.selectedRow.date();
+    // this.selectedStartTime = this.selectedRow.startTime();
+    // this.selectedEndTime = this.selectedRow.endTime();
   }
 
   isSelected(row){
