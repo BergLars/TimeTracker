@@ -10,7 +10,6 @@ export class EntryDialogComponent implements OnInit {
 	@Input() projects: IProject[] = [];
   @Input() tasks: ITask[] = [];
 	public title: string;
-  public selectedDescription: string;
   // description: string = (<HTMLInputElement>document.getElementsByName("description")).value;
   //public project = (<HTMLInputElement>document.getElemenstByName("project")).value; 
 

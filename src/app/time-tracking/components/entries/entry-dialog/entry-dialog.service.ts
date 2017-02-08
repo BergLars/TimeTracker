@@ -18,7 +18,6 @@ export class EntryDialogService {
     dialogRef = this.dialog.open(EntryDialogComponent, config);
 
     dialogRef.componentInstance.title = title;
-    dialogRef.componentInstance.selectedDescription = row.description;
 
     return dialogRef.afterClosed();
   }
