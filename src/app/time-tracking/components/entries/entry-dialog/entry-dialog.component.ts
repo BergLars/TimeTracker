@@ -10,13 +10,14 @@ export class EntryDialogComponent implements OnInit {
 	@Input() projects: IProject[] = [];
   @Input() tasks: ITask[] = [];
 	public title: string;
-  public selectedDescription: string;
-  public selectedProjectName: string;
-  public selectedTaskDescription: string;
-  public selectedDate: string;
-  public selectedStartTime: string;
-  public selectedEndTime: string;
-
+  // public selectedDescription: string;
+  // public selectedProjectName: string;
+  // public selectedTaskDescription: string;
+  // public selectedDate: string;
+  // public selectedStartTime: string;
+  // public selectedEndTime: string;
+  // description: string = (<HTMLInputElement>document.getElementsByName("description")).value;
+  //public project = (<HTMLInputElement>document.getElemenstByName("project")).value; 
 
   constructor(
   	public dialogRef: MdDialogRef<EntryDialogComponent>,

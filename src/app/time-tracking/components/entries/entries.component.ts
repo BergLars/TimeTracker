@@ -4,7 +4,7 @@ import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeT
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
-
+import { UpdateDialogService } from './update-dialog/update-dialog.service';
 @Component({
   selector: 'app-entries',
   templateUrl: './entries.component.html',
@@ -23,6 +23,7 @@ export class EntriesComponent implements OnInit {
   cloneSelectedRow: any;
   timeTrackingEntry: ITimeTrackingEntry;
   editMode: boolean = false;
+  rowid: number;
   selectedDescription: string;
   selectedProject: string;
   selectedTask: string;
@@ -39,6 +40,7 @@ export class EntriesComponent implements OnInit {
     public taskService: TaskService, 
     private entryDialogService: EntryDialogService, 
     private deleteEntryService: DeleteEntryService, 
+    private updateEntryService: UpdateDialogService, 
     private viewContainerRef: ViewContainerRef) { }
 
   ngOnInit() { 
@@ -75,12 +77,13 @@ export class EntriesComponent implements OnInit {
 
   onSelect({ selected }) {
     this.selectedRow = selected[0]; 
-    // this.selectedDescription = this.selectedRow.description;
-    // this.selectedProject = this.selectedRow.projectName();
-    // this.selectedTask = this.selectedRow.taskDescription();
-    // this.selectedDate = this.selectedRow.date();
-    // this.selectedStartTime = this.selectedRow.startTime();
-    // this.selectedEndTime = this.selectedRow.endTime();
+    this.rowid = this.selectedRow.id;
+    this.selectedDescription = this.selectedRow.description;
+    this.selectedProject = this.selectedRow.projectName();
+    this.selectedTask = this.selectedRow.taskDescription();
+    this.selectedDate = this.selectedRow.date();
+    this.selectedStartTime = this.selectedRow.startTime();
+    this.selectedEndTime = this.selectedRow.endTime();
   }
 
   isSelected(row){
@@ -94,12 +97,12 @@ export class EntriesComponent implements OnInit {
     this.timeTrackingEntryService.deleteTimeTrackingEntry(row.id);
   }
 
-  onUpdate(row){
+  /*onUpdate(row){
     this.cloneSelectedRow  = Object.assign({}, this.selectedRow);
     // this.toggleEditMode();
     console.log("Cloned selected Row", this.cloneSelectedRow);
     this.timeTrackingEntryService.updateTimeTrackingEntry(this.selectedRow.id, this.selectedDescription, this.selectedProject, this.selectedTask, this.selectedDate, this.selectedStartTime, this.selectedEndTime);
-  }
+  }*/
 
   onActivate(event) {
     console.log('Activate Event', event);
@@ -128,7 +131,7 @@ export class EntriesComponent implements OnInit {
   }
 
   public openUpdateDialog(row) {
-    this.entryDialogService
+    this.updateEntryService
       .confirm('Update Entry', this.viewContainerRef, row)
       .subscribe(res => this.result = res);
       console.log(row.projectName());

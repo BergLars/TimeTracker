@@ -1,24 +1,24 @@
-import { DeleteEntryService } from './delete-entry.service';
+import { UpdateEntryService } from './update-entry.service';
 import { MaterialModule } from '@angular/material';
 import { NgModule } from '@angular/core';
 
-import { DeleteEntryComponent }   from './delete-entry.component';
+import { UpdateEntryComponent }   from './update-entry.component';
 
 @NgModule({
     imports: [
         MaterialModule.forRoot(),
     ],
     exports: [
-        DeleteEntryComponent,
+        UpdateEntryComponent,
     ],
     declarations: [
-        DeleteEntryComponent,
+        UpdateEntryComponent,
     ],
     providers: [
-        DeleteEntryService,
+        UpdateEntryService,
     ],
     entryComponents: [
-        DeleteEntryComponent,
+        UpdateEntryComponent,
     ],
 })
-export class DialogsModule { }
+export class UpdateEntryModule { }

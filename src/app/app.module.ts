@@ -14,7 +14,7 @@ import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { DateComponent, DatepickerComponent, DialogComponent, TimepickerComponent } from './common';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService } from './data';
-import { SearchDialogComponent, ExportComponent, SidebarComponent, EntriesComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService } from './time-tracking';
+import { SearchDialogComponent, ExportComponent, SidebarComponent, EntriesComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService} from './time-tracking';
 import { QueryformComponent } from './queryform/queryform.component';
 import { ContainerComponent } from './container/container.component';
 import { routes } from './routes';
@@ -41,12 +41,14 @@ import { TimeTrackingComponent } from './time-tracking/time-tracking.component';
     ProfileComponent,
     TimeTrackingComponent,
     EntryDialogComponent,
-    DeleteEntryComponent
+    DeleteEntryComponent,
+    UpdateDialogComponent
   ],
   entryComponents: [
     SearchDialogComponent,
     EntryDialogComponent,
-    DeleteEntryComponent
+    DeleteEntryComponent,
+    UpdateDialogComponent
   ],
   imports: [
     Angular2DataTableModule,
@@ -66,7 +68,7 @@ import { TimeTrackingComponent } from './time-tracking/time-tracking.component';
     DatepickerModule,
     TypeaheadModule    
   ],
-  providers: [ProjectService, TaskService, TimeTrackingEntryService, UserService, LoggedInGuard, ProfileService, EntryDialogService, DeleteEntryService],
+  providers: [ProjectService, TaskService, TimeTrackingEntryService, UserService, LoggedInGuard, ProfileService, EntryDialogService, DeleteEntryService, UpdateDialogService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -3,7 +3,8 @@
     <table>
         <tr>
             <td>
-                <md-input name="description" placeholder="Description" [value]="selectedDescription"></md-input>
+                <!-- <md-input name="description" placeholder="Description" [value]="selectedDescription"></md-input> -->
+                <md-input name="description" placeholder="Description"></md-input>
             </td>
         </tr>
         <br>
@@ -11,7 +12,7 @@
             <td>Project:</td>
             <td>
                 <select>
-                    <option *ngFor="let project of projects" name="project" [ngValue]="project">{{ project.projectName }}</option>
+                    <option *ngFor="let project of projects" name="project">{{ project.projectName }}</option>
                 </select>
                 <!-- <form>
                  <md-select placeholder="Project">
@@ -24,7 +25,7 @@
             <td>Task:</td>
             <td>
                 <select>
-                    <option *ngFor="let task of tasks" name="task" [ngValue]="task">{{ task.taskDescription }}</option>
+                    <option *ngFor="let task of tasks" name="task">{{ task.taskDescription }}</option>
                 </select>
             </td>
         </tr>
@@ -37,11 +38,16 @@
         <br>
         <tr>
             <td>
-                <md-input placeholder="Start Time" name="starttime" [value]="selectedStartTime"></md-input>
+                <!--   <md-input placeholder="Start Time" name="starttime" [value]="selectedStartTime"></md-input>
             </td>
             <td>&nbsp;</td>
             <td>
-                <md-input placeholder="End Time" name="endtime" [value]="selectedEndTime"></md-input>
+                <md-input placeholder="End Time" name="endtime" [value]="selectedEndTime"></md-input> -->
+                <md-input placeholder="Start Time" name="starttime" type="time"></md-input>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                <md-input placeholder="End Time" name="endtime" type="time"></md-input>
             </td>
         </tr>
     </table>
