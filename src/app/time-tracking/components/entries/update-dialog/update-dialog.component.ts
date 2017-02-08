@@ -21,7 +21,32 @@ export class UpdateDialogComponent implements OnInit {
 
   public getNewDescription(value: string) {
     this.description = value;
+    console.log(this.description);
   }
+  public getNewTask(value: string) {
+    this.description = value;
+    console.log(this.description);
+  }
+  public getNewProject(value: string) {
+    this.description = value;
+    console.log(this.description);
+  }
+
+  public getNewStartDateTime(date: string, time: string){
+    this.selectedDate = date;
+    this.selectedStartTime = time;
+    let startDateTime = this.selectedDate + " " + this.selectedStartTime;
+    console.log(startDateTime);
+    return startDateTime;
+  }
+  public getNewEndDateTime(date: string, time: string){
+    this.selectedDate = date;
+    this.selectedEndTime = time;
+    let endDateTime = this.selectedDate + " " + this.selectedEndTime;
+    console.log(endDateTime);
+    return endDateTime;
+  }
+  
   constructor(
     public dialogRef: MdDialogRef<UpdateDialogComponent>,
     public projectService: ProjectService, 
@@ -29,12 +54,8 @@ export class UpdateDialogComponent implements OnInit {
     public timeTrackingEntryService: TimeTrackingEntryService) { 
   }
 
-  onUpdate(){
-
-  }
-
   updateEntry(){
-    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowid, this.description, this.selectedProject, this.selectedTask, this.selectedDate, this.selectedStartTime, this.selectedEndTime);
+    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowid, this.description, this.selectedProject, this.selectedTask, this.selectedDate, this.selectedStartTime);
    }
 
   ngOnInit() {

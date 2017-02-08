@@ -79,8 +79,8 @@ export class TimeTrackingEntryService implements IDataservice {
     });
   }
 
-  public updateTimeTrackingEntry(id: number, description: string, projectName: string, taskDescription: string, date: string, startTime: string, endTime: string): Promise<ITimeTrackingEntry>  {
-    return store.update(RESOURCE_NAME, id, [{description, projectName, taskDescription, startTime, endTime}]);
+  public updateTimeTrackingEntry(id: number, description: string, projectName: string, taskDescription: string, startDateTime: string, endDateTime: string): Promise<ITimeTrackingEntry>  {
+    return store.update(RESOURCE_NAME, id, [{description, projectName, taskDescription, startDateTime, endDateTime}]);
   }
 
   public createTimeTrackingEntry(description: string, projectName: string, taskDescription: string, date: string, startTime: string, endTime: string): Promise<ITimeTrackingEntry>  {

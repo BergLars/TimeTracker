@@ -31,24 +31,24 @@
         <br>
         <tr>
             <td>
-                <md-input placeholder="Date" name="date" ></md-input>
+                <md-input placeholder="Date" name="date" #selectedDate [value]="selectedDate"></md-input>
             </td>
         </tr>
         <br>
         <tr>
             <td>
-                <md-input placeholder="Start Time" name="starttime" ></md-input>
+                <md-input placeholder="Start Time" name="starttime" #selectedStartTime [value]="selectedStartTime"></md-input>
             </td>
             <td>&nbsp;</td>
             <td>
-                <md-input placeholder="End Time" name="endtime"></md-input>
+                <md-input placeholder="End Time" name="endtime" #selectedEndTime [value]="selectedEndTime"></md-input>
             </td>
         </tr>
     </table>
     <br>
 </div>
 <div md-dialog-actions>
-    <button type="button" md-button (click)="getNewDescription(description.value);updateEntry();dialogRef.close(true)">OK</button>
+    <button type="button" md-button (click)="getNewDescription(description.value);getNewStartDateTime(selectedDate.value,selectedStartTime.value);getNewEndDateTime(selectedDate.value,selectedEndTime.value);updateEntry();dialogRef.close(true)">OK</button>
     <!-- <button type="button" md-button (click)="createEntry();dialogRef.close(true)">OK</button> -->
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>
