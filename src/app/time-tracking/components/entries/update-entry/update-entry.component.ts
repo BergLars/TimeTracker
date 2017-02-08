@@ -10,18 +10,36 @@ export class UpdateEntryComponent implements OnInit {
   @Input() projects: IProject[] = [];
   @Input() tasks: ITask[] = [];
   public title: string;
+  public rowid: number;
   public selectedDescription: string;
   public selectedProject: string;
-  public rowid: number;
   public selectedTask: string;
   public selectedDate: string;
   public selectedStartTime: string;
   public selectedEndTime: string;
   public description: string;
+  public project: string;
+  public task: string;
+  public date: string;
+  public startTime: string;
+  public endTime: string;
 
   public getNewDescription(value: string) {
     this.description = value;
   }
+
+  public getNewStartTime(value: string) {
+    this.startTime = value;
+  }
+
+  public getNewEndTime(value: string) {
+    this.endTime = value;
+  }
+   
+  public getNewDate(value: string) {
+    this.date = value;
+  }
+
   constructor(
     public dialogRef: MdDialogRef<UpdateEntryComponent>,
     public projectService: ProjectService, 
@@ -34,7 +52,7 @@ export class UpdateEntryComponent implements OnInit {
   }
 
   updateEntry(){
-    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowid, this.description, this.selectedProject, this.selectedTask, this.selectedDate, this.selectedStartTime, this.selectedEndTime);
+    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowid, this.description, this.selectedProject, this.selectedTask, this.date, this.startTime, this.endTime);
    }
 
   ngOnInit() {
