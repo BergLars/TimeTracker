@@ -14,10 +14,12 @@ export class UpdateDialogComponent implements OnInit {
   public selectedProject: string;
   public rowid: number;
   public selectedTask: string;
-  public selectedDate: string;
-  public selectedStartTime: string;
-  public selectedEndTime: string;
+  @Input() selectedDate: string;
+  @Input() selectedStartTime: string;
+  public selectedEndTime: any;
   public description: string;
+  public startDateTime: any;
+  public endDateTime: any;
 
   public getNewDescription(value: string) {
     this.description = value;
@@ -32,19 +34,28 @@ export class UpdateDialogComponent implements OnInit {
     console.log(this.description);
   }
 
-  public getNewStartDateTime(date: string, time: string){
-    this.selectedDate = date;
-    this.selectedStartTime = time;
-    let startDateTime = this.selectedDate + " " + this.selectedStartTime;
-    console.log(startDateTime);
-    return startDateTime;
+  public getNewStartDateTime(value: string, value1: string){
+    console.log(this.selectedDate);
+    console.log(this.selectedStartTime);
+    console.log(this.selectedEndTime);
+    this.selectedDate = value;
+    this.selectedStartTime = value1;
+    this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
+    console.log(this.startDateTime);
+    return this.startDateTime;
   }
-  public getNewEndDateTime(date: string, time: string){
-    this.selectedDate = date;
-    this.selectedEndTime = time;
-    let endDateTime = this.selectedDate + " " + this.selectedEndTime;
-    console.log(endDateTime);
-    return endDateTime;
+  public getNewEndDateTime(value: string, value1: string){
+    if(value === null && value1 === null){
+      this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
+    }
+    else{
+      this.selectedDate = value;
+      this.selectedEndTime = value1;
+    this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
+  }
+
+    console.log(this.endDateTime);
+    return this.endDateTime;
   }
   
   constructor(
@@ -55,7 +66,8 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   updateEntry(){
-    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowid, this.description, this.selectedProject, this.selectedTask, this.selectedDate, this.selectedStartTime);
+    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowid, this.startDateTime, this.endDateTime, this.description, 3, 1, 1);
+    // this.userprofileID, this.projectID, this.taskID);
    }
 
   ngOnInit() {
