@@ -47,10 +47,6 @@ export class UpdateDialogComponent implements OnInit {
     public timeTrackingEntryService: TimeTrackingEntryService) { 
   }
 
-  onUpdate(){
-
-  }
-
   updateEntry(){
     this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowid, this.description, this.selectedProject, this.selectedTask, this.date, this.startTime, this.endTime);
    }

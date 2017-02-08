@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { DeleteEntryComponent } from './delete-entry.component';
+import { UpdateDialogComponent } from './update-dialog.component';
 
 describe('DeleteEntryComponent', () => {
-  let component: DeleteEntryComponent;
-  let fixture: ComponentFixture<DeleteEntryComponent>;
+  let component: UpdateDialogComponent;
+  let fixture: ComponentFixture<UpdateDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeleteEntryComponent ]
+      declarations: [ UpdateDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DeleteEntryComponent);
+    fixture = TestBed.createComponent(UpdateDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
