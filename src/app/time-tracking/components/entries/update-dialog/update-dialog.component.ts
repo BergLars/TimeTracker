@@ -24,26 +24,16 @@ export class UpdateDialogComponent implements OnInit {
   public startDateTime: string;
   public endDateTime: string;
 
-  public getNewDescription(value: string) {
-    this.description = value;
+  public projectDropdown(value : string): void {
+    this.projectID = value;
   }
 
-  public getNewTask(value: any) {
-    if( value === undefined){
-      this.selectedTask = this.selectedTask;
-    }else{
-      this.selectedTask = value;
-    }
-    console.log(this.selectedTask);
+  public taskDropdown(value : string): void {
+    this.taskID = value;
   }
-  public getNewProject(value: any) {
-    if(value == undefined){
-      this.selectedProject = this.selectedProject;
-    }
-    else{
-      this.selectedProject = value;
-    }
-    console.log(this.selectedProject);
+
+  public getNewDescription(value: string) {
+    this.description = value;
   }
 
   public getNewStartDateTime(value: any, value1: any){
