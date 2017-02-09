@@ -3,11 +3,13 @@ import { ITask } from './i-task';
 
 export interface ITimeTrackingEntry {
     readonly id: number;
-    userId: number;
-    projectId: number;
-    taskId: number;
-    startDate: Date;
-    endDate: Date;
+    
+    startDate: string;
+    endDate: string;
+    description: string;
+    userprofileID: number;
+    projectID: number;
+    taskID: number;
 
     // Added properties_functions by js-data
     readonly project ?: IProject;

@@ -4,7 +4,7 @@
         <tr>
             <td>
                 <!-- <md-input name="description" placeholder="Description" [value]="selectedDescription"></md-input> -->
-                <md-input name="description" placeholder="Description"></md-input>
+                <md-input name="description" #description placeholder="Description"></md-input>
             </td>
         </tr>
         <br>
@@ -32,7 +32,7 @@
         <br>
         <tr>
             <td>
-                <md-input placeholder="Date" name="date" type="date" [value]="selectedDate"></md-input>
+                <md-input placeholder="Date" name="date" type="date" #date [value]="selectedDate"></md-input>
             </td>
         </tr>
         <br>
@@ -43,18 +43,18 @@
             <td>&nbsp;</td>
             <td>
                 <md-input placeholder="End Time" name="endtime" [value]="selectedEndTime"></md-input> -->
-                <md-input placeholder="Start Time" name="starttime" type="time"></md-input>
+                <md-input placeholder="Start Time" name="starttime" #startTime type="time"></md-input>
             </td>
             <td>&nbsp;</td>
             <td>
-                <md-input placeholder="End Time" name="endtime" type="time"></md-input>
+                <md-input placeholder="End Time" name="endtime" #endTime type="time"></md-input>
             </td>
         </tr>
     </table>
     <br>
 </div>
 <div md-dialog-actions>
-    <button type="button" md-button (click)="dialogRef.close(true)">OK</button>
+    <button type="button" md-button (click)="getNewDescription(description.value);getNewDate(date.value);getNewStartTime(startTime.value);getNewEndTime(endTime.value);createEntry();dialogRef.close(true)">OK</button>
     <!-- <button type="button" md-button (click)="createEntry();dialogRef.close(true)">OK</button> -->
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>
