@@ -11,7 +11,7 @@
             <td>Project:</td>
             <td>
                 <select>
-                    <option *ngFor="let project of projects" name="project" [value]="selectedProject">{{ project.projectName }}</option>
+                    <option *ngFor="let project of projects" name="project" [value]="selectedProject" [selected]='project.id === selectedProject'>{{ project.projectName }}</option>
                 </select>
             </td>
         </tr>
@@ -20,7 +20,7 @@
             <td>Task:</td>
             <td>
                 <select>
-                    <option *ngFor="let task of tasks" name="task" [ngValue]="task">{{ task.taskDescription }}</option>
+                    <option *ngFor="let task of tasks" name="task" [value]="selectedTask" [selected]='task.id === selectedTask'>{{ task.taskDescription }}</option>
                 </select>
             </td>
         </tr>
