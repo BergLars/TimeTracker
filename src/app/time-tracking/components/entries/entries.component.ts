@@ -58,23 +58,6 @@ export class EntriesComponent implements OnInit {
     console.log(row, cell, cellValue);
   }
 
-  public openDialog(row) {
-    this.entryDialogService
-      .confirm('New Entry', this.viewContainerRef, row)
-      .subscribe(res => this.result = res);
-  }
-
-  fetch(cb) {
-    const req = new XMLHttpRequest();
-    req.open('GET', `assets/data/company.json`);
-
-    req.onload = () => {
-      cb(JSON.parse(req.response));
-    };
-
-    req.send();
-  }
-
   onSelect({ selected }) {
     this.selectedRow = selected[0]; 
     this.rowid = this.selectedRow.id;
@@ -128,6 +111,12 @@ export class EntriesComponent implements OnInit {
 
   getSelectedIx() {
     return this.selected[0]['$$index'];
+  }
+
+  public openDialog() {
+    this.entryDialogService
+      .confirm('New Entry', this.viewContainerRef)
+      .subscribe(res => this.result = res);
   }
 
   public openUpdateDialog(row) {
