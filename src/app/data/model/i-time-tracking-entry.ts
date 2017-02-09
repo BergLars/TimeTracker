@@ -3,7 +3,6 @@ import { ITask } from './i-task';
 
 export interface ITimeTrackingEntry {
     readonly id: number;
-    
     startDate: string;
     endDate: string;
     description: string;

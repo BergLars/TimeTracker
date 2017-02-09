@@ -14,32 +14,63 @@ export class UpdateDialogComponent implements OnInit {
   public selectedDescription: string;
   public selectedProject: string;
   public selectedTask: string;
-  public selectedDate: string;
-  public selectedStartTime: string;
-  public selectedEndTime: string;
+  @Input() selectedDate: any;
+  @Input() selectedStartTime: any;
+  public userprofileID: any;
+  public projectID: any;
+  public taskID: any;
+  public selectedEndTime: any;
   public description: string;
-  public project: string;
-  public task: string;
-  public date: string;
-  public startTime: string;
-  public endTime: string;
+  public startDateTime: string;
+  public endDateTime: string;
 
   public getNewDescription(value: string) {
     this.description = value;
   }
 
-  public getNewStartTime(value: string) {
-    this.startTime = value;
+  public getNewTask(value: any) {
+    if( value === undefined){
+      this.selectedTask = this.selectedTask;
+    }else{
+      this.selectedTask = value;
+    }
+    console.log(this.selectedTask);
+  }
+  public getNewProject(value: any) {
+    if(value == undefined){
+      this.selectedProject = this.selectedProject;
+    }
+    else{
+      this.selectedProject = value;
+    }
+    console.log(this.selectedProject);
   }
 
-  public getNewEndTime(value: string) {
-    this.endTime = value;
-  }
-   
-  public getNewDate(value: string) {
-    this.date = value;
+  public getNewStartDateTime(value: any, value1: any){
+    if(value === undefined || value1 === undefined){
+      this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
+    }
+    else{
+      console.log("Value: " + value);
+      this.selectedDate = value;
+      this.selectedStartTime = value1;
+      this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
+    }
+    return this.startDateTime;
   }
 
+  public getNewEndDateTime(value: any, value1: any){
+    if(value === undefined || value1 === undefined){
+      this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
+    }
+    else{
+      this.selectedDate = value;
+      this.selectedEndTime = value1;
+      this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
+    }
+    return this.endDateTime;
+  }
+  
   constructor(
     public dialogRef: MdDialogRef<UpdateDialogComponent>,
     public projectService: ProjectService, 
@@ -48,7 +79,8 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   updateEntry(){
-    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowid, this.description, this.selectedProject, this.selectedTask, this.date, this.startTime, this.endTime);
+    console.log(this.projectID, this.taskID, this.userprofileID);
+    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowid, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID);
    }
 
   ngOnInit() {
