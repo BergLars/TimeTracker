@@ -9,7 +9,7 @@ export class EntryDialogService {
 
   constructor(private dialog: MdDialog, public timeTrackingEntryService: TimeTrackingEntryService) { }
 
-  public confirm(title: string, viewContainerRef: ViewContainerRef, row: any): Observable<boolean> {
+  public confirm(title: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 
   	let dialogRef: MdDialogRef<EntryDialogComponent>;
     let config = new MdDialogConfig();
@@ -18,12 +18,6 @@ export class EntryDialogService {
     dialogRef = this.dialog.open(EntryDialogComponent, config);
 
     dialogRef.componentInstance.title = title;
-    dialogRef.componentInstance.selectedDescription = row.description;
-    dialogRef.componentInstance.selectedProjectID = row.projectID;
-    dialogRef.componentInstance.selectedTaskID = row.taskID;
-    dialogRef.componentInstance.selectedDate = row.startDate.substring(0,10);
-    dialogRef.componentInstance.selectedStartTime = row.startDate.substring(11,16);
-    dialogRef.componentInstance.selectedEndTime = row.endDate.substring(11,16);
 
     return dialogRef.afterClosed();
   }

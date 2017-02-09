@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
-import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeTrackingEntryService } from '../../../../data';
-
+import { ITimeTrackingEntry, IProject, ITask, IUser, ProjectService, TaskService, TimeTrackingEntryService, UserService}  from '../../../../data';
 @Component({
   selector: 'app-entry-dialog',
   templateUrl: './entry-dialog.component.html'
@@ -10,14 +9,17 @@ export class EntryDialogComponent implements OnInit {
 	@Input() projects: IProject[] = [];
   @Input() tasks: ITask[] = [];
 	public title: string;
-  public selectedDescription: string;
+  public description: string;
   public selectedProjectID: string;
   public rowid: number;
   public selectedTaskID: string;
   @Input() selectedDate: string;
   @Input() selectedStartTime: string;
+  public user: IUser;
   public selectedEndTime: any;
-  public description: string;
+  public userprofileID: any;
+  public projectID: any;
+  public taskID: any;
   public startDateTime: any;
   public endDateTime: any;
 
@@ -25,7 +27,8 @@ export class EntryDialogComponent implements OnInit {
   	public dialogRef: MdDialogRef<EntryDialogComponent>,
   	public projectService: ProjectService, 
     public taskService: TaskService,
-    public timeTrackingEntryService: TimeTrackingEntryService) { 
+    public timeTrackingEntryService: TimeTrackingEntryService,
+    public userService: UserService) { 
   }
 
   ngOnInit() {
@@ -38,6 +41,8 @@ export class EntryDialogComponent implements OnInit {
   public getNewDescription(value: string) {
     this.description = value;
     console.log(this.description);
+    // this.user = this.userService.getUser(2);
+    // console.log(this.userService.getUser(2));
   }
   public getNewTask(value: string) {
     this.description = value;
@@ -74,7 +79,8 @@ export class EntryDialogComponent implements OnInit {
   }
 
   createEntry(){
+    // if(this)
        this.timeTrackingEntryService.createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, 3, 1, 1);
-    // this.userprofileID, this.projectID, this.taskID);
+      // this.timeTrackingEntryService.createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID);
   }
 }
