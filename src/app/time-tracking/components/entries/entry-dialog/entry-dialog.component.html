@@ -3,46 +3,41 @@
     <table>
         <tr>
             <td>
-                <!-- <md-input name="description" placeholder="Description" [value]="selectedDescription"></md-input> -->
-                <md-input name="description" #description placeholder="Description" [value]="selectedDescription"></md-input>
+                <md-input #description placeholder="Description"></md-input>
             </td>
         </tr>
         <br>
         <tr>
             <td>Project:</td>
             <td>
-                <select>
-                    <option *ngFor="let project of projects" name="project">{{ project.projectName }}</option>
+                <select #project (change)="projectDropdown(project.value)">
+                    <option *ngFor="let project of projects" [value]='project.id'>{{ project.projectName }}</option>
                 </select>
-                <!-- <form>
-                 <md-select placeholder="Project">
-                    <md-option *ngFor="let project of projects" [value]="project">{{ project.projectName }}</md-option>
-                </md-select> </form>  -->
             </td>
         </tr>
         <br>
         <tr>
             <td>Task:</td>
             <td>
-                <select>
-                    <option *ngFor="let task of tasks" name="task">{{ task.taskDescription }}</option>
+                <select #task (change)="taskDropdown(task.value)">
+                    <option *ngFor="let task of tasks" [value]="task.id">{{ task.taskDescription }}</option>
                 </select>
             </td>
         </tr>
         <br>
         <tr>
             <td>
-                <md-input placeholder="Date" name="date" type="date" #date [value]="selectedDate"></md-input>
+                <md-input placeholder="Date" type="date" #date></md-input>
             </td>
         </tr>
         <br>
         <tr>
             <td>
-                <md-input placeholder="Start Time" name="starttime" #startTime [value]="selectedStartTime"></md-input>
+                <md-input placeholder="Start Time" #startTime></md-input>
             </td>
             <td>&nbsp;</td>
             <td>
-                <md-input placeholder="End Time" name="endtime" #endTime [value]="selectedEndTime"></md-input>
+                <md-input placeholder="End Time" #endTime></md-input>
             </td>
         </tr>
     </table>

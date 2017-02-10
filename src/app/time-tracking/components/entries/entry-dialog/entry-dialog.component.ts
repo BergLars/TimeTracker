@@ -78,6 +78,14 @@ export class EntryDialogComponent implements OnInit {
     return this.endDateTime;
   }
 
+  public projectDropdown(value : string): void {
+    this.projectID = value;
+  }
+
+  public taskDropdown(value : string): void {
+    this.taskID = value;
+  }
+
   createEntry(){
     // if(this)
        this.timeTrackingEntryService.createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, 3, 1, 1);
