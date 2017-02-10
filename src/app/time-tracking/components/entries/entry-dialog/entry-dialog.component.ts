@@ -54,13 +54,9 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public getNewStartDateTime(value: string, value1: string){
-    console.log(this.selectedDate);
-    console.log(this.selectedStartTime);
-    console.log(this.selectedEndTime);
     this.selectedDate = value;
     this.selectedStartTime = value1;
     this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
-    console.log(this.startDateTime);
     return this.startDateTime;
   }
 
@@ -88,7 +84,7 @@ export class EntryDialogComponent implements OnInit {
 
   createEntry(){
     // if(this)
-       this.timeTrackingEntryService.createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, 3, 1, 1);
+       this.timeTrackingEntryService.createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, 3, this.projectID, this.taskID);
       // this.timeTrackingEntryService.createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID);
   }
 }
