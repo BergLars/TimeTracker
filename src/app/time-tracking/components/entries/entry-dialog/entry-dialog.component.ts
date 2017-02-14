@@ -38,29 +38,19 @@ export class EntryDialogComponent implements OnInit {
   });
   }
 
-  public getNewDescription(value: string) {
+  public getDescription(value: string) {
     this.description = value;
-    console.log(this.description);
-    // this.user = this.userService.getUser(2);
-    // console.log(this.userService.getUser(2));
   }
-  public getNewTask(value: string) {
-    this.description = value;
-    console.log(this.description);
-  }
-  public getNewProject(value: string) {
-    this.description = value;
-    console.log(this.description);
-  }
+ 
 
-  public getNewStartDateTime(value: string, value1: string){
+  public getStartDateTime(value: string, value1: string){
     this.selectedDate = value;
     this.selectedStartTime = value1;
     this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
     return this.startDateTime;
   }
 
-  public getNewEndDateTime(value: string, value1: string){
+  public getEndDateTime(value: string, value1: string){
     if(value === null && value1 === null){
       this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
     }
@@ -69,8 +59,6 @@ export class EntryDialogComponent implements OnInit {
       this.selectedEndTime = value1;
     this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
   }
-
-    console.log(this.endDateTime);
     return this.endDateTime;
   }
 
@@ -83,7 +71,6 @@ export class EntryDialogComponent implements OnInit {
   }
 
   createEntry(){
-    // if(this)
        this.timeTrackingEntryService.createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, 3, this.projectID, this.taskID);
       // this.timeTrackingEntryService.createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID);
   }

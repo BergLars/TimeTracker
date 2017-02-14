@@ -1,5 +1,5 @@
 <button md-raised-button color="primary" (click)="openDialog(row)">NEW ENTRY</button>
-<swui-datatable class="material tablesize" [rows]="items" [columnMode]="'force'" [columns]="columns" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="5" [selected]="selected" [selectionType]="'single'" (activate)="onActivate($event)" (select)='onSelect($event)'>
+<swui-datatable class="material tablesize" [rows]="items" [columnMode]="'force'" [columns]="columns" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="5" [selected]="selected" [selectionType]="'single'" (select)='onSelect($event)'>
     <swui-datatable-column name="Description">
         <template swui-datatable-cell-template let-row="row">
            <!--  <span title="Double click to edit" (dblclick)="editing[row.$$index + '-description'] = true" *ngIf="!editing[row.$$index + '-description']">{{ row.description }}</span>
@@ -71,7 +71,6 @@
                 <div [hidden]="editMode">
                     <span (click)=openUpdateDialog(row)><md-icon>update</md-icon></span>
                     <span (click)="openDeleteDialog(row)"><md-icon>delete_forever</md-icon></span>
-                    <!-- <span (click)="onDelete(row)"><md-icon>delete_forever</md-icon></span> -->
                 </div>
                 <!-- <div [hidden]="!editMode">
                     <span><md-icon>check</md-icon></span>

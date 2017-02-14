@@ -55,7 +55,6 @@ export class EntriesComponent implements OnInit {
   updateValue(event, cell, cellValue, row) {
     this.editing[row.$$index + '-' + cell] = false;
     this.items[row.$$index][cell] = event.target.value;
-    console.log(row, cell, cellValue);
   }
 
   onSelect({ selected }) {
@@ -80,17 +79,6 @@ export class EntriesComponent implements OnInit {
     this.timeTrackingEntryService.deleteTimeTrackingEntry(row.id);
   }
 
-  /*onUpdate(row){
-    this.cloneSelectedRow  = Object.assign({}, this.selectedRow);
-    // this.toggleEditMode();
-    console.log("Cloned selected Row", this.cloneSelectedRow);
-    this.timeTrackingEntryService.updateTimeTrackingEntry(this.selectedRow.id, this.selectedDescription, this.selectedProject, this.selectedTask, this.selectedDate, this.selectedStartTime, this.selectedEndTime);
-  }*/
-
-  onActivate(event) {
-    console.log('Activate Event', event);
-  }
-
   toggleEditMode(){
     this.editMode = !this.editMode;
   }
@@ -98,7 +86,6 @@ export class EntriesComponent implements OnInit {
   discardChange(){
     this.selectedRow.description = this.cloneSelectedRow.description;
     this.toggleEditMode();
-    console.log(this.cloneSelectedRow);
   }
 
   updateRowPosition() {
@@ -123,7 +110,6 @@ export class EntriesComponent implements OnInit {
     this.updateEntryService
       .confirm('Update Entry', this.viewContainerRef, row)
       .subscribe(res => this.result = res);
-      console.log(row.projectName());
   }
 
   public openDeleteDialog(row) {
