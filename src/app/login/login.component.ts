@@ -8,9 +8,12 @@ let template = require('./login.component.html');
 
 @Component({
 	selector: 'app-login',
-	template: template
+	templateUrl: './login.component.html'
 })
 export class LoginComponent {
+	public username: string;
+	public password: string;
+
 	constructor(private userService: UserService, private router: Router) { }
 
 	onSubmit(username, password) {
@@ -19,5 +22,10 @@ export class LoginComponent {
 				this.router.navigate(['']);
 			}
 		});
+	}
+
+	public getUsernamePassword(value: string, value2: string) {
+		this.username = value;
+		this.password = value2;
 	}
 }

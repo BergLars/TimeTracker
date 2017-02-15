@@ -1,22 +1,21 @@
-<!--<md-card class="app-input-section">
-    <p>
-        <md-input>
-            <md-placeholder>
-                <md-icon class="material-icons app-input-icon">face</md-icon><span>Username</span>
-            </md-placeholder>
-        </md-input>
-    </p>
-    <p>
-        <md-input #password maxlength="50">
-            <md-placeholder>
-                <md-icon class="material-icons app-input-icon">security</md-icon>Password</md-placeholder>
-            <md-hint align="end">
-            {{password.characterCount}} / 50
-        </md-hint> 
-        </md-input>
-    </p>
-    <button md-button>OK</button>-->
-    <!-- <md-icon class="material-icons">account_circle</md-icon> 
-</md-card>-->
-<!--<app-entries></app-entries>
-<app-user></app-user>-->
+<div class="flex-container" fxLayout="row" fxLayoutAlign="center center">
+    <md-card class="app-input-section">
+        <p>
+            <md-input #username>
+                <md-placeholder>
+                    <md-icon class="material-icons app-input-icon">face</md-icon><span>Username</span>
+                </md-placeholder>
+            </md-input>
+        </p>
+        <p>
+            <md-input #password type="password" maxlength="50">
+                <md-placeholder>
+                    <md-icon class="material-icons app-input-icon">security</md-icon>Password
+                </md-placeholder>
+            </md-input>
+        </p>
+        <button md-button (click)="getUsernamePassword(username.value,password.value)">Login</button>
+
+        <!-- <md-icon class="material-icons">account_circle</md-icon> -->
+    </md-card>
+    </div>  
