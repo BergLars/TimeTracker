@@ -9,8 +9,8 @@ import { LoggedInGuard } from './logged-in-guard';
 import { ProfileComponent } from './profile/profile.component';
 
 export const routes = [
-	{ path: '', component: TimeTrackingComponent, pathMatch: 'full' },
-	{ path: 'login', component: LoginComponent },
+	{ path: 'timetracking', component: TimeTrackingComponent, pathMatch: 'full' },
+	{ path: '', component: LoginComponent },
 	{ path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard] }, 
 	{ path: 'export', component: ExportComponent },
 	{ path: 'entries', component: EntriesComponent }

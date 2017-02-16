@@ -3,6 +3,7 @@ import { Http, Headers } from '@angular/http';
 import { environment } from '../../environments/environment';
 import { store } from '../data/datastore';
 import { IDataservice, TimeTrackingEntryService, ITimeTrackingEntry, IUser } from '../data';
+import { Router } from '@angular/router';
 
 const RESOURCE_NAME: string = 'login';
 const ENDPOINT_NAME: string = 'login';
@@ -18,7 +19,7 @@ export class LoginService implements IDataservice {
   	private entries: ITimeTrackingEntry[];
 
 	constructor(private http: Http, 
-    private timeTrackingEntryService: TimeTrackingEntryService) {
+    private timeTrackingEntryService: TimeTrackingEntryService, private router: Router) {
 		// Define a Mapper for a "Project" resource
 		let resource = store.defineMapper(RESOURCE_NAME, {
 			basePath: this.baseUrl,
@@ -49,8 +50,9 @@ export class LoginService implements IDataservice {
 			// }
 			if( this.user.password === password) {
 				alert('Hello ' + username + ', your are logged in!' + this.user.id + this.user.pourcentageOfWork);
-			// }else{
-  	// 			alert('Your password is wrong!');
+				this.router.navigateByUrl('/timetracking');
+			}else{
+  				alert('Your password is wrong!');
   	// 		};
   			}}).then(() => {
 		      // Get user's time tracking entries
