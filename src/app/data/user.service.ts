@@ -9,9 +9,7 @@ const ENDPOINT_NAME: string = 'userprofiles';
 
 @Injectable()
 export class UserService implements IDataservice {
-
 	public baseUrl: string = environment.apiBaseUrl;
-
 	private loggedIn = false;
 
 	constructor(private http: Http) {
@@ -20,38 +18,6 @@ export class UserService implements IDataservice {
 			basePath: this.baseUrl,
 			endpoint: ENDPOINT_NAME
 		});
-
-		this.loggedIn = !!localStorage.getItem('auth_token');
-	}
-
-	login(username, password) {
-		let headers = new Headers();
-		headers.append('Content-Type', 'application/json');
-
-		return this.http
-			.post(
-			'/login',
-			JSON.stringify({ username, password }),
-			{ headers }
-			)
-			.map(res => res.json())
-			.map((res) => {
-				if (res.success) {
-					localStorage.setItem('auth_token', res.auth_token);
-					this.loggedIn = true;
-				}
-
-				return res.success;
-			});
-	}
-
-	logout() {
-		localStorage.removeItem('auth_token');
-		this.loggedIn = false;
-	}
-
-	isLoggedIn() {
-		return this.loggedIn;
 	}
 
 	public getUser(id: number): Promise<IUser> {
@@ -59,6 +25,10 @@ export class UserService implements IDataservice {
 	}
 
 	public getUsers(): Promise<IUser[]> {
-    return store.findAll(RESOURCE_NAME);
-  }
+    	return store.findAll(RESOURCE_NAME);
+  	}
+
+  	public isLoggedIn() {
+		return this.loggedIn;
+	}
 }

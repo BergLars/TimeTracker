@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { UserService } from '../data';
+import { LoginService } from './login.service';
 
 // webpack html imports
 let template = require('./login.component.html');
@@ -11,21 +11,17 @@ let template = require('./login.component.html');
 	templateUrl: './login.component.html'
 })
 export class LoginComponent {
-	public username: string;
-	public password: string;
+	private username: string;
+	private password: string;
+	private log: string;
+	private result: boolean;
 
-	constructor(private userService: UserService, private router: Router) { }
+	constructor(private loginService: LoginService, private router: Router) { }
 
-	onSubmit(username, password) {
-		this.userService.login(username, password).subscribe((result) => {
-			if (result) {
-				this.router.navigate(['']);
-			}
-		});
-	}
-
-	public getUsernamePassword(value: string, value2: string) {
+	public getUsernamePassword(value: string, value1: string) {
 		this.username = value;
-		this.password = value2;
+		this.password = value1;
+		this.loginService.compareCredentials(this.username, this.password);
+		this.log = this.username + ' ' + this.password;
 	}
 }

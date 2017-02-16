@@ -14,15 +14,14 @@ import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { DateComponent, DatepickerComponent, DialogComponent, TimepickerComponent } from './common';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService } from './data';
-import { SearchDialogComponent, ExportComponent, SidebarComponent, EntriesComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService} from './time-tracking';
+import { SearchDialogComponent, ExportComponent, SidebarComponent, EntriesComponent, TimeTrackingComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService} from './time-tracking';
 import { QueryformComponent } from './queryform/queryform.component';
 import { ContainerComponent } from './container/container.component';
 import { routes } from './routes';
 import { LoggedInGuard } from './logged-in-guard';
 import { ProfileService } from './profile.service';
-import { ProfileComponent } from './profile/profile.component';
-import { LoginComponent } from './login/login.component';
-import { TimeTrackingComponent } from './time-tracking/time-tracking.component';
+import { ProfileComponent } from './profile';
+import { LoginComponent, LoginService } from './login';
 
 @NgModule({
   declarations: [
@@ -68,7 +67,7 @@ import { TimeTrackingComponent } from './time-tracking/time-tracking.component';
     DatepickerModule,
     TypeaheadModule    
   ],
-  providers: [ProjectService, TaskService, TimeTrackingEntryService, UserService, LoggedInGuard, ProfileService, EntryDialogService, DeleteEntryService, UpdateDialogService],
+  providers: [ProjectService, TaskService, TimeTrackingEntryService, UserService, LoggedInGuard, ProfileService, LoginService, EntryDialogService, DeleteEntryService, UpdateDialogService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService, IProject, ITask, ITimeTrackingEntry, IUser, IStatistics } from '../data';
-import { SearchDialogComponent } from './components/search-dialog/search-dialog.component';
+import { LoginService } from '../login';
+import { SearchDialogComponent } from '../time-tracking';
+
 
 @Component({
   selector: 'app-time-tracking',
@@ -27,7 +29,8 @@ export class TimeTrackingComponent implements OnInit {
     private projectService: ProjectService,
     private taskService: TaskService,
     private timeTrackingEntryService: TimeTrackingEntryService,
-    private userService: UserService) {
+    private userService: UserService,
+    private loginService: LoginService) {
   }
 
   ngOnInit() {
@@ -36,7 +39,8 @@ export class TimeTrackingComponent implements OnInit {
     this.getStatistics();
 
     Promise.all([
-      // Get current user                                                         // TODO: Get user from login
+      // Get current user                                                        
+      // TODO: Get user from login
       this.userService.getUser(3).then(result => { this.user = result; }),
 
       // Get an entry with id
@@ -49,7 +53,9 @@ export class TimeTrackingComponent implements OnInit {
       this.taskService.getTasks().then(result => { this.tasks = result; }),
 
       // Get all users
-      this.userService.getUsers().then(result => { this.users = result })
+      this.userService.getUsers().then(result => { this.users = result; }),
+
+      this.loginService.getUserByUsername('wick').then(result => { this.user = result; })
     ])
       .then(() => {
 
