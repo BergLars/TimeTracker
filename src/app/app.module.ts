@@ -2,10 +2,9 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpModule, JsonpModule } from '@angular/http';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { MaterialModule } from '@angular/material';
-// import { FlexLayoutModule } from '@angular/flex-layout';
 import { MyDatePickerModule } from 'mydatepicker';
 import { Angular2DataTableModule } from 'angular2-data-table';
 import { DataTableModule } from "angular2-datatable";
@@ -49,6 +48,7 @@ import { LoginComponent, LoginService } from './login';
     BrowserModule,
     FormsModule,
     HttpModule,
+    JsonpModule,
     RouterModule.forRoot(routes),
     MaterialModule.forRoot(),
     // FlexLayoutModule.forRoot(),

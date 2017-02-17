@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Http, Headers, Request, RequestMethod, URLSearchParams, JsonpModule, Jsonp, Response } from '@angular/http';
 import { environment } from '../../environments/environment';
 import { store } from '../data/datastore';
 import { IDataservice, TimeTrackingEntryService, ITimeTrackingEntry, IUser } from '../data';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
-const RESOURCE_NAME: string = 'login';
-const ENDPOINT_NAME: string = 'login';
+const RESOURCE_NAME: string = 'user';
+const ENDPOINT_NAME: string = '/login';
 
 @Injectable()
 export class LoginService implements IDataservice {
@@ -21,13 +22,31 @@ export class LoginService implements IDataservice {
 	private entries: ITimeTrackingEntry[];
 
 	constructor(private http: Http,
-		private timeTrackingEntryService: TimeTrackingEntryService, private router: Router) {
+		private timeTrackingEntryService: TimeTrackingEntryService, private router: Router, private jsonp: Jsonp) {
 		// Define a Mapper for a "Project" resource
 		let resource = store.defineMapper(RESOURCE_NAME, {
 			basePath: this.baseUrl,
 			endpoint: ENDPOINT_NAME
 		});
 		this.loggedIn = !!localStorage.getItem('auth_token');
+	}
+
+	public request(username: string, password: string) {
+		let params = new URLSearchParams();
+		params.set('username', username);
+		params.set('password', password);
+		return this.http.request(new Request({
+			method: RequestMethod.Get,
+			url: this.baseUrl + ENDPOINT_NAME,
+			search: params
+		})).subscribe((res) => {
+			this.router.navigate(['timetracking']);
+		});
+		// return this.jsonp
+		// 	.get(this.baseUrl + ENDPOINT_NAME, { search: params })
+		// 	.map(function(res) {
+		// 		return res.json() || {};
+		// 	});
 	}
 
 	public logout() {
@@ -39,33 +58,15 @@ export class LoginService implements IDataservice {
 		return this.loggedIn;
 	}
 
-	public getUserByUsername(username: string): Promise<IUser> {
-		return store.find(RESOURCE_NAME, username);
-	}
-
-	public compareCredentials(username: string, password: string) {
-		this.getUserByUsername(username).then(result => {
-			this.user = result;
-			this.loggedUserID = this.user.id;
-			this.loggedUser = this.user;
-
-			if (username !== undefined) {
-				if (this.user.password === password) {
-					alert('Hello ' + username + ', your are logged in!' + this.user.id + ' ' + this.user.employmentDegree + ' ' + this.loggedUserID);
-					this.router.navigateByUrl('/timetracking');
-				} else {
-					alert('Your password is wrong!');
-					this.router.navigateByUrl('/');
-				}
-			}
-		});
-	}
-
 	public getLoggedUserID() {
 		return this.loggedUserID;
 	}
 
-	public getLoggedUser() {
-		return this.loggedUser;
+	// public getLoggedUser() {
+	// 	return this.loggedUser;
+	// }
+
+	public getLoggedUser(): Promise<IUser> {
+		return Promise.resolve(this.loggedUser);
 	}
 }

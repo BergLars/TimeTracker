@@ -24,11 +24,11 @@ export class UpdateDialogComponent implements OnInit {
   public startDateTime: string;
   public endDateTime: string;
 
-  public projectDropdown(value : string): void {
+  public projectDropdown(value: string): void {
     this.projectID = value;
   }
 
-  public taskDropdown(value : string): void {
+  public taskDropdown(value: string): void {
     this.taskID = value;
   }
 
@@ -36,11 +36,11 @@ export class UpdateDialogComponent implements OnInit {
     this.description = value;
   }
 
-  public getStartDateTime(value: any, value1: any){
-    if(value === undefined || value1 === undefined){
+  public getStartDateTime(value: any, value1: any) {
+    if (value === undefined || value1 === undefined) {
       this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
     }
-    else{
+    else {
       this.selectedDate = value;
       this.selectedStartTime = value1;
       this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
@@ -48,33 +48,35 @@ export class UpdateDialogComponent implements OnInit {
     return this.startDateTime;
   }
 
-  public getEndDateTime(value: any, value1: any){
-    if(value === undefined || value1 === undefined){
+  public getEndDateTime(value: any, value1: any) {
+    if (value === undefined || value1 === undefined) {
       this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
     }
-    else{
+    else {
       this.selectedDate = value;
       this.selectedEndTime = value1;
       this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
     }
     return this.endDateTime;
   }
-  
+
   constructor(
     public dialogRef: MdDialogRef<UpdateDialogComponent>,
-    public projectService: ProjectService, 
+    public projectService: ProjectService,
     public taskService: TaskService,
-    public timeTrackingEntryService: TimeTrackingEntryService) { 
+    public timeTrackingEntryService: TimeTrackingEntryService) {
   }
 
-  updateEntry(){
+  updateEntry() {
     this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowid, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID);
-   }
+  }
 
   ngOnInit() {
-   this.projectService.getProjects().then((projects) => { this.projects = projects;
-  });
-    this.taskService.getTasks().then((tasks) => { this.tasks = tasks; 
-  });
+    this.projectService.getProjects().then((projects) => {
+      this.projects = projects;
+    });
+    this.taskService.getTasks().then((tasks) => {
+      this.tasks = tasks;
+    });
   }
 }

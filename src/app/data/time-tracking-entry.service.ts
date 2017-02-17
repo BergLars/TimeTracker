@@ -17,24 +17,24 @@ export class TimeTrackingEntryService implements IDataservice {
       basePath: this.baseUrl,
       endpoint: ENDPOINT_NAME,
 
-      methods:{
-        projectName: function(){
+      methods: {
+        projectName: function() {
           return (this.project) ? this.project.projectName : '-';
         },
-        taskDescription: function(){
+        taskDescription: function() {
           return (this.task) ? this.task.taskDescription : '-';
         },
-        date: function(){
+        date: function() {
           var str = this.startDate;
-          return str.substring(0,10);
+          return str.substring(0, 10);
         },
-        startTime: function(){
+        startTime: function() {
           var str = this.startDate;
-          return str.substring(11,16);
+          return str.substring(11, 16);
         },
-        endTime: function(){
+        endTime: function() {
           var str = this.endDate;
-          return str.substring(11,16);
+          return str.substring(11, 16);
         }
       },
 
@@ -75,17 +75,15 @@ export class TimeTrackingEntryService implements IDataservice {
   }
 
   public deleteTimeTrackingEntry(id: number) {
-    return store.destroy(RESOURCE_NAME, id,{
+    return store.destroy(RESOURCE_NAME, id, {
     });
   }
 
-  public updateTimeTrackingEntry(id: number,  startDate: string, endDate: string, description: string, userprofileID: number, projectID: number, taskID: number, ): Promise<ITimeTrackingEntry>  {
-    return store.update(RESOURCE_NAME, id, {startDate: startDate, endDate: endDate, description: description, userprofileID: userprofileID, projectID: projectID, taskID: taskID});
+  public updateTimeTrackingEntry(id: number, startDate: string, endDate: string, description: string, userprofileID: number, projectID: number, taskID: number): Promise<ITimeTrackingEntry> {
+    return store.update(RESOURCE_NAME, id, { startDate: startDate, endDate: endDate, description: description, userprofileID: userprofileID, projectID: projectID, taskID: taskID });
   }
 
-  public createTimeTrackingEntry(startDate: string, endDate: string, description: string, userprofileID: number, projectID: number, taskID: number, ): Promise<ITimeTrackingEntry>  {
-    return store.create(RESOURCE_NAME, {startDate: startDate, endDate: endDate, description: description, userprofileID: userprofileID, projectID: projectID, taskID: taskID});
+  public createTimeTrackingEntry(startDate: string, endDate: string, description: string, userprofileID: number, projectID: number, taskID: number): Promise<ITimeTrackingEntry> {
+    return store.create(RESOURCE_NAME, { startDate: startDate, endDate: endDate, description: description, userprofileID: userprofileID, projectID: projectID, taskID: taskID });
   }
-
-
 }

@@ -5,6 +5,8 @@ import { MdDialog, MdDialogRef } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
 import { UpdateDialogService } from './update-dialog/update-dialog.service';
+import { LoginService } from '../../../login';
+
 @Component({
   selector: 'app-entries',
   templateUrl: './entries.component.html',
@@ -41,12 +43,13 @@ export class EntriesComponent implements OnInit {
     private entryDialogService: EntryDialogService, 
     private deleteEntryService: DeleteEntryService, 
     private updateEntryService: UpdateDialogService, 
-    private viewContainerRef: ViewContainerRef) { }
+    private viewContainerRef: ViewContainerRef,
+    private loginService: LoginService) { }
 
   ngOnInit() { 
     this.projectService.getProjects().then((projects) => { this.projects = projects; 
   });
-    this.timeTrackingEntryService.getTimeTrackingEntries().then((items) => { this.items = items; 
+    this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.loginService.getLoggedUser()).then((items) => { this.items = items; 
   });
     this.taskService.getTasks().then((tasks) => { this.tasks = tasks; 
   });

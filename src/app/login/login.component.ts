@@ -19,6 +19,6 @@ export class LoginComponent {
 	public getUsernamePassword(value: string, value1: string) {
 		this.username = value;
 		this.password = value1;
-		this.loginService.compareCredentials(this.username, this.password);
+		this.loginService.request(this.username, this.password);
 	}
 }

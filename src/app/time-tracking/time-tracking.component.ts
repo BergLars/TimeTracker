@@ -39,29 +39,19 @@ export class TimeTrackingComponent implements OnInit {
     this.getStatistics();
 
     Promise.all([
-      // Get current user                                                        
-      // TODO: Get user from login
+      // Get current user            
       this.userService.getUser(this.loginService.getLoggedUserID()).then(result => { this.user = result; }),
-
-      // Get an entry with id
-      // this.timeTrackingEntryService.getTimeTrackingEntry(1).then(result => { this.entry = result; }),
 
       // Get all projects
       this.projectService.getProjects().then(result => { this.projects = result; }),
 
       // Get all tasks
-      this.taskService.getTasks().then(result => { this.tasks = result; }),
-
-      // Get all users
-      // this.userService.getUsers().then(result => { this.users = result; }),
-
-      // this.loginService.getUserByUsername('wick').then(result => { this.user = result; })
+      this.taskService.getTasks().then(result => { this.tasks = result; })
     ])
       .then(() => {
 
-      // Get user's time tracking entries
-      return this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.loginService.getLoggedUser())
-      // return this.timeTrackingEntryService.getTimeTrackingEntries()
+        // Get user's time tracking entries
+        return this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.loginService.getLoggedUser())
           .then(result => {
             this.entries = result;
           });
