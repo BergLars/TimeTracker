@@ -12,11 +12,10 @@ import { DataTableModule } from "angular2-datatable";
 import { AlertModule, DropdownModule, ModalModule, TimepickerModule, TabsModule, DatepickerModule, TypeaheadModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
-import { DateComponent, DatepickerComponent, DialogComponent, TimepickerComponent } from './common';
+import { DatepickerComponent } from './common';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService } from './data';
 import { SearchDialogComponent, ExportComponent, SidebarComponent, EntriesComponent, TimeTrackingComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService} from './time-tracking';
 import { QueryformComponent } from './queryform/queryform.component';
-import { ContainerComponent } from './container/container.component';
 import { routes } from './routes';
 import { LoggedInGuard } from './logged-in-guard';
 import { ProfileService } from './profile.service';
@@ -27,16 +26,12 @@ import { LoginComponent, LoginService } from './login';
   declarations: [
     AppComponent,
     LoginComponent,
-    DateComponent,
     SearchDialogComponent,
     ExportComponent,
     SidebarComponent,
     EntriesComponent,
-    DialogComponent,
-    TimepickerComponent,
     DatepickerComponent,
     QueryformComponent,
-    ContainerComponent,
     ProfileComponent,
     TimeTrackingComponent,
     EntryDialogComponent,

@@ -4,7 +4,6 @@ import { TimeTrackingComponent } from './time-tracking/time-tracking.component';
 import { LoginComponent } from './login/login.component';
 import { ExportComponent } from './time-tracking/components/export/export.component';
 import { EntriesComponent } from './time-tracking/components/entries/entries.component';
-import { ContainerComponent } from './container/container.component';
 import { LoggedInGuard } from './logged-in-guard';
 import { ProfileComponent } from './profile/profile.component';
 

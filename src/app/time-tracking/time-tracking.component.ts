@@ -89,7 +89,6 @@ export class TimeTrackingComponent implements OnInit {
     this.dialogRefSearch
       .afterClosed()
       .subscribe(result => {
-        console.log('result: ' + result);
         this.dialogRefSearch = null;
       });
   }

@@ -35,36 +35,25 @@ export class EntryDialogComponent implements OnInit {
 
   ngOnInit() {
     this.projectService.getProjects().then((projects) => {
-    this.projects = projects;
+      this.projects = projects;
     });
     this.taskService.getTasks().then((tasks) => {
-    this.tasks = tasks;
+      this.tasks = tasks;
     });
   }
 
-  public getNewDescription(value: string) {
+  public getDescription(value: string) {
     this.description = value;
-    console.log(this.description);
-    // this.user = this.userService.getUser(2);
-    // console.log(this.userService.getUser(2));
-  }
-  public getNewTask(value: string) {
-    this.description = value;
-    console.log(this.description);
-  }
-  public getNewProject(value: string) {
-    this.description = value;
-    console.log(this.description);
   }
 
-  public getNewStartDateTime(value: string, value1: string) {
+  public getStartDateTime(value: string, value1: string) {
     this.selectedDate = value;
     this.selectedStartTime = value1;
     this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
     return this.startDateTime;
   }
 
-  public getNewEndDateTime(value: string, value1: string) {
+  public getEndDateTime(value: string, value1: string) {
     if (value === null && value1 === null) {
       this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
     }

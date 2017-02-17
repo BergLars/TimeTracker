@@ -32,16 +32,15 @@ export class UpdateDialogComponent implements OnInit {
     this.taskID = value;
   }
 
-  public getNewDescription(value: string) {
+  public getDescription(value: string) {
     this.description = value;
   }
 
-  public getNewStartDateTime(value: any, value1: any){
+  public getStartDateTime(value: any, value1: any){
     if(value === undefined || value1 === undefined){
       this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
     }
     else{
-      console.log("Value: " + value);
       this.selectedDate = value;
       this.selectedStartTime = value1;
       this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
@@ -49,7 +48,7 @@ export class UpdateDialogComponent implements OnInit {
     return this.startDateTime;
   }
 
-  public getNewEndDateTime(value: any, value1: any){
+  public getEndDateTime(value: any, value1: any){
     if(value === undefined || value1 === undefined){
       this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
     }
@@ -69,7 +68,6 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   updateEntry(){
-    console.log(this.projectID, this.taskID, this.userprofileID);
     this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowid, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID);
    }
 
