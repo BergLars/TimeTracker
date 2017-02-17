@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
-import { ITimeTrackingEntry, IProject, ITask, IUser, ProjectService, TaskService, TimeTrackingEntryService, UserService}  from '../../../../data';
+import { ITimeTrackingEntry, IProject, ITask, IUser, ProjectService, TaskService, TimeTrackingEntryService, UserService } from '../../../../data';
+import { LoginService } from '../../../../login';
 @Component({
   selector: 'app-entry-dialog',
   templateUrl: './entry-dialog.component.html'
@@ -24,18 +25,21 @@ export class EntryDialogComponent implements OnInit {
   public endDateTime: any;
 
   constructor(
-  	public dialogRef: MdDialogRef<EntryDialogComponent>,
-  	public projectService: ProjectService, 
+    public dialogRef: MdDialogRef<EntryDialogComponent>,
+    public projectService: ProjectService,
     public taskService: TaskService,
     public timeTrackingEntryService: TimeTrackingEntryService,
-    public userService: UserService) { 
+    public userService: UserService,
+    public loginService: LoginService) {
   }
 
   ngOnInit() {
-   this.projectService.getProjects().then((projects) => { this.projects = projects;
-  });
-    this.taskService.getTasks().then((tasks) => { this.tasks = tasks; 
-  });
+    this.projectService.getProjects().then((projects) => {
+    this.projects = projects;
+    });
+    this.taskService.getTasks().then((tasks) => {
+    this.tasks = tasks;
+    });
   }
 
   public getNewDescription(value: string) {
@@ -53,38 +57,34 @@ export class EntryDialogComponent implements OnInit {
     console.log(this.description);
   }
 
-  public getNewStartDateTime(value: string, value1: string){
+  public getNewStartDateTime(value: string, value1: string) {
     this.selectedDate = value;
     this.selectedStartTime = value1;
     this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
     return this.startDateTime;
   }
 
-  public getNewEndDateTime(value: string, value1: string){
-    if(value === null && value1 === null){
+  public getNewEndDateTime(value: string, value1: string) {
+    if (value === null && value1 === null) {
       this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
     }
-    else{
+    else {
       this.selectedDate = value;
       this.selectedEndTime = value1;
-    this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
-  }
-
-    console.log(this.endDateTime);
+      this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
+    }
     return this.endDateTime;
   }
 
-  public projectDropdown(value : string): void {
+  public projectDropdown(value: string): void {
     this.projectID = value;
   }
 
-  public taskDropdown(value : string): void {
+  public taskDropdown(value: string): void {
     this.taskID = value;
   }
 
-  createEntry(){
-    // if(this)
-       this.timeTrackingEntryService.createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, 3, this.projectID, this.taskID);
-      // this.timeTrackingEntryService.createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID);
+  createEntry() {
+    this.timeTrackingEntryService.createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, this.loginService.getLoggedUserID(), this.projectID, this.taskID);
   }
 }

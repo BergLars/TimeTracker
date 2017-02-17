@@ -13,8 +13,6 @@ let template = require('./login.component.html');
 export class LoginComponent {
 	private username: string;
 	private password: string;
-	private log: string;
-	private result: boolean;
 
 	constructor(private loginService: LoginService, private router: Router) { }
 
@@ -22,6 +20,5 @@ export class LoginComponent {
 		this.username = value;
 		this.password = value1;
 		this.loginService.compareCredentials(this.username, this.password);
-		this.log = this.username + ' ' + this.password;
 	}
 }

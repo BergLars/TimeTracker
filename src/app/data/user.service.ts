@@ -25,10 +25,10 @@ export class UserService implements IDataservice {
 	}
 
 	public getUsers(): Promise<IUser[]> {
-    	return store.findAll(RESOURCE_NAME);
-  	}
+		return store.findAll(RESOURCE_NAME);
+	}
 
-  	public isLoggedIn() {
+	public isLoggedIn() {
 		return this.loggedIn;
 	}
 }

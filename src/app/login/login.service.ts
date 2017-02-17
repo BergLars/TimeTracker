@@ -10,16 +10,18 @@ const ENDPOINT_NAME: string = 'login';
 
 @Injectable()
 export class LoginService implements IDataservice {
-	private user: any;
+	private user: IUser;
 
 	public baseUrl: string = environment.apiBaseUrl;
 
 	private loggedIn = false;
+	private loggedUserID: number;
+	private loggedUser: IUser;
 	public isLoading: Boolean = false;
-  	private entries: ITimeTrackingEntry[];
+	private entries: ITimeTrackingEntry[];
 
-	constructor(private http: Http, 
-    private timeTrackingEntryService: TimeTrackingEntryService, private router: Router) {
+	constructor(private http: Http,
+		private timeTrackingEntryService: TimeTrackingEntryService, private router: Router) {
 		// Define a Mapper for a "Project" resource
 		let resource = store.defineMapper(RESOURCE_NAME, {
 			basePath: this.baseUrl,
@@ -37,37 +39,33 @@ export class LoginService implements IDataservice {
 		return this.loggedIn;
 	}
 
-	public getUserByUsername(username: string): Promise<IUser>{
+	public getUserByUsername(username: string): Promise<IUser> {
 		return store.find(RESOURCE_NAME, username);
 	}
 
-	public compareCredentials(username: string, password: string){
-  		if( username !== undefined){
-			this.getUserByUsername(username).then(result => { 
-				this.user = result; 
-			// if( this.user.username == username){
-			// 	alert('Your username doesn\'t exist!');
-			// }
-			if( this.user.password === password) {
-				alert('Hello ' + username + ', your are logged in!' + this.user.id + this.user.pourcentageOfWork);
-				this.router.navigateByUrl('/timetracking');
-			}else{
-  				alert('Your password is wrong!');
-  	// 		};
-  			}}).then(() => {
-		      // Get user's time tracking entries
-		      return this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.user)
-		      // return this.timeTrackingEntryService.getTimeTrackingEntries()
-		        .then(result => {
-		        	this.entries = result;
-		        });
-		    })
-		    .then(result => {
-		        this.isLoading = false;
-		    })
-		    .catch(error => {
-		        this.isLoading = false;
-		    });
-		}	
+	public compareCredentials(username: string, password: string) {
+		this.getUserByUsername(username).then(result => {
+			this.user = result;
+			this.loggedUserID = this.user.id;
+			this.loggedUser = this.user;
+
+			if (username !== undefined) {
+				if (this.user.password === password) {
+					alert('Hello ' + username + ', your are logged in!' + this.user.id + ' ' + this.user.employmentDegree + ' ' + this.loggedUserID);
+					this.router.navigateByUrl('/timetracking');
+				} else {
+					alert('Your password is wrong!');
+					this.router.navigateByUrl('/');
+				}
+			}
+		});
+	}
+
+	public getLoggedUserID() {
+		return this.loggedUserID;
+	}
+
+	public getLoggedUser() {
+		return this.loggedUser;
 	}
 }
