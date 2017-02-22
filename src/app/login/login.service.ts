@@ -5,6 +5,7 @@ import { store } from '../data/datastore';
 import { IDataservice, TimeTrackingEntryService, ITimeTrackingEntry, IUser } from '../data';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/catch';
 
 const RESOURCE_NAME: string = 'user';
 const ENDPOINT_NAME: string = '/login';
@@ -33,18 +34,25 @@ export class LoginService implements IDataservice {
 
 	public request(username: string, password: string) {
 		let params = new URLSearchParams();
-		let data: Object;
 		params.set('username', username);
 		params.set('password', password);
 		return this.http.request(new Request({
 			method: RequestMethod.Get,
 			url: this.baseUrl + ENDPOINT_NAME,
 			search: params
-		})).subscribe((res) => {
-			this.loggedUser = res.json();
-			this.loggedUserID = this.loggedUser['id'];
-			this.router.navigate(['timetracking']);
-		});
+		})).map(res => res.json()).subscribe(
+			data => this.loggedUser = data,
+			err => {
+				if (err.status === 500) {
+					alert('Internal server error!')
+				} else if (err.status === 404) {
+					alert('No user found with username: ' + username + '!')
+				} else if (err.status === 400) {
+					alert('Wrong password!');
+				}
+			},
+			() => this.router.navigate(['timetracking'])
+			);
 	}
 
 	public logout() {
@@ -57,10 +65,7 @@ export class LoginService implements IDataservice {
 	}
 
 	public getLoggedUserID() {
+		this.loggedUserID = this.loggedUser['id'];
 		return this.loggedUserID;
-	}
-
-	public getLoggedUser(): Promise<IUser> {
-		return Promise.resolve(<IUser>this.loggedUser);
 	}
 }
