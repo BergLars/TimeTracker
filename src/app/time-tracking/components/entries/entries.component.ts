@@ -49,8 +49,6 @@ export class EntriesComponent implements OnInit {
   ngOnInit() { 
     this.projectService.getProjects().then((projects) => { this.projects = projects; 
   });
-    this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.loginService.getLoggedUser()).then((items) => { this.items = items; 
-  });
     this.taskService.getTasks().then((tasks) => { this.tasks = tasks; 
   });
   }

@@ -33,6 +33,7 @@ export class LoginService implements IDataservice {
 
 	public request(username: string, password: string) {
 		let params = new URLSearchParams();
+		let data: Object;
 		params.set('username', username);
 		params.set('password', password);
 		return this.http.request(new Request({
@@ -40,13 +41,10 @@ export class LoginService implements IDataservice {
 			url: this.baseUrl + ENDPOINT_NAME,
 			search: params
 		})).subscribe((res) => {
+			this.loggedUser = res.json();
+			this.loggedUserID = this.loggedUser['id'];
 			this.router.navigate(['timetracking']);
 		});
-		// return this.jsonp
-		// 	.get(this.baseUrl + ENDPOINT_NAME, { search: params })
-		// 	.map(function(res) {
-		// 		return res.json() || {};
-		// 	});
 	}
 
 	public logout() {
@@ -62,11 +60,7 @@ export class LoginService implements IDataservice {
 		return this.loggedUserID;
 	}
 
-	// public getLoggedUser() {
-	// 	return this.loggedUser;
-	// }
-
 	public getLoggedUser(): Promise<IUser> {
-		return Promise.resolve(this.loggedUser);
+		return Promise.resolve(<IUser>this.loggedUser);
 	}
 }

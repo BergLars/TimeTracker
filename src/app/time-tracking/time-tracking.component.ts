@@ -51,7 +51,7 @@ export class TimeTrackingComponent implements OnInit {
       .then(() => {
 
         // Get user's time tracking entries
-        return this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.loginService.getLoggedUser())
+        return this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.loginService.getLoggedUserID())
           .then(result => {
             this.entries = result;
           });
