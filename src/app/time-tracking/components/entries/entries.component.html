@@ -65,6 +65,13 @@
             </div>
         </template>
     </swui-datatable-column>
+    <swui-datatable-column name="Time spend">
+        <template swui-datatable-cell-template let-value="value" let-row="row">
+            <div>
+                {{ row.timeSpent() }}
+            </div>
+        </template>
+    </swui-datatable-column>
     <swui-datatable-column name="Actions">
         <template swui-datatable-cell-template let-value="value" let-row="row">
             <div [hidden]="!isSelected(row)">

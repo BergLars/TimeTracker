@@ -47,9 +47,6 @@ export class TimeTrackingComponent implements OnInit {
 
       // Get all tasks
       this.taskService.getTasks().then(result => { this.tasks = result; }),
-
-      // Get all users
-      this.userService.getUsers().then(result => { this.users = result })
     ])
       .then(() => {
 
