@@ -34,7 +34,29 @@ export class TimeTrackingEntryService implements IDataservice {
         },
         endTime: function() {
           var str = this.endDate;
-          return str.substring(11, 16);
+          return str.substring(11,16);
+        },
+        timeSpent: function() {
+          var timeSpent: string;
+          var timeSpentH: number;
+          var timeSpentMin: number;
+          var startTimeH: number = parseInt(this.startDate.substring(11,13));
+          var startTimeMin: number = parseInt(this.startDate.substring(14,16));
+          var endTimeH: number = parseInt(this.endDate.substring(11,13));
+          var endTimeMin: number = parseInt(this.endDate.substring(14,16));
+          if (endTimeMin >= startTimeMin) {
+            timeSpentMin = endTimeMin - startTimeMin;
+            timeSpentH = endTimeH - startTimeH;
+          } else {
+            timeSpentMin = endTimeMin - startTimeMin + 60;
+            timeSpentH = endTimeH - startTimeH - 1;
+          }
+          if (timeSpentMin < 10) {
+            timeSpent = timeSpentH + ":0" + timeSpentMin;  
+          } else{
+            timeSpent = timeSpentH + ":" + timeSpentMin;
+          }
+          return timeSpent;
         }
       },
 
