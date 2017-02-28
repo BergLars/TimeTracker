@@ -4,6 +4,7 @@
         <tr>
             <td>
                 <md-input #description placeholder="Description"></md-input>
+                <!-- <md-input placeholder="Description" [(ngModel)]="description"></md-input> -->
             </td>
         </tr>
         <br>
@@ -44,6 +45,6 @@
     <br>
 </div>
 <div md-dialog-actions>
-    <button type="button" md-button (click)="getDescription(description.value);projectDropdown(project.value);taskDropdown(task.value);getStartDateTime(date.value,startTime.value);getEndDateTime(date.value,endTime.value);createEntry();dialogRef.close(true)">OK</button>
+    <button type="button" md-button (click)="getDescription(description.value);projectDropdown(project.value);taskDropdown(task.value);getStartDateTime(date.value,startTime.value);getEndDateTime(date.value,endTime.value);ok()">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>

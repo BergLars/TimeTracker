@@ -47,10 +47,7 @@ export class EntriesComponent implements OnInit {
     private loginService: LoginService) { }
 
   ngOnInit() { 
-    this.projectService.getProjects().then((projects) => { this.projects = projects; 
-  });
-    this.taskService.getTasks().then((tasks) => { this.tasks = tasks; 
-  });
+    this.loadEntries();
   }
  
   updateValue(event, cell, cellValue, row) {
@@ -104,7 +101,12 @@ export class EntriesComponent implements OnInit {
   public openDialog() {
     this.entryDialogService
       .confirm('New Entry', this.viewContainerRef)
-      .subscribe(res => this.result = res);
+      .subscribe(res => {
+        this.result = res;
+        if (this.result) {
+          this.loadEntries();
+        }
+      });
   }
 
   public openUpdateDialog(row) {
@@ -117,5 +119,12 @@ export class EntriesComponent implements OnInit {
     this.deleteEntryService
       .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
       .subscribe(res => this.result = res);
+  }
+
+  private loadEntries(){
+    this.projectService.getProjects().then((projects) => { this.projects = projects; 
+  });
+    this.taskService.getTasks().then((tasks) => { this.tasks = tasks; 
+  });
   }
 }
