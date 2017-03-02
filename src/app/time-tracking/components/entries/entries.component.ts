@@ -37,58 +37,62 @@ export class EntriesComponent implements OnInit {
   public result: any;
 
   constructor(
-    public projectService: ProjectService, 
-    public timeTrackingEntryService: TimeTrackingEntryService, 
-    public taskService: TaskService, 
-    private entryDialogService: EntryDialogService, 
-    private deleteEntryService: DeleteEntryService, 
-    private updateEntryService: UpdateDialogService, 
+    public projectService: ProjectService,
+    public timeTrackingEntryService: TimeTrackingEntryService,
+    public taskService: TaskService,
+    private entryDialogService: EntryDialogService,
+    private deleteEntryService: DeleteEntryService,
+    private updateEntryService: UpdateDialogService,
     private viewContainerRef: ViewContainerRef,
     private loginService: LoginService) { }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.loadEntries();
   }
- 
+
   updateValue(event, cell, cellValue, row) {
     this.editing[row.$$index + '-' + cell] = false;
     this.items[row.$$index][cell] = event.target.value;
   }
 
   onSelect({ selected }) {
-    this.selectedRow = selected[0]; 
-    this.rowid = this.selectedRow.id;
-    this.selectedDescription = this.selectedRow.description;
-    this.selectedProject = this.selectedRow.projectName();
-    this.selectedTask = this.selectedRow.taskDescription();
-    this.selectedDate = this.selectedRow.date();
-    this.selectedStartTime = this.selectedRow.startTime();
-    this.selectedEndTime = this.selectedRow.endTime();
+    this.selectedRow = selected[0];
+    this.displayOnDialogView(this.selectedRow);
   }
 
-  isSelected(row){
-    if(this.selectedRow != null && this.selectedRow.id == row.id){
+  displayOnDialogView(selectedRow) {
+    this.rowid = selectedRow.id;
+    this.selectedDescription = selectedRow.description;
+    this.selectedProject = selectedRow.projectName();
+    this.selectedTask = selectedRow.taskDescription();
+    this.selectedDate = selectedRow.date();
+    this.selectedStartTime = selectedRow.startTime();
+    this.selectedEndTime = selectedRow.endTime();
+  }
+
+  isSelected(row) {
+    if (this.selectedRow != null && this.selectedRow.id == row.id) {
       return true;
     }
     return false;
   }
 
-  onDelete(row){
+  onDelete(row) {
     this.timeTrackingEntryService.deleteTimeTrackingEntry(row.id);
   }
 
-  toggleEditMode(){
+  toggleEditMode() {
     this.editMode = !this.editMode;
   }
 
-  discardChange(){
+  discardChange() {
     this.selectedRow.description = this.cloneSelectedRow.description;
     this.toggleEditMode();
   }
 
   updateRowPosition() {
     let ix = this.getSelectedIx();
-    let arr = [ ...this.rows ];
+    let arr = [...this.rows];
     arr[ix - 1] = this.rows[ix];
     arr[ix] = this.rows[ix - 1];
     this.rows = arr;
@@ -112,7 +116,11 @@ export class EntriesComponent implements OnInit {
   public openUpdateDialog(row) {
     this.updateEntryService
       .confirm('Update Entry', this.viewContainerRef, row)
-      .subscribe(res => this.result = res);
+      .subscribe(res => {
+        this.result = res;
+        this.selectedDescription;
+        row.description = this.selectedDescription;
+      });
   }
 
   public openDeleteDialog(row) {
@@ -121,10 +129,12 @@ export class EntriesComponent implements OnInit {
       .subscribe(res => this.result = res);
   }
 
-  private loadEntries(){
-    this.projectService.getProjects().then((projects) => { this.projects = projects; 
-  });
-    this.taskService.getTasks().then((tasks) => { this.tasks = tasks; 
-  });
+  private loadEntries() {
+    this.projectService.getProjects().then((projects) => {
+      this.projects = projects;
+    });
+    this.taskService.getTasks().then((tasks) => {
+      this.tasks = tasks;
+    });
   }
 }

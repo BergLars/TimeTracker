@@ -76,7 +76,7 @@
         <template swui-datatable-cell-template let-value="value" let-row="row">
             <div [hidden]="!isSelected(row)">
                 <div [hidden]="editMode">
-                    <span (click)=openUpdateDialog(row)><md-icon>update</md-icon></span>
+                    <span (click)=openUpdateDialog(row);><md-icon>update</md-icon></span>
                     <span (click)="openDeleteDialog(row)"><md-icon>delete_forever</md-icon></span>
                 </div>
                 <!-- <div [hidden]="!editMode">

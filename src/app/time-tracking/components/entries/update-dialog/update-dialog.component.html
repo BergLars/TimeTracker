@@ -2,8 +2,9 @@
 <div md-dialog-content>
     <table>
         <tr>
-            <td>
-                <md-input #description placeholder="Description" [value]="selectedDescription"></md-input>
+            <td><!-- 
+                <md-input #description placeholder="Description" [value]="selectedDescription"></md-input> -->
+                <md-input placeholder="Description" [(ngModel)]="selectedDescription">{{selectedDescription}}</md-input>
             </td>
         </tr>
         <br>
@@ -44,6 +45,6 @@
     <br>
 </div>
 <div md-dialog-actions>
-    <button type="button" md-button (click)="getDescription(description.value);getStartDateTime(date.value,startTime.value);getEndDateTime(date.value,endTime.value);updateEntry();dialogRef.close(true)">OK</button>
+    <button type="button" md-button (click)="getDescription(selectedDescription);getStartDateTime(date.value,startTime.value);getEndDateTime(date.value,endTime.value);ok();">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>

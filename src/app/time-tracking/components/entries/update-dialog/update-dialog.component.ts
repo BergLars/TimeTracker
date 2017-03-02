@@ -10,7 +10,7 @@ export class UpdateDialogComponent implements OnInit {
   @Input() projects: IProject[] = [];
   @Input() tasks: ITask[] = [];
   public title: string;
-  public rowid: number;
+  public rowID: number;
   public selectedDescription: string;
   public selectedProject: string;
   public selectedTask: string;
@@ -33,6 +33,10 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   public getDescription(value: string) {
+    this.description = value;
+  }
+
+  public setDescription(value: string) {
     this.description = value;
   }
 
@@ -67,10 +71,6 @@ export class UpdateDialogComponent implements OnInit {
     public timeTrackingEntryService: TimeTrackingEntryService) {
   }
 
-  updateEntry() {
-    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowid, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID);
-  }
-
   ngOnInit() {
     this.projectService.getProjects().then((projects) => {
       this.projects = projects;
@@ -78,5 +78,17 @@ export class UpdateDialogComponent implements OnInit {
     this.taskService.getTasks().then((tasks) => {
       this.tasks = tasks;
     });
+  }
+
+  public ok() {
+    // this.getDescription(description.value);
+    // this.projectDropdown(project.value);
+    // this.taskDropdown(task.value);
+    // this.getStartDateTime(date.value,startTime.value);
+    // this.getEndDateTime(date.value,endTime.value);
+    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID)
+      .then(() => {
+        this.dialogRef.close(true);
+      });
   }
 }
