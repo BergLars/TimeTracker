@@ -22,7 +22,9 @@ export class UpdateDialogService {
     dialogRef.componentInstance.rowID = row.id;
     dialogRef.componentInstance.userprofileID = row.userprofileID;
     dialogRef.componentInstance.projectID = row.projectID;
+    dialogRef.componentInstance.selectedProject = row.projectID;
     dialogRef.componentInstance.taskID = row.taskID;
+    dialogRef.componentInstance.selectedTask = row.taskID;
     dialogRef.componentInstance.selectedDate = row.startDate.substring(0,10);
     dialogRef.componentInstance.selectedStartTime = row.startDate.substring(11,16);
     dialogRef.componentInstance.selectedEndTime = row.endDate.substring(11,16);

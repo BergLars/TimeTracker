@@ -9,7 +9,7 @@ import { ProfileComponent } from './profile/profile.component';
 
 export const routes = [
 	{ path: 'timetracking', component: TimeTrackingComponent, pathMatch: 'full' },
-	{ path: 'login', component: LoginComponent },
+	{ path: '', component: LoginComponent },
 	{ path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard] }, 
 	{ path: 'export', component: ExportComponent },
 	{ path: 'entries', component: EntriesComponent }
