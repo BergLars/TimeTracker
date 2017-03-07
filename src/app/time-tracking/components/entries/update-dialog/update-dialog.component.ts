@@ -81,14 +81,11 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   public ok() {
-    // this.getDescription(description.value);
-    // this.projectDropdown(project.value);
-    // this.taskDropdown(task.value);
-    // this.getStartDateTime(date.value,startTime.value);
-    // this.getEndDateTime(date.value,endTime.value);
+    this.projectID = Number(this.projectID);
+    this.taskID = Number(this.taskID);
     this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID)
       .then(() => {
-        this.dialogRef.close(true);
+        this.dialogRef.close(this);
       });
   }
 }

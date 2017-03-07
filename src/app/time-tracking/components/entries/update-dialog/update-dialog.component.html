@@ -4,14 +4,14 @@
         <tr>
             <td><!-- 
                 <md-input #description placeholder="Description" [value]="selectedDescription"></md-input> -->
-                <md-input placeholder="Description" [(ngModel)]="selectedDescription">{{selectedDescription}}</md-input>
+                <md-input placeholder="Description" [(ngModel)]="selectedDescription"></md-input>
             </td>
         </tr>
         <br>
         <tr>
             <td>Project:</td>
-            <td>
-                <select #project (change)="projectDropdown(project.value)">
+            <td> 
+                <select #project (change)="projectDropdown(project.value)" [(ngModel)]='project.id'>
                     <option *ngFor="let project of projects" [value]='project.id' [selected]='project.id === selectedProject'>{{ project.projectName }}</option>
                 </select>
             </td>
@@ -20,7 +20,7 @@
         <tr>
             <td>Task:</td>
             <td>
-                <select #task (change)="taskDropdown(task.value)">
+                <select #task (change)="taskDropdown(task.value)" [(ngModel)]='task.id'>
                     <option *ngFor="let task of tasks" [value]="task.id" [selected]='task.id === selectedTask'>{{ task.taskDescription }}</option>
                 </select>
             </td>
@@ -28,13 +28,13 @@
         <br>
         <tr>
             <td>
-                <md-input placeholder="Date" #date [value]="selectedDate"></md-input>
+                <md-input placeholder="Date" #date [(ngModel)]="selectedDate"></md-input>
             </td>
         </tr>
         <br>
         <tr>
             <td>
-                <md-input placeholder="Start Time" #startTime [value]="selectedStartTime"></md-input>
+                <md-input placeholder="Start Time" #startTime [(ngModel)]="selectedStartTime"></md-input>
             </td>
             <td>&nbsp;</td>
             <td>

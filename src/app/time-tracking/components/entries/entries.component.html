@@ -1,4 +1,4 @@
-<button md-raised-button color="primary" (click)="openDialog(row)">NEW ENTRY</button>
+<button md-raised-button color="primary" (click)="openDialog(row)">NEW ENTRY</button> <i (click)="loadEntries()" class="material-icons">update</i>
 <swui-datatable class="material tablesize" [rows]="items" [columnMode]="'force'" [columns]="columns" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [selected]="selected" [selectionType]="'single'" (select)='onSelect($event)'>
     <swui-datatable-column name="Description">
         <template swui-datatable-cell-template let-row="row">

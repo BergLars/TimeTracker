@@ -17,6 +17,13 @@ export class DeleteEntryComponent implements OnInit {
     constructor(public dialogRef: MdDialogRef<DeleteEntryComponent>, 
     	public timeTrackingEntryService: TimeTrackingEntryService) {
     }
+
+  public ok() {
+    this.timeTrackingEntryService.deleteTimeTrackingEntry(this.rowid)
+      .then(() => {
+        this.dialogRef.close(true);
+      });
+  }
     onDelete(){
   	  this.timeTrackingEntryService.deleteTimeTrackingEntry(this.rowid);
   	}

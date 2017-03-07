@@ -26,6 +26,7 @@ export class EntriesComponent implements OnInit {
   timeTrackingEntry: ITimeTrackingEntry;
   editMode: boolean = false;
   rowid: number;
+  userID: number;
   selectedDescription: string;
   selectedProject: string;
   selectedTask: string;
@@ -118,18 +119,33 @@ export class EntriesComponent implements OnInit {
       .confirm('Update Entry', this.viewContainerRef, row)
       .subscribe(res => {
         this.result = res;
-        this.selectedDescription;
-        row.description = this.selectedDescription;
+        if (this.result) {
+          this.loadEntries();
+        }
+        this.items[row.$$index]['description'] = this.result.description;
+        this.items[row.$$index]['projectID'] = this.result.projectID;
+        //this.items[row.$$index]['taskID'] = this.result.taskID;
+        this.items[row.$$index]['startDate'] = this.result.startDateTime;
+        this.items[row.$$index]['endDate'] = this.result.endDateTime;
       });
-  }
+    }
 
   public openDeleteDialog(row) {
     this.deleteEntryService
       .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
-      .subscribe(res => this.result = res);
+      .subscribe(res => {
+        this.result = res;
+        if (this.result) {
+          this.loadEntries();
+        }
+      });
   }
 
   private loadEntries() {
+    this.userID = this.loginService.getLoggedUserID();
+    this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((items) => {
+      this.items = items;
+    });
     this.projectService.getProjects().then((projects) => {
       this.projects = projects;
     });
