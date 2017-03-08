@@ -1,11 +1,13 @@
 import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeTrackingEntryService } from '../../../data';
-import { MdDialog, MdDialogRef } from '@angular/material';
+import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
 import { UpdateDialogService } from './update-dialog/update-dialog.service';
+import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
 import { LoginService } from '../../../login';
+// import { SearchDialogComponent } from './components/search-dialog/search-dialog.component';
 
 @Component({
   selector: 'app-entries',
@@ -13,11 +15,12 @@ import { LoginService } from '../../../login';
   styleUrls: ['./entries.component.scss']
 })
 export class EntriesComponent implements OnInit {
-  @Input() items: ITimeTrackingEntry[] = [];
   @Input() projects: IProject[] = [];
   @Input() project: IProject;
   @Input() tasks: ITask[] = [];
   @Input() task: ITask;
+  public isLoading: Boolean = false;
+  public items: ITimeTrackingEntry[] = [];
 
   rows = [];
   selected = [];
@@ -35,6 +38,7 @@ export class EntriesComponent implements OnInit {
 
   public editing = {};
   public result: any;
+  // private dialogRefSearch: MdDialogRef<SearchDialogComponent>;
 
   constructor(
     public projectService: ProjectService,
@@ -42,9 +46,10 @@ export class EntriesComponent implements OnInit {
     public taskService: TaskService,
     private entryDialogService: EntryDialogService,
     private deleteEntryService: DeleteEntryService,
-    private updateEntryService: UpdateDialogService,
+    private updateDialogService: UpdateDialogService,
     private viewContainerRef: ViewContainerRef,
-    private loginService: LoginService) { }
+    private loginService: LoginService,
+    private dialog: MdDialog) { }
 
   ngOnInit() {
     this.loadEntries();
@@ -108,19 +113,14 @@ export class EntriesComponent implements OnInit {
       .subscribe(res => {
         this.result = res;
         if (this.result) {
-          this.loadEntries();
+          // this.loadEntries();
         }
       });
   }
 
   public openUpdateDialog(row) {
-    this.updateEntryService
-      .confirm('Update Entry', this.viewContainerRef, row)
-      .subscribe(res => {
-        this.result = res;
-        this.selectedDescription;
-        row.description = this.selectedDescription;
-      });
+    this.updateDialogService
+      .confirm('Update Entry', this.viewContainerRef, row);
   }
 
   public openDeleteDialog(row) {
@@ -130,11 +130,54 @@ export class EntriesComponent implements OnInit {
   }
 
   private loadEntries() {
-    this.projectService.getProjects().then((projects) => {
-      this.projects = projects;
-    });
-    this.taskService.getTasks().then((tasks) => {
-      this.tasks = tasks;
-    });
+    this.isLoading = false;
+    Promise.all([
+      // Get all projects
+      this.projectService.getProjects().then(result => { this.projects = result; }),
+
+      // Get all tasks
+      this.taskService.getTasks().then(result => { this.tasks = result; }),
+
+      this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.loginService.getLoggedUserID()).then(
+        result => {
+          this.items = result;
+        })
+    ]).then(result => {
+      this.getStatistics();
+    })
+      .catch(error => {
+        this.isLoading = false;
+      });
+  }
+
+  public openDialogTest(row) {
+    let config = new MdDialogConfig();
+    config.data = row;
+    let dialogRef = this.dialog.open(UpdateDialogComponent);
+  }
+
+  private getStatistics() {
+    // TODO
+    // this.statistics.totalAvailableVacationDays = 18;
+    // this.statistics.totalHousWorkedMonth = 69;
+    // this.statistics.totalHousWorkedWeek = 21;
+  }
+
+  public showSearchDialog() {
+    // this.dialogRefSearch = this.dialog.open(SearchDialogComponent);
+
+    // this.dialogRefSearch
+    //   .afterClosed()
+    //   .subscribe(result => {
+    //     this.dialogRefSearch = null;
+    //   });
+  }
+
+  public showExportDialog() {
+
+  }
+
+  public showVacationWorkedHoursDialog() {
+
   }
 }

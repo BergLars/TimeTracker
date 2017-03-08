@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import * as moment from 'moment';
+// import * as moment from 'moment';
 
 @Component({
   selector: 'app-datepicker',
@@ -40,7 +40,7 @@ export class DatepickerComponent {
   }
  
   public d20090824():void {
-    this.dt = moment('2009-08-24', 'YYYY-MM-DD').toDate();
+    // this.dt = moment('2009-08-24', 'YYYY-MM-DD').toDate();
   }
  
   // todo: implement custom class cases

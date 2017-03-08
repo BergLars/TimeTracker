@@ -1,5 +1,5 @@
 import { Component, ViewContainerRef } from '@angular/core';
-import { ComponentsHelper } from 'ng2-bootstrap/ng2-bootstrap';
+// import { ComponentsHelper } from 'ng2-bootstrap';
 import { environment } from '../environments/environment'
 
 @Component({
@@ -15,9 +15,7 @@ export class AppComponent {
         this.viewContainerRef = viewContainerRef;
     }
 }
-
-// it should fix the issue for NG2 v2.2.1 until an official patch is released by NG2-bootstrap team
-ComponentsHelper.prototype.getRootViewContainerRef = function () {
+this.getRootViewContainerRef = function() {
     // https://github.com/angular/angular/issues/9293
     if (this.root) {
         return this.root;

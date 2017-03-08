@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { IStatistics } from '../../../data';
 
 @Component({
@@ -6,6 +6,9 @@ import { IStatistics } from '../../../data';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit{
   @Input() statistics: IStatistics[] = [];
+
+  ngOnInit() {
+  }
 }

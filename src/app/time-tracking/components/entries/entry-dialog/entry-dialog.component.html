@@ -3,15 +3,16 @@
     <table>
         <tr>
             <td>
-                <md-input #description placeholder="Description"></md-input>
-                <!-- <md-input placeholder="Description" [(ngModel)]="description"></md-input> -->
+                <md-input-container>
+                    <input mdInput placeholder="Description" [(ngModel)]="selectedDescription">
+                </md-input-container>
             </td>
         </tr>
         <br>
         <tr>
             <td>Project:</td>
             <td>
-                <select #project >
+                <select #project>
                     <option *ngFor="let project of projects" [value]='project.id'>{{ project.projectName }}</option>
                 </select>
             </td>
@@ -28,17 +29,23 @@
         <br>
         <tr>
             <td>
-                <md-input placeholder="Date" #date></md-input>
+                <md-input-container>
+                    <input mdInput placeholder="Date" #date [value]="selectedDate">
+                </md-input-container>
             </td>
         </tr>
         <br>
         <tr>
             <td>
-                <md-input placeholder="Start Time" #startTime></md-input>
+                <md-input-container>
+                    <input mdInput placeholder="Start Time" #startTime [value]="selectedStartTime">
+                </md-input-container>
             </td>
             <td>&nbsp;</td>
             <td>
-                <md-input placeholder="End Time" #endTime></md-input>
+                <md-input-container>
+                    <input mdInput placeholder="End Time" #endTime [value]="selectedEndTime">
+                </md-input-container>
             </td>
         </tr>
     </table>

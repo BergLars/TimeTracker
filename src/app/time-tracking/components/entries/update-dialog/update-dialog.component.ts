@@ -10,7 +10,7 @@ export class UpdateDialogComponent implements OnInit {
   @Input() projects: IProject[] = [];
   @Input() tasks: ITask[] = [];
   public title: string;
-  public rowID: number;
+  public rowid: number;
   public selectedDescription: string;
   public selectedProject: string;
   public selectedTask: string;
@@ -32,19 +32,16 @@ export class UpdateDialogComponent implements OnInit {
     this.taskID = value;
   }
 
-  public getDescription(value: string) {
+  public getNewDescription(value: string) {
     this.description = value;
   }
 
-  public setDescription(value: string) {
-    this.description = value;
-  }
-
-  public getStartDateTime(value: any, value1: any) {
+  public getNewStartDateTime(value: any, value1: any) {
     if (value === undefined || value1 === undefined) {
       this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
     }
     else {
+      console.log("Value: " + value);
       this.selectedDate = value;
       this.selectedStartTime = value1;
       this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
@@ -52,7 +49,7 @@ export class UpdateDialogComponent implements OnInit {
     return this.startDateTime;
   }
 
-  public getEndDateTime(value: any, value1: any) {
+  public getNewEndDateTime(value: any, value1: any) {
     if (value === undefined || value1 === undefined) {
       this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
     }
@@ -71,24 +68,17 @@ export class UpdateDialogComponent implements OnInit {
     public timeTrackingEntryService: TimeTrackingEntryService) {
   }
 
-  ngOnInit() {
-    this.projectService.getProjects().then((projects) => {
-      this.projects = projects;
-    });
-    this.taskService.getTasks().then((tasks) => {
-      this.tasks = tasks;
-    });
+  updateEntry() {
+    console.log(this.projectID, this.taskID, this.userprofileID);
+    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowid, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID);
   }
 
-  public ok() {
-    // this.getDescription(description.value);
-    // this.projectDropdown(project.value);
-    // this.taskDropdown(task.value);
-    // this.getStartDateTime(date.value,startTime.value);
-    // this.getEndDateTime(date.value,endTime.value);
-    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID)
-      .then(() => {
-        this.dialogRef.close(true);
-      });
+  ngOnInit() {
+    this.projectService.getProjects().then((projects) => {
+    this.projects = projects;
+    });
+    this.taskService.getTasks().then((tasks) => {
+    this.tasks = tasks;
+    });
   }
 }

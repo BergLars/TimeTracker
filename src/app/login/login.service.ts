@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Request, RequestMethod, URLSearchParams, JsonpModule, Jsonp, Response } from '@angular/http';
+import { Http, Headers, Request, RequestMethod, URLSearchParams, Response } from '@angular/http';
 import { environment } from '../../environments/environment';
 import { store } from '../data/datastore';
 import { IDataservice, TimeTrackingEntryService, ITimeTrackingEntry, IUser } from '../data';
@@ -23,7 +23,7 @@ export class LoginService implements IDataservice {
 	private entries: ITimeTrackingEntry[];
 
 	constructor(private http: Http,
-		private timeTrackingEntryService: TimeTrackingEntryService, private router: Router, private jsonp: Jsonp) {
+		private timeTrackingEntryService: TimeTrackingEntryService, private router: Router) {
 		// Define a Mapper for a "Project" resource
 		let resource = store.defineMapper(RESOURCE_NAME, {
 			basePath: this.baseUrl,

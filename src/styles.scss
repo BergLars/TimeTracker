@@ -43,22 +43,22 @@ html, body {
 //     }
 // }
 
-.inputdemoIcons .inputIconDemo {
-    min-height: 48px;
-}
+// .inputdemoIcons .inputIconDemo {
+//     min-height: 48px;
+// }
 
-.inputdemoIcons md-input-container:not(.md-input-invalid) > md-icon.email {
-    color: green;
-}
+// .inputdemoIcons md-input-container:not(.md-input-invalid) > md-icon.email {
+//     color: green;
+// }
 
-.inputdemoIcons md-input-container:not(.md-input-invalid) > md-icon.name {
-    color: dodgerblue;
-}
+// .inputdemoIcons md-input-container:not(.md-input-invalid) > md-icon.name {
+//     color: dodgerblue;
+// }
 
-.inputdemoIcons md-input-container.md-input-invalid > md-icon.email,
-.inputdemoIcons md-input-container.md-input-invalid > md-icon.name {
-    color: red;
-}
+// .inputdemoIcons md-input-container.md-input-invalid > md-icon.email,
+// .inputdemoIcons md-input-container.md-input-invalid > md-icon.name {
+//     color: red;
+// }
 
 .btn-sidebar {
     width: 100%;
@@ -101,6 +101,6 @@ daypicker table {
     margin-left: 25%;
 }
 
-div.md-input-underline{
-  margin-top : 10px;
-}
+// div.md-input-underline{
+//   margin-top : 10px;
+// }

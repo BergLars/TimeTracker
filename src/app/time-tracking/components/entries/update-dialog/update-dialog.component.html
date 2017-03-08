@@ -2,9 +2,10 @@
 <div md-dialog-content>
     <table>
         <tr>
-            <td><!-- 
-                <md-input #description placeholder="Description" [value]="selectedDescription"></md-input> -->
-                <md-input placeholder="Description" [(ngModel)]="selectedDescription">{{selectedDescription}}</md-input>
+            <td>
+                <md-input-container>
+                    <input mdInput placeholder="Description" [(ngModel)]="selectedDescription">
+                </md-input-container>
             </td>
         </tr>
         <br>
@@ -28,17 +29,23 @@
         <br>
         <tr>
             <td>
-                <md-input placeholder="Date" #date [value]="selectedDate"></md-input>
+                <md-input-container>
+                    <input mdInput placeholder="Date" #date [value]="selectedDate">
+                </md-input-container>
             </td>
         </tr>
         <br>
         <tr>
             <td>
-                <md-input placeholder="Start Time" #startTime [value]="selectedStartTime"></md-input>
+                <md-input-container>
+                    <input mdInput placeholder="Start Time" #startTime [value]="selectedStartTime">
+                </md-input-container>
             </td>
             <td>&nbsp;</td>
             <td>
-                <md-input placeholder="End Time" #endTime [value]="selectedEndTime"></md-input>
+                <md-input-container>
+                    <input mdInput placeholder="End Time" #endTime [value]="selectedEndTime">
+                </md-input-container>
             </td>
         </tr>
     </table>
