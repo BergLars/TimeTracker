@@ -28,7 +28,8 @@ export class EntriesComponent implements OnInit {
   cloneSelectedRow: any;
   timeTrackingEntry: ITimeTrackingEntry;
   editMode: boolean = false;
-  rowid: number;
+  rowID: number;
+  userID: number;
   selectedDescription: string;
   selectedProject: string;
   selectedTask: string;
@@ -62,11 +63,10 @@ export class EntriesComponent implements OnInit {
 
   onSelect({ selected }) {
     this.selectedRow = selected[0];
-    this.displayOnDialogView(this.selectedRow);
   }
 
   displayOnDialogView(selectedRow) {
-    this.rowid = selectedRow.id;
+    this.rowID = selectedRow.id;
     this.selectedDescription = selectedRow.description;
     this.selectedProject = selectedRow.projectName();
     this.selectedTask = selectedRow.taskDescription();
@@ -113,20 +113,36 @@ export class EntriesComponent implements OnInit {
       .subscribe(res => {
         this.result = res;
         if (this.result) {
-          // this.loadEntries();
+          this.loadEntries();
         }
       });
   }
 
   public openUpdateDialog(row) {
     this.updateDialogService
-      .confirm('Update Entry', this.viewContainerRef, row);
+      .confirm('Update Entry', this.viewContainerRef, row)
+      .subscribe(res => {
+        this.result = res;
+        if (this.result) {
+          this.loadEntries();
+        }
+        this.items[row.$$index]['description'] = this.result.description;
+        this.items[row.$$index]['projectID'] = this.result.projectID;
+        //this.items[row.$$index]['taskID'] = this.result.taskID;
+        this.items[row.$$index]['startDate'] = this.result.startDateTime;
+        this.items[row.$$index]['endDate'] = this.result.endDateTime;
+      });
   }
 
   public openDeleteDialog(row) {
     this.deleteEntryService
       .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
-      .subscribe(res => this.result = res);
+      .subscribe(res => {
+        this.result = res;
+        if (this.result) {
+          this.loadEntries();
+        }
+      });
   }
 
   private loadEntries() {
@@ -138,23 +154,23 @@ export class EntriesComponent implements OnInit {
       // Get all tasks
       this.taskService.getTasks().then(result => { this.tasks = result; }),
 
-      this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.loginService.getLoggedUserID()).then(
-        result => {
-          this.items = result;
+      this.userID = this.loginService.getLoggedUserID(),
+      this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((items) => {
+        this.items = items;
+      }).then(result => {
+        this.getStatistics();
+      })
+        .catch(error => {
+          this.isLoading = false;
         })
-    ]).then(result => {
-      this.getStatistics();
-    })
-      .catch(error => {
-        this.isLoading = false;
-      });
+    ]);
   }
 
-  public openDialogTest(row) {
-    let config = new MdDialogConfig();
-    config.data = row;
-    let dialogRef = this.dialog.open(UpdateDialogComponent);
-  }
+  // public openDialogTest(row) {
+  //   let config = new MdDialogConfig();
+  //   config.data = row;
+  //   let dialogRef = this.dialog.open(UpdateDialogComponent);
+  // }
 
   private getStatistics() {
     // TODO
@@ -178,6 +194,5 @@ export class EntriesComponent implements OnInit {
   }
 
   public showVacationWorkedHoursDialog() {
-
   }
 }

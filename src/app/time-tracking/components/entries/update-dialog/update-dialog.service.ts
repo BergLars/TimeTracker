@@ -20,7 +20,7 @@ export class UpdateDialogService {
     dialogRef.componentInstance.title = title;
     dialogRef.componentInstance.selectedDescription = row.description;
     dialogRef.componentInstance.selectedProject = row.projectID;
-    dialogRef.componentInstance.rowid = row.id;
+    dialogRef.componentInstance.rowID = row.id;
     dialogRef.componentInstance.userprofileID = row.userprofileID;
     dialogRef.componentInstance.projectID = row.projectID;
     dialogRef.componentInstance.taskID = row.taskID;

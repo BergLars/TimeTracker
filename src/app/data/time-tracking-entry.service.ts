@@ -88,7 +88,8 @@ export class TimeTrackingEntryService implements IDataservice {
   public getTimeTrackingEntriesByUser(id: number): Promise<ITimeTrackingEntry[]> {
     let endpoint = '/' + ENDPOINT_NAME + '/' + id + '/entries';
     return store.findAll(RESOURCE_NAME, {}, {
-      endpoint: endpoint
+      endpoint: endpoint,
+      bypasscache: true
     });
   }
 

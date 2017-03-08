@@ -73,16 +73,7 @@ export class EntryDialogComponent implements OnInit {
     this.taskID = value;
   }
 
-  createEntry() {
-    this.timeTrackingEntryService.createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, this.loginService.getLoggedUserID(), this.projectID, this.taskID);
-  }
-
   public ok() {
-    // this.getDescription(description.value);
-    // this.projectDropdown(project.value);
-    // this.taskDropdown(task.value);
-    // this.getStartDateTime(date.value,startTime.value);
-    // this.getEndDateTime(date.value,endTime.value);
     this.timeTrackingEntryService
       .createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, this.loginService.getLoggedUserID(), this.projectID, this.taskID)
       .then(() => {
