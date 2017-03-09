@@ -21,6 +21,7 @@ export class EntriesComponent implements OnInit {
   @Input() task: ITask;
   public isLoading: Boolean = false;
   public items: ITimeTrackingEntry[] = [];
+  @Input() rowSize: number = undefined;
 
   rows = [];
   selected = [];
@@ -36,10 +37,16 @@ export class EntriesComponent implements OnInit {
   selectedDate: string;
   selectedStartTime: string;
   selectedEndTime: string;
+  // limits: number[];
 
   public editing = {};
   public result: any;
   // private dialogRefSearch: MdDialogRef<SearchDialogComponent>;
+  private list = [
+    { id: this.rowSize, name: 'Default' },
+    { id: 5, name: 'Five' },
+    { id: 10, name: 'Ten' }
+  ];
 
   constructor(
     public projectService: ProjectService,
@@ -63,16 +70,6 @@ export class EntriesComponent implements OnInit {
 
   onSelect({ selected }) {
     this.selectedRow = selected[0];
-  }
-
-  displayOnDialogView(selectedRow) {
-    this.rowID = selectedRow.id;
-    this.selectedDescription = selectedRow.description;
-    this.selectedProject = selectedRow.projectName();
-    this.selectedTask = selectedRow.taskDescription();
-    this.selectedDate = selectedRow.date();
-    this.selectedStartTime = selectedRow.startTime();
-    this.selectedEndTime = selectedRow.endTime();
   }
 
   isSelected(row) {
@@ -147,6 +144,7 @@ export class EntriesComponent implements OnInit {
 
   private loadEntries() {
     this.isLoading = false;
+    console.log(this.rowSize);
     Promise.all([
       // Get all projects
       this.projectService.getProjects().then(result => { this.projects = result; }),

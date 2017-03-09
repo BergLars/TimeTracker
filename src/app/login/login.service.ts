@@ -45,10 +45,8 @@ export class LoginService implements IDataservice {
 			err => {
 				if (err.status === 500) {
 					alert('Internal server error!')
-				} else if (err.status === 404) {
-					alert('No user found with username: ' + username + '!')
-				} else if (err.status === 400) {
-					alert('Wrong password!');
+				} else if (err.status === 404 || err.status === 400) {
+					alert('Wrong username or password!!')
 				}
 			},
 			() => this.router.navigate(['timetracking'])
@@ -64,7 +62,7 @@ export class LoginService implements IDataservice {
 		return this.loggedIn;
 	}
 
-	public getLoggedUserID() {
+	public getLoggedUserID(): number {
 		this.loggedUserID = this.loggedUser['id'];
 		return this.loggedUserID;
 	}

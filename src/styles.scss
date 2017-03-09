@@ -3,36 +3,29 @@
 // Material Design theme
 @import '~@angular/material/core/theming/prebuilt/indigo-pink.css';
 @import 'flexbox.scss';
-
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
     padding: 0;
     margin: 0;
 }
 
-
-
- .ftt-right {
-     text-align: right;
- }
-
-
+.ftt-right {
+    text-align: right;
+}
 
 // h1 {
 //     color: #369;
 //     font-family: Arial, Helvetica, sans-serif;
 //     font-size: 250%;
 // }
-
 // h2,
 // h3 {
 //     color: #444;
 //     font-family: Arial, Helvetica, sans-serif;
 //     font-weight: lighter;
 // }
-
-
 // .inputdemoIcons {
 //     .right-icon {
 //     position: absolute;
@@ -42,24 +35,19 @@ html, body {
 //     margin-top: 0;
 //     }
 // }
-
 // .inputdemoIcons .inputIconDemo {
 //     min-height: 48px;
 // }
-
 // .inputdemoIcons md-input-container:not(.md-input-invalid) > md-icon.email {
 //     color: green;
 // }
-
 // .inputdemoIcons md-input-container:not(.md-input-invalid) > md-icon.name {
 //     color: dodgerblue;
 // }
-
 // .inputdemoIcons md-input-container.md-input-invalid > md-icon.email,
 // .inputdemoIcons md-input-container.md-input-invalid > md-icon.name {
 //     color: red;
 // }
-
 .btn-sidebar {
     width: 100%;
 }
@@ -101,6 +89,10 @@ daypicker table {
     margin-left: 25%;
 }
 
-// div.md-input-underline{
-//   margin-top : 10px;
-// }
+div.mat-input-underline {
+    margin-top: 15px;
+}
+
+.mat-input-placeholder-wrapper {
+    padding-top: 75% !important;
+}
