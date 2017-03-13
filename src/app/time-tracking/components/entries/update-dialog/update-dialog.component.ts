@@ -67,6 +67,14 @@ export class UpdateDialogComponent implements OnInit {
     public timeTrackingEntryService: TimeTrackingEntryService) {
   }
 
+  checkStartAndEndTime() {
+    if (this.startDateTime > this.endDateTime || this.startDateTime == this.endDateTime) {
+      alert("Please enter a valid endtime.")
+    } else {
+      this.ok();
+    }
+  }
+
   updateEntry() {
     console.log(this.projectID, this.taskID, this.userprofileID);
     this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID);

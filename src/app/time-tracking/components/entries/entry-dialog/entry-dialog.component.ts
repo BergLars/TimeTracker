@@ -64,6 +64,14 @@ export class EntryDialogComponent implements OnInit {
     }
     return this.endDateTime;
   }
+  
+  checkStartAndEndTime() {
+    if (this.startDateTime > this.endDateTime || this.startDateTime == this.endDateTime) {
+      alert("Please enter a valid endtime.")
+    } else {
+      this.ok();
+    }
+  }
 
   public projectDropdown(value: string): void {
     this.projectID = value;
