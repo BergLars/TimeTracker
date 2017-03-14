@@ -13,7 +13,7 @@
             <td>Project:</td>
             <td>
                 <select #project>
-                    <option *ngFor="let project of projects" [value]='project.id'>{{ project.projectName }}</option>
+                    <option *ngFor="let project of projects">{{ project.projectName }}</option>
                 </select>
             </td>
         </tr>
@@ -22,7 +22,7 @@
             <td>Task:</td>
             <td>
                 <select #task>
-                    <option *ngFor="let task of tasks" [value]="task.id">{{ task.taskDescription }}</option>
+                    <option *ngFor="let task of tasks">{{ task.taskDescription }}</option>
                 </select>
             </td>
         </tr>
@@ -30,7 +30,7 @@
         <tr>
             <td>
                 <md-input-container>
-                    <input mdInput placeholder="Date" #date [value]="selectedDate">
+                    <input mdInput placeholder="Date" #date>
                 </md-input-container>
             </td>
         </tr>
@@ -38,13 +38,13 @@
         <tr>
             <td>
                 <md-input-container>
-                    <input mdInput placeholder="Start Time" #startTime [value]="selectedStartTime">
+                    <input mdInput placeholder="Start Time" #startTime>
                 </md-input-container>
             </td>
             <td>&nbsp;</td>
             <td>
                 <md-input-container>
-                    <input mdInput placeholder="End Time" #endTime [value]="selectedEndTime">
+                    <input mdInput placeholder="End Time" #endTime>
                 </md-input-container>
             </td>
         </tr>
@@ -52,6 +52,6 @@
     <br>
 </div>
 <div md-dialog-actions>
-    <button type="button" md-button (click)="getDescription(description.value);projectDropdown(project.value);taskDropdown(task.value);getStartDateTime(date.value,startTime.value);getEndDateTime(date.value,endTime.value);ok()">OK</button>
+    <button type="button" md-button (click)="getDescription(description.value);projectDropdown(project.value);taskDropdown(task.value);getStartDateTime(date.value,startTime.value);getEndDateTime(date.value,endTime.value);checkMandatoryFields()">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>
