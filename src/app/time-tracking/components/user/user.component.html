@@ -1,3 +1,4 @@
-<p>
-    <md-icon class="material-icons">account_circle</md-icon>
-</p>
+<span [hidden]="!isLogged()">
+<span *ngIf="isLogged()">Hi,&nbsp;{{currentUser.userName}}!&nbsp;</span>
+<span><md-icon (click)=displayUser(); class="material-icons">account_circle</md-icon></span>
+</span>

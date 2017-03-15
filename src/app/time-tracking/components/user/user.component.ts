@@ -1,15 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { LoginService } from '../../../login';
+import { IUser } from '../../../data';
 
 @Component({
-  selector: 'app-user',
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss']
+	selector: 'app-user',
+	templateUrl: './user.component.html',
+	styleUrls: ['./user.component.scss']
 })
-export class UserComponent implements OnInit {
+export class UserComponent {
+	private currentUser: IUser;
+	isLoggedIn: boolean = false;
+	@Input() username: string;
 
-  constructor() { }
+	constructor(
+		private loginService: LoginService) {
+	}
 
-  ngOnInit() {
-  }
+	public displayUser() {
+		alert('Employment degree: ' + this.currentUser['employmentDegree'] + '\nSettings' + '\nLogout');
+	}
 
+	public isLogged() {
+		this.showData();
+		return this.isLoggedIn = this.loginService.isLoggedIn();
+	}
+
+	public showData() {
+		this.currentUser = this.loginService.loggedUser;
+		// if(this.isLoggedIn === true){
+		// 	this.username = this.currentUser['userName'];
+		// }
+	}
 }

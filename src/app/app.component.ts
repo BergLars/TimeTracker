@@ -1,6 +1,6 @@
-import { Component, ViewContainerRef } from '@angular/core';
+import { Component, ViewContainerRef, Input } from '@angular/core';
 // import { ComponentsHelper } from 'ng2-bootstrap';
-import { environment } from '../environments/environment'
+import { environment } from '../environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -10,11 +10,14 @@ import { environment } from '../environments/environment'
 export class AppComponent {
     private viewContainerRef: ViewContainerRef;
     title = environment.title;
-    public constructor(viewContainerRef: ViewContainerRef) {
+
+    public constructor(
+        viewContainerRef: ViewContainerRef) {
         // You need this small hack in order to catch application root view container ref
         this.viewContainerRef = viewContainerRef;
     }
 }
+
 this.getRootViewContainerRef = function() {
     // https://github.com/angular/angular/issues/9293
     if (this.root) {
