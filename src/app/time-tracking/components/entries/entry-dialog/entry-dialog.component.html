@@ -13,7 +13,7 @@
             <td>Project:</td>
             <td>
                 <select #project>
-                    <option *ngFor="let project of projects">{{ project.projectName }}</option>
+                    <option *ngFor="let project of projects" [value]='project.id'>{{ project.projectName }}</option>
                 </select>
             </td>
         </tr>
@@ -22,7 +22,7 @@
             <td>Task:</td>
             <td>
                 <select #task>
-                    <option *ngFor="let task of tasks">{{ task.taskDescription }}</option>
+                    <option *ngFor="let task of tasks" [value]="task.id">{{ task.taskDescription }}</option>
                 </select>
             </td>
         </tr>
