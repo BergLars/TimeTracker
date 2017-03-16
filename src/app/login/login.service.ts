@@ -16,9 +16,9 @@ export class LoginService implements IDataservice {
 
 	public baseUrl: string = environment.apiBaseUrl;
 
-	private loggedIn = false;
-	private loggedUserID: number;
-	private loggedUser: IUser;
+	public loggedIn = false;
+	public loggedUserID: number;
+	public loggedUser: IUser;
 	public isLoading: Boolean = false;
 	private entries: ITimeTrackingEntry[];
 
@@ -49,7 +49,10 @@ export class LoginService implements IDataservice {
 					alert('Wrong username or password!!')
 				}
 			},
-			() => this.router.navigate(['timetracking'])
+			() => {
+				this.router.navigate(['timetracking']),
+					this.loggedIn = true
+			}
 			);
 	}
 
@@ -65,5 +68,9 @@ export class LoginService implements IDataservice {
 	public getLoggedUserID(): number {
 		this.loggedUserID = this.loggedUser['id'];
 		return this.loggedUserID;
+	}
+
+	public getLoggedUsername() {
+		return this.loggedUser['userName'];
 	}
 }

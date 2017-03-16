@@ -20,6 +20,7 @@ import { routes } from './routes';
 // import { ProfileService } from './profile.service';
 import { ProfileComponent } from './profile';
 import { LoginComponent, LoginService } from './login';
+import { UserComponent } from './time-tracking/components/user/user.component';
 
 @NgModule({
     declarations: [
@@ -35,7 +36,8 @@ import { LoginComponent, LoginService } from './login';
         TimeTrackingComponent,
         EntryDialogComponent,
         DeleteEntryComponent,
-        UpdateDialogComponent
+        UpdateDialogComponent,
+        UserComponent
     ],
     entryComponents: [
         SearchDialogComponent,
