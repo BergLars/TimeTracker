@@ -21,7 +21,7 @@ export class EntriesComponent implements OnInit {
   @Input() task: ITask;
   public isLoading: Boolean = false;
   public items: ITimeTrackingEntry[] = [];
-  @Input() rowSize: number = undefined;
+  @Input() limitValue: number;
 
   rows = [];
   selected = [];
@@ -37,15 +37,15 @@ export class EntriesComponent implements OnInit {
   selectedDate: string;
   selectedStartTime: string;
   selectedEndTime: string;
-  // limits: number[];
+  private current: number = 50;
 
   public editing = {};
   public result: any;
   // private dialogRefSearch: MdDialogRef<SearchDialogComponent>;
-  private list = [
-    { id: this.rowSize, name: 'Default' },
-    { id: 5, name: 'Five' },
-    { id: 10, name: 'Ten' }
+  private limits = [
+    { id: this.current, name: 'All Entries' },
+    // { id: 5, name: '5 rows' },
+    { id: 10, name: '10 Entries' }
   ];
 
   constructor(
@@ -61,6 +61,16 @@ export class EntriesComponent implements OnInit {
 
   ngOnInit() {
     this.loadEntries();
+  }
+
+  public setLimit(id: any): void {
+    this.current = id;
+    this.loadEntries();
+  }
+
+  public getLimit(): number {
+    // this.loadEntries();
+    return this.current;
   }
 
   updateValue(event, cell, cellValue, row) {
@@ -144,8 +154,7 @@ export class EntriesComponent implements OnInit {
 
   private loadEntries() {
     this.isLoading = false;
-    console.log(this.rowSize);
-    Promise.all([
+    return Promise.all([
       // Get all projects
       this.projectService.getProjects().then(result => { this.projects = result; }),
 
