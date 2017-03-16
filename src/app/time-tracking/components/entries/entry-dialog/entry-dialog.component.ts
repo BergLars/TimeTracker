@@ -73,6 +73,22 @@ export class EntryDialogComponent implements OnInit {
     this.taskID = value;
   }
 
+  checkMandatoryFields() {
+    if (this.description === "" || this.projectID === null || this.taskID === null || this.startDateTime === " " || this.endDateTime === " ") {
+      alert("Please check if all the fields are filled in");
+    } else {
+      this.checkStartAndEndTime();
+    }
+  }
+
+   checkStartAndEndTime() {
+    if (this.startDateTime > this.endDateTime || this.startDateTime == this.endDateTime) {
+      alert("Please enter a valid endtime.")
+    } else {
+      this.ok();
+    }
+  }
+
   public ok() {
     this.timeTrackingEntryService
       .createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, this.loginService.getLoggedUserID(), this.projectID, this.taskID)
