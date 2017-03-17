@@ -82,11 +82,12 @@ daypicker table {
     margin: 175px auto !important;
 }
 
-.app-input-section {
+.app-input-section.mat-card {
+    position: fixed;
+    top: 40%;
+    left: 35%;
+    width: 35%;
     text-align: center;
-    width: 50%;
-    margin-top: 30%;
-    margin-left: 25%;
 }
 
 div.mat-input-underline {
