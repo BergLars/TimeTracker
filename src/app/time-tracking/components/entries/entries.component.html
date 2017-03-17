@@ -4,14 +4,14 @@
         <!-- <i (click)="loadEntries()" class="material-icons">update</i> -->
         <span class="flex"></span>
         <span color="primary">
-        <select #select [(ngModel)]="current" (change)="setLimit(select.value)">
+        <select #select (change)="setLimit(select.value)">
             <option *ngFor="let limit of limits" [value]="limit.id">{{limit.name}}</option>
         </select>
         </span>
     </md-toolbar>
 </div>
-<swui-datatable class="material tablesize" [rows]="items" [columnMode]="'force'" [columns]="columns" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [selected]="selected" [selectionType]="'single'" [limit]="getLimit()" (select)='onSelect($event)'>
-    <swui-datatable-column name="Description">
+<swui-datatable class="material tablesize" [rows]="items" [columnMode]="'force'" [columns]="columns" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [selected]="selected" [selectionType]="'single'" [limit]="current" (select)='onSelect($event)'>
+    <swui-datatable-column name="Description"> 
         <template swui-datatable-cell-template let-row="row">
             <!--  <span title="Double click to edit" (dblclick)="editing[row.$$index + '-description'] = true" *ngIf="!editing[row.$$index + '-description']">{{ row.description }}</span>
             <input autofocus (blur)="updateValue($event, 'description', value, row)" *ngIf="editing[row.$$index + '-description']" type="text" [value]="value" /> -->

@@ -68,11 +68,6 @@ export class EntriesComponent implements OnInit {
     this.loadEntries();
   }
 
-  public getLimit(): number {
-    // this.loadEntries();
-    return this.current;
-  }
-
   updateValue(event, cell, cellValue, row) {
     this.editing[row.$$index + '-' + cell] = false;
     this.items[row.$$index][cell] = event.target.value;
