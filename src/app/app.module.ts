@@ -12,8 +12,8 @@ import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 // import { DatepickerComponent } from './common';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService } from './data';
-import { SearchDialogComponent, SidebarComponent, EntriesComponent, TimeTrackingComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService } from './time-tracking';
-// import { ExportComponent } from './time-tracking';
+import { SidebarComponent, EntriesComponent, TimeTrackingComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService } from './time-tracking';
+// import { SearchDialogComponent, ExportComponent } from './time-tracking';
 // import { QueryformComponent } from './queryform/queryform.component';
 import { routes } from './routes';
 // import { LoggedInGuard } from './logged-in-guard';
@@ -27,7 +27,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     declarations: [
         AppComponent,
         LoginComponent,
-        SearchDialogComponent,
+        // SearchDialogComponent,
         // ExportComponent,
         SidebarComponent,
         EntriesComponent, // ??? 
@@ -41,7 +41,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         UserComponent
     ],
     entryComponents: [
-        SearchDialogComponent,
+        // SearchDialogComponent,
         EntryDialogComponent,
         DeleteEntryComponent,
         UpdateDialogComponent

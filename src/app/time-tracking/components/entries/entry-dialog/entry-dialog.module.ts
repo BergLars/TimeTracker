@@ -4,21 +4,21 @@ import { NgModule } from '@angular/core';
 
 import { EntryDialogComponent }   from './entry-dialog.component';
 
-@NgModule({
-    imports: [
-        MaterialModule.forRoot(),
-    ],
-    exports: [
-        EntryDialogComponent,
-    ],
-    declarations: [
-        EntryDialogComponent,
-    ],
-    providers: [
-        EntryDialogService,
-    ],
-    entryComponents: [
-        EntryDialogComponent,
-    ],
-})
+// @NgModule({
+//     imports: [
+//         MaterialModule.forRoot(),
+//     ],
+//     exports: [
+//         EntryDialogComponent,
+//     ],
+//     declarations: [
+//         EntryDialogComponent,
+//     ],
+//     providers: [
+//         EntryDialogService,
+//     ],
+//     entryComponents: [
+//         EntryDialogComponent,
+//     ],
+// })
 export class EntryDialogModule { }

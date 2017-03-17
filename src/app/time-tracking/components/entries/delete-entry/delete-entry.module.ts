@@ -4,21 +4,21 @@ import { NgModule } from '@angular/core';
 
 import { DeleteEntryComponent }   from './delete-entry.component';
 
-@NgModule({
-    imports: [
-        MaterialModule.forRoot(),
-    ],
-    exports: [
-        DeleteEntryComponent,
-    ],
-    declarations: [
-        DeleteEntryComponent,
-    ],
-    providers: [
-        DeleteEntryService,
-    ],
-    entryComponents: [
-        DeleteEntryComponent,
-    ],
-})
+// @NgModule({
+//     imports: [
+//         MaterialModule.forRoot(),
+//     ],
+//     exports: [
+//         DeleteEntryComponent,
+//     ],
+//     declarations: [
+//         DeleteEntryComponent,
+//     ],
+//     providers: [
+//         DeleteEntryService,
+//     ],
+//     entryComponents: [
+//         DeleteEntryComponent,
+//     ],
+// })
 export class DialogsModule { }
