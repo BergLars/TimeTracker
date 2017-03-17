@@ -21,6 +21,7 @@ import { routes } from './routes';
 import { ProfileComponent } from './profile';
 import { LoginComponent, LoginService } from './login';
 import { UserComponent } from './time-tracking/components/user/user.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
     declarations: [
@@ -52,7 +53,7 @@ import { UserComponent } from './time-tracking/components/user/user.component';
         HttpModule,
         RouterModule.forRoot(routes),
         MaterialModule.forRoot(),
-        // FlexLayoutModule.forRoot(),
+        FlexLayoutModule,
         // MyDatePickerModule,
         AlertModule,
         DropdownModule,
