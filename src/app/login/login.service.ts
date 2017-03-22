@@ -34,26 +34,20 @@ export class LoginService implements IDataservice {
 
 	public request(username: string, password: string) {
 		let params = new URLSearchParams();
+		let url = this.baseUrl + ENDPOINT_NAME;
 		params.set('username', username);
 		params.set('password', password);
-		return this.http.request(new Request({
-			method: RequestMethod.Get,
-			url: this.baseUrl + ENDPOINT_NAME,
-			search: params
-		})).map(res => res.json()).subscribe(
+		return this.http.get(url, { search: params }).map(res => res.json()).subscribe(
 			data => this.loggedUser = data,
-			err => {
-				if (err.status === 500) {
+			error => {
+				if (error.status === 500) {
 					alert('Internal server error!')
-				} else if (err.status === 404 || err.status === 400) {
+				} else if (error.status === 404 || error.status === 400) {
 					alert('Wrong username or password!!')
 				}
 			},
-			() => {
-				this.router.navigate(['timetracking']),
-					this.loggedIn = true
-			}
-			);
+			() => { this.router.navigate(['timetracking']), this.loggedIn = true }
+		);
 	}
 
 	public logout() {
