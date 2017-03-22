@@ -1,4 +1,4 @@
-<div class="flex-container" fxLayout="row" fxLayoutAlign="center">
+<div fxLayout="column" fxLayoutAlign="center center">
     <md-card class="app-input-section">
         <p>
             <md-input-container>
@@ -7,15 +7,15 @@
                     <md-icon class="material-icons app-input-icon">face</md-icon>Username
                 </md-placeholder>
             </md-input-container>
-        </p>
-        <p>
+            <br />
             <md-input-container>
                 <input mdInput #password type="password" maxlength="50">
                 <md-placeholder>
                     <md-icon class="material-icons app-input-icon">security</md-icon>Password
                 </md-placeholder>
             </md-input-container>
+            <br />
+            <button md-button (click)="getUsernamePassword(username.value,password.value)">Login</button>
         </p>
-        <button md-button (click)="getUsernamePassword(username.value,password.value)">Login</button>
     </md-card>
 </div>
