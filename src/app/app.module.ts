@@ -5,8 +5,7 @@ import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angul
 import { HttpModule, Http, Response, RequestOptions, Headers } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 // import { MyDatePickerModule } from 'mydatepicker';
-// import { Angular2DataTableModule } from 'angular2-data-table';
-// import { DataTableModule } from "angular2-datatable";
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AlertModule, DropdownModule, ModalModule, TimepickerModule, TabsModule, DatepickerModule, TypeaheadModule } from 'ng2-bootstrap';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -47,7 +46,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         UpdateDialogComponent
     ],
     imports: [
-        // Angular2DataTableModule,
+        NgxDatatableModule,
         BrowserModule,
         FormsModule,
         HttpModule,
