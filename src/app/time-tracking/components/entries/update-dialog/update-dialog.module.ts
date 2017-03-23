@@ -1,8 +1,8 @@
-import { UpdateEntryService } from './update-entry.service';
+import { UpdateDialogService } from './update-dialog.service';
 import { MaterialModule } from '@angular/material';
 import { NgModule } from '@angular/core';
 
-import { UpdateEntryComponent }   from './update-entry.component';
+import { UpdateDialogComponent }   from './update-dialog.component';
 
 // @NgModule({
 //     imports: [
@@ -21,4 +21,21 @@ import { UpdateEntryComponent }   from './update-entry.component';
 //         UpdateEntryComponent,
 //     ],
 // })
+@NgModule({
+    imports: [
+        MaterialModule.forRoot(),
+    ],
+    exports: [
+        UpdateDialogComponent,
+    ],
+    declarations: [
+        UpdateDialogComponent,
+    ],
+    providers: [
+        UpdateDialogService,
+    ],
+    entryComponents: [
+        UpdateDialogComponent,
+    ],
+})
 export class UpdateEntryModule { }

@@ -18,8 +18,7 @@
       "prefix": "app",
       "mobile": false,
       "styles": [
-        "../node_modules/angular2-data-table/release/datatable.css",
-        "../node_modules/angular2-data-table/release/material.css",
+        "../node_modules/@swimlane/ngx-datatable/release/index.css",
         "styles.scss"
       ],
       "scripts": [],
