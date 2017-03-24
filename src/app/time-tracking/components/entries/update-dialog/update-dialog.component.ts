@@ -1,35 +1,47 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
 import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeTrackingEntryService } from '../../../../data';
+import { environment } from '../../../../../environments/environment';
+import { LoginService } from '../../../../login';
 
 @Component({
   selector: 'app-update-dialog',
   templateUrl: './update-dialog.component.html'
 })
 export class UpdateDialogComponent implements OnInit {
+  public baseUrl: string = environment.apiBaseUrl;
   @Input() projects: IProject[] = [];
   @Input() tasks: ITask[] = [];
   public title: string;
   public rowID: number;
   public selectedDescription: string;
-  public selectedProject: string;
-  public selectedTask: string;
+  @Input() selectedProject: any;
+  @Input() selectedTask: any;
   @Input() selectedDate: any;
   @Input() selectedStartTime: any;
   public userprofileID: any;
-  public projectID: any;
-  public taskID: any;
+  @Input() projectID: any;
+  @Input() taskID: any;
   public selectedEndTime: any;
   public description: string;
   public startDateTime: string;
   public endDateTime: string;
+  userID: number;
+  @Input() tempTaskID: number;
+  @Input() tempProjectID: number;
+  public items: ITimeTrackingEntry[] = [];
+  public result: any;
 
-  public projectDropdown(value: string): void {
-    this.projectID = value;
+  public projectDropdown(event) {
+    this.projectID = event.target.value;
+    let temp = this.projectID;
+    this.tempProjectID = temp;
   }
 
-  public taskDropdown(value: string): void {
-    this.taskID = value;
+  public taskDropdown(event) {
+    this.taskID = event.target.value;
+    let temp = this.taskID;
+    this.tempTaskID = temp;
   }
 
   public getNewDescription(value: string) {
@@ -64,11 +76,12 @@ export class UpdateDialogComponent implements OnInit {
     public dialogRef: MdDialogRef<UpdateDialogComponent>,
     public projectService: ProjectService,
     public taskService: TaskService,
-    public timeTrackingEntryService: TimeTrackingEntryService) {
+    public timeTrackingEntryService: TimeTrackingEntryService,
+    private loginService: LoginService) {
   }
 
   checkMandatoryFields() {
-    if (this.description === "" || this.projectID === null || this.taskID === null || this.startDateTime === " " || this.endDateTime === " ") {
+    if (this.description === "" || this.projectID === null || this.taskID === null || this.startDateTime === " " || this.endDateTime === " ") {
       alert("Please check if all the fields are filled in");
     } else {
       this.checkStartAndEndTime();
@@ -83,26 +96,61 @@ export class UpdateDialogComponent implements OnInit {
     }
   }
 
-  updateEntry() {
-    console.log(this.projectID, this.taskID, this.userprofileID);
-    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID);
-  }
-
   ngOnInit() {
     this.projectService.getProjects().then((projects) => {
-    this.projects = projects;
+      this.projects = projects;
     });
     this.taskService.getTasks().then((tasks) => {
-    this.tasks = tasks;
+      this.tasks = tasks;
     });
+
+    console.log(this.projectID, this.taskID, this.userprofileID);
+    console.log(this.selectedProject, this.selectedTask, this.userprofileID);
+  }
+
+  loadEntries() {
+    this.fetch((data) => {
+      this.items = data;
+    });
+  }
+
+  fetch(cb) {
+    this.userID = this.loginService.getLoggedUserID();
+    let url = this.baseUrl + '/timeentries/' + this.userID + '/entries';
+    const req = new XMLHttpRequest();
+    req.open('GET', url);
+
+    req.onload = () => {
+      // Get all projects
+      this.projectService.getProjects().then(result => { this.projects = result; }),
+
+        // Get all tasks
+        this.taskService.getTasks().then(result => { this.tasks = result; }),
+
+        // Get user's entries
+        this.userID = this.loginService.getLoggedUserID(),
+        this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((items) => {
+          this.items = items;
+        });
+    };
+    req.send();
   }
 
   public ok() {
-    this.projectID = Number(this.projectID);
-    this.taskID = Number(this.taskID);
-    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID)
+    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.selectedProject, this.selectedTask)
       .then(() => {
+        this.loadEntries();
         this.dialogRef.close(this);
       });
+
+    this.selectedProject = this.tempProjectID;
+    this.selectedTask = this.tempTaskID;
+    
+    // this.selectedProject = this.projectID;
+    // this.selectedTask = this.taskID;
+
+    console.log(this.projectID, this.taskID, this.userprofileID);
+    console.log(this.tempProjectID, this.tempTaskID, this.userprofileID);
+    console.log(this.selectedProject, this.selectedTask, this.userprofileID);
   }
 }

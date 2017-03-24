@@ -12,8 +12,8 @@
         <tr>
             <td>Project:</td>
             <td>
-                <select #project (change)="projectDropdown(project.value)" [(ngModel)]='project.id'>
-                    <option *ngFor="let project of projects" [value]='project.id' [selected]='project.id === selectedProject'>{{ project.projectName }}</option>
+                <select (change)="projectDropdown($event)">
+                    <option *ngFor="let project of projects" [value]='project.id' [selected]='project.id === projectID'>{{ project.projectName }}</option>
                 </select>
             </td>
         </tr>
@@ -21,8 +21,8 @@
         <tr>
             <td>Task:</td>
             <td>
-                <select #task (change)="taskDropdown(task.value)" [(ngModel)]='task.id'>
-                    <option *ngFor="let task of tasks" [value]="task.id" [selected]='task.id === selectedTask'>{{ task.taskDescription }}</option>
+                <select (change)="taskDropdown($event)">
+                    <option *ngFor="let task of tasks" [value]="task.id" [selected]='task.id === taskID'>{{ task.taskDescription }}</option>
                 </select>
             </td>
         </tr>
@@ -52,6 +52,6 @@
     <br>
 </div>
 <div md-dialog-actions>
-    <button type="button" md-button (click)="getNewDescription(selectedDescription);getNewStartDateTime(date.value,startTime.value);getNewEndDateTime(date.value,endTime.value);checkMandatoryFields()">OK</button>
+    <button type="button" md-button (click)="getNewDescription(selectedDescription);getNewStartDateTime(date.value,startTime.value);getNewEndDateTime(date.value,endTime.value);checkMandatoryFields();">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>
