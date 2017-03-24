@@ -6,7 +6,6 @@ import { HttpModule, Http, Response, RequestOptions, Headers } from '@angular/ht
 import { MaterialModule } from '@angular/material';
 // import { MyDatePickerModule } from 'mydatepicker';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-// import { DataTableModule } from "angular2-datatable";
 import { AlertModule, DropdownModule, ModalModule, TimepickerModule, TabsModule, DatepickerModule, TypeaheadModule } from 'ng2-bootstrap';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';

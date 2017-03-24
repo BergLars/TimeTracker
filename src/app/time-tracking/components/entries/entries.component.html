@@ -4,13 +4,23 @@
         <!-- <i (click)="loadEntries()" class="material-icons">update</i> -->
         <span class="flex"></span>
         <span color="primary">
-        <select #select (change)="setLimit(select.value)">
-            <option *ngFor="let limit of limits" [value]="limit.id">{{limit.name}}</option>
+        <select (change)="changeRowLimits($event)">
+            <option *ngFor="let limit of rowLimits" [value]="limit.value">{{limit.key}}</option>
         </select>
         </span>
     </md-toolbar>
 </div>
-<ngx-datatable class="material striped" [rows]="items" [columnMode]="'force'" [columns]="columns" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [selected]="selected" [selectionType]="'single'" [limit]="limit" (select)='onSelect($event)'>
+<ngx-datatable class="material" 
+[rows]="items" 
+[columnMode]="'force'" 
+[columns]="columns" 
+[headerHeight]="50" 
+[footerHeight]="50" 
+[rowHeight]="'auto'" 
+[selected]="selected" 
+[selectionType]="'single'" 
+[limit]="limit"
+(select)='onSelect($event)'>
     <ngx-datatable-column name="Description">
         <ng-template ngx-datatable-cell-template let-row="row">
             <!--  <span title="Double click to edit" (dblclick)="editing[row.$$index + '-description'] = true" *ngIf="!editing[row.$$index + '-description']">{{ row.description }}</span>

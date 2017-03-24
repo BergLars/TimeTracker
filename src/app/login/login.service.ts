@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Request, RequestMethod, URLSearchParams, Response } from '@angular/http';
+import { Http, URLSearchParams } from '@angular/http';
 import { environment } from '../../environments/environment';
 import { store } from '../data/datastore';
 import { IDataservice, TimeTrackingEntryService, ITimeTrackingEntry, IUser } from '../data';
