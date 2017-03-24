@@ -4,13 +4,12 @@
         <!-- <i (click)="loadEntries()" class="material-icons">update</i> -->
         <span class="flex"></span>
         <span color="primary">
-        <select [(ngModel)]="limit" (change)="changeRowLimits($event)">
+        <select (change)="changeRowLimits($event)">
             <option *ngFor="let limit of rowLimits" [value]="limit.value">{{limit.key}}</option>
         </select>
         </span>
     </md-toolbar>
 </div>
-<div>{{limit}}</div>
 <ngx-datatable class="material" 
 [rows]="items" 
 [columnMode]="'force'" 

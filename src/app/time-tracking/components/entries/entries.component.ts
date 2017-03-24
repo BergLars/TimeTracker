@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
-import { Http, Response, RequestOptions, Headers } from '@angular/http';
+import { Component, Input, ViewContainerRef } from '@angular/core';
+import { Http } from '@angular/http';
 import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeTrackingEntryService } from '../../../data';
 import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
@@ -7,6 +7,7 @@ import { DeleteEntryService } from './delete-entry/delete-entry.service';
 import { UpdateDialogService } from './update-dialog/update-dialog.service';
 import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
 import { LoginService } from '../../../login';
+import { environment } from '../../../../environments/environment';
 // import { SearchDialogComponent } from './components/search-dialog/search-dialog.component';
 
 @Component({
@@ -14,7 +15,9 @@ import { LoginService } from '../../../login';
   templateUrl: './entries.component.html',
   styleUrls: ['./entries.component.scss']
 })
-export class EntriesComponent implements OnInit {
+export class EntriesComponent {
+  public baseUrl: string = environment.apiBaseUrl;
+
   @Input() projects: IProject[] = [];
   @Input() project: IProject;
   @Input() tasks: ITask[] = [];
@@ -42,7 +45,8 @@ export class EntriesComponent implements OnInit {
   // private dialogRefSearch: MdDialogRef<SearchDialogComponent>;
   private limits = [
     { key: 'All Entries', value: 50 },
-    { key: '10 Entries', value: 10 }
+    { key: '10 Entries', value: 10 },
+    // { key: '5 Entries', value: 5 }
   ];
 
   limit: number = this.limits[0].value;
@@ -57,9 +61,8 @@ export class EntriesComponent implements OnInit {
     private updateDialogService: UpdateDialogService,
     private viewContainerRef: ViewContainerRef,
     private loginService: LoginService,
-    private dialog: MdDialog) { }
-
-  ngOnInit() {
+    private dialog: MdDialog,
+    private http: Http) {
     this.loadEntries();
   }
 
@@ -147,25 +150,32 @@ export class EntriesComponent implements OnInit {
       });
   }
 
-  public loadEntries() {
-    this.isLoading = false;
-    return Promise.all([
+  loadEntries() {
+    this.fetch((data) => {
+      this.items = data;
+    });
+  }
+
+  fetch(cb) {
+    this.userID = this.loginService.getLoggedUserID();
+    let url = this.baseUrl + '/timeentries/' + this.userID + '/entries';
+    const req = new XMLHttpRequest();
+    req.open('GET', url);
+
+    req.onload = () => {
       // Get all projects
       this.projectService.getProjects().then(result => { this.projects = result; }),
 
-      // Get all tasks
-      this.taskService.getTasks().then(result => { this.tasks = result; }),
+        // Get all tasks
+        this.taskService.getTasks().then(result => { this.tasks = result; }),
 
-      this.userID = this.loginService.getLoggedUserID(),
-      this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((items) => {
-        this.items = items;
-      }).then(result => {
-        this.getStatistics();
-      })
-        .catch(error => {
-          this.isLoading = false;
-        })
-    ]);
+        // Get user's entries
+        this.userID = this.loginService.getLoggedUserID(),
+        this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((items) => {
+          this.items = items;
+        });
+    };
+    req.send();
   }
 
   // public openDialogTest(row) {

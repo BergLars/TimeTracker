@@ -89,7 +89,8 @@ export class TimeTrackingEntryService implements IDataservice {
     let endpoint = '/' + ENDPOINT_NAME + '/' + id + '/entries';
     return store.findAll(RESOURCE_NAME, {}, {
       endpoint: endpoint,
-      bypasscache: true
+      cacheResponse: false,
+      bypassCache: true
     });
   }
 
