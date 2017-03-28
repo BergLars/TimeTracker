@@ -17,11 +17,11 @@ export class TaskService implements IDataservice {
       basePath: this.baseUrl,
       endpoint: ENDPOINT_NAME,
 
-      relations: {
-        hasOne: {
-          project: {
-            foreignKey: 'projectID',
-            localField: 'project'
+      relations : {
+        hasMany: {
+          entry: {
+            localField: "entries",
+            foreignKey: "id"
           }
         }
       }

@@ -9,7 +9,7 @@ export class UpdateDialogService {
 
   constructor(private dialog: MdDialog) { }
 
-  public confirm(title: string, viewContainerRef: ViewContainerRef, row: any): Observable<boolean> {
+  public confirm(title: string, viewContainerRef: ViewContainerRef, row: any): MdDialogRef<UpdateDialogComponent> {
 
     let dialogRef: MdDialogRef<UpdateDialogComponent>;
     let config = new MdDialogConfig();
@@ -29,6 +29,6 @@ export class UpdateDialogService {
     dialogRef.componentInstance.selectedStartTime = row.startDate.substring(11, 16);
     dialogRef.componentInstance.selectedEndTime = row.endDate.substring(11, 16);
 
-    return dialogRef.afterClosed();
+    return dialogRef;
   }
 }

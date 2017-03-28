@@ -12,9 +12,9 @@ export interface ITimeTrackingEntry {
 
     // Added properties_functions by js-data
     readonly project?: IProject;
-    projectName(): string;
+    projectName: string;
     readonly task?: ITask;
-    taskDescription(): string;
+    taskDescription: string;
     date(): string;
     startTime(): string;
     endTime(): string;

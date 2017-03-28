@@ -32,16 +32,12 @@ export class UpdateDialogComponent implements OnInit {
   public items: ITimeTrackingEntry[] = [];
   public result: any;
 
-  public projectDropdown(event) {
-    this.projectID = event.target.value;
-    let temp = this.projectID;
-    this.tempProjectID = temp;
+  public projectDropdown(value: string): void {
+    this.projectID = value;
   }
 
-  public taskDropdown(event) {
-    this.taskID = event.target.value;
-    let temp = this.taskID;
-    this.tempTaskID = temp;
+  public taskDropdown(value: string): void {
+    this.taskID = value;
   }
 
   public getNewDescription(value: string) {
@@ -103,9 +99,6 @@ export class UpdateDialogComponent implements OnInit {
     this.taskService.getTasks().then((tasks) => {
       this.tasks = tasks;
     });
-
-    console.log(this.projectID, this.taskID, this.userprofileID);
-    console.log(this.selectedProject, this.selectedTask, this.userprofileID);
   }
 
   loadEntries() {
@@ -136,21 +129,12 @@ export class UpdateDialogComponent implements OnInit {
     req.send();
   }
 
-  public ok() {
-    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.selectedProject, this.selectedTask)
+public ok() {
+    this.projectID = Number(this.projectID);
+    this.taskID = Number(this.taskID);
+    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID)
       .then(() => {
-        this.loadEntries();
-        this.dialogRef.close(this);
+        this.dialogRef.close();
       });
-
-    this.selectedProject = this.tempProjectID;
-    this.selectedTask = this.tempTaskID;
-    
-    // this.selectedProject = this.projectID;
-    // this.selectedTask = this.taskID;
-
-    console.log(this.projectID, this.taskID, this.userprofileID);
-    console.log(this.tempProjectID, this.tempTaskID, this.userprofileID);
-    console.log(this.selectedProject, this.selectedTask, this.userprofileID);
   }
 }

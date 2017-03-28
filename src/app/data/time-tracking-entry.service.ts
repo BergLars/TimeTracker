@@ -18,9 +18,6 @@ export class TimeTrackingEntryService implements IDataservice {
       endpoint: ENDPOINT_NAME,
 
       methods: {
-        projectName: function() {
-          return (this.project) ? this.project.projectName : '-';
-        },
         taskDescription: function() {
           return (this.task) ? this.task.taskDescription : '-';
         },
@@ -60,7 +57,7 @@ export class TimeTrackingEntryService implements IDataservice {
         }
       },
 
-      relations: {
+      /*relations: {
         belongsTo: {
           user: {
             foreignKey: 'userID',
@@ -75,7 +72,7 @@ export class TimeTrackingEntryService implements IDataservice {
             localField: 'task'
           }
         }
-      }
+      }*/
     });
   }
 

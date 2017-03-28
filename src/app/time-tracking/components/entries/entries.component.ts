@@ -1,4 +1,4 @@
-import { Component, Input, ViewContainerRef } from '@angular/core';
+import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { Http } from '@angular/http';
 import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeTrackingEntryService } from '../../../data';
 import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
@@ -15,7 +15,7 @@ import { environment } from '../../../../environments/environment';
   templateUrl: './entries.component.html',
   styleUrls: ['./entries.component.scss']
 })
-export class EntriesComponent {
+export class EntriesComponent implements OnInit{
   public baseUrl: string = environment.apiBaseUrl;
 
   @Input() projects: IProject[] = [];
@@ -63,6 +63,10 @@ export class EntriesComponent {
     private loginService: LoginService,
     private dialog: MdDialog,
     private http: Http) {
+    //this.loadEntries();
+  }
+
+  ngOnInit() {
     this.loadEntries();
   }
 
@@ -126,16 +130,34 @@ export class EntriesComponent {
   public openUpdateDialog(row) {
     this.updateDialogService
       .confirm('Update Entry', this.viewContainerRef, row)
+      .afterClosed()
       .subscribe(res => {
-        this.result = res;
-        if (this.result) {
-          this.loadEntries();
+        if (res) {
+          // TODO : that's bad, replace the array with a dictionary or something !!!
+          
+          let description = res[0];
+          let projectID = Number(res[1]);
+          let taskID = Number(res[2]);
+          let date = res[3];
+          let starttime = res[4];
+          let endtime = res[5];
+          let startDate = date + " " + starttime;
+          let endDate = date + " " + endtime;
+
+          this.projectService.getProject(projectID).then(res => {
+            var selectedProject = res ;
+
+            //selectedProject.
+
+            this.items[row.$$index]['description'] = description;//this.result.description;
+            this.items[row.$$index]['projectID'] = projectID; //this.result.projectID;
+            this.items[row.$$index]['taskID'] = taskID; //this.result.taskID;
+            this.items[row.$$index]['startDate'] = startDate;//this.result.startDateTime;
+            this.items[row.$$index]['endDate'] = endDate;//this.result.endDateTime;
+
+            this.loadEntries();
+          });
         }
-        this.items[row.$$index]['description'] = this.result.description;
-        this.items[row.$$index]['projectID'] = this.result.projectID;
-        //this.items[row.$$index]['taskID'] = this.result.taskID;
-        this.items[row.$$index]['startDate'] = this.result.startDateTime;
-        this.items[row.$$index]['endDate'] = this.result.endDateTime;
       });
   }
 
@@ -152,11 +174,12 @@ export class EntriesComponent {
 
   loadEntries() {
     this.fetch((data) => {
-      this.items = data;
+      //this.items = data;
     });
   }
 
   fetch(cb) {
+    this.items = [];
     this.userID = this.loginService.getLoggedUserID();
     let url = this.baseUrl + '/timeentries/' + this.userID + '/entries';
     const req = new XMLHttpRequest();
@@ -171,8 +194,19 @@ export class EntriesComponent {
 
         // Get user's entries
         this.userID = this.loginService.getLoggedUserID(),
-        this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((items) => {
-          this.items = items;
+        this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
+          for (let loadedItem of loadedItems) {
+            this.projectService.getProject(loadedItem.projectID).then(result => { 
+              loadedItem.projectName = result.projectName;
+              
+              this.taskService.getTask(loadedItem.taskID).then(result => { 
+                loadedItem.taskDescription = result.taskDescription;
+              
+              this.items.push(loadedItem); 
+              });
+             });
+          }
+          //this.items = items;
         });
     };
     req.send();
