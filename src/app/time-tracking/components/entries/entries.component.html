@@ -20,6 +20,9 @@
 [selected]="selected" 
 [selectionType]="'single'" 
 [limit]="limit"
+[count]="count"
+[offset]="offset"
+(page)='onPage($event)'
 (select)='onSelect($event)'>
     <ngx-datatable-column name="Description">
         <ng-template ngx-datatable-cell-template let-row="row">
