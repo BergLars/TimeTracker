@@ -41,6 +41,7 @@ export class EntriesComponent implements OnInit{
   selectedEndTime: string;
   count: number = 0;
   @Input() offset: number = 0;
+  columns: any
 
   public editing = {};
   public result: any;

@@ -9,33 +9,16 @@ import { UpdateDialogComponent }   from './update-dialog.component';
 //         MaterialModule.forRoot(),
 //     ],
 //     exports: [
-//         UpdateEntryComponent,
+//         UpdateDialogComponent
 //     ],
 //     declarations: [
-//         UpdateEntryComponent,
+//         UpdateDialogComponent
 //     ],
 //     providers: [
-//         UpdateEntryService,
+//         UpdateDialogService
 //     ],
 //     entryComponents: [
-//         UpdateEntryComponent,
+//         UpdateDialogComponent
 //     ],
 // })
-@NgModule({
-    imports: [
-        MaterialModule.forRoot(),
-    ],
-    exports: [
-        UpdateDialogComponent,
-    ],
-    declarations: [
-        UpdateDialogComponent,
-    ],
-    providers: [
-        UpdateDialogService,
-    ],
-    entryComponents: [
-        UpdateDialogComponent,
-    ],
-})
-export class UpdateEntryModule { }
+export class UpdateDialogModule { }

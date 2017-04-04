@@ -6,19 +6,19 @@ import { DeleteEntryComponent }   from './delete-entry.component';
 
 // @NgModule({
 //     imports: [
-//         MaterialModule.forRoot(),
+//         MaterialModule.forRoot()
 //     ],
 //     exports: [
-//         DeleteEntryComponent,
+//         DeleteEntryComponent
 //     ],
 //     declarations: [
-//         DeleteEntryComponent,
+//         DeleteEntryComponent
 //     ],
 //     providers: [
-//         DeleteEntryService,
+//         DeleteEntryService
 //     ],
 //     entryComponents: [
-//         DeleteEntryComponent,
+//         DeleteEntryComponent
 //     ],
 // })
-export class DialogsModule { }
+export class DeleteEntryModule { }
