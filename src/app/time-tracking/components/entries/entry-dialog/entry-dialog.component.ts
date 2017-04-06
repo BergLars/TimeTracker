@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
 import { ITimeTrackingEntry, IProject, ITask, IUser, ProjectService, TaskService, TimeTrackingEntryService, UserService } from '../../../../data';
 import { LoginService } from '../../../../login';
+import {IMyOptions, IMyDateModel, IMyDate} from 'mydatepicker';
 @Component({
   selector: 'app-entry-dialog',
   templateUrl: './entry-dialog.component.html'
@@ -23,6 +24,7 @@ export class EntryDialogComponent implements OnInit {
   public taskID: any;
   public startDateTime: any;
   public endDateTime: any;
+   private selDate: IMyDate;
 
   constructor(
     public dialogRef: MdDialogRef<EntryDialogComponent>,
@@ -41,6 +43,19 @@ export class EntryDialogComponent implements OnInit {
       this.tasks = tasks;
     });
   }
+
+    private myDatePickerOptions: IMyOptions = {
+        // other options...
+        dateFormat: 'dd.mm.yyyy',
+        disableWeekends: true,
+    };
+
+    onDateChanged(event: IMyDateModel) {
+        // event properties are: event.date, event.jsdate, event.formatted and event.epoc
+          this.selDate = event.date;
+          console.log(event.date);
+    }
+
 
   public getDescription(value: string) {
     this.description = value;

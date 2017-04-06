@@ -52,7 +52,7 @@
     <br>
 </div>
 <div md-dialog-actions>
-    <!--button type="button" md-button (click)="getNewDescription(selectedDescription);getNewStartDateTime(date.value,startTime.value);getNewEndDateTime(date.value,endTime.value);checkMandatoryFields();">OK</button-->
-    <button type="button" md-button (click)="dialogRef.close([selectedDescription, project.value, task.value, date.value, startTime.value, endTime.value])">OK</button>
+    <!-- <button type="button" md-button (click)="getNewDescription(selectedDescription);getNewStartDateTime(date.value,startTime.value);getNewEndDateTime(date.value,endTime.value);checkMandatoryFields();">OK</button> -->
+    <button type="button" md-button (click)="getNewDescription(selectedDescription);getNewStartDateTime(date.value,startTime.value);getNewEndDateTime(date.value,endTime.value);checkMandatoryFields();dialogRef.close([selectedDescription, project.value, task.value, date.value, startTime.value, endTime.value])">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>
