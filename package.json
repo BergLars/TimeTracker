@@ -27,7 +27,7 @@
     "core-js": "^2.4.1",
     "js-data": "^3.0.0-rc.9",
     "js-data-http": "^3.0.0-rc.2",
-    "mydatepicker": "^1.0.7",
+    "mydatepicker": "^1.7.15",
     "ng2-bootstrap": "^1.4.0",
     "rxjs": "5.1.0",
     "ts-helpers": "^1.1.1",

@@ -21,6 +21,7 @@ import { ProfileComponent } from './profile';
 import { LoginComponent, LoginService } from './login';
 import { UserComponent } from './time-tracking/components/user/user.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MyDatePickerModule } from 'mydatepicker';
 
 @NgModule({
     declarations: [
@@ -60,7 +61,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         TimepickerModule,
         // DataTableModule,
         TabsModule,
-        TypeaheadModule
+        TypeaheadModule,
+        MyDatePickerModule
     ],
     providers: [ProjectService, TaskService, TimeTrackingEntryService, UserService, LoginService, EntryDialogService, DeleteEntryService, UpdateDialogService],
     bootstrap: [AppComponent]
