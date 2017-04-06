@@ -1,6 +1,6 @@
 <div class="layout-column">
     <md-toolbar>
-        <button md-raised-button color="primary" (click)="openDialog(row)">NEW ENTRY</button>
+        <button md-raised-button color="primary" (click)="openDialog()">NEW ENTRY</button>
         <i (click)="loadEntries()" class="material-icons">update</i>
         <span class="flex"></span>
         <span color="primary">
@@ -20,6 +20,9 @@
 [selected]="selected" 
 [selectionType]="'single'" 
 [limit]="limit"
+[count]="count"
+[offset]="offset"
+(page)='onPage($event)'
 (select)='onSelect($event)'>
     <ngx-datatable-column name="Description">
         <ng-template ngx-datatable-cell-template let-row="row">

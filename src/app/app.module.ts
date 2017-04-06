@@ -4,15 +4,13 @@ import { NgModule, Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { HttpModule, Http, Response, RequestOptions, Headers } from '@angular/http';
 import { MaterialModule } from '@angular/material';
-// import { MyDatePickerModule } from 'mydatepicker';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { AlertModule, DropdownModule, ModalModule, TimepickerModule, TabsModule, DatepickerModule, TypeaheadModule } from 'ng2-bootstrap';
+import { AlertModule, ModalModule, TimepickerModule, TabsModule, DatepickerModule, TypeaheadModule } from 'ng2-bootstrap';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
-// import { DatepickerComponent } from './common';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService } from './data';
 import { SidebarComponent, EntriesComponent, TimeTrackingComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService } from './time-tracking';
-import { SearchDialogComponent, ExportComponent } from './time-tracking';
+// import { SearchDialogComponent, ExportComponent } from './time-tracking';
 // import { QueryformComponent } from './queryform/queryform.component';
 import { routes } from './routes';
 // import { LoggedInGuard } from './logged-in-guard';
@@ -27,12 +25,10 @@ import { MyDatePickerModule } from 'mydatepicker';
     declarations: [
         AppComponent,
         LoginComponent,
-        SearchDialogComponent,
-        ExportComponent,
+        // SearchDialogComponent,
+        // ExportComponent,
         SidebarComponent,
-        EntriesComponent, // ??? 
-        // DatepickerComponent,
-        // QueryformComponent,
+        EntriesComponent,
         ProfileComponent,
         TimeTrackingComponent,
         EntryDialogComponent,
@@ -41,9 +37,8 @@ import { MyDatePickerModule } from 'mydatepicker';
         UserComponent
     ],
     entryComponents: [
-        // SearchDialogComponent,
-        EntryDialogComponent,
-        DeleteEntryComponent,
+        // EntryDialogComponent,
+        // DeleteEntryComponent,
         UpdateDialogComponent
     ],
     imports: [
@@ -54,12 +49,9 @@ import { MyDatePickerModule } from 'mydatepicker';
         RouterModule.forRoot(routes),
         MaterialModule.forRoot(),
         FlexLayoutModule,
-        // MyDatePickerModule,
         AlertModule,
-        DropdownModule,
         ModalModule,
         TimepickerModule,
-        // DataTableModule,
         TabsModule,
         TypeaheadModule,
         MyDatePickerModule
@@ -68,4 +60,4 @@ import { MyDatePickerModule } from 'mydatepicker';
     bootstrap: [AppComponent]
 })
 export class AppModule { }
-platformBrowserDynamic().bootstrapModule(AppModule);
+// platformBrowserDynamic().bootstrapModule(AppModule);

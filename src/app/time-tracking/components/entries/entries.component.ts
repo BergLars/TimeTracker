@@ -39,6 +39,9 @@ export class EntriesComponent implements OnInit{
   selectedDate: string;
   selectedStartTime: string;
   selectedEndTime: string;
+  count: number = 0;
+  @Input() offset: number = 0;
+  columns: any
 
   public editing = {};
   public result: any;
@@ -46,7 +49,7 @@ export class EntriesComponent implements OnInit{
   private limits = [
     { key: 'All Entries', value: 50 },
     { key: '10 Entries', value: 10 },
-    // { key: '5 Entries', value: 5 }
+    { key: '5 Entries', value: 5 }
   ];
 
   limit: number = this.limits[0].value;
@@ -72,6 +75,7 @@ export class EntriesComponent implements OnInit{
 
   changeRowLimits(event) {
     this.limit = event.target.value;
+    this.offset = 0;
     this.loadEntries();
   }
 
@@ -210,6 +214,29 @@ export class EntriesComponent implements OnInit{
         });
     };
     req.send();
+  }
+
+  page(offset, limit) {
+    this.fetch((results) => {
+      this.count = results.length;
+
+      const start = offset * limit;
+      const end = start + limit;
+      const rows = [...this.rows];
+
+      for (let i = start; i < end; i++) {
+        rows[i] = results[i];
+      }
+
+      this.rows = rows;
+      console.log('Page Results', start, end, rows);
+    });
+  }
+
+  onPage(event) {
+    console.log('Page Event', event);
+    this.page(event.offset, event.limit);
+    this.offset = event.offset;
   }
 
   // public openDialogTest(row) {

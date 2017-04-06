@@ -6,19 +6,19 @@ import { EntryDialogComponent }   from './entry-dialog.component';
 
 // @NgModule({
 //     imports: [
-//         MaterialModule.forRoot(),
+//         MaterialModule.forRoot()
 //     ],
 //     exports: [
-//         EntryDialogComponent,
+//         EntryDialogComponent
 //     ],
 //     declarations: [
-//         EntryDialogComponent,
+//         EntryDialogComponent
 //     ],
 //     providers: [
-//         EntryDialogService,
+//         EntryDialogService
 //     ],
 //     entryComponents: [
-//         EntryDialogComponent,
+//         EntryDialogComponent
 //     ],
 // })
 export class EntryDialogModule { }
