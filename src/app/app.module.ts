@@ -37,8 +37,8 @@ import { MyDatePickerModule } from 'mydatepicker';
         UserComponent
     ],
     entryComponents: [
-        // EntryDialogComponent,
-        // DeleteEntryComponent,
+        EntryDialogComponent,
+        DeleteEntryComponent,
         UpdateDialogComponent
     ],
     imports: [
