@@ -15,7 +15,7 @@ import { environment } from '../../../../environments/environment';
   templateUrl: './entries.component.html',
   styleUrls: ['./entries.component.scss']
 })
-export class EntriesComponent implements OnInit{
+export class EntriesComponent implements OnInit {
   public baseUrl: string = environment.apiBaseUrl;
 
   @Input() projects: IProject[] = [];
@@ -41,7 +41,8 @@ export class EntriesComponent implements OnInit{
   selectedEndTime: string;
   count: number = 0;
   @Input() offset: number = 0;
-  columns: any
+  columns: any;
+  @Input() date: string;
 
   public editing = {};
   public result: any;
@@ -81,11 +82,36 @@ export class EntriesComponent implements OnInit{
 
   updateValue(event, cell, cellValue, row) {
     this.editing[row.$$index + '-' + cell] = false;
-    this.items[row.$$index][cell] = event.target.value;
+    console.log(cell);
+    console.log(event.target.value);
+    debugger;
+    if (cell == 'project') {
+      row.projectName = event.target.value;
+    }
+    else if (cell == 'task') {
+      row.taskDescription = event.target.value;
+    }
+    else if (cell == 'date') {
+      row.startDate = event.target.value;
+    }
+    else if (cell == 'startTime') {
+      row.startDate = event.target.value;
+    }
+    else if (cell == 'endTime') {
+      row.endDate = event.target.value;
+    }
+    else {
+      this.items[row.$$index][cell] = event.target.value;
+    }
+    this.loadEntries();
+    console.log(this.items[row.$$index][cell]);
+    console.log(cell);
+    console.log(row.startDate);
+    console.log(row.projectName);
   }
 
   onSelect({ selected }) {
-    this.selectedRow = selected[0];
+    // this.selectedRow = selected[0];
   }
 
   isSelected(row) {
@@ -138,7 +164,7 @@ export class EntriesComponent implements OnInit{
       .subscribe(res => {
         if (res) {
           // TODO : that's bad, replace the array with a dictionary or something !!!
-          
+
           let description = res[0];
           let projectID = Number(res[1]);
           let taskID = Number(res[2]);
@@ -149,7 +175,7 @@ export class EntriesComponent implements OnInit{
           let endDate = date + " " + endtime;
 
           this.projectService.getProject(projectID).then(res => {
-            var selectedProject = res ;
+            var selectedProject = res;
 
             //selectedProject.
 
@@ -200,17 +226,16 @@ export class EntriesComponent implements OnInit{
         this.userID = this.loginService.getLoggedUserID(),
         this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
           for (let loadedItem of loadedItems) {
-            this.projectService.getProject(loadedItem.projectID).then(result => { 
+            this.projectService.getProject(loadedItem.projectID).then(result => {
               loadedItem.projectName = result.projectName;
-              
-              this.taskService.getTask(loadedItem.taskID).then(result => { 
+
+              this.taskService.getTask(loadedItem.taskID).then(result => {
                 loadedItem.taskDescription = result.taskDescription;
-              
-              this.items.push(loadedItem); 
+
+                this.items.push(loadedItem);
               });
-             });
+            });
           }
-          //this.items = items;
         });
     };
     req.send();

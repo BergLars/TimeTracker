@@ -23,7 +23,8 @@ export class TimeTrackingEntryService implements IDataservice {
         },
         date: function() {
           var str = this.startDate;
-          return str.substring(0, 10);
+          var date = str.substring(0, 10);
+          return date;
         },
         startTime: function() {
           var str = this.startDate;
