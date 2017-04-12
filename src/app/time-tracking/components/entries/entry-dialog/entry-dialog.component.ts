@@ -22,8 +22,10 @@ export class EntryDialogComponent implements OnInit {
   public userprofileID: any;
   public projectID: any;
   public taskID: any;
-  public startDateTime: any;
-  public endDateTime: any;
+  public entryDate: any;
+  public startTime: any;
+  public endTime: any;
+  public timeSpent: any;
    private selDate: IMyDate;
 
   constructor(
@@ -61,24 +63,24 @@ export class EntryDialogComponent implements OnInit {
     this.description = value;
   }
 
-  public getStartDateTime(value: string, value1: string) {
-    this.selectedDate = value;
-    this.selectedStartTime = value1;
-    this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
-    return this.startDateTime;
-  }
+  // public getStartDateTime(value: string, value1: string) {
+  //   this.selectedDate = value;
+  //   this.selectedStartTime = value1;
+  //   this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
+  //   return this.startDateTime;
+  // }
 
-  public getEndDateTime(value: string, value1: string) {
-    if (value === null && value1 === null) {
-      this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
-    }
-    else {
-      this.selectedDate = value;
-      this.selectedEndTime = value1;
-      this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
-    }
-    return this.endDateTime;
-  }
+  // public getEndDateTime(value: string, value1: string) {
+  //   if (value === null && value1 === null) {
+  //     this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
+  //   }
+  //   else {
+  //     this.selectedDate = value;
+  //     this.selectedEndTime = value1;
+  //     this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
+  //   }
+  //   return this.endDateTime;
+  // }
 
   public projectDropdown(value: string): void {
     this.projectID = value;
@@ -88,25 +90,25 @@ export class EntryDialogComponent implements OnInit {
     this.taskID = value;
   }
 
-  checkMandatoryFields() {
-    if (this.description === "" || this.projectID === null || this.taskID === null || this.startDateTime === " " || this.endDateTime === " ") {
-      alert("Please check if all the fields are filled in");
-    } else {
-      this.checkStartAndEndTime();
-    }
-  }
+  // checkMandatoryFields() {
+  //   if (this.description === "" || this.projectID === null || this.taskID === null || this.startDateTime === " " || this.endDateTime === " ") {
+  //     alert("Please check if all the fields are filled in");
+  //   } else {
+  //     this.checkStartAndEndTime();
+  //   }
+  // }
 
-   checkStartAndEndTime() {
-    if (this.startDateTime > this.endDateTime || this.startDateTime == this.endDateTime) {
-      alert("Please enter a valid endtime.")
-    } else {
-      this.ok();
-    }
-  }
+  //  checkStartAndEndTime() {
+  //   if (this.startDateTime > this.endDateTime || this.startDateTime == this.endDateTime) {
+  //     alert("Please enter a valid endtime.")
+  //   } else {
+  //     this.ok();
+  //   }
+  // }
 
   public ok() {
     this.timeTrackingEntryService
-      .createTimeTrackingEntry(this.startDateTime, this.endDateTime, this.description, this.loginService.getLoggedUserID(), this.projectID, this.taskID)
+      .createTimeTrackingEntry(this.entryDate, this.startTime, this.endTime, this.timeSpent, this.description, this.loginService.getLoggedUserID(), this.projectID, this.taskID)
       .then(() => {
         this.dialogRef.close(true);
     });

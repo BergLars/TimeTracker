@@ -42,7 +42,7 @@
                 <option *ngFor="let project of projects" [ngValue]="project">{{ project.projectName }}</option>
             </select> -->
             <div>
-                {{ row.projectName }}
+                {{ row.projectName() }}
             </div>
         </ng-template>
     </ngx-datatable-column>
@@ -55,7 +55,7 @@
                 <option *ngFor="let task of tasks" [ngValue]="task">{{ task.taskDescription }}</option>
             </select> -->
             <div>
-                {{ row.taskDescription }}
+                {{ row.taskDescription() }}
             </div>
         </ng-template>
     </ngx-datatable-column>
@@ -65,7 +65,7 @@
                 {{ row.date() }}</span>
             <input autofocus (blur)="updateValue($event, 'description', value, row)" *ngIf="editing[row.$$index + '-date()']" type="datetime-local" [value]="value" /> -->
             <div>
-                {{ row.date() }}
+                {{ row.entryDate }}
             </div>
         </ng-template>
     </ngx-datatable-column>
@@ -75,7 +75,7 @@
                 {{ row.startTime()}}</span>
             <input autofocus (blur)="updateValue($event, 'startTime()', value, row)" *ngIf="editing[row.$$index + '-startTime()']" type="datetime-local" [value]="value" /> -->
             <div>
-                {{ row.startTime() }}
+                {{ row.startTime }}
             </div>
         </ng-template>
     </ngx-datatable-column>
@@ -85,14 +85,14 @@
                 {{ row.endTime() }}</span>
             <input autofocus (blur)="updateValue($event, 'endTime()', value, row)" *ngIf="editing[row.$$index + '-endTime()']" type="datetime-local" [value]="value" /> -->
             <div>
-                {{ row.endTime() }}
+                {{ row.endTime }}
             </div>
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Time spent">
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
             <div>
-                {{ row.timeSpent() }}
+                {{ row.timeSpent }}
             </div>
         </ng-template>
     </ngx-datatable-column>

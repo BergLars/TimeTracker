@@ -151,8 +151,6 @@ export class EntriesComponent implements OnInit{
           this.projectService.getProject(projectID).then(res => {
             var selectedProject = res ;
 
-            //selectedProject.
-
             this.items[row.$$index]['description'] = description;//this.result.description;
             this.items[row.$$index]['projectID'] = projectID; //this.result.projectID;
             this.items[row.$$index]['taskID'] = taskID; //this.result.taskID;
@@ -190,28 +188,18 @@ export class EntriesComponent implements OnInit{
     req.open('GET', url);
 
     req.onload = () => {
-      // Get all projects
-      this.projectService.getProjects().then(result => { this.projects = result; }),
+    //   // Get all projects
+    this.projectService.getProjects().then(result => { this.projects = result; }),
 
-        // Get all tasks
-        this.taskService.getTasks().then(result => { this.tasks = result; }),
+    //     // Get all tasks
+    this.taskService.getTasks().then(result => { this.tasks = result; }),
 
-        // Get user's entries
-        this.userID = this.loginService.getLoggedUserID(),
-        this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
-          for (let loadedItem of loadedItems) {
-            this.projectService.getProject(loadedItem.projectID).then(result => { 
-              loadedItem.projectName = result.projectName;
-              
-              this.taskService.getTask(loadedItem.taskID).then(result => { 
-                loadedItem.taskDescription = result.taskDescription;
-              
-              this.items.push(loadedItem); 
-              });
-             });
-          }
-          //this.items = items;
-        });
+    //     // Get user's entries
+    this.userID = this.loginService.getLoggedUserID(),
+    this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
+      this.items = loadedItems;
+      //this.items = items;
+    });
     };
     req.send();
   }
