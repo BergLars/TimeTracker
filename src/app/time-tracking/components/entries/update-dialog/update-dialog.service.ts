@@ -25,9 +25,10 @@ export class UpdateDialogService {
     dialogRef.componentInstance.projectID = row.projectID;
     dialogRef.componentInstance.taskID = row.taskID;
     dialogRef.componentInstance.selectedTask = row.taskID;
-    dialogRef.componentInstance.selectedDate = row.startDate.substring(0, 10);
-    dialogRef.componentInstance.selectedStartTime = row.startDate.substring(11, 16);
-    dialogRef.componentInstance.selectedEndTime = row.endDate.substring(11, 16);
+    dialogRef.componentInstance.selectedDate = row.entryDate;
+    dialogRef.componentInstance.selectedStartTime = row.startTime;
+    dialogRef.componentInstance.selectedEndTime = row.endTime;
+    dialogRef.componentInstance.selectedTimeSpent = row.timeSpent;
 
     return dialogRef;
   }

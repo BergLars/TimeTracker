@@ -46,41 +46,26 @@ export class EntryDialogComponent implements OnInit {
     });
   }
 
-    private myDatePickerOptions: IMyOptions = {
-        // other options...
-        dateFormat: 'dd.mm.yyyy',
-        disableWeekends: true,
-    };
+  private myDatePickerOptions: IMyOptions = {
+    // other options...
+    dateFormat: 'dd.mm.yyyy',
+    disableWeekends: true,
+  };
 
-    onDateChanged(event: IMyDateModel) {
-        // event properties are: event.date, event.jsdate, event.formatted and event.epoc
-          this.selDate = event.date;
-          console.log(event.date);
-    }
-
-
-  public getDescription(value: string) {
-    this.description = value;
+  onDateChanged(event: IMyDateModel) {
+    // event properties are: event.date, event.jsdate, event.formatted and event.epoc
+    this.selDate = event.date;
+    console.log(event.date);
   }
 
-  // public getStartDateTime(value: string, value1: string) {
-  //   this.selectedDate = value;
-  //   this.selectedStartTime = value1;
-  //   this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
-  //   return this.startDateTime;
-  // }
+   public getValues(valueDesc: string, valueDate: string, valueStartTime: string, valueEndTime: string, valueTimeSpent: string) {
+    this.description = valueDesc;
+    this.entryDate = valueDate;
+    this.startTime = valueStartTime;
+    this.endTime = valueEndTime;
+    this.timeSpent = valueTimeSpent
+  }
 
-  // public getEndDateTime(value: string, value1: string) {
-  //   if (value === null && value1 === null) {
-  //     this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
-  //   }
-  //   else {
-  //     this.selectedDate = value;
-  //     this.selectedEndTime = value1;
-  //     this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
-  //   }
-  //   return this.endDateTime;
-  // }
 
   public projectDropdown(value: string): void {
     this.projectID = value;
@@ -90,21 +75,21 @@ export class EntryDialogComponent implements OnInit {
     this.taskID = value;
   }
 
-  // checkMandatoryFields() {
-  //   if (this.description === "" || this.projectID === null || this.taskID === null || this.startDateTime === " " || this.endDateTime === " ") {
-  //     alert("Please check if all the fields are filled in");
-  //   } else {
-  //     this.checkStartAndEndTime();
-  //   }
-  // }
+  checkMandatoryFields() {
+    if (this.description === "" || this.projectID === null || this.taskID === null || this.entryDate === " " || this.startTime === " ") {
+      alert("Please check if all the fields are filled in");
+    } else {
+      this.checkStartAndEndTime();
+    }
+  }
 
-  //  checkStartAndEndTime() {
-  //   if (this.startDateTime > this.endDateTime || this.startDateTime == this.endDateTime) {
-  //     alert("Please enter a valid endtime.")
-  //   } else {
-  //     this.ok();
-  //   }
-  // }
+  checkStartAndEndTime() {
+    if (this.startTime > this.endTime || this.startTime == this.endTime) {
+      alert("Please enter a valid endtime.")
+    } else {
+      this.ok();
+    }
+  }
 
   public ok() {
     this.timeTrackingEntryService

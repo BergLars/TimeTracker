@@ -48,11 +48,20 @@
                 </md-input-container>
             </td>
         </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                <md-input-container>
+                <input mdInput placeholder="Time Spent" #timeSpent [value]="selectedTimeSpent">
+                </md-input-container>
+            </td>
+        </tr>
     </table>
     <br>
 </div>
 <div md-dialog-actions>
     <!-- <button type="button" md-button (click)="getNewDescription(selectedDescription);getNewStartDateTime(date.value,startTime.value);getNewEndDateTime(date.value,endTime.value);checkMandatoryFields();">OK</button> -->
-    <button type="button" md-button (click)="getNewDescription(selectedDescription);getNewStartDateTime(date.value,startTime.value);getNewEndDateTime(date.value,endTime.value);checkMandatoryFields();dialogRef.close([selectedDescription, project.value, task.value, date.value, startTime.value, endTime.value])">OK</button>
+    <button type="button" md-button (click)="getNewValues(selectedDescription, date.value, startTime.value, endTime.value, timeSpent.value);checkMandatoryFields();dialogRef.close([selectedDescription, project.value, task.value, date.value, startTime.value, endTime.value])">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>

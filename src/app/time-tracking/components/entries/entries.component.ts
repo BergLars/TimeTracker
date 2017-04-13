@@ -145,8 +145,7 @@ export class EntriesComponent implements OnInit{
           let date = res[3];
           let starttime = res[4];
           let endtime = res[5];
-          let startDate = date + " " + starttime;
-          let endDate = date + " " + endtime;
+          // let timespent = 
 
           this.projectService.getProject(projectID).then(res => {
             var selectedProject = res ;
@@ -154,8 +153,8 @@ export class EntriesComponent implements OnInit{
             this.items[row.$$index]['description'] = description;//this.result.description;
             this.items[row.$$index]['projectID'] = projectID; //this.result.projectID;
             this.items[row.$$index]['taskID'] = taskID; //this.result.taskID;
-            this.items[row.$$index]['startDate'] = startDate;//this.result.startDateTime;
-            this.items[row.$$index]['endDate'] = endDate;//this.result.endDateTime;
+            this.items[row.$$index]['startTime'] = starttime;//this.result.startDateTime;
+            this.items[row.$$index]['endTime'] = endtime;//this.result.endDateTime;
 
             this.loadEntries();
           });
