@@ -23,9 +23,12 @@ export class UpdateDialogComponent implements OnInit {
   @Input() projectID: any;
   @Input() taskID: any;
   public selectedEndTime: any;
-  public description: string;
-  public startDateTime: string;
-  public endDateTime: string;
+  public selectedTimeSpent: any;
+  public description: string; 
+  public entryDate: any;
+  public startTime: any;
+  public endTime: any;
+  public timeSpent: any;
   userID: number;
   @Input() tempTaskID: number;
   @Input() tempProjectID: number;
@@ -40,32 +43,12 @@ export class UpdateDialogComponent implements OnInit {
     this.taskID = value;
   }
 
-  public getNewDescription(value: string) {
-    this.description = value;
-  }
-
-  public getNewStartDateTime(value: any, value1: any) {
-    if (value === undefined || value1 === undefined) {
-      this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
-    }
-    else {
-      this.selectedDate = value;
-      this.selectedStartTime = value1;
-      this.startDateTime = this.selectedDate + " " + this.selectedStartTime;
-    }
-    return this.startDateTime;
-  }
-
-  public getNewEndDateTime(value: any, value1: any) {
-    if (value === undefined || value1 === undefined) {
-      this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
-    }
-    else {
-      this.selectedDate = value;
-      this.selectedEndTime = value1;
-      this.endDateTime = this.selectedDate + " " + this.selectedEndTime;
-    }
-    return this.endDateTime;
+  public getNewValues(valueDesc: string, valueDate: string, valueStartTime: string, valueEndTime: string, valueTimeSpent: string) {
+    this.description = valueDesc;
+    this.entryDate = valueDate;
+    this.startTime = valueStartTime;
+    this.endTime = valueEndTime;
+    this.timeSpent = valueTimeSpent
   }
 
   constructor(
@@ -77,7 +60,7 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   checkMandatoryFields() {
-    if (this.description === "" || this.projectID === null || this.taskID === null || this.startDateTime === " " || this.endDateTime === " ") {
+    if (this.description === "" || this.projectID === null || this.taskID === null || this.entryDate === " " || this.startTime === " ") {
       alert("Please check if all the fields are filled in");
     } else {
       this.checkStartAndEndTime();
@@ -85,7 +68,7 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   checkStartAndEndTime() {
-    if (this.startDateTime > this.endDateTime || this.startDateTime == this.endDateTime) {
+    if (this.startTime > this.endTime || this.startTime == this.endTime) {
       alert("Please enter a valid endtime.")
     } else {
       this.ok();
@@ -132,6 +115,6 @@ export class UpdateDialogComponent implements OnInit {
 public ok() {
     this.projectID = Number(this.projectID);
     this.taskID = Number(this.taskID);
-    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.startDateTime, this.endDateTime, this.description, this.userprofileID, this.projectID, this.taskID);
+    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.entryDate, this.startTime, this.endTime, this.timeSpent, this.description, this.userprofileID, this.projectID, this.taskID);
   }
 }

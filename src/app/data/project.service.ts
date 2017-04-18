@@ -16,11 +16,11 @@ export class ProjectService implements IDataservice {
     let resource = store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,
       endpoint: ENDPOINT_NAME,
-      relations : {
+      relations: {
         hasMany: {
           entry: {
-            localField: "entries",
-            foreignKey: "id"
+            foreignKey: 'projectID',
+            localField: 'entries'
           }
         }
       }

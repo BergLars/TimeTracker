@@ -3,8 +3,10 @@ import { ITask } from './i-task';
 
 export interface ITimeTrackingEntry {
     readonly id: number;
-    startDate: string;
-    endDate: string;
+    entryDate: string;
+    startTime: string;
+    endTime: string;
+    timeSpent: string;
     description: string;
     userprofileID: number;
     projectID: number;
@@ -15,7 +17,4 @@ export interface ITimeTrackingEntry {
     projectName: string;
     readonly task?: ITask;
     taskDescription: string;
-    date(): string;
-    startTime(): string;
-    endTime(): string;
 }

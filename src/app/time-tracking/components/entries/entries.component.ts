@@ -84,7 +84,6 @@ export class EntriesComponent implements OnInit {
     this.editing[row.$$index + '-' + cell] = false;
     console.log(cell);
     console.log(event.target.value);
-    debugger;
     if (cell == 'project') {
       row.projectName = event.target.value;
     }
@@ -103,11 +102,12 @@ export class EntriesComponent implements OnInit {
     else {
       this.items[row.$$index][cell] = event.target.value;
     }
-    this.loadEntries();
+    // this.loadEntries();
     console.log(this.items[row.$$index][cell]);
     console.log(cell);
-    console.log(row.startDate);
-    console.log(row.projectName);
+    console.log(row.entryDate);
+    console.log(this.selectedTask);
+    console.log(row.projectID);
   }
 
   onSelect({ selected }) {
@@ -171,19 +171,16 @@ export class EntriesComponent implements OnInit {
           let date = res[3];
           let starttime = res[4];
           let endtime = res[5];
-          let startDate = date + " " + starttime;
-          let endDate = date + " " + endtime;
+          // let timespent = 
 
           this.projectService.getProject(projectID).then(res => {
             var selectedProject = res;
 
-            //selectedProject.
-
             this.items[row.$$index]['description'] = description;//this.result.description;
             this.items[row.$$index]['projectID'] = projectID; //this.result.projectID;
             this.items[row.$$index]['taskID'] = taskID; //this.result.taskID;
-            this.items[row.$$index]['startDate'] = startDate;//this.result.startDateTime;
-            this.items[row.$$index]['endDate'] = endDate;//this.result.endDateTime;
+            this.items[row.$$index]['startTime'] = starttime;//this.result.startDateTime;
+            this.items[row.$$index]['endTime'] = endtime;//this.result.endDateTime;
 
             this.loadEntries();
           });
@@ -216,27 +213,18 @@ export class EntriesComponent implements OnInit {
     req.open('GET', url);
 
     req.onload = () => {
-      // Get all projects
-      this.projectService.getProjects().then(result => { this.projects = result; }),
+    // Get all projects
+    this.projectService.getProjects().then(result => { this.projects = result; }),
 
-        // Get all tasks
-        this.taskService.getTasks().then(result => { this.tasks = result; }),
+    // Get all tasks
+    this.taskService.getTasks().then(result => { this.tasks = result; }),
 
-        // Get user's entries
-        this.userID = this.loginService.getLoggedUserID(),
-        this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
-          for (let loadedItem of loadedItems) {
-            this.projectService.getProject(loadedItem.projectID).then(result => {
-              loadedItem.projectName = result.projectName;
-
-              this.taskService.getTask(loadedItem.taskID).then(result => {
-                loadedItem.taskDescription = result.taskDescription;
-
-                this.items.push(loadedItem);
-              });
-            });
-          }
-        });
+    // Get user's entries
+    this.userID = this.loginService.getLoggedUserID(),
+    this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
+      this.items = loadedItems;
+      //this.items = items;
+    });
     };
     req.send();
   }

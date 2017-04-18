@@ -20,8 +20,8 @@ export class TaskService implements IDataservice {
       relations : {
         hasMany: {
           entry: {
-            localField: "entries",
-            foreignKey: "id"
+            foreignKey: 'taskID',
+            localField: 'entries'
           }
         }
       }

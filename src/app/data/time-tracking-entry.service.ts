@@ -16,64 +16,50 @@ export class TimeTrackingEntryService implements IDataservice {
     let resource = store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,
       endpoint: ENDPOINT_NAME,
-
-      methods: {
-        taskDescription: function() {
-          return (this.task) ? this.task.taskDescription : '-';
-        },
-        date: function() {
-          var str = this.startDate;
-          var date = str.substring(0, 10);
-          return date;
-        },
-        startTime: function() {
-          var str = this.startDate;
-          return str.substring(11, 16);
-        },
-        endTime: function() {
-          var str = this.endDate;
-          return str.substring(11, 16);
-        },
-        timeSpent: function() {
-          var timeSpent: string;
-          var timeSpentH: number;
-          var timeSpentMin: number;
-          var startTimeH: number = parseInt(this.startDate.substring(11, 13));
-          var startTimeMin: number = parseInt(this.startDate.substring(14, 16));
-          var endTimeH: number = parseInt(this.endDate.substring(11, 13));
-          var endTimeMin: number = parseInt(this.endDate.substring(14, 16));
-          if (endTimeMin >= startTimeMin) {
-            timeSpentMin = endTimeMin - startTimeMin;
-            timeSpentH = endTimeH - startTimeH;
-          } else {
-            timeSpentMin = endTimeMin - startTimeMin + 60;
-            timeSpentH = endTimeH - startTimeH - 1;
+      relations: {
+        belongsTo: {
+          project: {
+            localField: 'project',
+            foreignKey: 'projectID'
+          },
+          task: {
+            localField: 'task',
+            foreignKey: 'taskID'
           }
-          if (timeSpentMin < 10)  {
-            timeSpent = timeSpentH + ":0" + timeSpentMin;
-          } else {
-            timeSpent = timeSpentH + ":" + timeSpentMin;
-          }
-          return timeSpent;
         }
       },
 
-      /*relations: {
-        belongsTo: {
-          user: {
-            foreignKey: 'userID',
-            localField: 'user'
-          },
-          project: {
-            foreignKey: 'projectID',
-            localField: 'project'
-          },
-          task: {
-            foreignKey: 'taskID',
-            localField: 'task'
-          }
-        }
-      }*/
+      methods: {
+      //   taskDescription: function() {
+      //     return (this.task) ? this.task.taskDescription : '-';
+      //   },
+      //   projectName: function () {
+      //     return this.project ? this.project.projectName : '-';
+      //   }
+      },
+      //   timeSpent: function() {
+      //     var timeSpent: string;
+      //     var timeSpentH: number;
+      //     var timeSpentMin: number;
+      //     var startTimeH: number = parseInt(this.startDate.substring(11, 13));
+      //     var startTimeMin: number = parseInt(this.startDate.substring(14, 16));
+      //     var endTimeH: number = parseInt(this.endDate.substring(11, 13));
+      //     var endTimeMin: number = parseInt(this.endDate.substring(14, 16));
+      //     if (endTimeMin >= startTimeMin) {
+      //       timeSpentMin = endTimeMin - startTimeMin;
+      //       timeSpentH = endTimeH - startTimeH;
+      //     } else {
+      //       timeSpentMin = endTimeMin - startTimeMin + 60;
+      //       timeSpentH = endTimeH - startTimeH - 1;
+      //     }
+      //     if (timeSpentMin < 10)  {
+      //       timeSpent = timeSpentH + ":0" + timeSpentMin;
+      //     } else {
+      //       timeSpent = timeSpentH + ":" + timeSpentMin;
+      //     }
+      //     return timeSpent;
+      //   }
+      // }
     });
   }
 
@@ -101,11 +87,11 @@ export class TimeTrackingEntryService implements IDataservice {
     });
   }
 
-  public updateTimeTrackingEntry(id: number, startDate: string, endDate: string, description: string, userprofileID: number, projectID: number, taskID: number): Promise<ITimeTrackingEntry> {
-    return store.update(RESOURCE_NAME, id, { startDate: startDate, endDate: endDate, description: description, userprofileID: userprofileID, projectID: projectID, taskID: taskID });
+  public updateTimeTrackingEntry(id: number, entryDate: string, startTime: string, endTime: string, timeSpent: string, description: string, userprofileID: number, projectID: number, taskID: number): Promise<ITimeTrackingEntry> {
+    return store.update(RESOURCE_NAME, id, { entryDate: entryDate, startTime: startTime, endTime: endTime, timeSpent: timeSpent, description: description, userprofileID: userprofileID, projectID: projectID, taskID: taskID });
   }
 
-  public createTimeTrackingEntry(startDate: string, endDate: string, description: string, userprofileID: number, projectID: number, taskID: number): Promise<ITimeTrackingEntry> {
-    return store.create(RESOURCE_NAME, { startDate: startDate, endDate: endDate, description: description, userprofileID: userprofileID, projectID: projectID, taskID: taskID });
+  public createTimeTrackingEntry(entryDate: string, startTime: string, endTime: string, timeSpent: string, description: string, userprofileID: number, projectID: number, taskID: number): Promise<ITimeTrackingEntry> {
+    return store.create(RESOURCE_NAME, { entryDate: entryDate, startTime: startTime, endTime: endTime, timeSpent: timeSpent, description: description, userprofileID: userprofileID, projectID: projectID, taskID: taskID });
   }
 }
