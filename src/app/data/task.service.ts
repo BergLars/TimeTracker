@@ -37,4 +37,13 @@ export class TaskService implements IDataservice {
   public getTask(id: number): Promise<ITask> {
     return store.find(RESOURCE_NAME, id);
   }
+
+  public getTaskByDescription(description: string): Promise<ITask> {
+    let endpoint = '/' + ENDPOINT_NAME + '/description';
+    return store.find(RESOURCE_NAME,description, {
+      endpoint: endpoint,
+      cacheResponse: false,
+      bypassCache: true
+    });
+  }
 }

@@ -97,16 +97,19 @@ export class EntriesComponent implements OnInit {
     }
     if (cell == 'project') {
       this.projectsName[row.$$index] = event.target.value;
-
       this.projectService.getProjectByName(this.projectsName[row.$$index]).then(res => {
         var selectedProject = res;
         row.projectID = res.id;
-        console.log(row.projectID, res.projectName);
         this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
       });
     }
     if (cell == 'task') {
       this.tasksDescription[row.$$index] = event.target.value;
+      this.taskService.getTaskByDescription(this.tasksDescription[row.$$index]).then(res => {
+        var selectedTask = res;
+        row.taskID = res.id;
+        this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
+      });
     }
     if (cell == 'date') {
       row.entryDate = event.target.value;
