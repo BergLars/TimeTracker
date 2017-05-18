@@ -20,11 +20,13 @@ export class TimeTrackingEntryService implements IDataservice {
         belongsTo: {
           project: {
             localField: 'project',
-            foreignKey: 'projectID'
+            foreignKey: 'projectID',
+            projectName: 'projectName'
           },
           task: {
             localField: 'task',
-            foreignKey: 'taskID'
+            foreignKey: 'taskID',
+            taskDescription: 'taskDescription'
           }
         }
       },

@@ -37,6 +37,15 @@ export class ProjectService implements IDataservice {
     return store.find(RESOURCE_NAME, id);
   }
 
+  public getProjectByName(name: string): Promise<IProject> {
+    let endpoint = '/' + ENDPOINT_NAME + '/projectName';
+    return store.find(RESOURCE_NAME,name, {
+      endpoint: endpoint,
+      cacheResponse: false,
+      bypassCache: true
+    });
+  }
+
   // ------------------------------------------------------------------------------- Helper methods
 
   private insertProject(id: number): any {

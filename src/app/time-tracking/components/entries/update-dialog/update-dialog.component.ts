@@ -13,6 +13,7 @@ export class UpdateDialogComponent implements OnInit {
   @Input() projects: IProject[] = [];
   @Input() tasks: ITask[] = [];
   public title: string;
+  public message: string;
   public rowID: number;
   public selectedDescription: string;
   @Input() selectedProject: any;
@@ -24,7 +25,7 @@ export class UpdateDialogComponent implements OnInit {
   @Input() taskID: any;
   public selectedEndTime: any;
   public selectedTimeSpent: any;
-  public description: string; 
+  public description: string;
   public entryDate: any;
   public startTime: any;
   public endTime: any;
@@ -112,7 +113,7 @@ export class UpdateDialogComponent implements OnInit {
     req.send();
   }
 
-public ok() {
+  public ok() {
     this.projectID = Number(this.projectID);
     this.taskID = Number(this.taskID);
     this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.entryDate, this.startTime, this.endTime, this.timeSpent, this.description, this.userprofileID, this.projectID, this.taskID);

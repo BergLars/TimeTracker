@@ -7,29 +7,30 @@ import { ITimeTrackingEntry } from '../../../../data';
 @Injectable()
 export class UpdateDialogService {
 
-  constructor(private dialog: MdDialog) { }
+    constructor(private dialog: MdDialog) { }
 
-  public confirm(title: string, viewContainerRef: ViewContainerRef, row: any): MdDialogRef<UpdateDialogComponent> {
+    public confirm(title: string, message: string, viewContainerRef: ViewContainerRef, row: any): Observable<boolean> {
 
-    let dialogRef: MdDialogRef<UpdateDialogComponent>;
-    let config = new MdDialogConfig();
-    config.viewContainerRef = viewContainerRef;
+        let dialogRef: MdDialogRef<UpdateDialogComponent>;
+        let config = new MdDialogConfig();
+        config.viewContainerRef = viewContainerRef;
 
-    dialogRef = this.dialog.open(UpdateDialogComponent, config);
+        dialogRef = this.dialog.open(UpdateDialogComponent, config);
 
-    dialogRef.componentInstance.title = title;
-    dialogRef.componentInstance.selectedDescription = row.description;
-    dialogRef.componentInstance.selectedProject = row.projectID;
-    dialogRef.componentInstance.rowID = row.id;
-    dialogRef.componentInstance.userprofileID = row.userprofileID;
-    dialogRef.componentInstance.projectID = row.projectID;
-    dialogRef.componentInstance.taskID = row.taskID;
-    dialogRef.componentInstance.selectedTask = row.taskID;
-    dialogRef.componentInstance.selectedDate = row.entryDate;
-    dialogRef.componentInstance.selectedStartTime = row.startTime;
-    dialogRef.componentInstance.selectedEndTime = row.endTime;
-    dialogRef.componentInstance.selectedTimeSpent = row.timeSpent;
+        dialogRef.componentInstance.title = title;
+        dialogRef.componentInstance.message = message;
+        dialogRef.componentInstance.selectedDescription = row.description;
+        dialogRef.componentInstance.selectedProject = row.projectID;
+        dialogRef.componentInstance.rowID = row.id;
+        dialogRef.componentInstance.userprofileID = row.userprofileID;
+        dialogRef.componentInstance.projectID = row.projectID;
+        dialogRef.componentInstance.taskID = row.taskID;
+        dialogRef.componentInstance.selectedTask = row.taskID;
+        dialogRef.componentInstance.selectedDate = row.entryDate;
+        dialogRef.componentInstance.selectedStartTime = row.startTime;
+        dialogRef.componentInstance.selectedEndTime = row.endTime;
+        dialogRef.componentInstance.selectedTimeSpent = row.timeSpent;
 
-    return dialogRef;
-  }
+        return dialogRef.afterClosed();
+    }
 }

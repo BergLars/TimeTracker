@@ -24,21 +24,24 @@ export class EntriesComponent implements OnInit {
   @Input() task: ITask;
   public isLoading: Boolean = false;
   public items: ITimeTrackingEntry[] = [];
-
   rows = [];
   selected = [];
+  projectsName = [];
+  tasksDescription = [];
   selectedRow: any;
   cloneSelectedRow: any;
   timeTrackingEntry: ITimeTrackingEntry;
   editMode: boolean = false;
   rowID: number;
   userID: number;
+  projectID: any;
+  taskID: any;
   selectedDescription: string;
-  selectedProject: string;
-  selectedTask: string;
-  selectedDate: string;
-  selectedStartTime: string;
-  selectedEndTime: string;
+  // selectedProject: string;
+  // selectedTask: string;
+  // selectedDate: string;
+  // selectedStartTime: string;
+  // selectedEndTime: string;
   count: number = 0;
   @Input() offset: number = 0;
   columns: any;
@@ -67,7 +70,6 @@ export class EntriesComponent implements OnInit {
     private loginService: LoginService,
     private dialog: MdDialog,
     private http: Http) {
-    //this.loadEntries();
   }
 
   ngOnInit() {
@@ -80,38 +82,48 @@ export class EntriesComponent implements OnInit {
     this.loadEntries();
   }
 
+  public projectDropdown(value: string): void {
+    this.projectID = value;
+  }
+
+  public taskDropdown(value: string): void {
+    this.taskID = value;
+  }
+
   updateValue(event, cell, cellValue, row) {
     this.editing[row.$$index + '-' + cell] = false;
-    console.log(cell);
-    console.log(event.target.value);
+    if (cell == 'description') {
+      row.description = event.target.value;
+    }
     if (cell == 'project') {
-      row.projectName = event.target.value;
+      this.projectsName[row.$$index] = event.target.value;
+
+      this.projectService.getProjectByName(this.projectsName[row.$$index]).then(res => {
+        var selectedProject = res;
+        row.projectID = res.id;
+        console.log(row.projectID, res.projectName);
+        this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
+      });
     }
-    else if (cell == 'task') {
-      row.taskDescription = event.target.value;
+    if (cell == 'task') {
+      this.tasksDescription[row.$$index] = event.target.value;
     }
-    else if (cell == 'date') {
-      row.startDate = event.target.value;
+    if (cell == 'date') {
+      row.entryDate = event.target.value;
     }
-    else if (cell == 'startTime') {
-      row.startDate = event.target.value;
+    if (cell == 'startTime') {
+      row.startTime = event.target.value;   
     }
-    else if (cell == 'endTime') {
-      row.endDate = event.target.value;
+    if (cell == 'endTime') {
+      row.endTime = event.target.value;
     }
-    else {
-      this.items[row.$$index][cell] = event.target.value;
-    }
-    // this.loadEntries();
-    console.log(this.items[row.$$index][cell]);
-    console.log(cell);
-    console.log(row.entryDate);
-    console.log(this.selectedTask);
-    console.log(row.projectID);
+    this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
   }
 
   onSelect({ selected }) {
-    // this.selectedRow = selected[0];
+    if (selected) {
+      this.selectedRow = selected[0];
+    }
   }
 
   isSelected(row) {
@@ -159,8 +171,8 @@ export class EntriesComponent implements OnInit {
 
   public openUpdateDialog(row) {
     this.updateDialogService
-      .confirm('Update Entry', this.viewContainerRef, row)
-      .afterClosed()
+      .confirm('Update Entry', 'Are you sure you want to update this entry?', this.viewContainerRef, row)
+      // .afterClosed()
       .subscribe(res => {
         if (res) {
           // TODO : that's bad, replace the array with a dictionary or something !!!
@@ -173,17 +185,19 @@ export class EntriesComponent implements OnInit {
           let endtime = res[5];
           // let timespent = 
 
-          this.projectService.getProject(projectID).then(res => {
-            var selectedProject = res;
+          // this.projectService.getProject(projectID).then(res => {
+          //   var selectedProject = res;
 
-            this.items[row.$$index]['description'] = description;//this.result.description;
-            this.items[row.$$index]['projectID'] = projectID; //this.result.projectID;
-            this.items[row.$$index]['taskID'] = taskID; //this.result.taskID;
-            this.items[row.$$index]['startTime'] = starttime;//this.result.startDateTime;
-            this.items[row.$$index]['endTime'] = endtime;//this.result.endDateTime;
+          //   this.items[row.$$index]['description'] = description;//this.result.description;
+          //   this.items[row.$$index]['projectID'] = projectID; //this.result.projectID;
+          //   this.items[row.$$index]['taskID'] = taskID; //this.result.taskID;
+          //   this.items[row.$$index]['startTime'] = starttime;//this.result.startDateTime;
+          //   this.items[row.$$index]['endTime'] = endtime;//this.result.endDateTime;
 
-            this.loadEntries();
-          });
+          //   this.loadEntries();
+          // });
+          // TO DO
+          this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, date, starttime, endtime, "00:00", "TEST DB", row.useID, Number(this.projectID), Number(this.taskID));
         }
       });
   }
@@ -207,24 +221,29 @@ export class EntriesComponent implements OnInit {
 
   fetch(cb) {
     this.items = [];
+    this.projectsName = [];
+    this.tasksDescription = [];
     this.userID = this.loginService.getLoggedUserID();
     let url = this.baseUrl + '/timeentries/' + this.userID + '/entries';
     const req = new XMLHttpRequest();
     req.open('GET', url);
 
     req.onload = () => {
-    // Get all projects
-    this.projectService.getProjects().then(result => { this.projects = result; }),
+      // Get all projects
+      this.projectService.getProjects().then(result => { this.projects = result; }),
 
-    // Get all tasks
-    this.taskService.getTasks().then(result => { this.tasks = result; }),
+        // Get all tasks
+        this.taskService.getTasks().then(result => { this.tasks = result; }),
 
-    // Get user's entries
-    this.userID = this.loginService.getLoggedUserID(),
-    this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
-      this.items = loadedItems;
-      //this.items = items;
-    });
+        // Get user's entries
+        this.userID = this.loginService.getLoggedUserID(),
+        this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
+          this.items = loadedItems;
+          for (let item of this.items) {
+            this.projectsName.push(item.project.projectName);
+            this.tasksDescription.push(item.task.taskDescription);
+          }
+        });
     };
     req.send();
   }

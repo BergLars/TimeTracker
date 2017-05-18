@@ -10,17 +10,18 @@
         </span>
     </md-toolbar>
 </div>
-<ngx-datatable #mydatatable class="material striped" [rows]="items" [columnMode]="'force'" [columns]="columns" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [selected]="selected" [selectionType]="'single'" [limit]="limit" [count]="count" [offset]="offset" (page)='onPage($event)' (select)='onSelect($event)'>
+<ngx-datatable #mydatatable class="material" [rows]="items" [columnMode]="'force'" [columns]="columns" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [selected]="selected" [selectionType]="'single'" [limit]="limit" [count]="count" [offset]="offset" (page)='onPage($event)' (select)='onSelect($event)'>
     <ngx-datatable-column name="Description">
         <ng-template ngx-datatable-cell-template let-row="row">
             <span title="Double click to edit" (click)="editing[row.$$index + '-description'] = true" *ngIf="!editing[row.$$index + '-description']">{{ row.description }}</span>
-            <input autofocus (blur)="updateValue($event, 'description', value, row)" *ngIf="editing[row.$$index + '-description']" type="text" [value]="value" />
+            <input autofocus (blur)="updateValue($event, 'description', value, row)" *ngIf="editing[row.$$index + '-description']" type="text" [value]="row.description" />
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Project">
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
             <span title="Double click to edit" (click)="editing[row.$$index + '-project'] = true" *ngIf="!editing[row.$$index + '-project']">
-              {{row.projectID}}
+              <!-- {{row.project.projectName}} -->
+              {{projectsName[row.$$index]}}
             </span>
             <select *ngIf="editing[row.$$index + '-project']" (change)="updateValue($event, 'project', value, row)" [value]="value">
                 <option *ngFor="let project of projects" [value]="project.projectName">{{project.projectName}}</option>
@@ -30,10 +31,10 @@
     <ngx-datatable-column name="Task">
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
             <span title="Double click to edit" (click)="editing[row.$$index + '-task'] = true" *ngIf="!editing[row.$$index + '-task']">
-              {{ row.taskID }}
+              {{tasksDescription[row.$$index]}}
             </span>
             <select *ngIf="editing[row.$$index + '-task']" (change)="updateValue($event, 'task', value, row)" [value]="value">
-                <option *ngFor="let task of tasks" [ngValue]="task.taskDescription">{{ task.taskDescription }}</option>
+                <option *ngFor="let task of tasks" [value]="task.taskDescription">{{ task.taskDescription }}</option>
             </select>
         </ng-template>
     </ngx-datatable-column>
@@ -75,7 +76,7 @@
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
             <div [hidden]="!isSelected(row)">
                 <div [hidden]="editMode">
-                    <span (click)=openUpdateDialog(row);><md-icon>update</md-icon></span>
+                    <!-- <span><md-icon (click)="openUpdateDialog(row)">update</md-icon></span> -->
                     <span (click)="openDeleteDialog(row)"><md-icon>delete_forever</md-icon></span>
                 </div>
                 <!-- <div [hidden]="!editMode">
