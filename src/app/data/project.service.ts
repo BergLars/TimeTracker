@@ -16,6 +16,7 @@ export class ProjectService implements IDataservice {
     let resource = store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,
       endpoint: ENDPOINT_NAME,
+      attributeId: 'name',
       relations: {
         hasMany: {
           entry: {
@@ -37,14 +38,14 @@ export class ProjectService implements IDataservice {
     return store.find(RESOURCE_NAME, id);
   }
 
-  public getProjectByName(name: string): Promise<IProject> {
-    let endpoint = '/' + ENDPOINT_NAME + '/projectName';
-    return store.find(RESOURCE_NAME,name, {
-      endpoint: endpoint,
-      cacheResponse: false,
-      bypassCache: true
-    });
-  }
+  // public getProjectByName(name: string): Promise<IProject> {
+  //   let endpoint = '/' + ENDPOINT_NAME + '/projectName';
+  //   return store.find(RESOURCE_NAME,{'name':name}, {
+  //     endpoint: endpoint,
+  //     cacheResponse: false,
+  //     bypassCache: true
+  //   });
+  // }
 
   // ------------------------------------------------------------------------------- Helper methods
 

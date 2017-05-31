@@ -102,3 +102,19 @@ div.mat-input-underline {
     background-color: #3f51b5;
     color: white;
 }
+
+.striped {
+    .datatable-row-odd {
+        background: #eee;
+    }  
+}
+
+.datatable-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    font-size:16px;
+}
+
+.datatable-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    font-size:16px;
+}

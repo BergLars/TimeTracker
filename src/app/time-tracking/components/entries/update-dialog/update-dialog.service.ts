@@ -9,7 +9,7 @@ export class UpdateDialogService {
 
     constructor(private dialog: MdDialog) { }
 
-    public confirm(title: string, message: string, viewContainerRef: ViewContainerRef, row: any): Observable<boolean> {
+    public confirm(viewContainerRef: ViewContainerRef, row: any): Observable<boolean> {
 
         let dialogRef: MdDialogRef<UpdateDialogComponent>;
         let config = new MdDialogConfig();
@@ -17,8 +17,6 @@ export class UpdateDialogService {
 
         dialogRef = this.dialog.open(UpdateDialogComponent, config);
 
-        dialogRef.componentInstance.title = title;
-        dialogRef.componentInstance.message = message;
         dialogRef.componentInstance.selectedDescription = row.description;
         dialogRef.componentInstance.selectedProject = row.projectID;
         dialogRef.componentInstance.rowID = row.id;

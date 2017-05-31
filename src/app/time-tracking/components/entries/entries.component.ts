@@ -94,33 +94,32 @@ export class EntriesComponent implements OnInit {
     this.editing[row.$$index + '-' + cell] = false;
     if (cell == 'description') {
       row.description = event.target.value;
+      this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
     }
     if (cell == 'project') {
-      this.projectsName[row.$$index] = event.target.value;
-      this.projectService.getProjectByName(this.projectsName[row.$$index]).then(res => {
-        var selectedProject = res;
+      this.projectService.getProject(event.target.value).then(res => {
         row.projectID = res.id;
         this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
       });
     }
     if (cell == 'task') {
-      this.tasksDescription[row.$$index] = event.target.value;
-      this.taskService.getTaskByDescription(this.tasksDescription[row.$$index]).then(res => {
-        var selectedTask = res;
+      this.taskService.getTask(event.target.value).then(res => {
         row.taskID = res.id;
         this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
       });
     }
     if (cell == 'date') {
       row.entryDate = event.target.value;
+      this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
     }
     if (cell == 'startTime') {
-      row.startTime = event.target.value;   
+      row.startTime = event.target.value;
+      this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
     }
     if (cell == 'endTime') {
       row.endTime = event.target.value;
+      this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
     }
-    this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
   }
 
   onSelect({ selected }) {
@@ -174,7 +173,7 @@ export class EntriesComponent implements OnInit {
 
   public openUpdateDialog(row) {
     this.updateDialogService
-      .confirm('Update Entry', 'Are you sure you want to update this entry?', this.viewContainerRef, row)
+      .confirm(this.viewContainerRef, row)
       // .afterClosed()
       .subscribe(res => {
         if (res) {
@@ -188,19 +187,19 @@ export class EntriesComponent implements OnInit {
           let endtime = res[5];
           // let timespent = 
 
-          // this.projectService.getProject(projectID).then(res => {
-          //   var selectedProject = res;
+          this.projectService.getProject(projectID).then(res => {
+            var selectedProject = res;
 
-          //   this.items[row.$$index]['description'] = description;//this.result.description;
-          //   this.items[row.$$index]['projectID'] = projectID; //this.result.projectID;
-          //   this.items[row.$$index]['taskID'] = taskID; //this.result.taskID;
-          //   this.items[row.$$index]['startTime'] = starttime;//this.result.startDateTime;
-          //   this.items[row.$$index]['endTime'] = endtime;//this.result.endDateTime;
+            this.items[row.$$index]['description'] = description;//this.result.description;
+            this.items[row.$$index]['projectID'] = projectID; //this.result.projectID;
+            this.items[row.$$index]['taskID'] = taskID; //this.result.taskID;
+            this.items[row.$$index]['startTime'] = starttime;//this.result.startDateTime;
+            this.items[row.$$index]['endTime'] = endtime;//this.result.endDateTime;
 
-          //   this.loadEntries();
-          // });
+            this.loadEntries();
+          });
           // TO DO
-          this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, date, starttime, endtime, "00:00", "TEST DB", row.useID, Number(this.projectID), Number(this.taskID));
+          this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, date, starttime, endtime, row.timespent, row.description, row.userprofileid, Number(this.projectID), Number(this.taskID));
         }
       });
   }

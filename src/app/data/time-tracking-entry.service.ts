@@ -16,6 +16,8 @@ export class TimeTrackingEntryService implements IDataservice {
     let resource = store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,
       endpoint: ENDPOINT_NAME,
+      cacheResponse: false,
+      bypassCache: true,
       relations: {
         belongsTo: {
           project: {
