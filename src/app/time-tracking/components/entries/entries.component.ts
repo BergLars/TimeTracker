@@ -24,6 +24,7 @@ export class EntriesComponent implements OnInit {
   @Input() task: ITask;
   public isLoading: Boolean = false;
   public items: ITimeTrackingEntry[] = [];
+  public clonedItems: ITimeTrackingEntry[] = [];
   rows = [];
   selected = [];
   projectsName = [];
@@ -241,6 +242,7 @@ export class EntriesComponent implements OnInit {
         this.userID = this.loginService.getLoggedUserID(),
         this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
           this.items = loadedItems;
+          this.clonedItems = loadedItems;
           for (let item of this.items) {
             this.projectsName.push(item.project.projectName);
             this.tasksDescription.push(item.task.taskDescription);
@@ -250,26 +252,37 @@ export class EntriesComponent implements OnInit {
     req.send();
   }
 
-  page(offset, limit) {
-    this.fetch((results) => {
-      this.count = results.length;
+  // public page(offset, limit) {
+  //   // this.fetch((results) => {
+  //     this.clonedItems = this.items;
+  //     this.count = this.items.length;
 
-      const start = offset * limit;
-      const end = start + limit;
-      const rows = [...this.rows];
+  //     const start = offset * limit;
+  //     const end = start + Number(limit);
+  //     let rows = [];
 
-      for (let i = start; i < end; i++) {
-        rows[i] = results[i];
-      }
-
-      this.rows = rows;
-      console.log('Page Results', start, end, rows);
-    });
-  }
+  //     for (let i = start; i < end; i++) {
+  //       rows[i] = this.items[i];
+  //     }
+  //     console.log('Page Results', start, end, rows);
+  //   // });
+  // }
 
   onPage(event) {
     console.log('Page Event', event);
-    this.page(event.offset, event.limit);
+    this.count = this.items.length;
+    this.items = this.clonedItems;;
+
+    const start = event.offset * event.limit;
+    const end = start + Number(event.limit);
+    let rows = [];
+
+    for (let i = start; i < end; i++) {
+      rows[i] = this.items[i];
+    }
+    this.items = rows;
+    this.items.length = this.count;
+    console.log('Page Results', start, end, rows);
     this.offset = event.offset;
   }
 
