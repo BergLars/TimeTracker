@@ -20,6 +20,7 @@ import { LoginComponent, LoginService } from './login';
 import { UserComponent } from './time-tracking/components/user/user.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MyDatePickerModule } from 'mydatepicker';
+import { CryptoJS} from 'crypto-js';
 
 @NgModule({
     declarations: [
