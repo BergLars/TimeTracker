@@ -6,6 +6,7 @@ import { IDataservice, TimeTrackingEntryService, ITimeTrackingEntry, IUser } fro
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
+import {CryptoJS} from 'crypto-js';
 
 const RESOURCE_NAME: string = 'user';
 const ENDPOINT_NAME: string = '/login';
