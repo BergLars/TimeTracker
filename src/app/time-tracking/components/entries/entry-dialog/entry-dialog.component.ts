@@ -2,15 +2,15 @@ import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
 import { ITimeTrackingEntry, IProject, ITask, IUser, ProjectService, TaskService, TimeTrackingEntryService, UserService } from '../../../../data';
 import { LoginService } from '../../../../login';
-import {IMyOptions, IMyDateModel, IMyDate} from 'mydatepicker';
+import { IMyOptions, IMyDateModel, IMyDate } from 'mydatepicker';
 @Component({
   selector: 'app-entry-dialog',
   templateUrl: './entry-dialog.component.html'
 })
 export class EntryDialogComponent implements OnInit {
-	@Input() projects: IProject[] = [];
+  @Input() projects: IProject[] = [];
   @Input() tasks: ITask[] = [];
-	public title: string;
+  public title: string;
   public description: string;
   public selectedProjectID: string;
   public rowid: number;
@@ -26,7 +26,7 @@ export class EntryDialogComponent implements OnInit {
   public startTime: any;
   public endTime: any;
   public timeSpent: any;
-   private selDate: IMyDate;
+  private selDate: IMyDate;
 
   constructor(
     public dialogRef: MdDialogRef<EntryDialogComponent>,
@@ -58,7 +58,7 @@ export class EntryDialogComponent implements OnInit {
     console.log(event.date);
   }
 
-   public getValues(valueDesc: string, valueDate: string, valueStartTime: string, valueEndTime: string, valueTimeSpent: string) {
+  public getValues(valueDesc: string, valueDate: string, valueStartTime: string, valueEndTime: string, valueTimeSpent: string) {
     this.description = valueDesc;
     this.entryDate = valueDate;
     this.startTime = valueStartTime;
@@ -91,11 +91,11 @@ export class EntryDialogComponent implements OnInit {
     }
   }
 
-  public ok() {
+  public ok() {
     this.timeTrackingEntryService
       .createTimeTrackingEntry(this.entryDate, this.startTime, this.endTime, this.timeSpent, this.description, this.loginService.getLoggedUserID(), this.projectID, this.taskID)
       .then(() => {
         this.dialogRef.close(true);
-    });
+      });
   }
 }

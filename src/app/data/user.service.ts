@@ -28,6 +28,10 @@ export class UserService implements IDataservice {
 		return store.findAll(RESOURCE_NAME);
 	}
 
+	public updatePassword(id: number, confirmPassword: string): Promise<IUser> {
+		return store.update(RESOURCE_NAME, id, { confirmPassword: confirmPassword });
+	}
+
 	public isLoggedIn() {
 		return this.loggedIn;
 	}

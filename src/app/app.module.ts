@@ -22,6 +22,8 @@ import { UserComponent } from './time-tracking/components/user/user.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MyDatePickerModule } from 'mydatepicker';
 import { CryptoJS} from 'crypto-js';
+import { MenuComponent, PasswordDialogComponent, PasswordDialogService } from './menu';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     declarations: [
@@ -37,12 +39,15 @@ import { CryptoJS} from 'crypto-js';
         DeleteEntryComponent,
         UpdateDialogComponent,
         UserComponent,
-        ChangePasswordComponent
+        ChangePasswordComponent,
+        MenuComponent,
+        PasswordDialogComponent
     ],
     entryComponents: [
         EntryDialogComponent,
         DeleteEntryComponent,
-        UpdateDialogComponent
+        UpdateDialogComponent,
+        PasswordDialogComponent
     ],
     imports: [
         NgxDatatableModule,
@@ -57,9 +62,10 @@ import { CryptoJS} from 'crypto-js';
         TimepickerModule,
         TabsModule,
         TypeaheadModule,
-        MyDatePickerModule
+        MyDatePickerModule,
+        BrowserAnimationsModule
     ],
-    providers: [ProjectService, TaskService, TimeTrackingEntryService, UserService, LoginService, EntryDialogService, DeleteEntryService, UpdateDialogService],
+    providers: [ProjectService, TaskService, TimeTrackingEntryService, UserService, LoginService, EntryDialogService, DeleteEntryService, UpdateDialogService, PasswordDialogService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
