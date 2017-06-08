@@ -33,4 +33,8 @@ export class LoginComponent {
 			};
 		this.loginService.request(this.username, encodeURIComponent(secureUsercreds.password));
 	}
+
+	public changePassword(){
+		this.router.navigate(['change-password']);
+	}
 }

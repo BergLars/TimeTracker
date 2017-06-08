@@ -17,6 +17,7 @@ import { routes } from './routes';
 // import { ProfileService } from './profile.service';
 import { ProfileComponent } from './profile';
 import { LoginComponent, LoginService } from './login';
+import { ChangePasswordComponent } from './change-password';
 import { UserComponent } from './time-tracking/components/user/user.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MyDatePickerModule } from 'mydatepicker';
@@ -35,7 +36,8 @@ import { CryptoJS} from 'crypto-js';
         EntryDialogComponent,
         DeleteEntryComponent,
         UpdateDialogComponent,
-        UserComponent
+        UserComponent,
+        ChangePasswordComponent
     ],
     entryComponents: [
         EntryDialogComponent,
