@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
 import { LoginService } from '../../../login';
 import { UserService } from '../../../data';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-password-dialog',
@@ -13,14 +14,17 @@ export class PasswordDialogComponent implements OnInit {
 	public newPassword: string;
 	public confirmPassword: string;
 	public userID: number;
+	public encryptedPassword: string;
 
 	constructor(
 		public dialogRef: MdDialogRef<PasswordDialogComponent>,
 		public loginService: LoginService,
-		public userService: UserService) { }
+		public userService: UserService,
+		private router: Router) { }
 
 	ngOnInit() {
 		this.userID = this.loginService.getLoggedUserID();
+		this.loginService.loggedUser;
 	}
 
 	public getValues(valueNewPass: string, valueConfirmPass: string) {
@@ -40,16 +44,18 @@ export class PasswordDialogComponent implements OnInit {
 	}
 
 	checkPasswords() {
-		if (this.newPassword === this.confirmPassword) {
+		if (this.newPassword !== this.confirmPassword) {
 			alert("Passwords are not the same.")
 		} else {
+			this.encryptedPassword = this.loginService.encryptPassword(this.confirmPassword);
 			this.ok();
 		}
 	}
 
 	public ok() {
-		this.userService.updatePassword(this.userID, this.confirmPassword).then(() => {
+		this.userService.updateUser(this.userID, this.encryptedPassword.toString(), this.loginService.loggedUser['admin'], this.loginService.loggedUser['employmentDegree'], this.loginService.loggedUser['userName']).then(() => {
 			this.dialogRef.close(true);
+			this.router.navigate(['']);
 		});
 	}
 

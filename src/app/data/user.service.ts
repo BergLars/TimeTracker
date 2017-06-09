@@ -5,7 +5,7 @@ import { store } from './datastore';
 import { IDataservice, IUser } from '.';
 
 const RESOURCE_NAME: string = 'user';
-const ENDPOINT_NAME: string = 'userprofiles';
+const ENDPOINT_NAME: string = 'userprofile';
 
 @Injectable()
 export class UserService implements IDataservice {
@@ -30,6 +30,10 @@ export class UserService implements IDataservice {
 
 	public updatePassword(id: number, confirmPassword: string): Promise<IUser> {
 		return store.update(RESOURCE_NAME, id, { confirmPassword: confirmPassword });
+	}
+
+	public updateUser(id: number, password: string, admin: string, employmentDegree: number, username: string): Promise<IUser> {
+		return store.update(RESOURCE_NAME, id, { password: password, isAdmin: admin, emplomentDegree: employmentDegree, username: username });
 	}
 
 	public isLoggedIn() {

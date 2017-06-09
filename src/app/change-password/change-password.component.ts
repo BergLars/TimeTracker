@@ -26,20 +26,6 @@ export class ChangePasswordComponent {
 		this.currentPassword = value1;
 		this.newPassword = value2;
 		this.confirmPassword = value3;
-
-		this.loginService.request(this.username, encodeURIComponent(secureUsercreds.password));
-		//if()
-
-		var salt = "Michaël";
-
-		//encrypt
-		var encrypted = CryptoJS.AES.encrypt(this.newPassword, salt);
-		var secureUsercreds =
-			{
-				username: this.username,
-				password: encrypted
-			};
-		this.loginService.request(this.username, encodeURIComponent(secureUsercreds.password));
 	}
 
 	public cancel(){

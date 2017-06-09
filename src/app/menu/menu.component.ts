@@ -11,7 +11,7 @@ import { PasswordDialogComponent } from './components/password-dialog/password-d
 export class MenuComponent implements OnInit {
 	constructor(
 		private router: Router,
-		private entryDialogService: PasswordDialogService,
+		private passwordDialogService: PasswordDialogService,
 		private viewContainerRef: ViewContainerRef
 	) { }
 
@@ -19,6 +19,6 @@ export class MenuComponent implements OnInit {
 	}
 
 	public openDialog() {
-		this.entryDialogService.confirm('Update password', this.viewContainerRef);
+		this.passwordDialogService.confirm('Update password', this.viewContainerRef);
 	}
 }

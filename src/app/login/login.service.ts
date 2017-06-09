@@ -6,7 +6,7 @@ import { IDataservice, TimeTrackingEntryService, ITimeTrackingEntry, IUser } fro
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
-import {CryptoJS} from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 
 const RESOURCE_NAME: string = 'user';
 const ENDPOINT_NAME: string = '/login';
@@ -49,6 +49,17 @@ export class LoginService implements IDataservice {
 			},
 			() => { this.router.navigate(['timetracking']), this.loggedIn = true }
 		);
+	}
+
+	public encryptPassword(value: string) {
+		var salt = "Michaël";
+		var encrypted = CryptoJS.AES.encrypt(value, salt);
+
+		var secureUsercreds =
+			{
+				password: encrypted
+			};
+		return secureUsercreds.password;
 	}
 
 	public logout() {
