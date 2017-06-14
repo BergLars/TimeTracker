@@ -1,4 +1,5 @@
 export interface IProject {
-	id: number;
+	readonly id: number;
 	projectName: string;
+	clientID: number;
 }

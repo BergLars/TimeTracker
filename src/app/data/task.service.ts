@@ -17,7 +17,7 @@ export class TaskService implements IDataservice {
       basePath: this.baseUrl,
       endpoint: ENDPOINT_NAME,
 
-      relations : {
+      relations: {
         hasMany: {
           entry: {
             foreignKey: 'taskID',
@@ -38,12 +38,25 @@ export class TaskService implements IDataservice {
     return store.find(RESOURCE_NAME, id);
   }
 
-  public getTaskByDescription(description: string): Promise<ITask> {
-    let endpoint = '/' + ENDPOINT_NAME + '/description';
-    return store.find(RESOURCE_NAME,description, {
-      endpoint: endpoint,
-      cacheResponse: false,
-      bypassCache: true
+  // public getTaskByDescription(description: string): Promise<ITask> {
+  //   let endpoint = '/' + ENDPOINT_NAME + '/description';
+  //   return store.find(RESOURCE_NAME, description, {
+  //     endpoint: endpoint,
+  //     cacheResponse: false,
+  //     bypassCache: true
+  //   });
+  // }
+
+  public createTask(description: string, projectID: number): Promise<ITask> {
+    return store.create(RESOURCE_NAME, { taskDescription: description, projectID: projectID });
+  }
+
+  public updateTask(id: number, description: string, projectID: number): Promise<ITask> {
+    return store.update(RESOURCE_NAME, id, { taskDescription: description, projectID: projectID });
+  }
+
+  public deleteTask(id: number) {
+    return store.destroy(RESOURCE_NAME, id, {
     });
   }
 }

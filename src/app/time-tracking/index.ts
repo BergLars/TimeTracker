@@ -9,3 +9,5 @@ export * from './components/entries/delete-entry/delete-entry.component';
 export * from './components/entries/entry-dialog/entry-dialog.service';
 export * from './components/entries/delete-entry/delete-entry.service';
 export * from './components/entries/update-dialog/update-dialog.service';
+export * from './components/create-dialog/create-dialog.component';
+export * from './components/create-dialog/create-dialog.service';

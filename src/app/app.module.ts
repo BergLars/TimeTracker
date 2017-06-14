@@ -8,8 +8,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AlertModule, ModalModule, TimepickerModule, TabsModule, DatepickerModule, TypeaheadModule } from 'ng2-bootstrap';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
-import { ProjectService, TaskService, TimeTrackingEntryService, UserService } from './data';
-import { SidebarComponent, EntriesComponent, TimeTrackingComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService } from './time-tracking';
+import { ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService} from './data';
+import { SidebarComponent, EntriesComponent, TimeTrackingComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService, CreateDialogComponent, CreateDialogService } from './time-tracking';
 // import { SearchDialogComponent, ExportComponent } from './time-tracking';
 // import { QueryformComponent } from './queryform/queryform.component';
 import { routes } from './routes';
@@ -41,13 +41,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         UserComponent,
         ChangePasswordComponent,
         MenuComponent,
-        PasswordDialogComponent
+        PasswordDialogComponent,
+        CreateDialogComponent
     ],
     entryComponents: [
         EntryDialogComponent,
         DeleteEntryComponent,
         UpdateDialogComponent,
-        PasswordDialogComponent
+        PasswordDialogComponent,
+        CreateDialogComponent
     ],
     imports: [
         NgxDatatableModule,
@@ -65,7 +67,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         MyDatePickerModule,
         BrowserAnimationsModule
     ],
-    providers: [ProjectService, TaskService, TimeTrackingEntryService, UserService, LoginService, EntryDialogService, DeleteEntryService, UpdateDialogService, PasswordDialogService],
+    providers: [ProjectService, TaskService, TimeTrackingEntryService, UserService, LoginService, EntryDialogService, DeleteEntryService, UpdateDialogService, PasswordDialogService, ClientService, CreateDialogService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
