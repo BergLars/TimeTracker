@@ -22,9 +22,9 @@ export class LoginService implements IDataservice {
 	public loggedUser: IUser;
 	public isLoading: Boolean = false;
 	private entries: ITimeTrackingEntry[];
-
 	constructor(private http: Http,
-		private timeTrackingEntryService: TimeTrackingEntryService, private router: Router) {
+				private timeTrackingEntryService: TimeTrackingEntryService, 
+				private router: Router) {
 		// Define a Mapper for a "Project" resource
 		let resource = store.defineMapper(RESOURCE_NAME, {
 			basePath: this.baseUrl,
@@ -39,13 +39,17 @@ export class LoginService implements IDataservice {
 		params.set('username', username);
 		params.set('password', password);
 		return this.http.get(url, { search: params }).map(res => res.json()).subscribe(
-			data => this.loggedUser = data,
+			data => {
+				this.loggedUser = data;
+				localStorage.setItem('Authorization', data.token);
+				
+			},
 			error => {
 				if (error.status === 500) {
 					alert('Internal server error!')
 				} else if (error.status === 404 || error.status === 400) {
 					alert('Wrong username or password!!')
-				}
+				}	
 			},
 			() => { this.router.navigate(['timetracking']), this.loggedIn = true }
 		);
