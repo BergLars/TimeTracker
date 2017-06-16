@@ -8,6 +8,7 @@ import { UpdateDialogService } from './update-dialog/update-dialog.service';
 import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
 import { LoginService } from '../../../login';
 import { environment } from '../../../../environments/environment';
+import moment from 'moment/src/moment';
 // import { SearchDialogComponent } from './components/search-dialog/search-dialog.component';
 
 @Component({
@@ -95,38 +96,110 @@ export class EntriesComponent implements OnInit {
     this.editing[row.$$index + '-' + cell] = false;
     if (cell == 'description') {
       row.description = event.target.value;
-      this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
+      this.ok(row);
     }
     if (cell == 'project') {
       this.projectService.getProject(event.target.value).then(res => {
         row.projectID = res.id;
-        this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
+        this.ok(row);
       });
     }
     if (cell == 'task') {
       this.taskService.getTask(event.target.value).then(res => {
         row.taskID = res.id;
-        this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
+        this.ok(row);
       });
     }
     if (cell == 'date') {
       row.entryDate = event.target.value;
-      this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
+      this.ok(row);
     }
     if (cell == 'startTime') {
       row.startTime = event.target.value;
-      this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
+      if (row.startTime > row.endTime || row.startTime == row.endTime) {
+        row.startTime = cellValue;
+        alert("Start time should be less than end time.");
+      }
+      else {
+        // row.timeSpent = this.calculateTimeSpent(row);
+        row.timeSpent = this.calculateSpentTime(row);
+        this.ok(row);
+      }
     }
     if (cell == 'endTime') {
       row.endTime = event.target.value;
-      this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
+      if (row.startTime > row.endTime || row.startTime == row.endTime) {
+        row.endTime = cellValue;
+        alert("Start time should be less than end time.");
+      }
+      else {
+        // row.timeSpent = this.calculateTimeSpent(row);
+        row.timeSpent = this.calculateSpentTime(row);
+        this.ok(row);
+      }
     }
   }
+
+  // Try MomentJS to resolve this task
+  // calculateTimeSpent(row) {
+  //   row.timeSpent = null;
+  //   let spentTimeH = moment(row.endTime, 'HH:mm').diff(moment(row.startTime, 'HH:mm'), 'Hours');
+  //   let spentTimeM: any;
+  //   if ((moment(row.endTime, 'HH:mm').diff(moment(row.startTime, 'HH:mm'), 'Minutes')) > 59) {
+  //     spentTimeM = Math.abs(moment(row.startTime, 'HH:mm').diff(moment(row.endTime, 'HH:mm'), 'Minutes') + 60);
+  //     console.log(spentTimeM);
+  //   }
+  //   else {
+  //     spentTimeM = moment(row.endTime, 'HH:mm').diff(moment(row.startTime, 'HH:mm'), 'Minutes');
+  //   }
+  //   if ((spentTimeH.toString()).length < 2) {
+  //     spentTimeH = '0' + spentTimeH;
+  //   }
+  //   if ((spentTimeM.toString()).length < 2) {
+  //     spentTimeM = '0' + spentTimeM;
+  //   }
+  //   return spentTimeH + ':' + spentTimeM;
+  // }
 
   onSelect({ selected }) {
     if (selected) {
       this.selectedRow = selected[0];
     }
+  }
+
+  public calculateSpentTime(row) {
+    let timeSpent: string;
+    let timeSpentH: number;
+    let timeSpentMin: number;
+    let startTimeH: number = parseInt(row.startTime.substring(0, 2));
+    let startTimeMin: number = parseInt(row.startTime.substring(3, 5));
+
+    let endTimeH: number = parseInt(row.endTime.substring(0, 2));
+    let endTimeMin: number = parseInt(row.endTime.substring(3, 5));
+    if (endTimeMin >= startTimeMin) {
+      timeSpentMin = endTimeMin - startTimeMin;
+      timeSpentH = endTimeH - startTimeH;
+    } else {
+      timeSpentMin = endTimeMin - startTimeMin + 60;
+      timeSpentH = endTimeH - startTimeH - 1;
+    }
+
+    if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
+      timeSpent = '0' + timeSpentH + ':0' + timeSpentMin;
+    }
+    else if ((timeSpentH.toString()).length < 2) {
+      timeSpent = '0' + timeSpentH + ':' + timeSpentMin;
+    } 
+    else if ((timeSpentMin.toString()).length < 2) {
+      timeSpent = timeSpentH + ':0' + timeSpentMin;
+    } else {
+      timeSpent = timeSpentH + ':' + timeSpentMin;
+    }
+    return timeSpent;
+  }
+
+  public ok(row) {
+    this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
   }
 
   isSelected(row) {
