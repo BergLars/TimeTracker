@@ -2,7 +2,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
-import { HttpModule, Http, Response, RequestOptions, Headers } from '@angular/http';
+import { HttpModule, Http, Response, RequestOptions, Headers, XHRBackend  } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AlertModule, ModalModule, TimepickerModule, TabsModule, DatepickerModule, TypeaheadModule } from 'ng2-bootstrap';
@@ -17,6 +17,7 @@ import { routes } from './routes';
 // import { ProfileService } from './profile.service';
 import { ProfileComponent } from './profile';
 import { LoginComponent, LoginService } from './login';
+import { HttpInterceptor, httpFactory } from './httpCalls';
 import { ChangePasswordComponent } from './change-password';
 import { UserComponent } from './time-tracking/components/user/user.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -65,8 +66,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         MyDatePickerModule,
         BrowserAnimationsModule
     ],
-    providers: [ProjectService, TaskService, TimeTrackingEntryService, UserService, LoginService, EntryDialogService, DeleteEntryService, UpdateDialogService, PasswordDialogService],
+    providers: [
+        ProjectService, 
+        TaskService, 
+        TimeTrackingEntryService, 
+        UserService, 
+        LoginService, 
+        EntryDialogService, 
+        DeleteEntryService, 
+        UpdateDialogService, 
+        PasswordDialogService, 
+        {
+            provide: Http,
+            useFactory: httpFactory,
+            deps: [XHRBackend, RequestOptions]
+        }],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
-// platformBrowserDynamic().bootstrapModule(AppModule);
+platformBrowserDynamic().bootstrapModule(AppModule);
