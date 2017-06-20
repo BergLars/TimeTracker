@@ -47,15 +47,16 @@ export class ProjectService implements IDataservice {
   //   });
   // }
 
-  // ------------------------------------------------------------------------------- Helper methods
+  public createProject(name: string, clientID: number): Promise<IProject> {
+    return store.create(RESOURCE_NAME, { projectName: name, clientID: clientID });
+  }
 
-  private insertProject(id: number): any {
-    // return this.http
-    //   .get(this.baseUrl + '/Project/' + id)
-    //   .map(result => {
-    //     let body = result.json();
-    //     return body.data || {};
-    //   })
-    //   .catch(this.handleError);
+  public updateProject(id: number, name: string, clientID: number): Promise<IProject> {
+    return store.update(RESOURCE_NAME, id, { projectName: name, clientID: clientID });
+  }
+
+  public deleteProject(id: number) {
+    return store.destroy(RESOURCE_NAME, id, {
+    });
   }
 }

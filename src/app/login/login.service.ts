@@ -95,4 +95,8 @@ export class LoginService implements IDataservice {
 	public getLoggedUsername() {
 		return this.loggedUser['userName'];
 	}
+
+	public isAdmin(){
+		return this.loggedUser['admin'];
+	}
 }

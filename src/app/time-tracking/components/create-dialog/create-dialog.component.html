@@ -1,0 +1,52 @@
+<h1 md-dialog-title>{{ title }}</h1>
+<div md-dialog-content>
+    <table>
+        <tr>
+            <td>Create new:</td>
+            <td>
+                <select (change)="changeItemToBeCreated($event)">
+                    <option *ngFor="let item of createItems" [value]="item.id">{{item.key}}</option>
+                </select>
+            </td>
+        </tr>
+        <br>
+        <tr [hidden]="editMode">
+            <td>
+                <md-input-container>
+                    <input mdInput placeholder="Project Name" #newProject>
+                </md-input-container>
+            </td>
+        </tr>
+        <br>
+        <tr [hidden]="editMode">
+            <td>Belongs to:</td>
+            <td>
+                <select #client>
+                    <option *ngFor="let client of clients" [value]='client.id'>{{ client.clientName }}</option>
+                </select>
+            </td>
+        </tr>
+        <br>
+        <tr [hidden]="!editMode">
+            <td>
+                <md-input-container>
+                    <input mdInput #description placeholder="Description">
+                </md-input-container>
+            </td>
+        </tr>
+        <br>
+        <tr [hidden]="!editMode">
+            <td>Belongs to:</td>
+            <td>
+                <select #project>
+                    <option *ngFor="let project of projects" [value]='project.id'>{{ project.projectName }}</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <br>
+</div>
+<div md-dialog-actions>
+    <button type="button" md-button (click)="getValues(description.value,newProject.value);projectDropdown(project.value);clientDropdown(client.value);checkMandatoryFields();">OK</button>
+    <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
+</div>
