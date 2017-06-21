@@ -20,12 +20,17 @@ export class ClientService {
 
 			relations: {
 				hasMany: {
-					entry: {
-						foreignKey: 'clientID',
-						localField: 'entries'
+					project: {
+						foreignKey: 'projectID',
+						localField: 'projects'
 					}
 				}
-			}
+			},
+			// methods: {
+			// 	clientName: function() {
+			// 		return (this.client) ? this.client.clientName : '-';
+			// 	}
+			// }
 		});
 	}
 
@@ -51,5 +56,4 @@ export class ClientService {
 		return store.destroy(RESOURCE_NAME, id, {
 		});
 	}
-
 }

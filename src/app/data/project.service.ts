@@ -23,6 +23,12 @@ export class ProjectService implements IDataservice {
             foreignKey: 'projectID',
             localField: 'entries'
           }
+        },
+        belongsTo: {
+          client: {
+            localField: 'client',
+            localKey: 'clientID'
+          }
         }
       }
     });
