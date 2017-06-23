@@ -23,12 +23,17 @@ export class TimeTrackingEntryService implements IDataservice {
           project: {
             localField: 'project',
             localKey: 'projectID',
-            // projectName: 'projectName'
+            projectName: 'projectName'
           },
           task: {
             localField: 'task',
             localKey: 'taskID',
-            // taskDescription: 'taskDescription'
+            taskDescription: 'taskDescription'
+          },
+          user:{
+            localField: 'user',
+            localKey: 'userprofileID',
+            username: 'userName'
           }
         }
       },

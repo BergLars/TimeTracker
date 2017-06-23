@@ -7,7 +7,7 @@ export const environment = {
   production: false,
 
   title: 'Fluance Timetracker - DEV',
-  //apiBaseUrl: 'http://localhost:8081/timetracker'
+  apiBaseUrl: 'http://localhost:8081/timetracker'
   // apiBaseUrl: 'http://localhost:8080/timetracker'
-  apiBaseUrl: 'https://mojito.dev.fluance.net:8443/timetracker'
+  // apiBaseUrl: 'https://mojito.dev.fluance.net:8443/timetracker'
 };

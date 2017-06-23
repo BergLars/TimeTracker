@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { Http } from '@angular/http';
-import { ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService, ClientService } from '../../../data';
+import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService, ClientService } from '../../../data';
 import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
@@ -25,6 +25,7 @@ export class EntriesComponent implements OnInit {
   @Input() task: ITask;
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
+  @Input() users: IUser[] = [];
   public isLoading: Boolean = false;
   public items: ITimeTrackingEntry[] = [];
   public clonedItems: ITimeTrackingEntry[] = [];
@@ -69,6 +70,7 @@ export class EntriesComponent implements OnInit {
     private updateDialogService: UpdateDialogService,
     private viewContainerRef: ViewContainerRef,
     private loginService: LoginService,
+    public userService: UserService,
     private dialog: MdDialog,
     private http: Http) {
   }
@@ -306,6 +308,10 @@ export class EntriesComponent implements OnInit {
     req.open('GET', url);
 
     req.onload = () => {
+      // Get all Users
+      this.userService.getUsers().then((users) => {
+        this.users = users;
+      });
       // Get all clients
       this.clientService.getClients().then(result => { this.clients = result; }),
         // Get all projects
