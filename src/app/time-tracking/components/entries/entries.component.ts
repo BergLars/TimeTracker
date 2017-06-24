@@ -308,10 +308,6 @@ export class EntriesComponent implements OnInit {
     req.open('GET', url);
 
     req.onload = () => {
-      // Get all Users
-      this.userService.getUsers().then((users) => {
-        this.users = users;
-      });
       // Get all clients
       this.clientService.getClients().then(result => { this.clients = result; }),
         // Get all projects

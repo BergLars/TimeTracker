@@ -27,7 +27,8 @@ export class ProjectService implements IDataservice {
         belongsTo: {
           client: {
             localField: 'client',
-            localKey: 'clientID'
+            localKey: 'clientID',
+            clientName: 'clientName'
           }
         }
       }

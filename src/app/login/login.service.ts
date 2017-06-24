@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Http, URLSearchParams } from '@angular/http';
+import { Http, URLSearchParams, Headers, RequestOptions } from '@angular/http';
 import { environment } from '../../environments/environment';
 import { store } from '../data/datastore';
-import { IDataservice, TimeTrackingEntryService, ITimeTrackingEntry, IUser } from '../data';
+import { IDataservice, TimeTrackingEntryService, ITimeTrackingEntry, IUser, UserService } from '../data';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -22,9 +22,14 @@ export class LoginService implements IDataservice {
 	public loggedUser: IUser;
 	public isLoading: Boolean = false;
 	private entries: ITimeTrackingEntry[];
+	public headers: Headers;
 
-	constructor(private http: Http,
-		private timeTrackingEntryService: TimeTrackingEntryService, private router: Router) {
+	constructor( 
+		private http: Http,
+		private timeTrackingEntryService: TimeTrackingEntryService, 
+		private router: Router,
+		private defaultOptions: RequestOptions,
+		private userService: UserService) {
 		// Define a Mapper for a "Project" resource
 		let resource = store.defineMapper(RESOURCE_NAME, {
 			basePath: this.baseUrl,
@@ -39,15 +44,26 @@ export class LoginService implements IDataservice {
 		params.set('username', username);
 		params.set('password', password);
 		return this.http.get(url, { search: params }).map(res => res.json()).subscribe(
-			data => this.loggedUser = data,
+			data => {
+				
+				localStorage.setItem('Authorization', data.token);
+				
+			},
 			error => {
 				if (error.status === 500) {
 					alert('Internal server error!')
 				} else if (error.status === 404 || error.status === 400) {
 					alert('Wrong username or password!!')
-				}
+				}	
 			},
-			() => { this.router.navigate(['timetracking']), this.loggedIn = true }
+		),
+		this.http.get(this.baseUrl + "/userprofile").map(res => res.json()).subscribe(
+			user => {
+				this.loggedUser = user;
+				this.getLoggedUserID();
+				this.router.navigate(['timetracking']), this.loggedIn = true 
+			},
+			() => { }
 		);
 	}
 

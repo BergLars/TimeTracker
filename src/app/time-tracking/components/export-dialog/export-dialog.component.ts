@@ -3,7 +3,7 @@ import { MdDialogRef } from '@angular/material';
 import { UserService, IClient, ClientService, TimeTrackingEntryService, IUser } from '../../../data';
 import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
-import 'moment/locale/de';
+//import 'moment/locale/de';
 
 @Component({
 	selector: 'app-export-dialog',
@@ -40,11 +40,10 @@ export class ExportDialogComponent implements OnInit {
 
 	public userDropdown(value: string): void {
 		this.userID = value;
-		console.log(this.userID);
 	}
 
 	public getValues(valueFrom: string, valueTo: string) {
-		moment().locale('de');
+		// moment().locale('de');
 		this.fromDate = valueFrom;
 		this.toDate = valueTo;
 		this.validLength = this.toDate.length > 9 && this.fromDate.length > 9;
@@ -71,7 +70,7 @@ export class ExportDialogComponent implements OnInit {
 			this.ok();
 		}
 	}
-	
+
 	loadUsers() {
 		this.loginService.loggedUser;
 		this.userService.getUsers().then((users) => {
@@ -79,23 +78,24 @@ export class ExportDialogComponent implements OnInit {
 		});
 	}
 
-	refreshExportURL() {
+	refreshExportURL(id) {
 		let validFrom = this.fromDate.substring(6, 10) + "/" + this.fromDate.substring(3, 5) + "/" + this.fromDate.substring(0, 2);
 		let validTo = this.toDate.substring(6, 10) + "/" + this.toDate.substring(3, 5) + "/" + this.toDate.substring(0, 2);
-		this.exportURL = "http://localhost:8081/timetracker/export?fromDate=" + 
-		validFrom +
-		"&toDate=" +
-		validTo +
-		"&userprofileID=" + 7;
+		this.exportURL = "http://localhost:8081/timetracker/export?fromDate=" +
+			validFrom +
+			"&toDate=" +
+			validTo +
+			"&userprofileID=" + id;
 		window.open(this.exportURL, '_blank');
 	}
 
 	public ok() {
 		if (this.checkIfAdmin()) {
-			this.refreshExportURL();
+			this.refreshExportURL(this.userID);
 		}
 		else {
-			this.refreshExportURL();
+			let loggedUserID = this.loginService.getLoggedUserID();
+			this.refreshExportURL(loggedUserID);
 		}
 	}
 }

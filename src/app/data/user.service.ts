@@ -12,11 +12,13 @@ export class UserService implements IDataservice {
 	public baseUrl: string = environment.apiBaseUrl;
 	private loggedIn = false;
 
-	constructor(private http: Http) {
+	constructor() {
 		// Define a Mapper for a "Project" resource
 		let resource = store.defineMapper(RESOURCE_NAME, {
 			basePath: this.baseUrl,
-			endpoint: ENDPOINT_NAME
+			endpoint: ENDPOINT_NAME,
+			cacheResponse: false,
+			bypassCache: true,
 		});
 	}
 
@@ -25,7 +27,12 @@ export class UserService implements IDataservice {
 	}
 
 	public getUsers(): Promise<IUser[]> {
-		return store.findAll(RESOURCE_NAME);
+		let endpoint = '/' + ENDPOINT_NAME + '/all';
+		return store.findAll(RESOURCE_NAME, {}, {
+			endpoint: endpoint,
+			cacheResponse: false,
+			bypassCache: true
+		});
 	}
 
 	public updatePassword(id: number, confirmPassword: string): Promise<IUser> {
