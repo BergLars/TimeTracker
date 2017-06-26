@@ -10,7 +10,7 @@
             </td>
         </tr>
         <br>
-        <tr [hidden]="editMode">
+        <tr [hidden]="item != PROJECT" *ngIf="checkIfAdmin()">
             <td>
                 <md-input-container>
                     <input mdInput placeholder="Project Name" #newProject>
@@ -18,7 +18,7 @@
             </td>
         </tr>
         <br>
-        <tr [hidden]="editMode">
+        <tr [hidden]="item != PROJECT" *ngIf="checkIfAdmin()">
             <td>Belongs to:</td>
             <td>
                 <select #client>
@@ -27,7 +27,7 @@
             </td>
         </tr>
         <br>
-        <tr [hidden]="!editMode">
+        <tr [hidden]="item != TASK">
             <td>
                 <md-input-container>
                     <input mdInput #description placeholder="Description">
@@ -35,7 +35,7 @@
             </td>
         </tr>
         <br>
-        <tr [hidden]="!editMode">
+        <tr [hidden]="item != TASK">
             <td>Belongs to:</td>
             <td>
                 <select #project>
@@ -43,10 +43,17 @@
                 </select>
             </td>
         </tr>
+        <tr [hidden]="item != CLIENT" *ngIf="checkIfAdmin()">
+            <td>
+                <md-input-container>
+                    <input mdInput #clientName placeholder="Client">
+                </md-input-container>
+            </td>
+        </tr>
     </table>
     <br>
 </div>
 <div md-dialog-actions>
-    <button type="button" md-button (click)="getValues(description.value,newProject.value);projectDropdown(project.value);clientDropdown(client.value);checkMandatoryFields();">OK</button>
+    <button type="button" md-button (click)="getValues(description.value,newProject.value,clientName.value);projectDropdown(project.value);clientDropdown(client.value);checkMandatoryFields();">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>

@@ -22,8 +22,7 @@ export class TimeTrackingComponent implements OnInit {
   private user: IUser;
   private users: IUser[];
   private statistics: IStatistics;
-  public result: any;
-  private isAdmin: boolean;
+
 
   constructor(
     private dialog: MdDialog,
@@ -43,12 +42,5 @@ export class TimeTrackingComponent implements OnInit {
     .confirm('Create', this.viewContainerRef);
   }
 
-  public checkIfAdmin() {
-    this.showData();
-    return this.isAdmin = this.loginService.isAdmin();
-  }
 
-  public showData() {
-    this.user = this.loginService.loggedUser;
-  }
 }

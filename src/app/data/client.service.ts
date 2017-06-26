@@ -40,7 +40,7 @@ export class ClientService {
 	}
 
 	public createClient(name: string): Promise<IClient> {
-		return store.create(RESOURCE_NAME, { name: name });
+		return store.create(RESOURCE_NAME, { clientName: name });
 	}
 
 	public updateClient(id: number, name: string): Promise<IClient> {
