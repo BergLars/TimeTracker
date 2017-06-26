@@ -19,6 +19,6 @@ export class LoginComponent {
 		this.username = value;
 		this.password = value1;
 
-		this.loginService.request(this.username, encodeURIComponent(this.loginService.encryptPassword(this.password)));
+		this.loginService.request(this.username, encodeURIComponent(this.password));
 	}
 }

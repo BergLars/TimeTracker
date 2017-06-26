@@ -17,7 +17,6 @@ import { routes } from './routes';
 import { ProfileComponent } from './profile';
 import { LoginComponent, LoginService } from './login';
 import { HttpInterceptor, httpFactory } from './httpCalls';
-import { ChangePasswordComponent } from './change-password';
 import { UserComponent } from './time-tracking/components/user/user.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MyDatePickerModule } from 'mydatepicker';
@@ -39,7 +38,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         DeleteEntryComponent,
         UpdateDialogComponent,
         UserComponent,
-        ChangePasswordComponent,
         MenuComponent,
         PasswordDialogComponent,
         CreateDialogComponent

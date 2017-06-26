@@ -13,6 +13,7 @@ export class PasswordDialogComponent implements OnInit {
 	public title: string;
 	public newPassword: string;
 	public confirmPassword: string;
+	public currentPassword: string;
 	public userID: number;
 	public encryptedPassword: string;
 
@@ -33,11 +34,11 @@ export class PasswordDialogComponent implements OnInit {
 	}
 
 	checkMandatoryFields() {
-		if (this.newPassword === "" || this.confirmPassword === null) {
+		if ( this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
 			alert("Please check if all the fields are filled in");
 		}
-		else if (this.newPassword.length < 9) {
-			alert("Password length should be > 9");
+		else if (this.newPassword.length < 8) {
+			alert("Password length should be > 8");
 		} else {
 			this.checkPasswords();
 		}
@@ -47,7 +48,7 @@ export class PasswordDialogComponent implements OnInit {
 		if (this.newPassword !== this.confirmPassword) {
 			alert("Passwords are not the same.")
 		} else {
-			this.encryptedPassword = this.loginService.encryptPassword(this.confirmPassword);
+			this.encryptedPassword = this.confirmPassword;
 			this.ok();
 		}
 	}
