@@ -20,15 +20,16 @@ export class CreateDialogComponent implements OnInit {
 	public projectID: any;
 	public clientID: any;
 	editMode: boolean = false;
-	private PROJECT: number = 1;
-	private TASK: number = 2;
+	private TASK: number = 1;
+	private PROJECT: number = 2;
+	
 	private CLIENT: number = 3;
-	  public result: any;
-  private isAdmin: boolean;
+	public result: any;
+  	private isAdmin: boolean;
 
 	private createItems = [
-		{ key: 'Project', id: 1 },
-		{ key: 'Task', id: 2 },
+		{ key: 'Task', id: 1 },
+		{ key: 'Project', id: 2 },
 		{ key: 'Client', id: 3 }
 	];
 
@@ -79,7 +80,7 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	checkMandatoryFields() {
-		if (this.item == 1) {
+		if (this.item == this.PROJECT) {
 			if (this.newProjectName === "" || this.clientID === null) {
 				alert("Please check if all the fields are filled in");
 			} else {
@@ -87,7 +88,7 @@ export class CreateDialogComponent implements OnInit {
 				this.ok();
 			}
 		}
-		if (this.item == 2) {
+		if (this.item == this.TASK) {
 			if (this.description === "" || this.projectID === null) {
 				alert("Please check if all the fields are filled in");
 			} else {
@@ -95,11 +96,10 @@ export class CreateDialogComponent implements OnInit {
 				this.ok();
 			}
 		}
-		if (this.item == 3) {
+		if (this.item == this.CLIENT) {
 			if (this.clientName === "") {
 				alert("Please check if all the fields are filled in");
 			} else {
-				//this.newProjectName = "";
 				this.ok();
 			}
 		}

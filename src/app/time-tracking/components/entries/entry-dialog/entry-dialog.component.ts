@@ -66,7 +66,6 @@ export class EntryDialogComponent implements OnInit {
     this.timeSpent = valueTimeSpent
   }
 
-
   public projectDropdown(value: string): void {
     this.projectID = value;
   }

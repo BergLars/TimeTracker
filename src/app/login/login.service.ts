@@ -24,9 +24,9 @@ export class LoginService implements IDataservice {
 	private entries: ITimeTrackingEntry[];
 	public headers: Headers;
 
-	constructor( 
+	constructor(
 		private http: Http,
-		private timeTrackingEntryService: TimeTrackingEntryService, 
+		private timeTrackingEntryService: TimeTrackingEntryService,
 		private router: Router,
 		private defaultOptions: RequestOptions,
 		private userService: UserService) {
@@ -45,41 +45,30 @@ export class LoginService implements IDataservice {
 		params.set('password', password);
 		return this.http.get(url, { search: params }).map(res => res.json()).subscribe(
 			data => {
-				
 				localStorage.setItem('Authorization', data.token);
-				
 			},
 			error => {
 				if (error.status === 500) {
 					alert('Internal server error!')
-				} else if (error.status === 404 || error.status === 400) {
-					alert('Wrong username or password!!')
-				}	
+				}
+				if (error.status === 404 || error.status === 400) {
+					alert('Wrong username or password!!');
+					this.router.navigate(['']);
+				}
 			},
 		),
-		this.http.get(this.baseUrl + "/userprofile").map(res => res.json()).subscribe(
-			user => {
-				this.loggedUser = user;
-				this.getLoggedUserID();
-				this.router.navigate(['timetracking']), this.loggedIn = true 
-			},
-			() => { }
-		);
-	}
-
-	public encryptPassword(value: string) {
-		var salt = "Michaël";
-		var encrypted = CryptoJS.AES.encrypt(value, salt);
-
-		var secureUsercreds =
-			{
-				password: encrypted
-			};
-		return secureUsercreds.password;
+			this.http.get(this.baseUrl + "/userprofile").map(res => res.json()).subscribe(
+				user => {
+					this.loggedUser = user;
+					this.getLoggedUserID();
+					this.router.navigate(['timetracking']), this.loggedIn = true
+				},
+				() => { }
+			);
 	}
 
 	public logout() {
-		localStorage.removeItem('auth_token');
+		localStorage.removeItem('Authorization');
 		this.loggedIn = false;
 	}
 
@@ -96,7 +85,7 @@ export class LoginService implements IDataservice {
 		return this.loggedUser['userName'];
 	}
 
-	public isAdmin(){
+	public isAdmin() {
 		return this.loggedUser['admin'];
 	}
 }

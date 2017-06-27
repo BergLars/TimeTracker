@@ -21,4 +21,8 @@ export class MenuComponent implements OnInit {
 	public openDialog() {
 		this.passwordDialogService.confirm('Update password', this.viewContainerRef);
 	}
+	public logout() {
+		localStorage.removeItem('Authorization');
+		this.router.navigate(['']);
+	}
 }

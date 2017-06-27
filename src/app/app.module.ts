@@ -9,8 +9,7 @@ import { AlertModule, ModalModule, TimepickerModule, TabsModule, DatepickerModul
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService} from './data';
-import { SidebarComponent, EntriesComponent, TimeTrackingComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService, CreateDialogComponent, CreateDialogService } from './time-tracking';
-// import { SearchDialogComponent, ExportComponent } from './time-tracking';
+import { SidebarComponent, EntriesComponent, TimeTrackingComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService, CreateDialogComponent, CreateDialogService, ExportDialogComponent, ExportDialogService } from './time-tracking';
 // import { QueryformComponent } from './queryform/queryform.component';
 import { routes } from './routes';
 // import { LoggedInGuard } from './logged-in-guard';
@@ -18,7 +17,6 @@ import { routes } from './routes';
 import { ProfileComponent } from './profile';
 import { LoginComponent, LoginService } from './login';
 import { HttpInterceptor, httpFactory } from './httpCalls';
-import { ChangePasswordComponent } from './change-password';
 import { UserComponent } from './time-tracking/components/user/user.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MyDatePickerModule } from 'mydatepicker';
@@ -31,7 +29,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         AppComponent,
         LoginComponent,
         // SearchDialogComponent,
-        // ExportComponent,
+        ExportDialogComponent,
         SidebarComponent,
         EntriesComponent,
         ProfileComponent,
@@ -40,7 +38,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         DeleteEntryComponent,
         UpdateDialogComponent,
         UserComponent,
-        ChangePasswordComponent,
         MenuComponent,
         PasswordDialogComponent,
         CreateDialogComponent
@@ -50,7 +47,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         DeleteEntryComponent,
         UpdateDialogComponent,
         PasswordDialogComponent,
-        CreateDialogComponent
+        CreateDialogComponent,
+        ExportDialogComponent
     ],
     imports: [
         NgxDatatableModule,
@@ -80,12 +78,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         PasswordDialogService, 
         ClientService,
         CreateDialogService,
+        ExportDialogService,
         {
             provide: Http,
             useFactory: httpFactory,
             deps: [XHRBackend, RequestOptions]
         }],
-
     bootstrap: [AppComponent]
 })
 export class AppModule { }

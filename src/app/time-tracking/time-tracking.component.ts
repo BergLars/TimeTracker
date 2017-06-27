@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService, IProject, ITask, ITimeTrackingEntry, IUser, IStatistics } from '../data';
+import { LoginService } from '../login';
 // Use the Full path instead of using index.ts path
 import { CreateDialogService} from '../time-tracking/components/create-dialog/create-dialog.service';
-import { LoginService } from '../login';
+import { ExportDialogService} from '../time-tracking/components/export-dialog/export-dialog.service';
 
 @Component({
   selector: 'app-time-tracking',
@@ -29,6 +30,7 @@ export class TimeTrackingComponent implements OnInit {
     private projectService: ProjectService,
     private taskService: TaskService,
     private createDialogService: CreateDialogService,
+    private exportDialogService: ExportDialogService,
     private userService: UserService,
     private loginService: LoginService,
     private viewContainerRef: ViewContainerRef) {
@@ -42,5 +44,8 @@ export class TimeTrackingComponent implements OnInit {
     .confirm('Create', this.viewContainerRef);
   }
 
-
+  public openExportDialog() {
+   this.exportDialogService
+    .confirm('Export', this.viewContainerRef);
+  }
 }
