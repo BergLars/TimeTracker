@@ -15,14 +15,22 @@ export class CreateDialogComponent implements OnInit {
 	public title: string;
 	public description: string;
 	public newProjectName: string;
+	public clientName: string;
 	public user: IUser;
 	public projectID: any;
 	public clientID: any;
 	editMode: boolean = false;
+	private TASK: number = 1;
+	private PROJECT: number = 2;
+	
+	private CLIENT: number = 3;
+	public result: any;
+  	private isAdmin: boolean;
 
 	private createItems = [
-		{ key: 'Project', id: 1 },
-		{ key: 'Task', id: 2 }
+		{ key: 'Task', id: 1 },
+		{ key: 'Project', id: 2 },
+		{ key: 'Client', id: 3 }
 	];
 
 	public item: number = this.createItems[0].id;
@@ -57,9 +65,10 @@ export class CreateDialogComponent implements OnInit {
 		this.editMode = !this.editMode;
 	}
 
-	public getValues(valueDesc: string, valueProjName: string) {
+	public getValues(valueDesc: string, valueProjName: string, client: string) {
 		this.description = valueDesc;
 		this.newProjectName = valueProjName;
+		this.clientName = client;
 	}
 
 	public projectDropdown(value: string): void {
@@ -71,35 +80,62 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	checkMandatoryFields() {
-		if (!this.editMode) {
-			if (this.newProjectName === "" || this.clientID === null) {
+		if (this.item == this.PROJECT) {
+			if (this.newProjectName === "" || this.clientID === null || this.clientID === "undefined" ) {
 				alert("Please check if all the fields are filled in");
 			} else {
 				this.description = "";
 				this.ok();
 			}
 		}
-		if (this.editMode) {
-			if (this.description === "" || this.projectID === null) {
+		if (this.item == this.TASK) {
+			if (this.description === "" || this.projectID === null || this.projectID === "undefined") {
 				alert("Please check if all the fields are filled in");
 			} else {
 				this.newProjectName = "";
 				this.ok();
 			}
 		}
+		if (this.item == this.CLIENT) {
+			if (this.clientName === "") {
+				alert("Please check if all the fields are filled in");
+			} else {
+				this.ok();
+			}
+		}
+	}
+
+	public validateForm(description, newProjectName, clientName, project, client) {
+		this.getValues(description.value,newProjectName.value,clientName.value);
+		this.projectDropdown(project.value);
+		this.clientDropdown(client.value);
+		this.checkMandatoryFields();
+	}
+
+ 	public checkIfAdmin() {
+	    this.showData();
+	    return this.isAdmin = this.loginService.isAdmin();
+	}
+
+	public showData() {
+	    this.user = this.loginService.loggedUser;
 	}
 
 	public ok() {
-		if (!this.editMode) {
+		if (this.item == this.PROJECT) {
 			this.projectService.createProject(this.newProjectName, this.clientID).then(() => {
 				this.dialogRef.close(true);
 			});
 		}
-		if (this.editMode) {
+		if (this.item == this.TASK) {
 			this.taskService.createTask(this.description, this.projectID).then(() => {
 				this.dialogRef.close(true);
 			});
 		}
+		if (this.item == this.CLIENT) {
+			this.clientService.createClient(this.clientName).then(() => {
+				this.dialogRef.close(true);
+			});
+		}
 	}
-
 }

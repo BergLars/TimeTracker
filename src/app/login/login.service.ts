@@ -46,6 +46,16 @@ export class LoginService implements IDataservice {
 		return this.http.get(url, { search: params }).map(res => res.json()).subscribe(
 			data => {
 				localStorage.setItem('Authorization', data.token);
+
+
+				this.http.get(this.baseUrl + "/userprofile").map(res => res.json()).subscribe(
+				user => {
+					this.loggedUser = user;
+					this.getLoggedUserID();
+					this.router.navigate(['timetracking']), this.loggedIn = true
+				},
+				() => { }
+			);
 			},
 			error => {
 				if (error.status === 500) {
@@ -56,20 +66,13 @@ export class LoginService implements IDataservice {
 					this.router.navigate(['']);
 				}
 			},
-		),
-			this.http.get(this.baseUrl + "/userprofile").map(res => res.json()).subscribe(
-				user => {
-					this.loggedUser = user;
-					this.getLoggedUserID();
-					this.router.navigate(['timetracking']), this.loggedIn = true
-				},
-				() => { }
-			);
+		)
 	}
 
 	public logout() {
-		localStorage.removeItem('auth_token');
+		localStorage.removeItem('Authorization');
 		this.loggedIn = false;
+		this.router.navigate(['']);
 	}
 
 	public isLoggedIn() {
