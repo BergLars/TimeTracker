@@ -35,10 +35,10 @@ export class PasswordDialogComponent implements OnInit {
 
 	checkMandatoryFields() {
 		if ( this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
-			alert("Please check if all the fields are filled in");
+			alert("Please check if all the fields are filled in !");
 		}
 		else if (this.newPassword.length < 8) {
-			alert("Password length should be > 8");
+			alert("Password length should be > 8 !");
 		} else {
 			this.checkPasswords();
 		}
@@ -46,7 +46,7 @@ export class PasswordDialogComponent implements OnInit {
 
 	checkPasswords() {
 		if (this.newPassword !== this.confirmPassword) {
-			alert("Passwords are not the same.")
+			alert("Passwords are not the same !")
 		} else {
 			this.encryptedPassword = this.confirmPassword;
 			this.ok();
