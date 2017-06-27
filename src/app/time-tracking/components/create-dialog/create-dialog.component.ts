@@ -81,7 +81,7 @@ export class CreateDialogComponent implements OnInit {
 
 	checkMandatoryFields() {
 		if (this.item == this.PROJECT) {
-			if (this.newProjectName === "" || this.clientID === null) {
+			if (this.newProjectName === "" || this.clientID === null || this.clientID === "undefined" ) {
 				alert("Please check if all the fields are filled in");
 			} else {
 				this.description = "";
@@ -89,7 +89,7 @@ export class CreateDialogComponent implements OnInit {
 			}
 		}
 		if (this.item == this.TASK) {
-			if (this.description === "" || this.projectID === null) {
+			if (this.description === "" || this.projectID === null || this.projectID === "undefined") {
 				alert("Please check if all the fields are filled in");
 			} else {
 				this.newProjectName = "";
@@ -103,6 +103,13 @@ export class CreateDialogComponent implements OnInit {
 				this.ok();
 			}
 		}
+	}
+
+	public validateForm(description, newProjectName, clientName, project, client) {
+		this.getValues(description.value,newProjectName.value,clientName.value);
+		this.projectDropdown(project.value);
+		this.clientDropdown(client.value);
+		this.checkMandatoryFields();
 	}
 
  	public checkIfAdmin() {
