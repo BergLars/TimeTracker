@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { Http } from '@angular/http';
-import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeTrackingEntryService } from '../../../data';
+import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService, ClientService } from '../../../data';
 import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
@@ -23,12 +23,17 @@ export class EntriesComponent implements OnInit {
   @Input() project: IProject;
   @Input() tasks: ITask[] = [];
   @Input() task: ITask;
+  @Input() clients: IClient[] = [];
+  @Input() client: IClient;
+  @Input() users: IUser[] = [];
   public isLoading: Boolean = false;
   public items: ITimeTrackingEntry[] = [];
   public clonedItems: ITimeTrackingEntry[] = [];
   rows = [];
   selected = [];
   projectsName = [];
+  clientsName = [];
+  currentProjectIDS = [];
   tasksDescription = [];
   selectedRow: any;
   cloneSelectedRow: any;
@@ -39,11 +44,6 @@ export class EntriesComponent implements OnInit {
   projectID: any;
   taskID: any;
   selectedDescription: string;
-  // selectedProject: string;
-  // selectedTask: string;
-  // selectedDate: string;
-  // selectedStartTime: string;
-  // selectedEndTime: string;
   count: number = 0;
   @Input() offset: number = 0;
   columns: any;
@@ -51,7 +51,6 @@ export class EntriesComponent implements OnInit {
 
   public editing = {};
   public result: any;
-  // private dialogRefSearch: MdDialogRef<SearchDialogComponent>;
   private limits = [
     { key: 'All Entries', value: 50 },
     { key: '10 Entries', value: 10 },
@@ -65,11 +64,13 @@ export class EntriesComponent implements OnInit {
     public projectService: ProjectService,
     public timeTrackingEntryService: TimeTrackingEntryService,
     public taskService: TaskService,
+    public clientService: ClientService,
     private entryDialogService: EntryDialogService,
     private deleteEntryService: DeleteEntryService,
     private updateDialogService: UpdateDialogService,
     private viewContainerRef: ViewContainerRef,
     private loginService: LoginService,
+    public userService: UserService,
     private dialog: MdDialog,
     private http: Http) {
   }
@@ -189,7 +190,7 @@ export class EntriesComponent implements OnInit {
     }
     else if ((timeSpentH.toString()).length < 2) {
       timeSpent = '0' + timeSpentH + ':' + timeSpentMin;
-    } 
+    }
     else if ((timeSpentMin.toString()).length < 2) {
       timeSpent = timeSpentH + ':0' + timeSpentMin;
     } else {
@@ -301,13 +302,16 @@ export class EntriesComponent implements OnInit {
     this.tasksDescription = [];
     this.userID = this.loginService.getLoggedUserID();
     let url = this.baseUrl + '/timeentries/' + this.userID + '/entries';
+
+    let clientName: string;
     const req = new XMLHttpRequest();
     req.open('GET', url);
 
     req.onload = () => {
-      // Get all projects
-      this.projectService.getProjects().then(result => { this.projects = result; }),
-
+      // Get all clients
+      this.clientService.getClients().then(result => { this.clients = result; }),
+        // Get all projects
+        this.projectService.getProjects().then(result => { this.projects = result; }),
         // Get all tasks
         this.taskService.getTasks().then(result => { this.tasks = result; }),
 
@@ -317,7 +321,8 @@ export class EntriesComponent implements OnInit {
           this.items = loadedItems;
           this.clonedItems = loadedItems;
           for (let item of this.items) {
-            this.projectsName.push(item.project.projectName);
+            let currentProject = item.project;
+            this.projectsName.push(currentProject.projectName);
             this.tasksDescription.push(item.task.taskDescription);
           }
         });

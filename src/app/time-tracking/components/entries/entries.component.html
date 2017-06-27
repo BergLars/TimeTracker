@@ -18,7 +18,7 @@
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Project">
-        <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+        <ng-template ngx-datatable-cell-template let-row="row">
             <span title="Double click to edit" (click)="editing[row.$$index + '-project'] = true" *ngIf="!editing[row.$$index + '-project']">
               {{row.project.projectName}}
             </span>
@@ -27,8 +27,13 @@
             </select>
         </ng-template>
     </ngx-datatable-column>
+    <ngx-datatable-column name="Client">
+        <ng-template ngx-datatable-cell-template let-row="row">
+            {{row.project.client.clientName}}
+        </ng-template>
+    </ngx-datatable-column>
     <ngx-datatable-column name="Task">
-        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+        <ng-template ngx-datatable-cell-template let-row="row">
             <span title="Double click to edit" (click)="editing[row.$$index + '-task'] = true" *ngIf="!editing[row.$$index + '-task']">
               {{row.task.taskDescription}}
             </span>
@@ -38,7 +43,7 @@
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Date">
-        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+        <ng-template ngx-datatable-cell-template let-row="row">
             <span title="Double click to edit" (click)="editing[row.$$index + '-date'] = true" *ngIf="!editing[row.$$index + '-date']">
                 {{ row.entryDate }}</span>
             <input autofocus (blur)="updateValue($event, 'date', value, row)" *ngIf="editing[row.$$index + '-date']" type="text" [value]="value" />
