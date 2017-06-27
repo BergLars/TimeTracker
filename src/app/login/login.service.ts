@@ -70,6 +70,7 @@ export class LoginService implements IDataservice {
 	public logout() {
 		localStorage.removeItem('Authorization');
 		this.loggedIn = false;
+		this.router.navigate(['']);
 	}
 
 	public isLoggedIn() {
