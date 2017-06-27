@@ -23,5 +23,6 @@ export class MenuComponent implements OnInit {
 	}
 	public logout() {
 		localStorage.removeItem('Authorization');
+		this.router.navigate(['']);
 	}
 }
