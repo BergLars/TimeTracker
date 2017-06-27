@@ -79,7 +79,7 @@ export class LoginService implements IDataservice {
 	}
 
 	public logout() {
-		localStorage.removeItem('auth_token');
+		localStorage.removeItem('Authorization');
 		this.loggedIn = false;
 	}
 
