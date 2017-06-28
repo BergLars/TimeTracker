@@ -15,7 +15,7 @@ export class PasswordDialogComponent implements OnInit {
 	public confirmPassword: string;
 	public currentPassword: string;
 	public userID: number;
-	public encryptedPassword: string;
+	// public encryptedPassword: string;
 
 	constructor(
 		public dialogRef: MdDialogRef<PasswordDialogComponent>,
@@ -28,18 +28,20 @@ export class PasswordDialogComponent implements OnInit {
 		this.loginService.loggedUser;
 	}
 
-	public getValues(valueNewPass: string, valueConfirmPass: string) {
+	public getValues(valueCurrentPass: string, valueNewPass: string, valueConfirmPass: string) {
+		this.currentPassword = valueCurrentPass;
 		this.newPassword = valueNewPass;
 		this.confirmPassword = valueConfirmPass;
 	}
 
 	checkMandatoryFields() {
-		if ( this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
+		if (this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
 			alert("Please check if all the fields are filled in !");
 		}
 		else if (this.newPassword.length < 8) {
 			alert("Password length should be > 8 !");
-		} else {
+		}
+		else {
 			this.checkPasswords();
 		}
 	}
@@ -48,16 +50,27 @@ export class PasswordDialogComponent implements OnInit {
 		if (this.newPassword !== this.confirmPassword) {
 			alert("Passwords are not the same !")
 		} else {
-			this.encryptedPassword = this.confirmPassword;
+			// this.encryptedPassword = this.confirmPassword;
 			this.ok();
 		}
 	}
 
 	public ok() {
-		this.userService.updateUser(this.userID, this.encryptedPassword.toString(), this.loginService.loggedUser['admin'], this.loginService.loggedUser['employmentDegree'], this.loginService.loggedUser['userName']).then(() => {
-			this.dialogRef.close(true);
-			this.router.navigate(['']);
-		});
+		// TODO
+		this.userService.updatePassword(this.currentPassword, this.newPassword, this.confirmPassword).map(res => res.json()).subscribe(
+			user => {
+				this.dialogRef.close(true);
+				this.loginService.logout();
+			},
+			error => {
+				if (error.status === 500) {
+					alert('Internal server error!')
+				}
+				if (error.status === 404 || error.status === 400) {
+					alert('Wrong username or password!!');
+					this.router.navigate(['timetracking']);
+				}
+			}
+		);
 	}
-
 }
