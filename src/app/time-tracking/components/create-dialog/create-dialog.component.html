@@ -10,7 +10,7 @@
             </td>
         </tr>
         <br>
-        <tr [hidden]="item != PROJECT && checkIfAdmin()">
+        <tr [hidden]="item != PROJECT">
             <td>
                 <md-input-container>
                     <input mdInput placeholder="Project Name" #newprojectname>
@@ -18,7 +18,7 @@
             </td>
         </tr>
         <br>
-        <tr [hidden]="item != PROJECT && checkIfAdmin()">
+        <tr [hidden]="item != PROJECT">
             <td>Belongs to:</td>
             <td>
                 <select #client>
@@ -43,7 +43,7 @@
                 </select>
             </td>
         </tr>
-        <tr [hidden]="item != CLIENT && checkIfAdmin()" >
+        <tr [hidden]="item != CLIENT">
             <td>
                 <md-input-container>
                     <input mdInput #clientName placeholder="Client">
@@ -54,6 +54,6 @@
     <br>
 </div>
 <div md-dialog-actions>
-    <button type="button" md-button (click)="validateForm(description, newprojectname, clientName, project, client)">OK</button>
+    <button type="button" md-button (click)="validateForm(description,newprojectname,clientName,project,client)">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>

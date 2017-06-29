@@ -24,7 +24,7 @@ export class LoginService implements IDataservice {
 		private http: Http,
 		private timeTrackingEntryService: TimeTrackingEntryService,
 		private router: Router,
-		private defaultOptions: RequestOptions,
+		// private defaultOptions: RequestOptions,
 		private userService: UserService) {
 		// Define a Mapper for a "Project" resource
 		let resource = store.defineMapper(RESOURCE_NAME, {
@@ -41,7 +41,6 @@ export class LoginService implements IDataservice {
 		return this.http.get(url, { search: params }).map(res => res.json()).subscribe(
 			data => {
 				localStorage.setItem('Authorization', data.token);
-
 
 				this.http.get(this.baseUrl + "/userprofile").map(res => res.json()).subscribe(
 					user => {
@@ -84,6 +83,10 @@ export class LoginService implements IDataservice {
 
 	public getLoggedUsername() {
 		return this.getUser()['userName'];
+	}
+
+	public getLoggedPassword() {
+		return this.getUser()['password'];
 	}
 
 	public isAdmin() {

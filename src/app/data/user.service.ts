@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Http, Headers, URLSearchParams } from '@angular/http';
 import { environment } from '../../environments/environment';
 import { store } from './datastore';
 import { IDataservice, IUser } from '.';
+import { Router } from '@angular/router';
 
 const RESOURCE_NAME: string = 'user';
-const ENDPOINT_NAME: string = 'userprofile';
+const ENDPOINT_NAME: string = '/userprofile';
 
 @Injectable()
 export class UserService implements IDataservice {
 	public baseUrl: string = environment.apiBaseUrl;
-	private loggedIn = false;
+	public loggedIn = false;
 
-	constructor() {
+	constructor(
+		private router: Router,
+		private http: Http) {
 		// Define a Mapper for a "Project" resource
 		let resource = store.defineMapper(RESOURCE_NAME, {
 			basePath: this.baseUrl,
@@ -27,7 +30,7 @@ export class UserService implements IDataservice {
 	}
 
 	public getUsers(): Promise<IUser[]> {
-		let endpoint = '/' + ENDPOINT_NAME + '/all';
+		let endpoint = ENDPOINT_NAME + '/all';
 		return store.findAll(RESOURCE_NAME, {}, {
 			endpoint: endpoint,
 			cacheResponse: false,
@@ -35,8 +38,13 @@ export class UserService implements IDataservice {
 		});
 	}
 
-	public updatePassword(id: number, confirmPassword: string): Promise<IUser> {
-		return store.update(RESOURCE_NAME, id, { confirmPassword: confirmPassword });
+	public updatePassword(currentPassword: string, newPassword: string, confirmPassword: string) {
+		let params = new URLSearchParams();
+		let url = this.baseUrl + ENDPOINT_NAME;
+		params.set('currentPassword', currentPassword);
+		params.set('newPassword', newPassword);
+		params.set('confirmPassword', confirmPassword);
+		return this.http.get(url + "/updatePassword", { search: params });
 	}
 
 	public updateUser(id: number, password: string, user: any): Promise<IUser> {

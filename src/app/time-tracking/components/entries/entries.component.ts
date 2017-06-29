@@ -332,22 +332,6 @@ export class EntriesComponent implements OnInit {
     req.send();
   }
 
-  // public page(offset, limit) {
-  //   // this.fetch((results) => {
-  //     this.clonedItems = this.items;
-  //     this.count = this.items.length;
-
-  //     const start = offset * limit;
-  //     const end = start + Number(limit);
-  //     let rows = [];
-
-  //     for (let i = start; i < end; i++) {
-  //       rows[i] = this.items[i];
-  //     }
-  //     console.log('Page Results', start, end, rows);
-  //   // });
-  // }
-
   onPage(event) {
     console.log('Page Event', event);
     this.count = this.items.length;
@@ -365,12 +349,6 @@ export class EntriesComponent implements OnInit {
     console.log('Page Results', start, end, rows);
     this.offset = event.offset;
   }
-
-  // public openDialogTest(row) {
-  //   let config = new MdDialogConfig();
-  //   config.data = row;
-  //   let dialogRef = this.dialog.open(UpdateDialogComponent);
-  // }
 
   private getStatistics() {
     // TODO

@@ -22,10 +22,10 @@ export class CreateDialogComponent implements OnInit {
 	editMode: boolean = false;
 	private TASK: number = 1;
 	private PROJECT: number = 2;
-	
+
 	private CLIENT: number = 3;
 	public result: any;
-  	private isAdmin: boolean;
+	private isAdmin: boolean;
 
 	private createItems = [
 		{ key: 'Task', id: 1 },
@@ -54,21 +54,25 @@ export class CreateDialogComponent implements OnInit {
 		this.clientService.getClients().then((clients) => {
 			this.clients = clients;
 		});
+		if (!this.checkIfAdmin()) {
+			this.createItems.splice(1);
+			this.createItems.splice(2);
+		}
 	}
 
 	changeItemToBeCreated(event) {
 		this.item = event.target.value;
-		this.toggleEditMode();
+		// this.toggleEditMode();
 	}
 
 	toggleEditMode() {
 		this.editMode = !this.editMode;
 	}
 
-	public getValues(valueDesc: string, valueProjName: string, client: string) {
+	public getValues(valueDesc: string, valueProjName: string, valueClient: string) {
 		this.description = valueDesc;
 		this.newProjectName = valueProjName;
-		this.clientName = client;
+		this.clientName = valueClient;
 	}
 
 	public projectDropdown(value: string): void {
@@ -81,7 +85,7 @@ export class CreateDialogComponent implements OnInit {
 
 	checkMandatoryFields() {
 		if (this.item == this.PROJECT) {
-			if (this.newProjectName === "" || this.clientID === null || this.clientID === "undefined" ) {
+			if (this.newProjectName === "" || this.clientID === null || this.clientID === "undefined") {
 				alert("Please check if all the fields are filled in");
 			} else {
 				this.description = "";
@@ -106,15 +110,15 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	public validateForm(description, newProjectName, clientName, project, client) {
-		this.getValues(description.value,newProjectName.value,clientName.value);
+		this.getValues(description.value, newProjectName.value, clientName.value);
 		this.projectDropdown(project.value);
 		this.clientDropdown(client.value);
 		this.checkMandatoryFields();
 	}
 
- 	public checkIfAdmin() {
-	    this.showData();
-	    return this.isAdmin = this.loginService.isAdmin();
+	public checkIfAdmin() {
+		this.showData();
+		return this.isAdmin = this.loginService.isAdmin();
 	}
 
 	public showData() {
