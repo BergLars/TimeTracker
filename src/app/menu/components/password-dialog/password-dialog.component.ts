@@ -68,7 +68,7 @@ export class PasswordDialogComponent implements OnInit {
 				}
 				if (error.status === 404 || error.status === 400) {
 					alert('Wrong username or password!!');
-					this.router.navigate(['timetracking']);
+					this.router.navigate(['entries']);
 				}
 			}
 		);

@@ -10,4 +10,7 @@ export const environment = {
   apiBaseUrl: 'http://localhost:8081/timetracker'
   // apiBaseUrl: 'http://localhost:8080/timetracker'
   // apiBaseUrl: 'https://mojito.dev.fluance.net:8443/timetracker'
+
+  // Deployment on Mojito
+  // apiBaseUrl: 'https://localhost:8443/timetracker'
 };

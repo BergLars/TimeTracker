@@ -73,8 +73,8 @@ export class EntriesComponent implements OnInit {
     private loginService: LoginService,
     public userService: UserService,
     private dialog: MdDialog,
-    private router: Router,
-    private http: Http) {
+    private http: Http,
+    private router: Router) {
   }
 
   ngOnInit() {

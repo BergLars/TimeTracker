@@ -41,11 +41,10 @@ export class LoginService implements IDataservice {
 		return this.http.get(url, { search: params }).map(res => res.json()).subscribe(
 			data => {
 				localStorage.setItem('Authorization', data.token);
-
 				this.http.get(this.baseUrl + "/userprofile").map(res => res.json()).subscribe(
 					user => {
 						localStorage.setItem('user', JSON.stringify(user));
-						this.router.navigate(['timetracking']);
+						this.router.navigate(['entries']);
 					},
 					() => { }
 				);
@@ -74,6 +73,10 @@ export class LoginService implements IDataservice {
 
 	public isLoggedIn() {
 		return this.getLoggedUserID() ? true : false;
+	}
+
+	public setLoggedUserID(id: number) {
+		this.loggedUserID = id;
 	}
 
 	public getLoggedUserID(): number {

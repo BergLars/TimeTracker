@@ -7,11 +7,11 @@ import { LoggedInGuard } from './logged-in-guard';
 import { ProfileComponent } from './profile';
 
 export const routes = [
-	{ path: 'timetracking', component: TimeTrackingComponent, pathMatch: 'full' },
-	{ path: '', component: LoginComponent, pathMatch: 'full'},
-	{ path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard] }, 
+	{ path: 'entries', component: TimeTrackingComponent },
+	{ path: '', component: LoginComponent }
+	// { path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard] }, 
 	// { path: 'export', component: ExportComponent },
-	{ path: 'entries', component: EntriesComponent },
+	// { path: 'entries', component: EntriesComponent },
 	// { path: 'logout', component: LogoutComponent },
 	
 ];
