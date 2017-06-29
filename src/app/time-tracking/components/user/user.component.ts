@@ -8,7 +8,7 @@ import { IUser } from '../../../data';
 	styleUrls: ['./user.component.scss']
 })
 export class UserComponent {
-	private currentUser: IUser;
+	private currentUser;
 	isLoggedIn: boolean = false;
 	@Input() username: string;
 
@@ -26,7 +26,7 @@ export class UserComponent {
 	}
 
 	public showData() {
-		this.currentUser = this.loginService.loggedUser;
+		this.currentUser = this.loginService.getUser();
 		// if(this.isLoggedIn === true){
 		// 	this.username = this.currentUser['userName'];
 		// }

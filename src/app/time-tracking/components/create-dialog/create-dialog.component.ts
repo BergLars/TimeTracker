@@ -16,7 +16,7 @@ export class CreateDialogComponent implements OnInit {
 	public description: string;
 	public newProjectName: string;
 	public clientName: string;
-	public user: IUser;
+	public user;
 	public projectID: any;
 	public clientID: any;
 	editMode: boolean = false;
@@ -118,7 +118,7 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	public showData() {
-	    this.user = this.loginService.loggedUser;
+	    this.user = this.loginService.getUser();
 	}
 
 	public ok() {

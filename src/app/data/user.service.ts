@@ -39,8 +39,8 @@ export class UserService implements IDataservice {
 		return store.update(RESOURCE_NAME, id, { confirmPassword: confirmPassword });
 	}
 
-	public updateUser(id: number, password: string, admin: string, employmentDegree: number, username: string): Promise<IUser> {
-		return store.update(RESOURCE_NAME, id, { password: password, isAdmin: admin, emplomentDegree: employmentDegree, username: username });
+	public updateUser(id: number, password: string, user: any): Promise<IUser> {
+		return store.update(RESOURCE_NAME, id, { password: password, isAdmin: user['admin'], emplomentDegree: user['employmentDegree'], username: user['username'] });
 	}
 
 	public isLoggedIn() {

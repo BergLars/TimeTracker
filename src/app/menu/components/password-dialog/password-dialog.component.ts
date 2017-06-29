@@ -25,7 +25,6 @@ export class PasswordDialogComponent implements OnInit {
 
 	ngOnInit() {
 		this.userID = this.loginService.getLoggedUserID();
-		this.loginService.loggedUser;
 	}
 
 	public getValues(valueNewPass: string, valueConfirmPass: string) {
@@ -54,9 +53,9 @@ export class PasswordDialogComponent implements OnInit {
 	}
 
 	public ok() {
-		this.userService.updateUser(this.userID, this.encryptedPassword.toString(), this.loginService.loggedUser['admin'], this.loginService.loggedUser['employmentDegree'], this.loginService.loggedUser['userName']).then(() => {
+		this.userService.updateUser(this.userID, this.encryptedPassword.toString(), this.loginService.getUser()).then(() => {
 			this.dialogRef.close(true);
-			this.router.navigate(['']);
+			//this.router.navigate(['']);
 		});
 	}
 

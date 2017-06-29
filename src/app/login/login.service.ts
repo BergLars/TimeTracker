@@ -17,11 +17,7 @@ export class LoginService implements IDataservice {
 
 	public baseUrl: string = environment.apiBaseUrl;
 
-	public loggedIn = false;
 	public loggedUserID: number;
-	public loggedUser: IUser;
-	public isLoading: Boolean = false;
-	private entries: ITimeTrackingEntry[];
 	public headers: Headers;
 
 	constructor(
@@ -35,7 +31,6 @@ export class LoginService implements IDataservice {
 			basePath: this.baseUrl,
 			endpoint: ENDPOINT_NAME
 		});
-		this.loggedIn = !!localStorage.getItem('auth_token');
 	}
 
 	public request(username: string, password: string) {
@@ -49,13 +44,12 @@ export class LoginService implements IDataservice {
 
 
 				this.http.get(this.baseUrl + "/userprofile").map(res => res.json()).subscribe(
-				user => {
-					this.loggedUser = user;
-					this.getLoggedUserID();
-					this.router.navigate(['timetracking']), this.loggedIn = true
-				},
-				() => { }
-			);
+					user => {
+						localStorage.setItem('user', JSON.stringify(user));
+						this.router.navigate(['timetracking']);
+					},
+					() => { }
+				);
 			},
 			error => {
 				if (error.status === 500) {
@@ -63,7 +57,7 @@ export class LoginService implements IDataservice {
 				}
 				if (error.status === 404 || error.status === 400) {
 					alert('Wrong username or password!!');
-					this.router.navigate(['']);
+					//this.router.navigate(['']);
 				}
 			},
 		)
@@ -71,24 +65,28 @@ export class LoginService implements IDataservice {
 
 	public logout() {
 		localStorage.removeItem('Authorization');
-		this.loggedIn = false;
+		localStorage.removeItem('user');
 		this.router.navigate(['']);
 	}
 
+	public getUser() {
+		return JSON.parse(localStorage.getItem('user'));
+	}
+
 	public isLoggedIn() {
-		return this.loggedIn;
+		return this.getLoggedUserID() ? true : false;
 	}
 
 	public getLoggedUserID(): number {
-		this.loggedUserID = this.loggedUser['id'];
-		return this.loggedUserID;
+		let user = this.getUser();
+		return user ? parseInt(user.id) : 0;
 	}
 
 	public getLoggedUsername() {
-		return this.loggedUser['userName'];
+		return this.getUser()['userName'];
 	}
 
 	public isAdmin() {
-		return this.loggedUser['admin'];
+		return this.getUser()['admin'];
 	}
 }

@@ -8,6 +8,7 @@ import { UpdateDialogService } from './update-dialog/update-dialog.service';
 import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
 import { LoginService } from '../../../login';
 import { environment } from '../../../../environments/environment';
+import { Router } from '@angular/router';
 import moment from 'moment/src/moment';
 // import { SearchDialogComponent } from './components/search-dialog/search-dialog.component';
 
@@ -72,6 +73,7 @@ export class EntriesComponent implements OnInit {
     private loginService: LoginService,
     public userService: UserService,
     private dialog: MdDialog,
+    private router: Router,
     private http: Http) {
   }
 

@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService, IProject, ITask, ITimeTrackingEntry, IUser, IStatistics } from '../data';
-import { LoginService } from '../login';
 // Use the Full path instead of using index.ts path
 import { CreateDialogService} from '../time-tracking/components/create-dialog/create-dialog.service';
 import { ExportDialogService} from '../time-tracking/components/export-dialog/export-dialog.service';
+
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-time-tracking',
@@ -32,12 +33,14 @@ export class TimeTrackingComponent implements OnInit {
     private createDialogService: CreateDialogService,
     private exportDialogService: ExportDialogService,
     private userService: UserService,
-    private loginService: LoginService,
+    private router: Router,
     private viewContainerRef: ViewContainerRef) {
   }
 
   ngOnInit() {
     this.isLoading = false;
+    debugger;
+    this.checkIfLoggedIn();
   }
   public openCreateDialog() {
    this.createDialogService
@@ -47,5 +50,13 @@ export class TimeTrackingComponent implements OnInit {
   public openExportDialog() {
    this.exportDialogService
     .confirm('Export', this.viewContainerRef);
+  }
+
+  checkIfLoggedIn(){
+    if (localStorage.getItem('Authorization')) {
+      console.log("hdfjkghdk");
+    } else {
+      //this.router.navigate(['timetracking'],4);
+    }
   }
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { LoginService } from './login.service';
+import { Router } from '@angular/router';
 
 // webpack html imports
 let template = require('./login.component.html');
@@ -13,7 +14,15 @@ export class LoginComponent {
 	private username: string;
 	private password: string;
 
-	constructor(private loginService: LoginService) { }
+	constructor(private loginService: LoginService, private router: Router) {
+
+		let token = localStorage.getItem('Authorization');
+
+		if (token) {
+			console.log('blablabla', token);
+			this.router.navigate(['timetracking']);
+		}
+	}
 
 	public getUsernamePassword(value: string, value1: string) {
 		this.username = value;

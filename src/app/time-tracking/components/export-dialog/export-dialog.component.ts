@@ -72,7 +72,6 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	loadUsers() {
-		this.loginService.loggedUser;
 		this.userService.getUsers().then((users) => {
 			this.users = users;
 		});
