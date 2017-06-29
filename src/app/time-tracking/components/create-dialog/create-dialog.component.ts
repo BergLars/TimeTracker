@@ -20,14 +20,14 @@ export class CreateDialogComponent implements OnInit {
 	public projectID: any;
 	public clientID: any;
 	editMode: boolean = false;
-	private TASK: number = 1;
-	private PROJECT: number = 2;
+	public TASK: number = 1;
+	public PROJECT: number = 2;
 
-	private CLIENT: number = 3;
+	public CLIENT: number = 3;
 	public result: any;
 	private isAdmin: boolean;
 
-	private createItems = [
+	public createItems = [
 		{ key: 'Task', id: 1 },
 		{ key: 'Project', id: 2 },
 		{ key: 'Client', id: 3 }
