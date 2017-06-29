@@ -39,7 +39,6 @@ export class TimeTrackingComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = false;
-    debugger;
     this.checkIfLoggedIn();
   }
   public openCreateDialog() {
