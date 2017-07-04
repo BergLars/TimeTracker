@@ -7,18 +7,18 @@ import { ITimeTrackingEntry, TimeTrackingEntryService } from '../../../../data';
 @Injectable()
 export class EntryDialogService {
 
-  constructor(private dialog: MdDialog, public timeTrackingEntryService: TimeTrackingEntryService) { }
+	constructor(private dialog: MdDialog, public timeTrackingEntryService: TimeTrackingEntryService) { }
 
-  public confirm(title: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
+	public confirm(title: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 
-  	let dialogRef: MdDialogRef<EntryDialogComponent>;
-    let config = new MdDialogConfig();
-    config.viewContainerRef = viewContainerRef;
+		let dialogRef: MdDialogRef<EntryDialogComponent>;
+		let config = new MdDialogConfig();
+		config.viewContainerRef = viewContainerRef;
 
-    dialogRef = this.dialog.open(EntryDialogComponent, config);
+		dialogRef = this.dialog.open(EntryDialogComponent, config);
 
-    dialogRef.componentInstance.title = title;
+		dialogRef.componentInstance.title = title;
 
-    return dialogRef.afterClosed();
-  }
+		return dialogRef.afterClosed();
+	}
 }

@@ -1,7 +1,7 @@
-import {Injectable} from "@angular/core";
-import { ConnectionBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers} from "@angular/http";
-import {Observable} from "rxjs/Rx";
-import {environment} from "../../environments/environment";
+import { Injectable } from "@angular/core";
+import { ConnectionBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers } from "@angular/http";
+import { Observable } from "rxjs/Rx";
+import { environment } from "../../environments/environment";
 
 @Injectable()
 export class HttpInterceptor extends Http {
@@ -34,10 +34,10 @@ export class HttpInterceptor extends Http {
     }
 
     private updateUrl(req: string) {
-        return  req;
+        return req;
     }
 
-    private getRequestOptionArgs(options?: RequestOptionsArgs) : RequestOptionsArgs {
+    private getRequestOptionArgs(options?: RequestOptionsArgs): RequestOptionsArgs {
         if (options == null) {
             options = new RequestOptions();
         }
@@ -45,7 +45,7 @@ export class HttpInterceptor extends Http {
             options.headers = new Headers();
         }
         options.headers.append('Content-Type', 'application/json');
-        options.headers.append('Authorization',  localStorage.getItem('Authorization'));
+        options.headers.append('Authorization', localStorage.getItem('Authorization'));
 
         return options;
     }

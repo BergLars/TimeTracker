@@ -53,7 +53,7 @@
             <td></td>
             <td>
                 <md-input-container>
-                <input mdInput placeholder="Time Spent" #timeSpent [value]="selectedTimeSpent">
+                    <input mdInput placeholder="Time Spent" #timeSpent [value]="selectedTimeSpent">
                 </md-input-container>
             </td>
         </tr>
@@ -65,9 +65,7 @@
     <!--<button type="button" md-button (click)="getNewValues(selectedDescription, date.value, startTime.value, endTime.value, timeSpent.value);checkMandatoryFields();dialogRef.close([selectedDescription, project.value, task.value, date.value, startTime.value, endTime.value])">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div> -->
-<p>{{ title }}</p>
-<p>{{ message }}</p>
-<button type="button" md-raised-button 
-    (click)="ok();">OK</button>
-<button type="button" md-button 
-    (click)="dialogRef.close()">Cancel</button>
+    <p>{{ title }}</p>
+    <p>{{ message }}</p>
+    <button type="button" md-raised-button (click)="ok();">OK</button>
+    <button type="button" md-button (click)="dialogRef.close()">Cancel</button>

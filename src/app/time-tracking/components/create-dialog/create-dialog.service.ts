@@ -7,18 +7,18 @@ import { IProject, ProjectService, ITask, TaskService, TimeTrackingEntryService 
 @Injectable()
 export class CreateDialogService {
 
-  constructor(private dialog: MdDialog, public projectService: ProjectService, public taskService: TaskService, public timetrackingService: TimeTrackingEntryService) { }
+	constructor(private dialog: MdDialog, public projectService: ProjectService, public taskService: TaskService, public timetrackingService: TimeTrackingEntryService) { }
 
-  public confirm(title: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
+	public confirm(title: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 
-  	let dialogRef: MdDialogRef<CreateDialogComponent>;
-    let config = new MdDialogConfig();
-    config.viewContainerRef = viewContainerRef;
+		let dialogRef: MdDialogRef<CreateDialogComponent>;
+		let config = new MdDialogConfig();
+		config.viewContainerRef = viewContainerRef;
 
-    dialogRef = this.dialog.open(CreateDialogComponent, config);
+		dialogRef = this.dialog.open(CreateDialogComponent, config);
 
-    dialogRef.componentInstance.title = title;
+		dialogRef.componentInstance.title = title;
 
-    return dialogRef.afterClosed();
-  }
+		return dialogRef.afterClosed();
+	}
 }

@@ -62,7 +62,6 @@ export class CreateDialogComponent implements OnInit {
 
 	changeItemToBeCreated(event) {
 		this.item = event.target.value;
-		// this.toggleEditMode();
 	}
 
 	toggleEditMode() {
@@ -122,7 +121,7 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	public showData() {
-	    this.user = this.loginService.getUser();
+		this.user = this.loginService.getUser();
 	}
 
 	public ok() {

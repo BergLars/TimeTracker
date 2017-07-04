@@ -9,14 +9,13 @@ import { TimeTrackingEntryService } from '../../../../data';
 })
 export class DeleteEntryComponent implements OnInit {
 
-    public title: string;
-    public message: string;
-    public rowid: number;
+  public title: string;
+  public message: string;
+  public rowid: number;
 
-
-    constructor(public dialogRef: MdDialogRef<DeleteEntryComponent>, 
-    	public timeTrackingEntryService: TimeTrackingEntryService) {
-    }
+  constructor(public dialogRef: MdDialogRef<DeleteEntryComponent>,
+    public timeTrackingEntryService: TimeTrackingEntryService) {
+  }
 
   public ok() {
     this.timeTrackingEntryService.deleteTimeTrackingEntry(this.rowid)
@@ -24,11 +23,10 @@ export class DeleteEntryComponent implements OnInit {
         this.dialogRef.close(true);
       });
   }
-    onDelete(){
-  	  this.timeTrackingEntryService.deleteTimeTrackingEntry(this.rowid);
-  	}
-    
-  ngOnInit() {
+  onDelete() {
+    this.timeTrackingEntryService.deleteTimeTrackingEntry(this.rowid);
   }
 
+  ngOnInit() {
+  }
 }

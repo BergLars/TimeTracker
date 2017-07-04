@@ -3,7 +3,6 @@ import { MdDialogRef } from '@angular/material';
 import { UserService, IClient, ClientService, TimeTrackingEntryService, IUser } from '../../../data';
 import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
-//import 'moment/locale/de';
 
 @Component({
 	selector: 'app-export-dialog',
@@ -43,7 +42,6 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	public getValues(valueFrom: string, valueTo: string) {
-		// moment().locale('de');
 		this.fromDate = valueFrom;
 		this.toDate = valueTo;
 		this.validLength = this.toDate.length > 9 && this.fromDate.length > 9;

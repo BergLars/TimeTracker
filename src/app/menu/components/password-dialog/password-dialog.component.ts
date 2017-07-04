@@ -15,7 +15,6 @@ export class PasswordDialogComponent implements OnInit {
 	public confirmPassword: string;
 	public currentPassword: string;
 	public userID: number;
-	// public encryptedPassword: string;
 
 	constructor(
 		public dialogRef: MdDialogRef<PasswordDialogComponent>,
@@ -49,14 +48,11 @@ export class PasswordDialogComponent implements OnInit {
 		if (this.newPassword !== this.confirmPassword) {
 			alert("Passwords are not the same !")
 		} else {
-			// this.encryptedPassword = this.confirmPassword;
 			this.ok();
 		}
 	}
 
 	public ok() {
-
-		// TODO
 		this.userService.updatePassword(this.currentPassword, this.newPassword, this.confirmPassword).map(res => res.json()).subscribe(
 			user => {
 				this.dialogRef.close(true);

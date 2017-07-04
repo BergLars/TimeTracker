@@ -6,7 +6,6 @@ import { IDataservice, ITask } from '.';
 const RESOURCE_NAME: string = 'task';
 const RESOURCE_NAME_PROJECT: string = 'taskProject';
 const ENDPOINT_NAME: string = 'tasks';
-// const ENDPOINT_NAME_PROJECTID: string = 'projects/2/tasks';
 
 @Injectable()
 export class TaskService implements IDataservice {
@@ -22,25 +21,22 @@ export class TaskService implements IDataservice {
       bypassCache: true,
 
       relations: {
-        hasMany:{
+        hasMany: {
           entry: {
             foreignKey: 'taskID',
-            localField: 'entry',
-            // description: 'description'
+            localField: 'entry'
           }
         },
         belongsTo: {
           project: {
             localField: 'project',
-            localKey: 'projectID',
-            // projectName: 'projectName'
+            localKey: 'projectID'
           }
         }
       }
     });
     store.defineMapper(RESOURCE_NAME_PROJECT, {
-      basePath: this.baseUrl,
-      // endpoint: ENDPOINT_NAME_PROJECTID,
+      basePath: this.baseUrl
     })
   }
 
@@ -52,26 +48,16 @@ export class TaskService implements IDataservice {
 
   public getTasksByProject(id: number): Promise<ITask[]> {
     let endpoint = '/' + ENDPOINT_NAME + '/project/' + id;
-    return store.findAll(RESOURCE_NAME_PROJECT, {projectID:id}, {
+    return store.findAll(RESOURCE_NAME_PROJECT, { projectID: id }, {
       endpoint: endpoint,
       cacheResponse: false,
       bypassCache: true
     });
   }
 
-
   public getTask(id: number): Promise<ITask> {
     return store.find(RESOURCE_NAME, id);
   }
-
-  // public getTaskByDescription(description: string): Promise<ITask> {
-  //   let endpoint = '/' + ENDPOINT_NAME + '/description';
-  //   return store.find(RESOURCE_NAME, description, {
-  //     endpoint: endpoint,
-  //     cacheResponse: false,
-  //     bypassCache: true
-  //   });
-  // }
 
   public createTask(description: string, projectID: number): Promise<ITask> {
     return store.create(RESOURCE_NAME, { taskDescription: description, projectID: projectID });

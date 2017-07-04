@@ -18,18 +18,17 @@
         </tr>
         <br>
         <tr [hidden]="!checkIfAdmin()">
-        <td>User: </td>
-        <td>
-            <select #userprofile>
-                <option *ngFor="let user of users" [value]='user.id'>{{ user.userName }}</option>
-            </select>
-        </td>
+            <td>User: </td>
+            <td>
+                <select #userprofile>
+                    <option *ngFor="let user of users" [value]='user.id'>{{ user.userName }}</option>
+                </select>
+            </td>
         </tr>
     </table>
     <br>
 </div>
-
 <div md-dialog-actions>
-<a md-button (click)="getValues(fromDate.value,toDate.value);userDropdown(userprofile.value);checkMandatoryFields();dialogRef.close();">OK</a>
+    <a md-button (click)="getValues(fromDate.value,toDate.value);userDropdown(userprofile.value);checkMandatoryFields();dialogRef.close();">OK</a>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>

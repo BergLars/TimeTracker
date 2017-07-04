@@ -311,7 +311,6 @@ export class EntriesComponent implements OnInit {
 
   loadEntries() {
     this.fetch((data) => {
-      //this.items = data;
     });
   }
 

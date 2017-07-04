@@ -12,7 +12,6 @@ export class ProjectService implements IDataservice {
   public baseUrl: string = environment.apiBaseUrl;
 
   constructor() {
-    console.log('hey, created');
     // Define a Mapper for a "Project" resource
     let resource = store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,

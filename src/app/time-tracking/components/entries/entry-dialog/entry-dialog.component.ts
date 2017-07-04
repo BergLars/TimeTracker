@@ -39,18 +39,15 @@ export class EntryDialogComponent implements OnInit {
 
   ngOnInit() {
     this.projectService.getProjects().then((projects) => {
-      console.log(projects);
       this.projects = projects;
     });
 
     this.projectID = 1;
 
     this.taskService.getTasksByProject(this.projectID).then((tasks) => {
-      console.log(tasks);
       this.tasks = tasks;
     });
   }
-
 
   onDateChanged(event: IMyDateModel) {
     // event properties are: event.date, event.jsdate, event.formatted and event.epoc
@@ -70,18 +67,13 @@ export class EntryDialogComponent implements OnInit {
 
   public projectDropdown(value: string): void {
     this.projectID = value;
-    console.log(value);
     this.taskService.getTasksByProject(+this.projectID).then((tasks) => {
-      console.log(tasks);
       this.tasks = tasks;
     });
   }
 
-  pu
-
   public taskDropdown(value: string): void {
     this.taskID = value;
-    console.log(value);
   }
 
   checkMandatoryFields() {
