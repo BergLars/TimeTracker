@@ -15,12 +15,10 @@ export class LoginComponent {
 	private password: string;
 
 	constructor(private loginService: LoginService, private router: Router) {
-
 		let token = localStorage.getItem('Authorization');
 
 		if (token) {
-			console.log('blablabla', token);
-			this.router.navigate(['timetracking']);
+			this.router.navigate(['entries']);
 		}
 	}
 

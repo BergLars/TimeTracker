@@ -24,7 +24,6 @@ export class MenuComponent implements OnInit {
 		this.passwordDialogService.confirm('Update password', this.viewContainerRef);
 	}
 
-
 	public logout() {
 		this.loginService.logout();
 	}

@@ -45,24 +45,11 @@ export class CreateDialogComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.projectService.getProjects().then((projects) => {
-			this.projects = projects;
-		});
-		this.taskService.getTasks().then((tasks) => {
-			this.tasks = tasks;
-		});
-		this.clientService.getClients().then((clients) => {
-			this.clients = clients;
-		});
-		if (!this.checkIfAdmin()) {
-			this.createItems.splice(1);
-			this.createItems.splice(2);
-		}
+		this.loadItems();
 	}
 
 	changeItemToBeCreated(event) {
 		this.item = event.target.value;
-		// this.toggleEditMode();
 	}
 
 	toggleEditMode() {
@@ -89,7 +76,7 @@ export class CreateDialogComponent implements OnInit {
 				alert("Please check if all the fields are filled in");
 			} else {
 				this.description = "";
-				this.ok();
+				this.createItem();
 			}
 		}
 		if (this.item == this.TASK) {
@@ -97,14 +84,14 @@ export class CreateDialogComponent implements OnInit {
 				alert("Please check if all the fields are filled in");
 			} else {
 				this.newProjectName = "";
-				this.ok();
+				this.createItem();
 			}
 		}
 		if (this.item == this.CLIENT) {
 			if (this.clientName === "") {
 				alert("Please check if all the fields are filled in");
 			} else {
-				this.ok();
+				this.createItem();
 			}
 		}
 	}
@@ -122,10 +109,10 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	public showData() {
-	    this.user = this.loginService.getUser();
+		this.user = this.loginService.getUser();
 	}
 
-	public ok() {
+	public createItem() {
 		if (this.item == this.PROJECT) {
 			this.projectService.createProject(this.newProjectName, this.clientID).then(() => {
 				this.dialogRef.close(true);
@@ -140,6 +127,25 @@ export class CreateDialogComponent implements OnInit {
 			this.clientService.createClient(this.clientName).then(() => {
 				this.dialogRef.close(true);
 			});
+		}
+		window.location.reload();
+	}
+
+	private loadItems() {
+		this.clientService.getClients().then((clients) => {
+			this.clients = clients;
+		});
+
+		this.taskService.getTasks().then((tasks) => {
+			this.tasks = tasks;
+		});
+
+		this.projectService.getProjects().then((projects) => {
+			this.projects = projects;
+		});
+		if (!this.checkIfAdmin()) {
+			this.createItems.splice(1);
+			this.createItems.splice(2);
 		}
 	}
 }

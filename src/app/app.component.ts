@@ -1,5 +1,4 @@
 import { Component, ViewContainerRef, Input } from '@angular/core';
-// import { ComponentsHelper } from 'ng2-bootstrap';
 import { environment } from '../environments/environment';
 
 @Component({

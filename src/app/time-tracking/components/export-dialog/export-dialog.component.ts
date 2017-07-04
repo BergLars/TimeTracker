@@ -3,7 +3,6 @@ import { MdDialogRef } from '@angular/material';
 import { UserService, IClient, ClientService, TimeTrackingEntryService, IUser } from '../../../data';
 import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
-//import 'moment/locale/de';
 
 @Component({
 	selector: 'app-export-dialog',
@@ -43,7 +42,6 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	public getValues(valueFrom: string, valueTo: string) {
-		// moment().locale('de');
 		this.fromDate = valueFrom;
 		this.toDate = valueTo;
 		this.validLength = this.toDate.length > 9 && this.fromDate.length > 9;
@@ -80,7 +78,7 @@ export class ExportDialogComponent implements OnInit {
 	refreshExportURL(id) {
 		let validFrom = this.fromDate.substring(6, 10) + "/" + this.fromDate.substring(3, 5) + "/" + this.fromDate.substring(0, 2);
 		let validTo = this.toDate.substring(6, 10) + "/" + this.toDate.substring(3, 5) + "/" + this.toDate.substring(0, 2);
-		this.exportURL = "http://localhost:8081/timetracker/export?fromDate=" +
+		this.exportURL = "http://localhost:8081/export?fromDate=" +
 			validFrom +
 			"&toDate=" +
 			validTo +

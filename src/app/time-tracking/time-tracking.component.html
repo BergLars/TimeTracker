@@ -1,10 +1,10 @@
 <div class="layout-column">
   <md-toolbar color="primary">
-    <span>Today</span>
+    <span id="today">Today - {{currentDate}}</span>
     <span class="flex"></span>
     <span>
       <button md-raised-button color="primary" (click)="openCreateDialog()">CREATE</button>
-      <button md-raised-button color="primary">SEARCH</button>
+      <!-- <button md-raised-button color="primary">SEARCH</button> -->
       <button md-raised-button color="primary" (click)="openExportDialog()">EXPORT</button>
     </span>
   </md-toolbar>

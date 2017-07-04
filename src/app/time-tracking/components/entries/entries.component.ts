@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { Http } from '@angular/http';
-import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService, ClientService } from '../../../data';
+import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, TaskService, ProjectService, TimeTrackingEntryService, ClientService } from '../../../data';
 import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
@@ -97,25 +97,37 @@ export class EntriesComponent implements OnInit {
 
   updateValue(event, cell, cellValue, row) {
     this.editing[row.$$index + '-' + cell] = false;
+
     if (cell == 'description') {
       row.description = event.target.value;
-      this.ok(row);
+      this.updateEntry(row);
     }
-    if (cell == 'project') {
-      this.projectService.getProject(event.target.value).then(res => {
-        row.projectID = res.id;
-        this.ok(row);
-      });
-    }
+    // if (cell == 'project') {
+    //   this.tasks = [];
+    //   this.projectService.getProject(event.target.value).then(res => {
+    //     // row.task.project.projectName = res.projectName;
+    //   });
+
+    //   this.taskService.updateTask(row.task.id, row.task.taskDescription, row.task.projectID).then(res => {
+    //     row.task.project.id = event.target.value;
+    //     // row.task.project.projectName;
+    //   });
+
+    //   this.taskService.getTasksByProject(event.target.value).then(res => {
+    //     this.tasks = res;
+    //     alert("Update the task field too !");
+    //     // this.ok(row);
+    //   });
+    // }
     if (cell == 'task') {
       this.taskService.getTask(event.target.value).then(res => {
-        row.taskID = res.id;
-        this.ok(row);
+        row.task = res;
+        this.updateEntry(row);
       });
     }
     if (cell == 'date') {
       row.entryDate = event.target.value;
-      this.ok(row);
+      this.updateEntry(row);
     }
     if (cell == 'startTime') {
       row.startTime = event.target.value;
@@ -126,7 +138,7 @@ export class EntriesComponent implements OnInit {
       else {
         // row.timeSpent = this.calculateTimeSpent(row);
         row.timeSpent = this.calculateSpentTime(row);
-        this.ok(row);
+        this.updateEntry(row);
       }
     }
     if (cell == 'endTime') {
@@ -138,10 +150,15 @@ export class EntriesComponent implements OnInit {
       else {
         // row.timeSpent = this.calculateTimeSpent(row);
         row.timeSpent = this.calculateSpentTime(row);
-        this.ok(row);
+        this.updateEntry(row);
       }
     }
   }
+
+  public updateEntry(row) {
+    this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.taskID);
+  }
+
 
   // Try MomentJS to resolve this task
   // calculateTimeSpent(row) {
@@ -167,6 +184,10 @@ export class EntriesComponent implements OnInit {
   onSelect({ selected }) {
     if (selected) {
       this.selectedRow = selected[0];
+      this.taskService.getTasksByProject(this.selectedRow.task.projectID).then(res => {
+        this.tasks = [];
+        this.tasks = res;
+      });
     }
   }
 
@@ -199,10 +220,6 @@ export class EntriesComponent implements OnInit {
       timeSpent = timeSpentH + ':' + timeSpentMin;
     }
     return timeSpent;
-  }
-
-  public ok(row) {
-    this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.projectID, row.taskID);
   }
 
   isSelected(row) {
@@ -248,38 +265,38 @@ export class EntriesComponent implements OnInit {
       });
   }
 
-  public openUpdateDialog(row) {
-    this.updateDialogService
-      .confirm(this.viewContainerRef, row)
-      // .afterClosed()
-      .subscribe(res => {
-        if (res) {
-          // TODO : that's bad, replace the array with a dictionary or something !!!
+  // public openUpdateDialog(row) {
+  //   this.updateDialogService
+  //     .confirm(this.viewContainerRef, row)
+  //     // .afterClosed()
+  //     .subscribe(res => {
+  //       if (res) {
+  //         // TODO : that's bad, replace the array with a dictionary or something !!!
 
-          let description = res[0];
-          let projectID = Number(res[1]);
-          let taskID = Number(res[2]);
-          let date = res[3];
-          let starttime = res[4];
-          let endtime = res[5];
-          // let timespent = 
+  //         let description = res[0];
+  //         let projectID = Number(res[1]);
+  //         let taskID = Number(res[2]);
+  //         let date = res[3];
+  //         let starttime = res[4];
+  //         let endtime = res[5];
+  //         // let timespent = 
 
-          this.projectService.getProject(projectID).then(res => {
-            var selectedProject = res;
+  //         this.projectService.getProject(projectID).then(res => {
+  //           var selectedProject = res;
 
-            this.items[row.$$index]['description'] = description;//this.result.description;
-            this.items[row.$$index]['projectID'] = projectID; //this.result.projectID;
-            this.items[row.$$index]['taskID'] = taskID; //this.result.taskID;
-            this.items[row.$$index]['startTime'] = starttime;//this.result.startDateTime;
-            this.items[row.$$index]['endTime'] = endtime;//this.result.endDateTime;
+  //           this.items[row.$$index]['description'] = description;//this.result.description;
+  //           this.items[row.$$index]['projectID'] = projectID; //this.result.projectID;
+  //           this.items[row.$$index]['taskID'] = taskID; //this.result.taskID;
+  //           this.items[row.$$index]['startTime'] = starttime;//this.result.startDateTime;
+  //           this.items[row.$$index]['endTime'] = endtime;//this.result.endDateTime;
 
-            this.loadEntries();
-          });
-          // TO DO
-          this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, date, starttime, endtime, row.timespent, row.description, row.userprofileid, Number(this.projectID), Number(this.taskID));
-        }
-      });
-  }
+  //           this.loadEntries();
+  //         });
+  //         // TO DO
+  //         this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, date, starttime, endtime, row.timespent, row.description, row.userprofileid, Number(this.taskID));
+  //       }
+  //     });
+  // }
 
   public openDeleteDialog(row) {
     this.deleteEntryService
@@ -294,14 +311,13 @@ export class EntriesComponent implements OnInit {
 
   loadEntries() {
     this.fetch((data) => {
-      //this.items = data;
     });
   }
 
   fetch(cb) {
     this.items = [];
-    this.projectsName = [];
-    this.tasksDescription = [];
+    this.tasks = [];
+    this.task = null;
     this.userID = this.loginService.getLoggedUserID();
     let url = this.baseUrl + '/timeentries/' + this.userID + '/entries';
 
@@ -310,12 +326,14 @@ export class EntriesComponent implements OnInit {
     req.open('GET', url);
 
     req.onload = () => {
-      // Get all clients
-      this.clientService.getClients().then(result => { this.clients = result; }),
+      // Get all tasks
+      this.taskService.getTasks().then(result => {
+        this.tasks = result;
+      }),
         // Get all projects
         this.projectService.getProjects().then(result => { this.projects = result; }),
-        // Get all tasks
-        this.taskService.getTasks().then(result => { this.tasks = result; }),
+        // Get all clients
+        this.clientService.getClients().then(result => { this.clients = result; }),
 
         // Get user's entries
         this.userID = this.loginService.getLoggedUserID(),
@@ -323,11 +341,14 @@ export class EntriesComponent implements OnInit {
           this.items = loadedItems;
           this.clonedItems = loadedItems;
           for (let item of this.items) {
-            let currentProject = item.project;
-            this.projectsName.push(currentProject.projectName);
-            this.tasksDescription.push(item.task.taskDescription);
+
+            this.tasks = [];
+            this.taskService.getTasksByProject(item.task.project.id).then(res => {
+              this.tasks = res;
+            });
           }
         });
+        
     };
     req.send();
   }
@@ -336,11 +357,9 @@ export class EntriesComponent implements OnInit {
     console.log('Page Event', event);
     this.count = this.items.length;
     this.items = this.clonedItems;;
-
     const start = event.offset * event.limit;
     const end = start + Number(event.limit);
     let rows = [];
-
     for (let i = start; i < end; i++) {
       rows[i] = this.items[i];
     }
@@ -349,7 +368,6 @@ export class EntriesComponent implements OnInit {
     console.log('Page Results', start, end, rows);
     this.offset = event.offset;
   }
-
   private getStatistics() {
     // TODO
     // this.statistics.totalAvailableVacationDays = 18;
