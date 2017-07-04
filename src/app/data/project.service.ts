@@ -12,6 +12,7 @@ export class ProjectService implements IDataservice {
   public baseUrl: string = environment.apiBaseUrl;
 
   constructor() {
+    console.log('hey, created');
     // Define a Mapper for a "Project" resource
     let resource = store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,
@@ -19,16 +20,15 @@ export class ProjectService implements IDataservice {
       attributeId: 'name',
       relations: {
         hasMany: {
-          entry: {
-            foreignKey: 'projectID',
-            localField: 'entries'
+          task: {
+            localField: 'tasks',
+            foreignKey: 'projectID'
           }
         },
         belongsTo: {
           client: {
             localField: 'client',
-            localKey: 'clientID',
-            clientName: 'clientName'
+            localKey: 'clientID'
           }
         }
       }
@@ -44,15 +44,6 @@ export class ProjectService implements IDataservice {
   public getProject(id: number): Promise<IProject> {
     return store.find(RESOURCE_NAME, id);
   }
-
-  // public getProjectByName(name: string): Promise<IProject> {
-  //   let endpoint = '/' + ENDPOINT_NAME + '/projectName';
-  //   return store.find(RESOURCE_NAME,{'name':name}, {
-  //     endpoint: endpoint,
-  //     cacheResponse: false,
-  //     bypassCache: true
-  //   });
-  // }
 
   public createProject(name: string, clientID: number): Promise<IProject> {
     return store.create(RESOURCE_NAME, { projectName: name, clientID: clientID });

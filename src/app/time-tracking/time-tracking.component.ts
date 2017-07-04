@@ -53,7 +53,6 @@ export class TimeTrackingComponent implements OnInit {
 
   checkIfLoggedIn(){
     if (localStorage.getItem('Authorization')) {
-      console.log("hdfjkghdk");
     } else {
       //this.router.navigate(['timetracking'],4);
     }

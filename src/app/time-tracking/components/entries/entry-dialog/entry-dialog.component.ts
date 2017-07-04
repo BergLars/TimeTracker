@@ -39,18 +39,18 @@ export class EntryDialogComponent implements OnInit {
 
   ngOnInit() {
     this.projectService.getProjects().then((projects) => {
+      console.log(projects);
       this.projects = projects;
     });
-    this.taskService.getTasks().then((tasks) => {
+
+    this.projectID = 1;
+
+    this.taskService.getTasksByProject(this.projectID).then((tasks) => {
+      console.log(tasks);
       this.tasks = tasks;
     });
   }
 
-  private myDatePickerOptions: IMyOptions = {
-    // other options...
-    dateFormat: 'dd.mm.yyyy',
-    disableWeekends: true,
-  };
 
   onDateChanged(event: IMyDateModel) {
     // event properties are: event.date, event.jsdate, event.formatted and event.epoc
@@ -58,20 +58,30 @@ export class EntryDialogComponent implements OnInit {
     console.log(event.date);
   }
 
-  public getValues(valueDesc: string, valueDate: string, valueStartTime: string, valueEndTime: string, valueTimeSpent: string) {
+  public getValues(valueDesc: string, valueDate: string, valueStartTime: string, valueEndTime: string, valueTimeSpent: string, valueProjectID: number, valueTaskID: number) {
     this.description = valueDesc;
     this.entryDate = valueDate;
     this.startTime = valueStartTime;
     this.endTime = valueEndTime;
-    this.timeSpent = valueTimeSpent
+    this.timeSpent = valueTimeSpent;
+    this.projectID = valueProjectID;
+    this.taskID = valueTaskID;
   }
 
   public projectDropdown(value: string): void {
     this.projectID = value;
+    console.log(value);
+    this.taskService.getTasksByProject(+this.projectID).then((tasks) => {
+      console.log(tasks);
+      this.tasks = tasks;
+    });
   }
+
+  pu
 
   public taskDropdown(value: string): void {
     this.taskID = value;
+    console.log(value);
   }
 
   checkMandatoryFields() {
@@ -92,7 +102,7 @@ export class EntryDialogComponent implements OnInit {
 
   public ok() {
     this.timeTrackingEntryService
-      .createTimeTrackingEntry(this.entryDate, this.startTime, this.endTime, this.timeSpent, this.description, this.loginService.getLoggedUserID(), this.projectID, this.taskID)
+      .createTimeTrackingEntry(this.entryDate, this.startTime, this.endTime, this.timeSpent, this.description, this.loginService.getLoggedUserID(), this.taskID)
       .then(() => {
         this.dialogRef.close(true);
       });

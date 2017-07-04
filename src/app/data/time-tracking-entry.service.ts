@@ -20,56 +20,16 @@ export class TimeTrackingEntryService implements IDataservice {
       bypassCache: true,
       relations: {
         belongsTo: {
-          project: {
-            localField: 'project',
-            localKey: 'projectID',
-            projectName: 'projectName'
-          },
           task: {
             localField: 'task',
-            localKey: 'taskID',
-            taskDescription: 'taskDescription'
+            localKey: 'taskID'
           },
-          user:{
+          user: {
             localField: 'user',
-            localKey: 'userprofileID',
-            username: 'userName'
+            foreignKey: 'userprofileID'
           }
         }
-      },
-
-      methods: {
-      //   taskDescription: function() {
-      //     return (this.task) ? this.task.taskDescription : '-';
-      //   },
-      //   projectName: function () {
-      //     return this.project ? this.project.projectName : '-';
-      //   }
-      },
-      //   timeSpent: function() {
-      //     var timeSpent: string;
-      //     var timeSpentH: number;
-      //     var timeSpentMin: number;
-      //     var startTimeH: number = parseInt(this.startDate.substring(11, 13));
-      //     var startTimeMin: number = parseInt(this.startDate.substring(14, 16));
-      //     var endTimeH: number = parseInt(this.endDate.substring(11, 13));
-      //     var endTimeMin: number = parseInt(this.endDate.substring(14, 16));
-      //     if (endTimeMin >= startTimeMin) {
-      //       timeSpentMin = endTimeMin - startTimeMin;
-      //       timeSpentH = endTimeH - startTimeH;
-      //     } else {
-      //       timeSpentMin = endTimeMin - startTimeMin + 60;
-      //       timeSpentH = endTimeH - startTimeH - 1;
-      //     }
-      //     if (timeSpentMin < 10)  {
-      //       timeSpent = timeSpentH + ":0" + timeSpentMin;
-      //     } else {
-      //       timeSpent = timeSpentH + ":" + timeSpentMin;
-      //     }
-      //     return timeSpent;
-      //   }
-      // }
-    });
+      }});
   }
 
   // ------------------------------------------------------------------------------ CRUD operations
@@ -96,11 +56,11 @@ export class TimeTrackingEntryService implements IDataservice {
     });
   }
 
-  public updateTimeTrackingEntry(id: number, entryDate: string, startTime: string, endTime: string, timeSpent: string, description: string, userprofileID: number, projectID: number, taskID: number): Promise<ITimeTrackingEntry> {
-    return store.update(RESOURCE_NAME, id, { entryDate: entryDate, startTime: startTime, endTime: endTime, timeSpent: timeSpent, description: description, userprofileID: userprofileID, projectID: projectID, taskID: taskID });
+  public updateTimeTrackingEntry(id: number, entryDate: string, startTime: string, endTime: string, timeSpent: string, description: string, userprofileID: number, taskID: number): Promise<ITimeTrackingEntry> {
+    return store.update(RESOURCE_NAME, id, { entryDate: entryDate, startTime: startTime, endTime: endTime, timeSpent: timeSpent, description: description, userprofileID: userprofileID, taskID: taskID });
   }
 
-  public createTimeTrackingEntry(entryDate: string, startTime: string, endTime: string, timeSpent: string, description: string, userprofileID: number, projectID: number, taskID: number): Promise<ITimeTrackingEntry> {
-    return store.create(RESOURCE_NAME, { entryDate: entryDate, startTime: startTime, endTime: endTime, timeSpent: timeSpent, description: description, userprofileID: userprofileID, projectID: projectID, taskID: taskID });
+  public createTimeTrackingEntry(entryDate: string, startTime: string, endTime: string, timeSpent: string, description: string, userprofileID: number, taskID: number): Promise<ITimeTrackingEntry> {
+    return store.create(RESOURCE_NAME, { entryDate: entryDate, startTime: startTime, endTime: endTime, timeSpent: timeSpent, description: description, userprofileID: userprofileID, taskID: taskID });
   }
 }

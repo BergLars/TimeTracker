@@ -4,7 +4,9 @@ import { store } from './datastore';
 import { IDataservice, ITask } from '.';
 
 const RESOURCE_NAME: string = 'task';
+const RESOURCE_NAME_PROJECT: string = 'taskProject';
 const ENDPOINT_NAME: string = 'tasks';
+// const ENDPOINT_NAME_PROJECTID: string = 'projects/2/tasks';
 
 @Injectable()
 export class TaskService implements IDataservice {
@@ -16,16 +18,30 @@ export class TaskService implements IDataservice {
     store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,
       endpoint: ENDPOINT_NAME,
+      cacheResponse: false,
+      bypassCache: true,
 
       relations: {
-        hasMany: {
+        hasMany:{
           entry: {
             foreignKey: 'taskID',
-            localField: 'entries'
+            localField: 'entry',
+            // description: 'description'
+          }
+        },
+        belongsTo: {
+          project: {
+            localField: 'project',
+            localKey: 'projectID',
+            // projectName: 'projectName'
           }
         }
       }
     });
+    store.defineMapper(RESOURCE_NAME_PROJECT, {
+      basePath: this.baseUrl,
+      // endpoint: ENDPOINT_NAME_PROJECTID,
+    })
   }
 
   // ------------------------------------------------------------------------------ CRUD operations
@@ -33,6 +49,16 @@ export class TaskService implements IDataservice {
   public getTasks(): Promise<ITask[]> {
     return store.findAll(RESOURCE_NAME);
   }
+
+  public getTasksByProject(id: number): Promise<ITask[]> {
+    let endpoint = '/' + ENDPOINT_NAME + '/project/' + id;
+    return store.findAll(RESOURCE_NAME_PROJECT, {projectID:id}, {
+      endpoint: endpoint,
+      cacheResponse: false,
+      bypassCache: true
+    });
+  }
+
 
   public getTask(id: number): Promise<ITask> {
     return store.find(RESOURCE_NAME, id);

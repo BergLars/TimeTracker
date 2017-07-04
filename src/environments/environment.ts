@@ -6,10 +6,14 @@
 export const environment = {
   production: false,
 
-  title: 'Fluance Timetracker - DEV',
-  apiBaseUrl: 'http://localhost:8081/timetracker'
-  // apiBaseUrl: 'http://localhost:8080/timetracker'
-  // apiBaseUrl: 'https://mojito.dev.fluance.net:8443/timetracker'
+  title: 'Fluance Timetracker - PROD',
+  apiBaseUrl: 'http://localhost:8081/'
+
+	// we don't need a port config on the server provide it already
+  // apiBaseUrl: 'https://vps-02.fluance.net/'
+  
+  // title: 'Fluance Timetracker - DEV',
+  //apiBaseUrl: 'https://mojito.dev.fluance.net:8443/timetracker'
 
   // Deployment on Mojito
   // apiBaseUrl: 'https://localhost:8443/timetracker'
