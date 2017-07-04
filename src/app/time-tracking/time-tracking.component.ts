@@ -6,6 +6,7 @@ import { CreateDialogService } from '../time-tracking/components/create-dialog/c
 import { ExportDialogService } from '../time-tracking/components/export-dialog/export-dialog.service';
 
 import { Router } from '@angular/router';
+import moment from 'moment/src/moment';
 
 @Component({
   selector: 'app-time-tracking',
@@ -24,6 +25,7 @@ export class TimeTrackingComponent implements OnInit {
   private user: IUser;
   private users: IUser[];
   private statistics: IStatistics;
+  public currentDate: any;
 
 
   constructor(
@@ -39,6 +41,7 @@ export class TimeTrackingComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = false;
+    this.currentDate = moment().format('LL');
     this.checkIfLoggedIn();
   }
   public openCreateDialog() {

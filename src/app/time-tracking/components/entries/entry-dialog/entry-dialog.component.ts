@@ -38,15 +38,7 @@ export class EntryDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.projectService.getProjects().then((projects) => {
-      this.projects = projects;
-    });
-
-    this.projectID = 1;
-
-    this.taskService.getTasksByProject(this.projectID).then((tasks) => {
-      this.tasks = tasks;
-    });
+    this.loadItems();
   }
 
   onDateChanged(event: IMyDateModel) {
@@ -88,15 +80,32 @@ export class EntryDialogComponent implements OnInit {
     if (this.startTime > this.endTime || this.startTime == this.endTime) {
       alert("Please enter a valid endtime.")
     } else {
-      this.ok();
+      this.newEntry();
     }
   }
 
-  public ok() {
+  public newEntry() {
+    this.loadItems();
     this.timeTrackingEntryService
       .createTimeTrackingEntry(this.entryDate, this.startTime, this.endTime, this.timeSpent, this.description, this.loginService.getLoggedUserID(), this.taskID)
       .then(() => {
         this.dialogRef.close(true);
       });
+  }
+
+  private loadItems() {
+    this.projectService.getProjects().then((projects) => {
+      this.projects = projects;
+    });
+    
+    this.taskService.getTasks().then(result => {
+      this.tasks = result;
+    });
+
+    this.projectID = 1;
+
+    this.taskService.getTasksByProject(this.projectID).then((tasks) => {
+      this.tasks = tasks;
+    });
   }
 }

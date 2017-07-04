@@ -13,10 +13,12 @@ export class ProjectService implements IDataservice {
 
   constructor() {
     // Define a Mapper for a "Project" resource
-    let resource = store.defineMapper(RESOURCE_NAME, {
+    store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,
       endpoint: ENDPOINT_NAME,
-      attributeId: 'name',
+      // attributeId: 'name',
+      cacheResponse: false,
+      bypassCache: true,
       relations: {
         hasMany: {
           task: {

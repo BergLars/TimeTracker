@@ -36,8 +36,10 @@ export class TaskService implements IDataservice {
       }
     });
     store.defineMapper(RESOURCE_NAME_PROJECT, {
-      basePath: this.baseUrl
-    })
+      basePath: this.baseUrl,
+      cacheResponse: false,
+      bypassCache: true
+    });
   }
 
   // ------------------------------------------------------------------------------ CRUD operations

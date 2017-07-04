@@ -339,16 +339,20 @@ export class EntriesComponent implements OnInit {
         this.userID = this.loginService.getLoggedUserID(),
         this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
           this.items = loadedItems;
+          this.clonedItems = loadedItems;
           for (let item of this.items) {
+
             this.tasks = [];
             this.taskService.getTasksByProject(item.task.project.id).then(res => {
               this.tasks = res;
             });
           }
         });
+        
     };
     req.send();
   }
+
   onPage(event) {
     console.log('Page Event', event);
     this.count = this.items.length;
