@@ -303,33 +303,57 @@ export class EntriesComponent implements OnInit {
     this.projectsName = [];
     this.tasksDescription = [];
     this.userID = this.loginService.getLoggedUserID();
-    let url = this.baseUrl + '/timeentries/' + this.userID + '/entries';
+    // let url = this.baseUrl;
 
     let clientName: string;
     const req = new XMLHttpRequest();
-    req.open('GET', url);
+    // req.open('GET', url);
 
-    req.onload = () => {
-      // Get all clients
-      this.clientService.getClients().then(result => { this.clients = result; }),
-        // Get all projects
-        this.projectService.getProjects().then(result => { this.projects = result; }),
-        // Get all tasks
-        this.taskService.getTasks().then(result => { this.tasks = result; }),
+    this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
+          result => {this.clients= result; });
 
-        // Get user's entries
-        this.userID = this.loginService.getLoggedUserID(),
-        this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
-          this.items = loadedItems;
-          this.clonedItems = loadedItems;
-          for (let item of this.items) {
+    this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+          result => {this.projects = result; });
+
+    this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+          result => {this.tasks = result; });
+
+
+    this.userID = this.loginService.getLoggedUserID()
+        this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
+          loadedItems => {
+            this.items = loadedItems;
+            this.clonedItems = loadedItems;
+            for (let item of this.items) {
             let currentProject = item.project;
-            this.projectsName.push(currentProject.projectName);
+            //this.projectsName.push(currentProject.projectName);
             this.tasksDescription.push(item.task.taskDescription);
-          }
-        });
-    };
-    req.send();
+            }
+          },
+          () => { }
+        );
+        
+    // req.onload = () => {
+    //   // Get all clients
+    //   this.clientService.getClients().then(result => { this.clients = result; }),
+    //     // Get all projects
+    //     this.projectService.getProjects().then(result => { this.projects = result; }),
+    //     // Get all tasks
+    //     this.taskService.getTasks().then(result => { this.tasks = result; })
+    //     // Get user's entries
+        
+        
+    //     // this.timeTrackingEntryService.getTimeTrackingEntriesByUser().then((loadedItems) => {
+    //     //   this.items = loadedItems;
+    //     //   this.clonedItems = loadedItems;
+    //     //   for (let item of this.items) {
+    //     //     let currentProject = item.project;
+    //     //     this.projectsName.push(currentProject.projectName);
+    //     //     this.tasksDescription.push(item.task.taskDescription);
+    //     //   }
+    //     // });
+    // };
+    // //req.send();
   }
 
   onPage(event) {

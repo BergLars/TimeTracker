@@ -37,38 +37,6 @@ export class TimeTrackingEntryService implements IDataservice {
           }
         }
       },
-
-      methods: {
-      //   taskDescription: function() {
-      //     return (this.task) ? this.task.taskDescription : '-';
-      //   },
-      //   projectName: function () {
-      //     return this.project ? this.project.projectName : '-';
-      //   }
-      },
-      //   timeSpent: function() {
-      //     var timeSpent: string;
-      //     var timeSpentH: number;
-      //     var timeSpentMin: number;
-      //     var startTimeH: number = parseInt(this.startDate.substring(11, 13));
-      //     var startTimeMin: number = parseInt(this.startDate.substring(14, 16));
-      //     var endTimeH: number = parseInt(this.endDate.substring(11, 13));
-      //     var endTimeMin: number = parseInt(this.endDate.substring(14, 16));
-      //     if (endTimeMin >= startTimeMin) {
-      //       timeSpentMin = endTimeMin - startTimeMin;
-      //       timeSpentH = endTimeH - startTimeH;
-      //     } else {
-      //       timeSpentMin = endTimeMin - startTimeMin + 60;
-      //       timeSpentH = endTimeH - startTimeH - 1;
-      //     }
-      //     if (timeSpentMin < 10)  {
-      //       timeSpent = timeSpentH + ":0" + timeSpentMin;
-      //     } else {
-      //       timeSpent = timeSpentH + ":" + timeSpentMin;
-      //     }
-      //     return timeSpent;
-      //   }
-      // }
     });
   }
 
@@ -78,14 +46,14 @@ export class TimeTrackingEntryService implements IDataservice {
     return store.findAll(RESOURCE_NAME);
   }
 
-  public getTimeTrackingEntriesByUser(id: number): Promise<ITimeTrackingEntry[]> {
-    let endpoint = '/' + ENDPOINT_NAME + '/' + id + '/entries';
-    return store.findAll(RESOURCE_NAME, {}, {
-      endpoint: endpoint,
-      cacheResponse: false,
-      bypassCache: true
-    });
-  }
+  // public getTimeTrackingEntriesByUser(): Promise<ITimeTrackingEntry[]> {
+  //   let endpoint = '/' + ENDPOINT_NAME;
+  //   return store.findAll(RESOURCE_NAME, {}, {
+  //     endpoint: endpoint,
+  //     cacheResponse: false,
+  //     bypassCache: true
+  //   });
+  // }
 
   public getTimeTrackingEntry(id: number): Promise<ITimeTrackingEntry> {
     return store.find(RESOURCE_NAME, id);

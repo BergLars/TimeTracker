@@ -92,25 +92,25 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   fetch(cb) {
-    this.userID = this.loginService.getLoggedUserID();
-    let url = this.baseUrl + '/timeentries/' + this.userID + '/entries';
-    const req = new XMLHttpRequest();
-    req.open('GET', url);
+    // this.userID = this.loginService.getLoggedUserID();
+    // let url = this.baseUrl + '/timeentries/' + this.userID + '/entries';
+    // const req = new XMLHttpRequest();
+    // req.open('GET', url);
 
-    req.onload = () => {
-      // Get all projects
-      this.projectService.getProjects().then(result => { this.projects = result; }),
+    // req.onload = () => {
+    //   // Get all projects
+    //   this.projectService.getProjects().then(result => { this.projects = result; }),
 
-        // Get all tasks
-        this.taskService.getTasks().then(result => { this.tasks = result; }),
+    //     // Get all tasks
+    //     this.taskService.getTasks().then(result => { this.tasks = result; }),
 
-        // Get user's entries
-        this.userID = this.loginService.getLoggedUserID(),
-        this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((items) => {
-          this.items = items;
-        });
-    };
-    req.send();
+    //     // Get user's entries
+    //     this.userID = this.loginService.getLoggedUserID(),
+    //     this.timeTrackingEntryService.getTimeTrackingEntriesByUser().then((items) => {
+    //       this.items = items;
+    //     });
+    // };
+    // req.send();
   }
 
   public ok() {
