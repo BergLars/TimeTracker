@@ -3,6 +3,7 @@ import { MdDialogRef } from '@angular/material';
 import { UserService, IClient, ClientService, TimeTrackingEntryService, IUser } from '../../../data';
 import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
+import { environment } from '../../../../environments/environment';
 
 @Component({
 	selector: 'app-export-dialog',
@@ -21,6 +22,7 @@ export class ExportDialogComponent implements OnInit {
 	@Input() users: IUser[] = [];
 	public validFormat: boolean;
 	public validLength: boolean;
+	public baseUrl: string = environment.apiBaseUrl;
 
 	constructor(
 		public dialogRef: MdDialogRef<ExportDialogComponent>,
@@ -78,7 +80,7 @@ export class ExportDialogComponent implements OnInit {
 	refreshExportURL(id) {
 		let validFrom = this.fromDate.substring(6, 10) + "/" + this.fromDate.substring(3, 5) + "/" + this.fromDate.substring(0, 2);
 		let validTo = this.toDate.substring(6, 10) + "/" + this.toDate.substring(3, 5) + "/" + this.toDate.substring(0, 2);
-		this.exportURL = "http://localhost:8081/export?fromDate=" +
+		this.exportURL = this.baseUrl +"/export?fromDate=" +
 			validFrom +
 			"&toDate=" +
 			validTo +

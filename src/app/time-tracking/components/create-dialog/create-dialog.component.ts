@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
 import { IProject, ITask, IUser, ProjectService, TaskService, UserService, IClient, ClientService } from '../../../data';
 import { LoginService } from '../../../login';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-create-dialog',
@@ -41,7 +42,8 @@ export class CreateDialogComponent implements OnInit {
 		public taskService: TaskService,
 		public userService: UserService,
 		public loginService: LoginService,
-		public clientService: ClientService
+		public clientService: ClientService,
+		private router: Router
 	) { }
 
 	ngOnInit() {
@@ -128,7 +130,8 @@ export class CreateDialogComponent implements OnInit {
 				this.dialogRef.close(true);
 			});
 		}
-		window.location.reload();
+		this.router.navigate(['entries']);
+		//window.location.reload();
 	}
 
 	private loadItems() {
