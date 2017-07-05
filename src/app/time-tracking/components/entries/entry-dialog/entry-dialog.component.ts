@@ -102,6 +102,8 @@ export class EntryDialogComponent implements OnInit {
       this.tasks = result;
     });
 
+    this.projectID = 1;
+
     this.taskService.getTasksByProject(this.projectID).then((tasks) => {
       this.tasks = tasks;
     });
