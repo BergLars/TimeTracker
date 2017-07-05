@@ -4,5 +4,5 @@ import { LoggedInGuard } from './logged-in-guard';
 
 export const routes = [
 	{ path: 'entries', component: TimeTrackingComponent },
-	{ path: 'login', component: LoginComponent }
+	{ path: '', component: LoginComponent }
 ];

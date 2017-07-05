@@ -58,7 +58,7 @@ export class TimeTrackingComponent implements OnInit {
     if (localStorage.getItem('Authorization')) {
     }
     else {
-      this.router.navigate(['login']);
+      this.router.navigate(['']);
     }
   }
 }
