@@ -17,8 +17,6 @@ export class TaskService implements IDataservice {
     store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,
       endpoint: ENDPOINT_NAME,
-      cacheResponse: false,
-      bypassCache: true,
 
       relations: {
         hasMany: {
@@ -36,24 +34,21 @@ export class TaskService implements IDataservice {
       }
     });
     store.defineMapper(RESOURCE_NAME_PROJECT, {
-      basePath: this.baseUrl,
-      cacheResponse: false,
-      bypassCache: true
+      basePath: this.baseUrl
     });
   }
 
   // ------------------------------------------------------------------------------ CRUD operations
 
   public getTasks(): Promise<ITask[]> {
-    return store.findAll(RESOURCE_NAME);
+    return store.findAll(RESOURCE_NAME, {}, { force: true });
   }
 
   public getTasksByProject(id: number): Promise<ITask[]> {
     let endpoint = '/' + ENDPOINT_NAME + '/project/' + id;
     return store.findAll(RESOURCE_NAME_PROJECT, { projectID: id }, {
       endpoint: endpoint,
-      cacheResponse: false,
-      bypassCache: true
+      force: true
     });
   }
 

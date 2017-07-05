@@ -93,7 +93,7 @@ export class UpdateDialogComponent implements OnInit {
 
   fetch(cb) {
     this.userID = this.loginService.getLoggedUserID();
-    let url = this.baseUrl + '/timeentries/' + this.userID + '/entries';
+    let url = this.baseUrl + '/timeentries/user/' + this.userID;
     const req = new XMLHttpRequest();
     req.open('GET', url);
 

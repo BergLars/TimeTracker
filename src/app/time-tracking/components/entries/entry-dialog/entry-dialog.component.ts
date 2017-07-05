@@ -88,7 +88,7 @@ export class EntryDialogComponent implements OnInit {
     this.loadItems();
     this.timeTrackingEntryService
       .createTimeTrackingEntry(this.entryDate, this.startTime, this.endTime, this.timeSpent, this.description, this.loginService.getLoggedUserID(), this.taskID)
-      .then(() => {
+      .then((data) => {
         this.dialogRef.close(true);
       });
   }
@@ -101,8 +101,6 @@ export class EntryDialogComponent implements OnInit {
     this.taskService.getTasks().then(result => {
       this.tasks = result;
     });
-
-    this.projectID = 1;
 
     this.taskService.getTasksByProject(this.projectID).then((tasks) => {
       this.tasks = tasks;

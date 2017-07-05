@@ -32,7 +32,7 @@ export class ClientService {
 	// ------------------------------------------------------------------------------ CRUD operations
 
 	public getClients(): Promise<IClient[]> {
-		return store.findAll(RESOURCE_NAME);
+		return store.findAll(RESOURCE_NAME, {}, { force: true });
 	}
 
 	public getClient(id: number): Promise<IClient> {

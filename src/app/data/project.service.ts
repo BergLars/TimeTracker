@@ -16,9 +16,6 @@ export class ProjectService implements IDataservice {
     store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,
       endpoint: ENDPOINT_NAME,
-      // attributeId: 'name',
-      cacheResponse: false,
-      bypassCache: true,
       relations: {
         hasMany: {
           task: {
@@ -39,7 +36,7 @@ export class ProjectService implements IDataservice {
   // ------------------------------------------------------------------------------ CRUD operations
 
   public getProjects(): Promise<IProject[]> {
-    return store.findAll(RESOURCE_NAME);
+    return store.findAll(RESOURCE_NAME, {}, { force: true });
   }
 
   public getProject(id: number): Promise<IProject> {

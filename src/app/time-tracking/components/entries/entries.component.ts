@@ -319,7 +319,7 @@ export class EntriesComponent implements OnInit {
     this.tasks = [];
     this.task = null;
     this.userID = this.loginService.getLoggedUserID();
-    let url = this.baseUrl + '/timeentries/' + this.userID + '/entries';
+    let url = this.baseUrl + '/timeentries/user/' + this.userID;
 
     let clientName: string;
     const req = new XMLHttpRequest();
@@ -339,6 +339,7 @@ export class EntriesComponent implements OnInit {
         this.userID = this.loginService.getLoggedUserID(),
         this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
           this.items = loadedItems;
+          console.log(this.items);
           this.clonedItems = loadedItems;
           for (let item of this.items) {
 

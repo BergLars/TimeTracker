@@ -121,7 +121,8 @@ export class CreateDialogComponent implements OnInit {
 			});
 		}
 		if (this.item == this.TASK) {
-			this.taskService.createTask(this.description, this.projectID).then(() => {
+			this.taskService.createTask(this.description, this.projectID).then((response) => {
+				console.log(response)
 				this.dialogRef.close(true);
 			});
 		}

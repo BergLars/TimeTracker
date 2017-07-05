@@ -1,6 +1,6 @@
 export const environment = {
-  production: false,
+	production: false,
 
-  title: 'Fluance Timetracker - PROD',
-  apiBaseUrl: 'https://timetracker.fluance.net/timetracker'
+	title: 'Fluance Timetracker - PROD',
+	apiBaseUrl: 'https://timetracker.fluance.net/timetracker'
 };
