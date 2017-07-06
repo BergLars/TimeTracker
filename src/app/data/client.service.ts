@@ -21,16 +21,11 @@ export class ClientService {
 			relations: {
 				hasMany: {
 					project: {
-						foreignKey: 'projectID',
+						foreignKey: 'clientID',
 						localField: 'projects'
 					}
 				}
-			},
-			// methods: {
-			// 	clientName: function() {
-			// 		return (this.client) ? this.client.clientName : '-';
-			// 	}
-			// }
+			}
 		});
 	}
 

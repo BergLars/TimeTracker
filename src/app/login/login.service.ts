@@ -24,7 +24,6 @@ export class LoginService implements IDataservice {
 		private http: Http,
 		private timeTrackingEntryService: TimeTrackingEntryService,
 		private router: Router,
-		// private defaultOptions: RequestOptions,
 		private userService: UserService) {
 		// Define a Mapper for a "Project" resource
 		let resource = store.defineMapper(RESOURCE_NAME, {
@@ -55,7 +54,6 @@ export class LoginService implements IDataservice {
 				}
 				if (error.status === 404 || error.status === 400) {
 					alert('Wrong username or password!!');
-					//this.router.navigate(['']);
 				}
 			},
 		)
@@ -64,7 +62,7 @@ export class LoginService implements IDataservice {
 	public logout() {
 		localStorage.removeItem('Authorization');
 		localStorage.removeItem('user');
-		this.router.navigate(['']);
+		this.router.navigate(['login']);
 	}
 
 	public getUser() {

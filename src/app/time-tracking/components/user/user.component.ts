@@ -27,8 +27,5 @@ export class UserComponent {
 
 	public showData() {
 		this.currentUser = this.loginService.getUser();
-		// if(this.isLoggedIn === true){
-		// 	this.username = this.currentUser['userName'];
-		// }
 	}
 }

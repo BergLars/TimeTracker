@@ -3,7 +3,6 @@ import { DeleteEntryComponent } from './delete-entry.component';
 import { MdDialogRef, MdDialog, MdDialogConfig } from '@angular/material';
 import { Injectable, ViewContainerRef } from '@angular/core';
 
-
 @Injectable()
 export class DeleteEntryService {
 
@@ -23,5 +22,4 @@ export class DeleteEntryService {
 
         return dialogRef.afterClosed();
     }
-    
 }

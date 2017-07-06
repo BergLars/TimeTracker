@@ -19,17 +19,18 @@
     </ngx-datatable-column>
     <ngx-datatable-column name="Project">
         <ng-template ngx-datatable-cell-template let-row="row">
-            <span title="Double click to edit" (click)="editing[row.$$index + '-project'] = true" *ngIf="!editing[row.$$index + '-project']">
-              {{row.project.projectName}}
+            <span>
+            <!-- title="Double click to edit" (click)="editing[row.$$index + '-project'] = true" *ngIf="!editing[row.$$index + '-project']" -->
+              {{row.task.project.projectName}}
             </span>
-            <select *ngIf="editing[row.$$index + '-project']" (change)="updateValue($event, 'project', value, row)" [value]="value">
+            <!-- <select *ngIf="editing[row.$$index + '-project']" (change)="updateValue($event, 'project', value, row)" [value]="value">
                 <option *ngFor="let project of projects" [value]="project.id">{{ project.projectName}}</option>
-            </select>
+            </select> -->
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Client">
         <ng-template ngx-datatable-cell-template let-row="row">
-            {{row.project.client.clientName}}
+            {{row.task.project.client.clientName}}
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Task">

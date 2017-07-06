@@ -20,20 +20,13 @@ export class TimeTrackingEntryService implements IDataservice {
       bypassCache: true,
       relations: {
         belongsTo: {
-          project: {
-            localField: 'project',
-            localKey: 'projectID',
-            projectName: 'projectName'
-          },
           task: {
             localField: 'task',
-            localKey: 'taskID',
-            taskDescription: 'taskDescription'
+            localKey: 'taskID'
           },
-          user:{
+          user: {
             localField: 'user',
-            localKey: 'userprofileID',
-            username: 'userName'
+            foreignKey: 'userprofileID'
           }
         }
       },
@@ -46,14 +39,14 @@ export class TimeTrackingEntryService implements IDataservice {
     return store.findAll(RESOURCE_NAME);
   }
 
-  // public getTimeTrackingEntriesByUser(): Promise<ITimeTrackingEntry[]> {
-  //   let endpoint = '/' + ENDPOINT_NAME;
-  //   return store.findAll(RESOURCE_NAME, {}, {
-  //     endpoint: endpoint,
-  //     cacheResponse: false,
-  //     bypassCache: true
-  //   });
-  // }
+  public getTimeTrackingEntriesByUser(): Promise<ITimeTrackingEntry[]> {
+    let endpoint = '/' + ENDPOINT_NAME;
+    return store.findAll(RESOURCE_NAME, {}, {
+      endpoint: endpoint,
+      cacheResponse: false,
+      bypassCache: true
+    });
+  }
 
   public getTimeTrackingEntry(id: number): Promise<ITimeTrackingEntry> {
     return store.find(RESOURCE_NAME, id);
@@ -64,11 +57,11 @@ export class TimeTrackingEntryService implements IDataservice {
     });
   }
 
-  public updateTimeTrackingEntry(id: number, entryDate: string, startTime: string, endTime: string, timeSpent: string, description: string, userprofileID: number, projectID: number, taskID: number): Promise<ITimeTrackingEntry> {
-    return store.update(RESOURCE_NAME, id, { entryDate: entryDate, startTime: startTime, endTime: endTime, timeSpent: timeSpent, description: description, userprofileID: userprofileID, projectID: projectID, taskID: taskID });
+  public updateTimeTrackingEntry(id: number, entryDate: string, startTime: string, endTime: string, timeSpent: string, description: string, userprofileID: number, taskID: number): Promise<ITimeTrackingEntry> {
+    return store.update(RESOURCE_NAME, id, { entryDate: entryDate, startTime: startTime, endTime: endTime, timeSpent: timeSpent, description: description, userprofileID: userprofileID, taskID: taskID });
   }
 
-  public createTimeTrackingEntry(entryDate: string, startTime: string, endTime: string, timeSpent: string, description: string, userprofileID: number, projectID: number, taskID: number): Promise<ITimeTrackingEntry> {
-    return store.create(RESOURCE_NAME, { entryDate: entryDate, startTime: startTime, endTime: endTime, timeSpent: timeSpent, description: description, userprofileID: userprofileID, projectID: projectID, taskID: taskID });
+  public createTimeTrackingEntry(entryDate: string, startTime: string, endTime: string, timeSpent: string, description: string, userprofileID: number, taskID: number): Promise<ITimeTrackingEntry> {
+    return store.create(RESOURCE_NAME, { entryDate: entryDate, startTime: startTime, endTime: endTime, timeSpent: timeSpent, description: description, userprofileID: userprofileID, taskID: taskID });
   }
 }

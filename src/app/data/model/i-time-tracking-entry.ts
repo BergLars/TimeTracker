@@ -9,12 +9,7 @@ export interface ITimeTrackingEntry {
     timeSpent: string;
     description: string;
     userprofileID: number;
-    projectID: number;
     taskID: number;
-
-    // Added properties_functions by js-data
-    readonly project?: IProject;
-    projectName: string;
-    readonly task?: ITask;
+    task: ITask;
     taskDescription: string;
 }
