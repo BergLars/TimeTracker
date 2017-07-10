@@ -9,7 +9,6 @@
                 </select>
             </td>
         </tr>
-        <br>
         <tr [hidden]="item != PROJECT">
             <td>
                 <md-input-container>
@@ -17,7 +16,6 @@
                 </md-input-container>
             </td>
         </tr>
-        <br>
         <tr [hidden]="item != PROJECT">
             <td>Belongs to:</td>
             <td>
@@ -26,7 +24,6 @@
                 </select>
             </td>
         </tr>
-        <br>
         <tr [hidden]="item != TASK">
             <td>
                 <md-input-container>
@@ -34,7 +31,6 @@
                 </md-input-container>
             </td>
         </tr>
-        <br>
         <tr [hidden]="item != TASK">
             <td>Belongs to:</td>
             <td>
@@ -50,10 +46,45 @@
                 </md-input-container>
             </td>
         </tr>
+        <tr [hidden]="item != USER">
+            <td>
+            <label>Password length should be at least 9 !</label>
+            <br>
+                <md-input-container>
+                    <input mdInput placeholder="Username" #username>
+                </md-input-container>
+            </td>
+        </tr>
+        <tr [hidden]="item != USER">
+            <td>
+                <md-input-container>
+                    <input mdInput type="password" placeholder="Password" #password>
+                </md-input-container>
+            </td>
+        </tr>
+        <tr [hidden]="item != USER">
+            <td>
+                <md-input-container>
+                    <input mdInput type="password" placeholder="Confirm password" #confirmPassword>
+                </md-input-container>
+            </td>
+        </tr>
+        <tr [hidden]="item != USER">
+            <td>
+                <md-input-container>
+                    <input mdInput placeholder="Employment degree" #employmentDegree>
+                </md-input-container>
+            </td>
+        </tr>
+         <tr [hidden]="item != USER">
+            <td>
+                <md-checkbox #adminRole>Administrator</md-checkbox>
+            </td>
+        </tr>
     </table>
     <br>
 </div>
 <div md-dialog-actions>
-    <button type="button" md-button (click)="validateForm(description,newprojectname,clientName,project,client)">OK</button>
+    <button type="button" md-button (click)="validateForm(description,newprojectname,clientName,project,client,username,password,confirmPassword,employmentDegree,adminRole)">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>
