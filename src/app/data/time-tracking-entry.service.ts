@@ -13,11 +13,9 @@ export class TimeTrackingEntryService implements IDataservice {
 
   constructor() {
     // Define a Mapper for a "Project - User - Task" resource
-    let resource = store.defineMapper(RESOURCE_NAME, {
+    store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,
       endpoint: ENDPOINT_NAME,
-      cacheResponse: false,
-      bypassCache: true,
       relations: {
         belongsTo: {
           task: {
@@ -29,23 +27,30 @@ export class TimeTrackingEntryService implements IDataservice {
             foreignKey: 'userprofileID'
           }
         }
-      },
+      }
     });
   }
 
   // ------------------------------------------------------------------------------ CRUD operations
 
   public getTimeTrackingEntries(): Promise<ITimeTrackingEntry[]> {
-    return store.findAll(RESOURCE_NAME);
+    return store.findAll(RESOURCE_NAME, {}, { force: true });
   }
 
-  public getTimeTrackingEntriesByUser(): Promise<ITimeTrackingEntry[]> {
-    let endpoint = '/' + ENDPOINT_NAME;
+
+  // public getTimeTrackingEntriesByUser(): Promise<ITimeTrackingEntry[]> {
+  //   let endpoint = '/' + ENDPOINT_NAME;
+  // }
+  public getTimeTrackingEntriesByUser(id: number): Promise<ITimeTrackingEntry[]> {
+    let endpoint = '/' + ENDPOINT_NAME + '/user/' + id;
     return store.findAll(RESOURCE_NAME, {}, {
       endpoint: endpoint,
-      cacheResponse: false,
-      bypassCache: true
+      force: true
     });
+
+    // return store.getMapper(RESOURCE_NAME).findAll(
+    //   {},
+    //   { endpoint: endpoint });
   }
 
   public getTimeTrackingEntry(id: number): Promise<ITimeTrackingEntry> {

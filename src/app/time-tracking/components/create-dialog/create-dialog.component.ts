@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
 import { IProject, ITask, IUser, ProjectService, TaskService, UserService, IClient, ClientService } from '../../../data';
 import { LoginService } from '../../../login';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-create-dialog',
@@ -20,14 +21,14 @@ export class CreateDialogComponent implements OnInit {
 	public projectID: any;
 	public clientID: any;
 	editMode: boolean = false;
-	private TASK: number = 1;
-	private PROJECT: number = 2;
+	public TASK: number = 1;
+	public PROJECT: number = 2;
 
-	private CLIENT: number = 3;
+	public CLIENT: number = 3;
 	public result: any;
 	private isAdmin: boolean;
 
-	private createItems = [
+	public createItems = [
 		{ key: 'Task', id: 1 },
 		{ key: 'Project', id: 2 },
 		{ key: 'Client', id: 3 }
@@ -41,23 +42,12 @@ export class CreateDialogComponent implements OnInit {
 		public taskService: TaskService,
 		public userService: UserService,
 		public loginService: LoginService,
-		public clientService: ClientService
+		public clientService: ClientService,
+		private router: Router
 	) { }
 
 	ngOnInit() {
-		this.projectService.getProjects().then((projects) => {
-			this.projects = projects;
-		});
-		this.taskService.getTasks().then((tasks) => {
-			this.tasks = tasks;
-		});
-		this.clientService.getClients().then((clients) => {
-			this.clients = clients;
-		});
-		if (!this.checkIfAdmin()) {
-			this.createItems.splice(1);
-			this.createItems.splice(2);
-		}
+		this.loadItems();
 	}
 
 	changeItemToBeCreated(event) {
@@ -88,7 +78,7 @@ export class CreateDialogComponent implements OnInit {
 				alert("Please check if all the fields are filled in");
 			} else {
 				this.description = "";
-				this.ok();
+				this.createItem();
 			}
 		}
 		if (this.item == this.TASK) {
@@ -96,14 +86,14 @@ export class CreateDialogComponent implements OnInit {
 				alert("Please check if all the fields are filled in");
 			} else {
 				this.newProjectName = "";
-				this.ok();
+				this.createItem();
 			}
 		}
 		if (this.item == this.CLIENT) {
 			if (this.clientName === "") {
 				alert("Please check if all the fields are filled in");
 			} else {
-				this.ok();
+				this.createItem();
 			}
 		}
 	}
@@ -124,14 +114,14 @@ export class CreateDialogComponent implements OnInit {
 		this.user = this.loginService.getUser();
 	}
 
-	public ok() {
+	public createItem() {
 		if (this.item == this.PROJECT) {
 			this.projectService.createProject(this.newProjectName, this.clientID).then(() => {
 				this.dialogRef.close(true);
 			});
 		}
 		if (this.item == this.TASK) {
-			this.taskService.createTask(this.description, this.projectID).then(() => {
+			this.taskService.createTask(this.description, this.projectID).then((response) => {
 				this.dialogRef.close(true);
 			});
 		}
@@ -139,6 +129,26 @@ export class CreateDialogComponent implements OnInit {
 			this.clientService.createClient(this.clientName).then(() => {
 				this.dialogRef.close(true);
 			});
+		}
+		this.router.navigate(['entries']);
+		//window.location.reload();
+	}
+
+	private loadItems() {
+		this.clientService.getClients().then((clients) => {
+			this.clients = clients;
+		});
+
+		this.taskService.getTasks().then((tasks) => {
+			this.tasks = tasks;
+		});
+
+		this.projectService.getProjects().then((projects) => {
+			this.projects = projects;
+		});
+		if (!this.checkIfAdmin()) {
+			this.createItems.splice(1);
+			this.createItems.splice(2);
 		}
 	}
 }

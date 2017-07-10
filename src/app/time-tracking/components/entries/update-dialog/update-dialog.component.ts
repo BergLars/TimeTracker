@@ -96,6 +96,11 @@ export class UpdateDialogComponent implements OnInit {
     // let url = this.baseUrl + '/timeentries/' + this.userID + '/entries';
     // const req = new XMLHttpRequest();
     // req.open('GET', url);
+    this.userID = this.loginService.getLoggedUserID();
+    let url = this.baseUrl + '/timeentries/user/' + this.userID;
+    const req = new XMLHttpRequest();
+    req.open('GET', url);
+
 
     // req.onload = () => {
     //   // Get all projects

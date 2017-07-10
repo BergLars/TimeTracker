@@ -319,35 +319,39 @@ export class EntriesComponent implements OnInit {
     this.tasks = [];
     this.task = null;
     this.userID = this.loginService.getLoggedUserID();
+
     // let url = this.baseUrl;
+
+    let url = this.baseUrl + '/timeentries/user/' + this.userID;
+
 
     let clientName: string;
     const req = new XMLHttpRequest();
-    // req.open('GET', url);
+    req.open('GET', url);
 
-    this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
-          result => {this.clients= result; });
+    // this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
+    //       result => {this.clients= result; });
 
-    this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
-          result => {this.projects = result; });
+    // this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+    //       result => {this.projects = result; });
 
-    this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
-          result => {this.tasks = result; });
+    // this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+    //       result => {this.tasks = result; });
 
 
-        // this.userID = this.loginService.getLoggedUserID()
-        this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
-          loadedItems => {
-            this.items = loadedItems;
-            this.clonedItems = loadedItems;
-            for (let item of this.items) {
-             this.tasks = [];
-              this.taskService.getTasksByProject(item.task.project.id).then(res => {
-                this.tasks = res;
-              });
-            }
-          }
-        );
+    //     // this.userID = this.loginService.getLoggedUserID()
+    //     this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
+    //       loadedItems => {
+    //         this.items = loadedItems;
+    //         this.clonedItems = loadedItems;
+    //         for (let item of this.items) {
+    //          this.tasks = [];
+    //           this.taskService.getTasksByProject(item.task.project.id).then(res => {
+    //             this.tasks = res;
+    //           });
+    //         }
+    //       }
+    //     );
 
 
         //     let currentProject = item.project;
@@ -381,18 +385,23 @@ export class EntriesComponent implements OnInit {
     // //req.send();
 
 
-        // Get user's entries
-        // this.userID = this.loginService.getLoggedUserID(),
-        // this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
-        //   this.items = loadedItems;
-        //   for (let item of this.items) {
-        //     this.tasks = [];
-        //     this.taskService.getTasksByProject(item.task.project.id).then(res => {
-        //       this.tasks = res;
-        //     });
-        //   }
-        // });
+
+      // Get user's entries
+      this.userID = this.loginService.getLoggedUserID(),
+      this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
+        this.items = loadedItems;
+        this.clonedItems = loadedItems;
+        for (let item of this.items) {
+
+          this.tasks = [];
+          this.taskService.getTasksByProject(item.task.project.id).then(res => {
+            this.tasks = res;
+          });
+        }
+      });
+    req.send();
   }
+
   onPage(event) {
     console.log('Page Event', event);
     this.count = this.items.length;
