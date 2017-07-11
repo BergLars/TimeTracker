@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { HttpModule, Http, Response, RequestOptions, Headers, XHRBackend } from '@angular/http';
-import { MaterialModule } from '@angular/material';
+import { MaterialModule, MdNativeDateModule } from '@angular/material';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AlertModule, ModalModule, TimepickerModule, TabsModule, DatepickerModule, TypeaheadModule } from 'ng2-bootstrap';
 import { AppComponent } from './app.component';
@@ -59,7 +59,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         TabsModule,
         TypeaheadModule,
         MyDatePickerModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        MdNativeDateModule
     ],
     providers: [
         ProjectService,

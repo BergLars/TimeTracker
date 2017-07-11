@@ -126,7 +126,8 @@ export class EntriesComponent implements OnInit {
       });
     }
     if (cell == 'date') {
-      row.entryDate = event.target.value;
+      let fromDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
+      row.entryDate = fromDate;
       this.updateEntry(row);
     }
     if (cell == 'startTime') {
@@ -348,7 +349,7 @@ export class EntriesComponent implements OnInit {
             });
           }
         });
-        
+
     };
     req.send();
   }

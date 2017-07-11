@@ -47,7 +47,7 @@
         <ng-template ngx-datatable-cell-template let-row="row">
             <span title="Double click to edit" (click)="editing[row.$$index + '-date'] = true" *ngIf="!editing[row.$$index + '-date']">
                 {{ row.entryDate }}</span>
-            <input autofocus (blur)="updateValue($event, 'date', value, row)" *ngIf="editing[row.$$index + '-date']" type="text" [value]="value" />
+            <input autofocus (blur)="updateValue($event, 'date', value, row)" *ngIf="editing[row.$$index + '-date']" type="date" [value]="value" />
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Start time">
