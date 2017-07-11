@@ -50,6 +50,10 @@ export class EntriesComponent implements OnInit {
   columns: any;
   @Input() date: string;
 
+  public tasksDictionary: any = {};
+  public projectsDictionary: any = {};
+  public clientsDictionary: any = {};
+
   public editing = {};
   public result: any;
   private limits = [
@@ -309,93 +313,69 @@ export class EntriesComponent implements OnInit {
       });
   }
 
-  loadEntries() {
+  /*loadEntries() {
     this.fetch((data) => {
     });
-  }
+  }*/
 
-  fetch(cb) {
+  loadEntries() {
     this.items = [];
     this.tasks = [];
     this.task = null;
     this.userID = this.loginService.getLoggedUserID();
-    // let url = this.baseUrl;
 
-    let clientName: string;
-    const req = new XMLHttpRequest();
-    // req.open('GET', url);
+    let that = this;
 
     this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
-          result => {this.clients= result; });
+      results => {
+        this.clients = results; 
 
-    this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
-          result => {this.projects = result; });
+        results.forEach(function(result) {
+          that.clientsDictionary[result.id] = result;
+        });
 
-    this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
-          result => {this.tasks = result; });
+        this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+          results => {
+            this.projects = results; 
 
+            results.forEach(function(result) {
+              that.projectsDictionary[result.id] = result;
+            });
 
-        // this.userID = this.loginService.getLoggedUserID()
-        this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
-          loadedItems => {
-            this.items = loadedItems;
-            this.clonedItems = loadedItems;
-            for (let item of this.items) {
-             this.tasks = [];
-              this.taskService.getTasksByProject(item.task.project.id).then(res => {
-                this.tasks = res;
-              });
-            }
-          }
-        );
+            this.projects.forEach(function(project) {
+              project.client = that.clientsDictionary[project.clientID];
+            });
 
+             // We build the dictionary of tasks
+            this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+              results => {
+                this.tasks = results;
+                
+                results.forEach(function(result){
+                  that.tasksDictionary[result.id] = result;
+                });
 
-        //     let currentProject = item.project;
-        //     //this.projectsName.push(currentProject.projectName);
-        //     this.tasksDescription.push(item.task.taskDescription);
-        //     }
-        //   },
-        //   () => { }
-        // );
-        
-    // req.onload = () => {
-    //   // Get all clients
-    //   this.clientService.getClients().then(result => { this.clients = result; }),
-    //     // Get all projects
-    //     this.projectService.getProjects().then(result => { this.projects = result; }),
-    //     // Get all tasks
-    //     this.taskService.getTasks().then(result => { this.tasks = result; })
-    //     // Get user's entries
-        
-        
-    //     // this.timeTrackingEntryService.getTimeTrackingEntriesByUser().then((loadedItems) => {
-    //     //   this.items = loadedItems;
-    //     //   this.clonedItems = loadedItems;
-    //     //   for (let item of this.items) {
-    //     //     let currentProject = item.project;
-    //     //     this.projectsName.push(currentProject.projectName);
-    //     //     this.tasksDescription.push(item.task.taskDescription);
-    //     //   }
-    //     // });
-    // };
-    // //req.send();
+                this.tasks.forEach(function(task){
+                  task.project = that.projectsDictionary[task.projectID];
+                });
 
+                this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
+                  loadedEntries => {
+                    let that = this;
 
-        // Get user's entries
-        // this.userID = this.loginService.getLoggedUserID(),
-        // this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
-        //   this.items = loadedItems;
-        //   for (let item of this.items) {
-        //     this.tasks = [];
-        //     this.taskService.getTasksByProject(item.task.project.id).then(res => {
-        //       this.tasks = res;
-        //     });
-        //   }
-        // });
+                    loadedEntries.forEach(function(entry){
+                      entry.task = that.tasksDictionary[entry.taskID];
+                      that.items.push(entry);
+                    });
+                  });
+              }); 
+          });
+      });
   }
+
   onPage(event) {
     console.log('Page Event', event);
-    this.count = this.items.length;
+    /*this.count = this.items.length;
     this.items = this.clonedItems;;
     const start = event.offset * event.limit;
     const end = start + Number(event.limit);
@@ -403,10 +383,10 @@ export class EntriesComponent implements OnInit {
     for (let i = start; i < end; i++) {
       rows[i] = this.items[i];
     }
-    this.items = rows;
+    // this.items = rows;
     this.items.length = this.count;
     console.log('Page Results', start, end, rows);
-    this.offset = event.offset;
+    this.offset = event.offset;*/
   }
   private getStatistics() {
     // TODO
