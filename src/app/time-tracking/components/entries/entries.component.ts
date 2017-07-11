@@ -371,6 +371,7 @@ export class EntriesComponent implements OnInit {
               }); 
           });
       });
+
   }
 
   onPage(event) {

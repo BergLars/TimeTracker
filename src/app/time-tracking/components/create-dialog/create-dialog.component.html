@@ -22,7 +22,7 @@
             <td>Belongs to:</td>
             <td>
                 <select #client>
-                    <option *ngFor="let client of clients" [value]='client.id'>{{ client.clientName }}</option>
+                    <option *ngFor="let client of clients" [value]="client.id">{{ client.clientName }}</option>
                 </select>
             </td>
         </tr>
@@ -39,7 +39,7 @@
             <td>Belongs to:</td>
             <td>
                 <select #project>
-                    <option *ngFor="let project of projects" [value]='project.id'>{{ project.projectName }}</option>
+                    <option *ngFor="let project of projects" [value]="project.id">{{ project.projectName }}</option>
                 </select>
             </td>
         </tr>

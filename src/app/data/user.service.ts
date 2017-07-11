@@ -17,11 +17,9 @@ export class UserService implements IDataservice {
 		private router: Router,
 		private http: Http) {
 		// Define a Mapper for a "Project" resource
-		let resource = store.defineMapper(RESOURCE_NAME, {
+		store.defineMapper(RESOURCE_NAME, {
 			basePath: this.baseUrl,
-			endpoint: ENDPOINT_NAME,
-			cacheResponse: false,
-			bypassCache: true,
+			endpoint: ENDPOINT_NAME
 		});
 	}
 
@@ -33,8 +31,7 @@ export class UserService implements IDataservice {
 		let endpoint = ENDPOINT_NAME + '/all';
 		return store.findAll(RESOURCE_NAME, {}, {
 			endpoint: endpoint,
-			cacheResponse: false,
-			bypassCache: true
+			force: true
 		});
 	}
 
