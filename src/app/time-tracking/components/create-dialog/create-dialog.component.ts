@@ -20,18 +20,25 @@ export class CreateDialogComponent implements OnInit {
 	public user;
 	public projectID: any;
 	public clientID: any;
+	public username: string;
+	public password: string;
+	public confirmPassword: string;
+	public employmentDegree: number;
+	public adminRole: boolean;
+
 	editMode: boolean = false;
 	public TASK: number = 1;
 	public PROJECT: number = 2;
-
 	public CLIENT: number = 3;
+	public USER: number = 4;
 	public result: any;
 	private isAdmin: boolean;
 
 	public createItems = [
 		{ key: 'Task', id: 1 },
 		{ key: 'Project', id: 2 },
-		{ key: 'Client', id: 3 }
+		{ key: 'Client', id: 3 },
+		{ key: 'User', id: 4 }
 	];
 
 	public item: number = this.createItems[0].id;
@@ -58,10 +65,15 @@ export class CreateDialogComponent implements OnInit {
 		this.editMode = !this.editMode;
 	}
 
-	public getValues(valueDesc: string, valueProjName: string, valueClient: string) {
+	public getValues(valueDesc: string, valueProjName: string, valueClient: string, valueUsername: string, valuePassw: string, valueConfirmPass: string, valueEmploy: number, valueIsAdmin: boolean) {
 		this.description = valueDesc;
 		this.newProjectName = valueProjName;
 		this.clientName = valueClient;
+		this.username = valueUsername;
+		this.password = valuePassw;
+		this.confirmPassword = valueConfirmPass;
+		this.employmentDegree = valueEmploy;
+		this.adminRole = valueIsAdmin;
 	}
 
 	public projectDropdown(value: string): void {
@@ -96,10 +108,27 @@ export class CreateDialogComponent implements OnInit {
 				this.createItem();
 			}
 		}
+		if (this.item == this.USER) {
+			if (this.username === "" || this.password === "" || this.confirmPassword === "" || this.employmentDegree === undefined || this.adminRole === undefined) {
+				alert("Please check if all the fields are filled in");
+			}
+			else if (this.password.length < 8) {
+				alert("Password length should be at least 9 !");
+			}
+			else if (this.password !== this.confirmPassword) {
+				alert("Passwords are not the same !")
+			}
+			else if (!(this.employmentDegree <= 1 && this.employmentDegree > 0)) {
+				alert("Employment degree should be between 0.10 and 1.0 !");
+			}
+			else {
+				this.createItem();
+			}
+		}
 	}
 
-	public validateForm(description, newProjectName, clientName, project, client) {
-		this.getValues(description.value, newProjectName.value, clientName.value);
+	public validateForm(description, newProjectName, clientName, project, client, username, password, confirmPassword, employmentDegree, adminRole) {
+		this.getValues(description.value, newProjectName.value, clientName.value, username.value, password.value, confirmPassword.value, employmentDegree.value, adminRole.checked);
 		this.projectDropdown(project.value);
 		this.clientDropdown(client.value);
 		this.checkMandatoryFields();
@@ -130,8 +159,26 @@ export class CreateDialogComponent implements OnInit {
 				this.dialogRef.close(true);
 			});
 		}
+		if (this.item == this.USER) {
+			this.userService.createUser(this.username, this.password, this.employmentDegree, this.adminRole).then(
+				res => {
+					this.dialogRef.close(true);
+				}
+			).catch(
+				error => {
+					if (error.response.status === 400 || error.response.status === 404) {
+						alert('Please check that fields are the correct input !');
+					}
+					if (error.response.status === 409) {
+						alert('Username already exists !');
+					}
+					if (error.response.status === 500) {
+						alert('Internal server error !')
+					}
+					this.dialogRef.close(true);
+				});
+		}
 		this.router.navigate(['entries']);
-		//window.location.reload();
 	}
 
 	private loadItems() {
@@ -149,6 +196,7 @@ export class CreateDialogComponent implements OnInit {
 		if (!this.checkIfAdmin()) {
 			this.createItems.splice(1);
 			this.createItems.splice(2);
+			this.createItems.splice(3);
 		}
 	}
 }

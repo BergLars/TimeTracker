@@ -49,11 +49,11 @@ export class LoginService implements IDataservice {
 				);
 			},
 			error => {
+				if (error.status === 400 || error.status === 404) {
+					alert('Wrong username or password!!');
+				}
 				if (error.status === 500) {
 					alert('Internal server error!')
-				}
-				if (error.status === 404 || error.status === 400) {
-					alert('Wrong username or password!!');
 				}
 			},
 		)
