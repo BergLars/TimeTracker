@@ -126,7 +126,8 @@ export class EntriesComponent implements OnInit {
       });
     }
     if (cell == 'date') {
-      row.entryDate = event.target.value;
+      let fromDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
+      row.entryDate = fromDate;
       this.updateEntry(row);
     }
     if (cell == 'startTime') {
@@ -329,76 +330,32 @@ export class EntriesComponent implements OnInit {
     const req = new XMLHttpRequest();
     req.open('GET', url);
 
-    // this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
-    //       result => {this.clients= result; });
 
-    // this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
-    //       result => {this.projects = result; });
+    req.onload = () => {
+      // Get all tasks
+      this.taskService.getTasks().then(result => {
+        this.tasks = result;
+      }),
+        // Get all projects
+        this.projectService.getProjects().then(result => { this.projects = result; }),
+        // Get all clients
+        this.clientService.getClients().then(result => { this.clients = result; }),
 
-    // this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
-    //       result => {this.tasks = result; });
+        // Get user's entries
+        this.userID = this.loginService.getLoggedUserID(),
+        this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
+          this.items = loadedItems;
+          this.clonedItems = loadedItems;
+          for (let item of this.items) {
 
+            this.tasks = [];
+            this.taskService.getTasksByProject(item.task.project.id).then(res => {
+              this.tasks = res;
+            });
+          }
+        });
 
-    //     // this.userID = this.loginService.getLoggedUserID()
-    //     this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
-    //       loadedItems => {
-    //         this.items = loadedItems;
-    //         this.clonedItems = loadedItems;
-    //         for (let item of this.items) {
-    //          this.tasks = [];
-    //           this.taskService.getTasksByProject(item.task.project.id).then(res => {
-    //             this.tasks = res;
-    //           });
-    //         }
-    //       }
-    //     );
-
-
-        //     let currentProject = item.project;
-        //     //this.projectsName.push(currentProject.projectName);
-        //     this.tasksDescription.push(item.task.taskDescription);
-        //     }
-        //   },
-        //   () => { }
-        // );
-        
-    // req.onload = () => {
-    //   // Get all clients
-    //   this.clientService.getClients().then(result => { this.clients = result; }),
-    //     // Get all projects
-    //     this.projectService.getProjects().then(result => { this.projects = result; }),
-    //     // Get all tasks
-    //     this.taskService.getTasks().then(result => { this.tasks = result; })
-    //     // Get user's entries
-        
-        
-    //     // this.timeTrackingEntryService.getTimeTrackingEntriesByUser().then((loadedItems) => {
-    //     //   this.items = loadedItems;
-    //     //   this.clonedItems = loadedItems;
-    //     //   for (let item of this.items) {
-    //     //     let currentProject = item.project;
-    //     //     this.projectsName.push(currentProject.projectName);
-    //     //     this.tasksDescription.push(item.task.taskDescription);
-    //     //   }
-    //     // });
-    // };
-    // //req.send();
-
-
-
-      // Get user's entries
-      this.userID = this.loginService.getLoggedUserID(),
-      this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
-        this.items = loadedItems;
-        this.clonedItems = loadedItems;
-        for (let item of this.items) {
-
-          this.tasks = [];
-          this.taskService.getTasksByProject(item.task.project.id).then(res => {
-            this.tasks = res;
-          });
-        }
-      });
+    };
     req.send();
   }
 

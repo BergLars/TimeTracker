@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MdDialogRef } from '@angular/material';
+import { MdDialogRef, MdDatepickerModule, DateAdapter } from '@angular/material';
 import { UserService, IClient, ClientService, TimeTrackingEntryService, IUser } from '../../../data';
 import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
@@ -12,8 +12,9 @@ import { environment } from '../../../../environments/environment';
 })
 export class ExportDialogComponent implements OnInit {
 	public title: string;
-	public fromDate: any;
-	public toDate: any;
+	@Input() fromDate: any;
+	@Input() toDate: any;
+	@Input() myFilter: any;
 	public path: string;
 	public username: string;
 	public userID: any;
@@ -33,6 +34,11 @@ export class ExportDialogComponent implements OnInit {
 
 	ngOnInit() {
 		this.loadUsers();
+		this.myFilter = (d: Date): boolean => {
+			const day = d.getDay();
+			// Prevent Saturday and Sunday from being selected.
+			return day !== 0 && day !== 6;
+		}
 	}
 
 	public checkIfAdmin() {
@@ -43,13 +49,13 @@ export class ExportDialogComponent implements OnInit {
 		this.userID = value;
 	}
 
-	public getValues(valueFrom: string, valueTo: string) {
-		this.fromDate = valueFrom;
-		this.toDate = valueTo;
-		this.validLength = this.toDate.length > 9 && this.fromDate.length > 9;
-		let validFrom = this.fromDate.substring(6, 10) + "/" + this.fromDate.substring(3, 5) + "/" + this.fromDate.substring(0, 2);
-		let validTo = this.toDate.substring(6, 10) + "/" + this.toDate.substring(3, 5) + "/" + this.toDate.substring(0, 2);
-		this.validFormat = moment(validFrom).isBefore(moment(validTo));
+	public readDates(valueFrom: any, valueTo: any) {
+		this.fromDate = valueFrom._selected;
+		this.toDate = valueTo._selected;
+
+		let validFrom = moment(this.fromDate).format('L');
+		let validTo = moment(this.toDate).format('L');
+		this.validFormat = moment(this.fromDate).isBefore(moment(this.toDate));
 	}
 
 	checkMandatoryFields() {
@@ -61,12 +67,11 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	checkFromDateAndToDate() {
-		if (!this.validLength) {
-			alert("Please a valid date Format");
-		}
-		else if (!this.validFormat) {
+		if (!this.validFormat) {
 			alert("Please a valid Period");
-		} else {
+		}
+		else {
+			this.dialogRef.close();
 			this.ok();
 		}
 	}
@@ -78,12 +83,14 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	refreshExportURL(id) {
-		let validFrom = this.fromDate.substring(6, 10) + "/" + this.fromDate.substring(3, 5) + "/" + this.fromDate.substring(0, 2);
-		let validTo = this.toDate.substring(6, 10) + "/" + this.toDate.substring(3, 5) + "/" + this.toDate.substring(0, 2);
-		this.exportURL = this.baseUrl +"/export?fromDate=" +
-			validFrom +
+		let validFrom = moment(this.fromDate).format('L');
+		let validTo = moment(this.toDate).format('L');
+		let fromDate = validFrom.substring(6, 10) + "/" + validFrom.substring(0, 2) + "/" + validFrom.substring(3, 5);
+		let toDate = validTo.substring(6, 10) + "/" + validTo.substring(0, 2) + "/" + validTo.substring(3, 5);
+		this.exportURL = this.baseUrl + "/export?fromDate=" +
+			fromDate +
 			"&toDate=" +
-			validTo +
+			toDate +
 			"&userprofileID=" + id;
 		window.open(this.exportURL, '_blank');
 	}
