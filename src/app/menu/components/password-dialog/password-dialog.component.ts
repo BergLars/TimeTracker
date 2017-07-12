@@ -37,36 +37,28 @@ export class PasswordDialogComponent implements OnInit {
 			alert("Please check if all the fields are filled in !");
 		}
 		else if (this.newPassword.length < 8) {
-			alert("Password length should be > 8 !");
+			alert("Password length should be at least 9 !");
 		}
 		else {
-			this.checkPasswords();
+			this.updatePassword();
 		}
 	}
 
-	checkPasswords() {
-		if (this.newPassword !== this.confirmPassword) {
-			alert("Passwords are not the same !")
-		} else {
-			this.ok();
-		}
-	}
-
-	public ok() {
+	private updatePassword() {
 		this.userService.updatePassword(this.currentPassword, this.newPassword, this.confirmPassword).map(res => res.json()).subscribe(
 			user => {
 				this.dialogRef.close(true);
 				this.loginService.logout();
 			},
 			error => {
-				if (error.status === 500) {
-					alert('Internal server error!')
-				}
-				if (error.status === 404 || error.status === 400) {
-					alert('Wrong username or password!!');
+				if (error.status === 400 || error.status === 404) {
+					alert("Wrong password or passwords are not the same !");
 					this.router.navigate(['entries']);
+				}
+				if (error.status === 500) {
+					alert('Internal server error !')
 				}
 			}
 		);
 	}
-}
+} 

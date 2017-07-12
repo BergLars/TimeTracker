@@ -51,7 +51,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         FormsModule,
         HttpModule,
         RouterModule.forRoot(routes),
-        MaterialModule.forRoot(),
+        MaterialModule,
         FlexLayoutModule,
         AlertModule,
         ModalModule,
