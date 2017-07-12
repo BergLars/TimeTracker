@@ -131,7 +131,6 @@ export class CreateDialogComponent implements OnInit {
 		this.getValues(description.value, newProjectName.value, clientName.value, username.value, password.value, confirmPassword.value, employmentDegree.value, adminRole.checked);
 		this.projectDropdown(project.value);
 		this.clientDropdown(client.value);
-		this.checkMandatoryFields();
 	}
 
 	public checkIfAdmin() {
@@ -179,6 +178,12 @@ export class CreateDialogComponent implements OnInit {
 				});
 		}
 		this.router.navigate(['entries']);
+	}
+
+	public keyDownFunction(event) {
+		if (event.keyCode == 13) {
+			this.checkMandatoryFields();
+		}
 	}
 
 	private loadItems() {

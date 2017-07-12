@@ -72,7 +72,7 @@ export class ExportDialogComponent implements OnInit {
 		}
 		else {
 			this.dialogRef.close();
-			this.ok();
+			this.exportEntry();
 		}
 	}
 
@@ -95,7 +95,12 @@ export class ExportDialogComponent implements OnInit {
 		window.open(this.exportURL, '_blank');
 	}
 
-	public ok() {
+	public keyDownFunction(event) {
+		if (event.keyCode == 13) {
+		}
+	}
+
+	public exportEntry() {
 		if (this.checkIfAdmin()) {
 			this.refreshExportURL(this.userID);
 		}
