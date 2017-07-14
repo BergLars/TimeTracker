@@ -17,14 +17,11 @@ export class DeleteEntryComponent implements OnInit {
     public timeTrackingEntryService: TimeTrackingEntryService) {
   }
 
-  public ok() {
+  public deleteEntry() {
     this.timeTrackingEntryService.deleteTimeTrackingEntry(this.rowid)
       .then(() => {
         this.dialogRef.close(true);
       });
-  }
-  onDelete() {
-    this.timeTrackingEntryService.deleteTimeTrackingEntry(this.rowid);
   }
 
   ngOnInit() {

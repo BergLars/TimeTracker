@@ -11,5 +11,6 @@ export interface ITimeTrackingEntry {
     userprofileID: number;
     taskID: number;
     task: ITask;
+    project: IProject;
     taskDescription: string;
 }
