@@ -3,11 +3,15 @@ import { MdDialogRef } from '@angular/material';
 import { ITimeTrackingEntry, IProject, ITask, IUser, ProjectService, TaskService, TimeTrackingEntryService, UserService } from '../../../../data';
 import { LoginService } from '../../../../login';
 import { IMyOptions, IMyDateModel, IMyDate } from 'mydatepicker';
+import { Http } from '@angular/http';
+import { environment } from '../../../../../environments/environment';
+
 @Component({
   selector: 'app-entry-dialog',
   templateUrl: './entry-dialog.component.html'
 })
 export class EntryDialogComponent implements OnInit {
+  public baseUrl: string = environment.apiBaseUrl;
   @Input() projects: IProject[] = [];
   @Input() tasks: ITask[] = [];
   public title: string;
@@ -27,6 +31,8 @@ export class EntryDialogComponent implements OnInit {
   public endTime: any;
   public timeSpent: any;
   private selDate: IMyDate;
+    public tasksDictionary: any = {};
+  public projectsDictionary: any = {};
 
   constructor(
     public dialogRef: MdDialogRef<EntryDialogComponent>,
@@ -34,6 +40,7 @@ export class EntryDialogComponent implements OnInit {
     public taskService: TaskService,
     public timeTrackingEntryService: TimeTrackingEntryService,
     public userService: UserService,
+    private http: Http,
     public loginService: LoginService) {
   }
 
@@ -86,26 +93,41 @@ export class EntryDialogComponent implements OnInit {
 
   public newEntry() {
     this.loadItems();
-    this.timeTrackingEntryService
-      .createTimeTrackingEntry(this.entryDate, this.startTime, this.endTime, this.timeSpent, this.description, this.loginService.getLoggedUserID(), this.taskID)
-      .then((data) => {
+    return this.http.post(this.baseUrl + "/timeentries", 
+      { entryDate: this.entryDate, 
+        startTime: this.startTime, 
+        endTime: this.endTime, 
+        timeSpent: this.timeSpent, 
+        description: this.description, 
+        userprofileID: this.loginService.getLoggedUserID(), 
+        taskID: this.taskID 
+      }).subscribe(() => {
         this.dialogRef.close(true);
       });
   }
 
   private loadItems() {
-    this.projectService.getProjects().then((projects) => {
-      this.projects = projects;
-    });
-    
-    this.taskService.getTasks().then(result => {
-      this.tasks = result;
-    });
+    let that = this;
+    this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+      results => {
+        this.projects = results; 
 
-    this.projectID = 1;
+        results.forEach(function(result) {
+          that.projectsDictionary[result.id] = result;
+        });
+         // We build the dictionary of tasks
+        this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+          results => {
+            this.tasks = results;
+            
+            results.forEach(function(result){
+              that.tasksDictionary[result.id] = result;
+            });
 
-    this.taskService.getTasksByProject(this.projectID).then((tasks) => {
-      this.tasks = tasks;
-    });
+            this.tasks.forEach(function(task){
+              task.project = that.projectsDictionary[task.projectID];
+            });
+          });
+      });
   }
 }

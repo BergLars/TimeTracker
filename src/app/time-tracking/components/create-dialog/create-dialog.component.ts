@@ -3,6 +3,8 @@ import { MdDialogRef } from '@angular/material';
 import { IProject, ITask, IUser, ProjectService, TaskService, UserService, IClient, ClientService } from '../../../data';
 import { LoginService } from '../../../login';
 import { Router } from '@angular/router';
+import { Http } from '@angular/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
 	selector: 'app-create-dialog',
@@ -10,6 +12,8 @@ import { Router } from '@angular/router';
 	styleUrls: ['./create-dialog.component.scss']
 })
 export class CreateDialogComponent implements OnInit {
+	public baseUrl: string = environment.apiBaseUrl;
+
 	@Input() projects: IProject[] = [];
 	@Input() tasks: ITask[] = [];
 	@Input() clients: IClient[] = [];
@@ -50,6 +54,7 @@ export class CreateDialogComponent implements OnInit {
 		public userService: UserService,
 		public loginService: LoginService,
 		public clientService: ClientService,
+    	private http: Http,
 		private router: Router
 	) { }
 
@@ -145,26 +150,33 @@ export class CreateDialogComponent implements OnInit {
 
 	public createItem() {
 		if (this.item == this.PROJECT) {
-			this.projectService.createProject(this.newProjectName, this.clientID).then(() => {
+
+			return this.http.post(this.baseUrl + "/projects", 
+				{ projectName: this.newProjectName, 
+					clientID: this.clientID
+				}).subscribe(() => {
 				this.dialogRef.close(true);
 			});
 		}
 		if (this.item == this.TASK) {
-			this.taskService.createTask(this.description, this.projectID).then((response) => {
+			return this.http.post(this.baseUrl + "/tasks", {taskDescription: this.description, projectID: this.projectID}).subscribe(() => {
 				this.dialogRef.close(true);
 			});
 		}
 		if (this.item == this.CLIENT) {
-			this.clientService.createClient(this.clientName).then(() => {
+			return this.http.post(this.baseUrl + "/clients", { clientName: this.clientName}).subscribe(() => {
 				this.dialogRef.close(true);
 			});
 		}
 		if (this.item == this.USER) {
-			this.userService.createUser(this.username, this.password, this.employmentDegree, this.adminRole).then(
-				res => {
+			return this.http.post(this.baseUrl + "/userprofile", 
+				{ userName: this.username, 
+					password: this.password, 
+					employmentDegree: this.employmentDegree, 
+					admin: this.adminRole
+				}).subscribe(() => {
 					this.dialogRef.close(true);
-				}
-			).catch(
+				},
 				error => {
 					if (error.response.status === 400 || error.response.status === 404) {
 						alert('Please check that fields are the correct input !');
@@ -182,17 +194,22 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	private loadItems() {
-		this.clientService.getClients().then((clients) => {
-			this.clients = clients;
-		});
 
-		this.taskService.getTasks().then((tasks) => {
-			this.tasks = tasks;
-		});
+		this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
+      	results => {
+      		this.clients = results;
+      	});
 
-		this.projectService.getProjects().then((projects) => {
-			this.projects = projects;
-		});
+		this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+      	results => {
+      		this.tasks = results;
+      	});
+
+		this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+      	results => {
+      		this.projects = results;
+      	});
+
 		if (!this.checkIfAdmin()) {
 			this.createItems.splice(1);
 			this.createItems.splice(2);
