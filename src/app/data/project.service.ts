@@ -18,15 +18,9 @@ export class ProjectService implements IDataservice {
       endpoint: ENDPOINT_NAME,
       relations: {
         hasMany: {
-          task: {
-            localField: 'tasks',
-            foreignKey: 'projectID'
-          }
-        },
-        belongsTo: {
-          client: {
-            localField: 'client',
-            localKey: 'clientID'
+          entry: {
+            foreignKey: 'projectID',
+            localField: 'entry'
           }
         }
       }
@@ -43,16 +37,15 @@ export class ProjectService implements IDataservice {
     return store.find(RESOURCE_NAME, id);
   }
 
-  public createProject(name: string, clientID: number): Promise<IProject> {
-    return store.create(RESOURCE_NAME, { projectName: name, clientID: clientID });
+  public createProject(name: string): Promise<IProject> {
+    return store.create(RESOURCE_NAME, { projectName: name }, { force: true });
   }
 
-  public updateProject(id: number, name: string, clientID: number): Promise<IProject> {
-    return store.update(RESOURCE_NAME, id, { projectName: name, clientID: clientID });
+  public updateProject(id: number, name: string): Promise<IProject> {
+    return store.update(RESOURCE_NAME, id, { projectName: name });
   }
 
   public deleteProject(id: number) {
-    return store.destroy(RESOURCE_NAME, id, {
-    });
+    return store.destroy(RESOURCE_NAME, id, { force: true });
   }
 }

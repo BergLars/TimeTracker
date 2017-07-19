@@ -32,18 +32,16 @@ export class EntriesComponent implements OnInit {
   public clonedItems: ITimeTrackingEntry[] = [];
   rows = [];
   selected = [];
-  projectsName = [];
-  clientsName = [];
-  currentProjectIDS = [];
-  tasksDescription = [];
   selectedRow: any;
   cloneSelectedRow: any;
   timeTrackingEntry: ITimeTrackingEntry;
   editMode: boolean = false;
   rowID: number;
   userID: number;
+  clientID: any;
   projectID: any;
   taskID: any;
+  isBillable: boolean;
   selectedDescription: string;
   count: number = 0;
   @Input() offset: number = 0;
@@ -102,34 +100,36 @@ export class EntriesComponent implements OnInit {
       row.description = event.target.value;
       this.updateEntry(row);
     }
-    // if (cell == 'project') {
-    //   this.tasks = [];
-    //   this.projectService.getProject(event.target.value).then(res => {
-    //     // row.task.project.projectName = res.projectName;
-    //   });
 
-    //   this.taskService.updateTask(row.task.id, row.task.taskDescription, row.task.projectID).then(res => {
-    //     row.task.project.id = event.target.value;
-    //     // row.task.project.projectName;
-    //   });
+    if (cell == 'client') {
+      // row.client.clientName = event.target.value;
+      this.clientService.getClient(event.target.value).then(res => {
+        row.client = res;
+        this.updateEntry(row);
+      });
+    }
 
-    //   this.taskService.getTasksByProject(event.target.value).then(res => {
-    //     this.tasks = res;
-    //     alert("Update the task field too !");
-    //     // this.ok(row);
-    //   });
-    // }
+    if (cell == 'project') {
+      // row.project.projectName = event.target.value;
+      this.projectService.getProject(event.target.value).then(res => {
+        row.project = res;
+        this.updateEntry(row);
+      });
+    }
+
     if (cell == 'task') {
       this.taskService.getTask(event.target.value).then(res => {
         row.task = res;
         this.updateEntry(row);
       });
     }
+
     if (cell == 'date') {
-      let fromDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
-      row.entryDate = fromDate;
+      let selectedDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
+      row.entryDate = selectedDate;
       this.updateEntry(row);
     }
+
     if (cell == 'startTime') {
       row.startTime = event.target.value;
       if (row.startTime > row.endTime || row.startTime == row.endTime) {
@@ -137,11 +137,11 @@ export class EntriesComponent implements OnInit {
         alert("Start time should be less than end time.");
       }
       else {
-        // row.timeSpent = this.calculateTimeSpent(row);
         row.timeSpent = this.calculateSpentTime(row);
         this.updateEntry(row);
       }
     }
+
     if (cell == 'endTime') {
       row.endTime = event.target.value;
       if (row.startTime > row.endTime || row.startTime == row.endTime) {
@@ -149,7 +149,6 @@ export class EntriesComponent implements OnInit {
         alert("Start time should be less than end time.");
       }
       else {
-        // row.timeSpent = this.calculateTimeSpent(row);
         row.timeSpent = this.calculateSpentTime(row);
         this.updateEntry(row);
       }
@@ -157,9 +156,8 @@ export class EntriesComponent implements OnInit {
   }
 
   public updateEntry(row) {
-    this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.taskID);
+    this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.clientID, row.projectID, row.taskID, row.isBillable);
   }
-
 
   // Try MomentJS to resolve this task
   // calculateTimeSpent(row) {
@@ -185,10 +183,6 @@ export class EntriesComponent implements OnInit {
   onSelect({ selected }) {
     if (selected) {
       this.selectedRow = selected[0];
-      this.taskService.getTasksByProject(this.selectedRow.task.projectID).then(res => {
-        this.tasks = [];
-        this.tasks = res;
-      });
     }
   }
 
@@ -232,6 +226,7 @@ export class EntriesComponent implements OnInit {
 
   onDelete(row) {
     this.timeTrackingEntryService.deleteTimeTrackingEntry(row.id);
+      this.loadEntries();
   }
 
   toggleEditMode() {
@@ -300,6 +295,7 @@ export class EntriesComponent implements OnInit {
   // }
 
   public openDeleteDialog(row) {
+    console.log(row.project.projectName, row.id);
     this.deleteEntryService
       .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
       .subscribe(res => {
@@ -317,44 +313,24 @@ export class EntriesComponent implements OnInit {
 
   fetch(cb) {
     this.items = [];
-    this.tasks = [];
-    this.task = null;
     this.userID = this.loginService.getLoggedUserID();
-
-    // let url = this.baseUrl;
-
     let url = this.baseUrl + '/timeentries/user/' + this.userID;
-
-
-    let clientName: string;
     const req = new XMLHttpRequest();
     req.open('GET', url);
 
-
     req.onload = () => {
       // Get all tasks
-      this.taskService.getTasks().then(result => {
-        this.tasks = result;
-      }),
+      this.taskService.getTasks().then(result => { this.tasks = result; }),
         // Get all projects
         this.projectService.getProjects().then(result => { this.projects = result; }),
         // Get all clients
         this.clientService.getClients().then(result => { this.clients = result; }),
-
         // Get user's entries
-        this.userID = this.loginService.getLoggedUserID(),
         this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
           this.items = loadedItems;
           this.clonedItems = loadedItems;
-          for (let item of this.items) {
-
-            this.tasks = [];
-            this.taskService.getTasksByProject(item.task.project.id).then(res => {
-              this.tasks = res;
-            });
-          }
+          console.log(this.items);
         });
-
     };
     req.send();
   }

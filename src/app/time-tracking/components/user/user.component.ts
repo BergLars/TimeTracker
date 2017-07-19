@@ -16,10 +16,6 @@ export class UserComponent {
 		private loginService: LoginService) {
 	}
 
-	public displayUser() {
-		alert('Employment degree: ' + this.currentUser['employmentDegree'] + '\nSettings' + '\nLogout');
-	}
-
 	public isLogged() {
 		this.showData();
 		return this.isLoggedIn = this.loginService.isLoggedIn();

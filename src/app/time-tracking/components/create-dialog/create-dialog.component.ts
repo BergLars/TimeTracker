@@ -14,9 +14,9 @@ export class CreateDialogComponent implements OnInit {
 	@Input() tasks: ITask[] = [];
 	@Input() clients: IClient[] = [];
 	public title: string;
-	public description: string;
+	public newTaskDescription: string;
 	public newProjectName: string;
-	public clientName: string;
+	public newClientName: string;
 	public user;
 	public projectID: any;
 	public clientID: any;
@@ -54,7 +54,7 @@ export class CreateDialogComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.loadItems();
+		this.displayItems();
 	}
 
 	changeItemToBeCreated(event) {
@@ -66,9 +66,9 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	public getValues(valueDesc: string, valueProjName: string, valueClient: string, valueUsername: string, valuePassw: string, valueConfirmPass: string, valueEmploy: number, valueIsAdmin: boolean) {
-		this.description = valueDesc;
+		this.newTaskDescription = valueDesc;
 		this.newProjectName = valueProjName;
-		this.clientName = valueClient;
+		this.newClientName = valueClient;
 		this.username = valueUsername;
 		this.password = valuePassw;
 		this.confirmPassword = valueConfirmPass;
@@ -76,33 +76,23 @@ export class CreateDialogComponent implements OnInit {
 		this.adminRole = valueIsAdmin;
 	}
 
-	public projectDropdown(value: string): void {
-		this.projectID = value;
-	}
-
-	public clientDropdown(value: string): void {
-		this.clientID = value;
-	}
-
 	checkMandatoryFields() {
 		if (this.item == this.PROJECT) {
-			if (this.newProjectName === "" || this.clientID === null || this.clientID === "undefined") {
+			if (this.newProjectName === "" || this.newProjectName === undefined) {
 				alert("Please check if all the fields are filled in");
 			} else {
-				this.description = "";
 				this.createItem();
 			}
 		}
 		if (this.item == this.TASK) {
-			if (this.description === "" || this.projectID === null || this.projectID === "undefined") {
+			if (this.newTaskDescription === "" || this.newTaskDescription === undefined) {
 				alert("Please check if all the fields are filled in");
 			} else {
-				this.newProjectName = "";
 				this.createItem();
 			}
 		}
 		if (this.item == this.CLIENT) {
-			if (this.clientName === "") {
+			if (this.newClientName === "" || this.newClientName === undefined) {
 				alert("Please check if all the fields are filled in");
 			} else {
 				this.createItem();
@@ -127,10 +117,8 @@ export class CreateDialogComponent implements OnInit {
 		}
 	}
 
-	public validateForm(description, newProjectName, clientName, project, client, username, password, confirmPassword, employmentDegree, adminRole) {
+	public validateForm(description, newProjectName, clientName, username, password, confirmPassword, employmentDegree, adminRole) {
 		this.getValues(description.value, newProjectName.value, clientName.value, username.value, password.value, confirmPassword.value, employmentDegree.value, adminRole.checked);
-		this.projectDropdown(project.value);
-		this.clientDropdown(client.value);
 		this.checkMandatoryFields();
 	}
 
@@ -145,19 +133,43 @@ export class CreateDialogComponent implements OnInit {
 
 	public createItem() {
 		if (this.item == this.PROJECT) {
-			this.projectService.createProject(this.newProjectName, this.clientID).then(() => {
+			this.projectService.createProject(this.newProjectName).then(() => {
 				this.dialogRef.close(true);
-			});
+			}).catch(
+				error => {
+					if (error.response.status === 400 || error.response.status === 404) {
+						alert('Please check that fields are the correct input !');
+					}
+					if (error.response.status === 500) {
+						alert('Internal server error !')
+					}
+				});
 		}
 		if (this.item == this.TASK) {
-			this.taskService.createTask(this.description, this.projectID).then((response) => {
+			this.taskService.createTask(this.newTaskDescription).then(() => {
 				this.dialogRef.close(true);
-			});
+			}).catch(
+				error => {
+					if (error.response.status === 400 || error.response.status === 404) {
+						alert('Please check that fields are the correct input !');
+					}
+					if (error.response.status === 500) {
+						alert('Internal server error !')
+					}
+				});
 		}
 		if (this.item == this.CLIENT) {
-			this.clientService.createClient(this.clientName).then(() => {
+			this.clientService.createClient(this.newClientName).then(() => {
 				this.dialogRef.close(true);
-			});
+			}).catch(
+				error => {
+					if (error.response.status === 400 || error.response.status === 404) {
+						alert('Please check that fields are the correct input !');
+					}
+					if (error.response.status === 500) {
+						alert('Internal server error !')
+					}
+				});
 		}
 		if (this.item == this.USER) {
 			this.userService.createUser(this.username, this.password, this.employmentDegree, this.adminRole).then(
@@ -181,18 +193,7 @@ export class CreateDialogComponent implements OnInit {
 		this.router.navigate(['entries']);
 	}
 
-	private loadItems() {
-		this.clientService.getClients().then((clients) => {
-			this.clients = clients;
-		});
-
-		this.taskService.getTasks().then((tasks) => {
-			this.tasks = tasks;
-		});
-
-		this.projectService.getProjects().then((projects) => {
-			this.projects = projects;
-		});
+	private displayItems() {
 		if (!this.checkIfAdmin()) {
 			this.createItems.splice(1);
 			this.createItems.splice(2);

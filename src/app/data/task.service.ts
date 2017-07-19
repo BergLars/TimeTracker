@@ -21,20 +21,11 @@ export class TaskService implements IDataservice {
       relations: {
         hasMany: {
           entry: {
-            foreignKey: 'taskID',
+            localKey: 'taskID',
             localField: 'entry'
-          }
-        },
-        belongsTo: {
-          project: {
-            localField: 'project',
-            localKey: 'projectID'
           }
         }
       }
-    });
-    store.defineMapper(RESOURCE_NAME_PROJECT, {
-      basePath: this.baseUrl
     });
   }
 
@@ -44,24 +35,24 @@ export class TaskService implements IDataservice {
     return store.findAll(RESOURCE_NAME, {}, { force: true });
   }
 
-  public getTasksByProject(id: number): Promise<ITask[]> {
-    let endpoint = '/' + ENDPOINT_NAME + '/project/' + id;
-    return store.findAll(RESOURCE_NAME_PROJECT, { projectID: id }, {
-      endpoint: endpoint,
-      force: true
-    });
-  }
+  // public getTasksByProject(id: number): Promise<ITask[]> {
+  //   let endpoint = '/' + ENDPOINT_NAME + '/project/' + id;
+  //   return store.findAll(RESOURCE_NAME_PROJECT, { projectID: id }, {
+  //     endpoint: endpoint,
+  //     force: true
+  //   });
+  // }
 
   public getTask(id: number): Promise<ITask> {
     return store.find(RESOURCE_NAME, id);
   }
 
-  public createTask(description: string, projectID: number): Promise<ITask> {
-    return store.create(RESOURCE_NAME, { taskDescription: description, projectID: projectID });
+  public createTask(description: string): Promise<ITask> {
+    return store.create(RESOURCE_NAME, { taskDescription: description });
   }
 
   public updateTask(id: number, description: string, projectID: number): Promise<ITask> {
-    return store.update(RESOURCE_NAME, id, { taskDescription: description, projectID: projectID });
+    return store.update(RESOURCE_NAME, id, { taskDescription: description });
   }
 
   public deleteTask(id: number) {

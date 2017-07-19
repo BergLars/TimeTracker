@@ -21,7 +21,7 @@ export class ExportDialogComponent implements OnInit {
 	public exportURL: string;
 	private user: IUser;
 	@Input() users: IUser[] = [];
-	public validFormat: boolean;
+	public validDatePeriod: boolean;
 	public validLength: boolean;
 	public baseUrl: string = environment.apiBaseUrl;
 
@@ -55,7 +55,7 @@ export class ExportDialogComponent implements OnInit {
 
 		let validFrom = moment(this.fromDate).format('L');
 		let validTo = moment(this.toDate).format('L');
-		this.validFormat = moment(this.fromDate).isBefore(moment(this.toDate));
+		this.validDatePeriod = moment(this.fromDate).isBefore(moment(this.toDate));
 	}
 
 	checkMandatoryFields() {
@@ -67,12 +67,12 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	checkFromDateAndToDate() {
-		if (!this.validFormat) {
+		if (!this.validDatePeriod) {
 			alert("Please a valid Period");
 		}
 		else {
 			this.dialogRef.close();
-			this.ok();
+			this.exportEntries();
 		}
 	}
 
@@ -95,7 +95,7 @@ export class ExportDialogComponent implements OnInit {
 		window.open(this.exportURL, '_blank');
 	}
 
-	public ok() {
+	public exportEntries() {
 		if (this.checkIfAdmin()) {
 			this.refreshExportURL(this.userID);
 		}
