@@ -97,6 +97,7 @@ export class ExportDialogComponent implements OnInit {
 
 	public keyDownFunction(event) {
 		if (event.keyCode == 13) {
+			this.checkFromDateAndToDate();
 		}
 	}
 
