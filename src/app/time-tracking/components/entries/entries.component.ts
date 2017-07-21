@@ -102,7 +102,6 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'client') {
-      // row.client.clientName = event.target.value;
       this.clientService.getClient(event.target.value).then(res => {
         row.client = res;
         this.updateEntry(row);
@@ -110,7 +109,6 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'project') {
-      // row.project.projectName = event.target.value;
       this.projectService.getProject(event.target.value).then(res => {
         row.project = res;
         this.updateEntry(row);
@@ -226,7 +224,7 @@ export class EntriesComponent implements OnInit {
 
   onDelete(row) {
     this.timeTrackingEntryService.deleteTimeTrackingEntry(row.id);
-      this.loadEntries();
+    this.loadEntries();
   }
 
   toggleEditMode() {
@@ -295,7 +293,6 @@ export class EntriesComponent implements OnInit {
   // }
 
   public openDeleteDialog(row) {
-    console.log(row.project.projectName, row.id);
     this.deleteEntryService
       .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
       .subscribe(res => {
@@ -329,14 +326,13 @@ export class EntriesComponent implements OnInit {
         this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
           this.items = loadedItems;
           this.clonedItems = loadedItems;
-          console.log(this.items);
         });
     };
     req.send();
   }
 
   onPage(event) {
-    console.log('Page Event', event);
+    // console.log('Page Event', event);
     this.count = this.items.length;
     this.items = this.clonedItems;;
     const start = event.offset * event.limit;
@@ -347,7 +343,7 @@ export class EntriesComponent implements OnInit {
     }
     this.items = rows;
     this.items.length = this.count;
-    console.log('Page Results', start, end, rows);
+    // console.log('Page Results', start, end, rows);
     this.offset = event.offset;
   }
   private getStatistics() {

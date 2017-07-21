@@ -1,8 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MdDialogRef, MdDatepickerModule, DateAdapter } from '@angular/material';
+import { MdDialogRef, MdDatepickerModule, DateAdapter, MdNativeDateModule } from '@angular/material';
 import { ITimeTrackingEntry, IClient, IProject, ITask, IUser, ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService } from '../../../../data';
 import { LoginService } from '../../../../login';
 import moment from 'moment/src/moment';
+// import { MD_NATIVE_DATE_FORMATS } from "app";
+// import { DeDateAdapter } from "app/dateAdapter";
 
 @Component({
   selector: 'app-entry-dialog',
@@ -31,10 +33,10 @@ export class EntryDialogComponent implements OnInit {
   public timeSpent: any;
   public isBillable: boolean = false;
   public enableTimes: boolean = false;
-  @Input() date: any;
   @Input() checkBoxTimes: boolean;
   @Input() myFilter: any;
-  public validTimePeriod: boolean;
+  public validTimePeriod: boolean; 
+  // deDateAdapter: DeDateAdapter;
 
   constructor(
     public dialogRef: MdDialogRef<EntryDialogComponent>,
@@ -43,10 +45,13 @@ export class EntryDialogComponent implements OnInit {
     public taskService: TaskService,
     public timeTrackingEntryService: TimeTrackingEntryService,
     public userService: UserService,
-    public loginService: LoginService) {
+    public loginService: LoginService,
+    private dateAdapter: DateAdapter<Date>) {
+    // this.deDateAdapter = new DeDateAdapter();
   }
 
   ngOnInit() {
+    // this.dateAdapter.setLocale('de-CH');
     this.loadItems();
     this.myFilter = (d: Date): boolean => {
       const day = d.getDay();
@@ -64,7 +69,11 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public readDate(valueDate: any) {
-    this.date = valueDate._selected;
+    if (valueDate._selected) {
+      let validDate = moment(valueDate._selected).format('L');
+      let currentDate = validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
+      this.selectedDate = currentDate;
+    }
   }
 
   public getValues(valueDesc: string, valueStartTime: string, valueEndTime: string, valueTimeSpent: string, valueClientID: string, valueProjectID: number, valueTaskID: number, valueEnableTimes: any, valueIsBillable: any) {
@@ -77,11 +86,7 @@ export class EntryDialogComponent implements OnInit {
     this.taskID = valueTaskID;
     this.checkBoxTimes = valueEnableTimes._checked;
     this.isBillable = valueIsBillable._checked;
-
-    let validDate = moment(this.date).format('L');
-    this.entryDate = validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
     this.validTimePeriod = moment(this.startTime, 'HH:mm').isBefore(moment(this.endTime, 'HH:mm'));
-    console.log(this.entryDate, this.isBillable);
   }
 
   public clientDropdown(value: string): void {
@@ -98,7 +103,7 @@ export class EntryDialogComponent implements OnInit {
 
   public checkMandatoryFields() {
     if (!this.enableTimes) {
-      if (this.description === "" || this.clientID === null || this.projectID === null || this.taskID === null || this.timeSpent === " " || this.isBillable === null) {
+      if (this.description === "" || this.clientID === null || this.entryDate === " " || this.projectID === null || this.taskID === null || this.timeSpent === " " || this.isBillable === null) {
         alert("Please check if all the fields are filled in");
       } else {
         this.startTime = moment().format('HH:mm');
@@ -112,7 +117,7 @@ export class EntryDialogComponent implements OnInit {
         alert("Please check if all the fields are filled in");
       } else {
         this.timeSpent = this.calculateSpentTime();
-        // this.checkStartAndEndTime();
+        this.checkStartAndEndTime();
       }
     }
   }
@@ -157,9 +162,8 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public newEntry() {
-    console.log(this.isBillable);
     this.timeTrackingEntryService
-      .createTimeTrackingEntry(this.entryDate, this.startTime, this.endTime, this.timeSpent, this.description, this.loginService.getLoggedUserID(), this.clientID, this.projectID, this.taskID, this.isBillable)
+      .createTimeTrackingEntry(this.selectedDate, this.startTime, this.endTime, this.timeSpent, this.description, this.loginService.getLoggedUserID(), this.clientID, this.projectID, this.taskID, this.isBillable)
       .then((data) => {
         this.dialogRef.close(true);
         this.loadItems();

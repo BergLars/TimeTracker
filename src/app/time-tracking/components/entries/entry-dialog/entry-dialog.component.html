@@ -39,10 +39,10 @@
     <tr>
       <td>
         <md-input-container>
-          <input mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="date" placeholder="Date">
-           <button mdSuffix [mdDatepickerToggle]="date"></button>
+          <input mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="selectedDate" placeholder="Date">
+           <button mdSuffix [mdDatepickerToggle]="selectedDate"></button>
         </md-input-container>
-         <md-datepicker startView="year" [startAt]="startDate" #date></md-datepicker>dd/mm/yyyy*
+         <md-datepicker #selectedDate></md-datepicker>*
       </td>
     </tr>
     <br>
@@ -82,7 +82,7 @@
   <br>
 </div>
 <div md-dialog-actions>
-  <button type="button" md-button (click)="getValues(description.value, startTime.value, endTime.value, timeSpent.value, client.value, project.value, task.value, checkBoxTimes, billable); readDate(date); checkMandatoryFields();
+  <button type="button" md-button (click)="getValues(description.value,startTime.value,endTime.value,timeSpent.value,client.value,project.value,task.value,checkBoxTimes,billable);readDate(selectedDate);checkMandatoryFields();
     ">OK</button>
   <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>
