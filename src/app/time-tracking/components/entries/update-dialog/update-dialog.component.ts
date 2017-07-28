@@ -21,6 +21,7 @@ export class UpdateDialogComponent implements OnInit {
   @Input() selectedDate: any;
   @Input() selectedStartTime: any;
   public userprofileID: any;
+  @Input() clientID: any;
   @Input() projectID: any;
   @Input() taskID: any;
   public selectedEndTime: any;
@@ -30,6 +31,7 @@ export class UpdateDialogComponent implements OnInit {
   public startTime: any;
   public endTime: any;
   public timeSpent: any;
+  public isBillable: boolean;
   userID: number;
   @Input() tempTaskID: number;
   @Input() tempProjectID: number;
@@ -120,6 +122,6 @@ export class UpdateDialogComponent implements OnInit {
 
   public ok() {
     this.taskID = Number(this.taskID);
-    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.entryDate, this.startTime, this.endTime, this.timeSpent, this.description, this.userprofileID, this.taskID);
+    this.timeTrackingEntryService.updateTimeTrackingEntry(this.rowID, this.entryDate, this.startTime, this.endTime, this.timeSpent, this.description, this.userprofileID, this.clientID, this.projectID, this.taskID, this.isBillable);
   }
 }

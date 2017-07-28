@@ -32,18 +32,16 @@ export class EntriesComponent implements OnInit {
   public clonedItems: ITimeTrackingEntry[] = [];
   rows = [];
   selected = [];
-  projectsName = [];
-  clientsName = [];
-  currentProjectIDS = [];
-  tasksDescription = [];
   selectedRow: any;
   cloneSelectedRow: any;
   timeTrackingEntry: ITimeTrackingEntry;
   editMode: boolean = false;
   rowID: number;
   userID: number;
+  clientID: any;
   projectID: any;
   taskID: any;
+  isBillable: boolean;
   selectedDescription: string;
   count: number = 0;
   @Input() offset: number = 0;
@@ -106,33 +104,36 @@ export class EntriesComponent implements OnInit {
       row.description = event.target.value;
       this.updateEntry(row);
     }
-    // if (cell == 'project') {
-    //   this.tasks = [];
-    //   this.projectService.getProject(event.target.value).then(res => {
-    //     // row.task.project.projectName = res.projectName;
-    //   });
 
-    //   this.taskService.updateTask(row.task.id, row.task.taskDescription, row.task.projectID).then(res => {
-    //     row.task.project.id = event.target.value;
-    //     // row.task.project.projectName;
-    //   });
+    if (cell == 'client') {
+      // row.client.clientName = event.target.value;
+      this.clientService.getClient(event.target.value).then(res => {
+        row.client = res;
+        this.updateEntry(row);
+      });
+    }
 
-    //   this.taskService.getTasksByProject(event.target.value).then(res => {
-    //     this.tasks = res;
-    //     alert("Update the task field too !");
-    //     // this.ok(row);
-    //   });
-    // }
+    if (cell == 'project') {
+      // row.project.projectName = event.target.value;
+      this.projectService.getProject(event.target.value).then(res => {
+        row.project = res;
+        this.updateEntry(row);
+      });
+    }
+
     if (cell == 'task') {
       this.taskService.getTask(event.target.value).then(res => {
         row.task = res;
         this.updateEntry(row);
       });
     }
+
     if (cell == 'date') {
-      row.entryDate = event.target.value;
+      let selectedDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
+      row.entryDate = selectedDate;
       this.updateEntry(row);
     }
+
     if (cell == 'startTime') {
       row.startTime = event.target.value;
       if (row.startTime > row.endTime || row.startTime == row.endTime) {
@@ -140,11 +141,11 @@ export class EntriesComponent implements OnInit {
         alert("Start time should be less than end time.");
       }
       else {
-        // row.timeSpent = this.calculateTimeSpent(row);
         row.timeSpent = this.calculateSpentTime(row);
         this.updateEntry(row);
       }
     }
+
     if (cell == 'endTime') {
       row.endTime = event.target.value;
       if (row.startTime > row.endTime || row.startTime == row.endTime) {
@@ -152,7 +153,6 @@ export class EntriesComponent implements OnInit {
         alert("Start time should be less than end time.");
       }
       else {
-        // row.timeSpent = this.calculateTimeSpent(row);
         row.timeSpent = this.calculateSpentTime(row);
         this.updateEntry(row);
       }
@@ -160,9 +160,22 @@ export class EntriesComponent implements OnInit {
   }
 
   public updateEntry(row) {
-    this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.taskID);
+    this.http.put(this.baseUrl + "/timeentries/" + row.id, {
+      entryDate: row.entryDate, 
+      startTime: row.startTime,
+      endTime: row.endTime, 
+      timeSpent: row.timeSpent,
+      description: row.description,
+      userprofileID: row.userprofileID, 
+      clientID: row.clientID, 
+      projectID: row.projectID, 
+      taskID: row.taskID, 
+      billable: row.isBillable
+    }).subscribe(
+    () => {
+      this.loadEntries();
+    });
   }
-
 
   // Try MomentJS to resolve this task
   // calculateTimeSpent(row) {
@@ -188,10 +201,6 @@ export class EntriesComponent implements OnInit {
   onSelect({ selected }) {
     if (selected) {
       this.selectedRow = selected[0];
-      this.taskService.getTasksByProject(this.selectedRow.task.projectID).then(res => {
-        this.tasks = [];
-        this.tasks = res;
-      });
     }
   }
 
@@ -235,6 +244,7 @@ export class EntriesComponent implements OnInit {
 
   onDelete(row) {
     this.timeTrackingEntryService.deleteTimeTrackingEntry(row.id);
+      this.loadEntries();
   }
 
   toggleEditMode() {
@@ -303,6 +313,7 @@ export class EntriesComponent implements OnInit {
   // }
 
   public openDeleteDialog(row) {
+    console.log(row.project.projectName, row.id);
     this.deleteEntryService
       .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
       .subscribe(res => {
@@ -313,15 +324,8 @@ export class EntriesComponent implements OnInit {
       });
   }
 
-  /*loadEntries() {
-    this.fetch((data) => {
-    });
-  }*/
-
   loadEntries() {
     this.items = [];
-    this.tasks = [];
-    this.task = null;
     this.userID = this.loginService.getLoggedUserID();
 
     let that = this;
@@ -342,10 +346,6 @@ export class EntriesComponent implements OnInit {
               that.projectsDictionary[result.id] = result;
             });
 
-            this.projects.forEach(function(project) {
-              project.client = that.clientsDictionary[project.clientID];
-            });
-
              // We build the dictionary of tasks
             this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
               results => {
@@ -355,23 +355,20 @@ export class EntriesComponent implements OnInit {
                   that.tasksDictionary[result.id] = result;
                 });
 
-                this.tasks.forEach(function(task){
-                  task.project = that.projectsDictionary[task.projectID];
-                });
-
                 this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
                   loadedEntries => {
                     let that = this;
 
                     loadedEntries.forEach(function(entry){
                       entry.task = that.tasksDictionary[entry.taskID];
+                      entry.client = that.clientsDictionary[entry.clientID];
+                      entry.project = that.projectsDictionary[entry.projectID];
                       that.items.push(entry);
                     });
                   });
               }); 
           });
       });
-
   }
 
   onPage(event) {

@@ -10,44 +10,49 @@
         </span>
     </md-toolbar>
 </div>
-<ngx-datatable #mydatatable class="material striped" [rows]="items" [columnMode]="'force'" [columns]="columns" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [selected]="selected" [selectionType]="'single'" [limit]="limit" [count]="count" [offset]="offset" (page)='onPage($event)' (select)='onSelect($event)'>
+<ngx-datatable #mydatatable class="material striped" [scrollbarH]="true" [rows]="items" [columnMode]="'force'" [columns]="columns" [headerHeight]="50" [footerHeight]="50" 
+          [selected]="selected" [selectionType]="'single'" [limit]="limit" [count]="count" [offset]="offset" (page)='onPage($event)' (select)='onSelect($event)'>
     <ngx-datatable-column name="Description">
-        <ng-template ngx-datatable-cell-template let-row="row">
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
             <span title="Double click to edit" (click)="editing[row.$$index + '-description'] = true" *ngIf="!editing[row.$$index + '-description']">{{ row.description }}</span>
             <input autofocus (blur)="updateValue($event, 'description', value, row)" *ngIf="editing[row.$$index + '-description']" type="text" [value]="row.description" />
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Project">
-        <ng-template ngx-datatable-cell-template let-row="row">
-            <span>
-            <!-- title="Double click to edit" (click)="editing[row.$$index + '-project'] = true" *ngIf="!editing[row.$$index + '-project']" -->
-              {{row.task.project.projectName}}
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <span title="Double click to edit" (click)="editing[row.$$index + '-project'] = true" *ngIf="row && row.project && !editing[row.$$index + '-project']">
+              {{row.project.projectName}}
             </span>
-            <!-- <select *ngIf="editing[row.$$index + '-project']" (change)="updateValue($event, 'project', value, row)" [value]="value">
+            <select *ngIf="editing[row.$$index + '-project']" (change)="updateValue($event, 'project', value, row)" [value]="value">
                 <option *ngFor="let project of projects" [value]="project.id">{{ project.projectName}}</option>
-            </select> -->
+            </select>
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Client">
-        <ng-template ngx-datatable-cell-template let-row="row">
-            {{row.task.project.client.clientName}}
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <span title="Double click to edit" (click)="editing[row.$$index + '-client'] = true" *ngIf="row && row.client && !editing[row.$$index + '-client']">
+              {{row.client.clientName}}
+            </span>
+            <select *ngIf="editing[row.$$index + '-client']" (change)="updateValue($event, 'client', value, row)" [value]="value">
+                <option *ngFor="let client of clients" [value]="client.id">{{ client.clientName}}</option>
+            </select>
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Task">
-        <ng-template ngx-datatable-cell-template let-row="row">
-            <span title="Double click to edit" (click)="editing[row.$$index + '-task'] = true" *ngIf="!editing[row.$$index + '-task']">
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <span title="Double click to edit" (click)="editing[row.$$index + '-task'] = true" *ngIf="row && row.task && !editing[row.$$index + '-task']">
               {{row.task.taskDescription}}
             </span>
-            <select *ngIf="editing[row.$$index + '-task']" (change)="updateValue($event, 'task', value, row)" [value]="row.task.id">
+            <select *ngIf="editing[row.$$index + '-task']" (change)="updateValue($event, 'task', value, row)" [value]="value">
                 <option *ngFor="let task of tasks" [value]="task.id">{{ task.taskDescription }}</option>
             </select>
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Date">
-        <ng-template ngx-datatable-cell-template let-row="row">
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
             <span title="Double click to edit" (click)="editing[row.$$index + '-date'] = true" *ngIf="!editing[row.$$index + '-date']">
                 {{ row.entryDate }}</span>
-            <input autofocus (blur)="updateValue($event, 'date', value, row)" *ngIf="editing[row.$$index + '-date']" type="text" [value]="value" />
+            <input autofocus (blur)="updateValue($event, 'date', value, row)" *ngIf="editing[row.$$index + '-date']" type="date" [value]="value" />
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Start time">

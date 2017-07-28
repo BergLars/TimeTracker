@@ -20,9 +20,9 @@ export class ClientService {
 
 			relations: {
 				hasMany: {
-					project: {
+					entry: {
 						foreignKey: 'clientID',
-						localField: 'projects'
+						localField: 'entry'
 					}
 				}
 			}
@@ -44,7 +44,7 @@ export class ClientService {
 	}
 
 	public updateClient(id: number, name: string): Promise<IClient> {
-		return store.update(RESOURCE_NAME, id, { name: name });
+		return store.update(RESOURCE_NAME, id, { clientName: name });
 	}
 
 	public deleteClient(id: number) {

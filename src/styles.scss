@@ -124,9 +124,29 @@ div.mat-input-underline {
     font-size: 16px;
 }
 
-.datatable-footer {
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
-    font-size: 16px;
+// .datatable-footer {
+//     border-top: 1px solid rgba(0, 0, 0, 0.12);
+//     font-size: 16px;
+// }
+
+.md-toolbar {
+    width: 1125px !important;
+}
+
+.datatable-body {
+    .datatable-body-row {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        border-width: 0px 0px 0.5px 0px;
+        .datatable-body-cell {
+          text-align: left;
+          padding: .5rem 1.2rem;
+          vertical-align: top;
+          border-top: 0;
+
+          -webkit-transition: width 0.3s ease;
+          transition: width 0.3s ease;
+        }
+    }
 }
 
 // .mat-button{

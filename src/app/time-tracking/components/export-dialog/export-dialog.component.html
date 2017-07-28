@@ -4,16 +4,20 @@
         <tr>
             <td>
                 <md-input-container>
-                    <input mdInput placeholder="From" #fromDate>
+                    <input mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="fromDate" placeholder="From">
+                    <button mdSuffix [mdDatepickerToggle]="fromDate"></button>
                 </md-input-container>
+                <md-datepicker startView="year" [startAt]="startDate" #fromDate></md-datepicker>
             </td>
         </tr>
         <br>
         <tr>
             <td>
                 <md-input-container>
-                    <input mdInput placeholder="To" #toDate>
+                    <input mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="toDate" placeholder="To">
+                    <button mdSuffix [mdDatepickerToggle]="toDate"></button>
                 </md-input-container>
+                <md-datepicker startView="year" #toDate></md-datepicker>
             </td>
         </tr>
         <br>
@@ -29,6 +33,6 @@
     <br>
 </div>
 <div md-dialog-actions>
-    <a md-button (click)="getValues(fromDate.value,toDate.value);userDropdown(userprofile.value);checkMandatoryFields();dialogRef.close();">OK</a>
+    <a md-button (click)="readDates(fromDate,toDate);userDropdown(userprofile.value);checkMandatoryFields();">OK</a>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>
