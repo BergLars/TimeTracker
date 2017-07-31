@@ -141,12 +141,13 @@ export class CreateDialogComponent implements OnInit {
 		if (this.item == this.PROJECT) {
 			return this.http.post(this.baseUrl + "/projects", {
 				 projectName: this.newProjectName
-			}).map(() => {
+			}).subscribe(() => {
 				this.dialogRef.close(true);
-			}).catch((error:any) => {
+			},
+			error => {
 				if (error.response.status === 400 || error.response.status === 404) {
 					alert('Please check that fields are the correct input !');
-					  return Observable.of(undefined);
+					return Observable.of(undefined);
 				}
 				if (error.response.status === 500) {
 					alert('Internal server error !')
@@ -157,32 +158,34 @@ export class CreateDialogComponent implements OnInit {
 		if (this.item == this.TASK) {
 			return this.http.post(this.baseUrl + "/tasks", {
 				taskDescription: this.newTaskDescription
-			}).map(() => {
+			}).subscribe(() => {
 				this.dialogRef.close(true);
-			}).catch((error:any) => {
-					if (error.response.status === 400 || error.response.status === 404) {
-						alert('Please check that fields are the correct input !');
-						  return Observable.of(undefined);
-					}
-					if (error.response.status === 500) {
-						alert('Internal server error !')
-					}
-				});
+			},
+			error => {
+				if (error.response.status === 400 || error.response.status === 404) {
+					alert('Please check that fields are the correct input !');
+				  return Observable.of(undefined);
+				}
+				if (error.response.status === 500) {
+					alert('Internal server error !')
+				}
+			});
 		}
 		if (this.item == this.CLIENT) {
 			return this.http.post(this.baseUrl + "/clients", { 
 				clientName: this.newClientName
-			}).map(() => {
+			}).subscribe(() => {
 				this.dialogRef.close(true);
-			}).catch((error:any) => {
-					if (error.response.status === 400 || error.response.status === 404) {
-						alert('Please check that fields are the correct input !');
-						  return Observable.of(undefined);
-					}
-					if (error.response.status === 500) {
-						alert('Internal server error !')
-					}
-				});
+			},
+			error => {
+				if (error.response.status === 400 || error.response.status === 404) {
+					alert('Please check that fields are the correct input !');
+					return Observable.of(undefined);
+				}
+				if (error.response.status === 500) {
+					alert('Internal server error !')
+				}
+			});
 		}
 		if (this.item == this.USER) {
 			return this.http.post(this.baseUrl + "/userprofile", 

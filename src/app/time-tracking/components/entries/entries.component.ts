@@ -107,24 +107,26 @@ export class EntriesComponent implements OnInit {
 
     if (cell == 'client') {
       // row.client.clientName = event.target.value;
-      this.clientService.getClient(event.target.value).then(res => {
+      row.clientID = event.target.value;
+      this.http.get(this.baseUrl + "/clients/" + event.target.value).subscribe(res => {
         row.client = res;
-        this.updateEntry(row);
+        return this.updateEntry(row);
       });
     }
 
     if (cell == 'project') {
-      // row.project.projectName = event.target.value;
-      this.projectService.getProject(event.target.value).then(res => {
+      row.projectID = event.target.value;
+      this.http.get(this.baseUrl + "/projects/" + event.target.value).subscribe(res => {
         row.project = res;
-        this.updateEntry(row);
+        return this.updateEntry(row);
       });
     }
 
     if (cell == 'task') {
-      this.taskService.getTask(event.target.value).then(res => {
+      row.taskID = event.target.value;
+      this.http.get(this.baseUrl + "/tasks/" + event.target.value).subscribe(res => {
         row.task = res;
-        this.updateEntry(row);
+        return this.updateEntry(row);
       });
     }
 
