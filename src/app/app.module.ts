@@ -9,7 +9,7 @@ import { AlertModule, ModalModule, TimepickerModule, TabsModule, DatepickerModul
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService } from './data';
-import { SidebarComponent, EntriesComponent, TimeTrackingComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService, CreateDialogComponent, CreateDialogService, ExportDialogComponent, ExportDialogService } from './time-tracking';
+import { SidebarComponent, EntriesComponent, TimeTrackingComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService, CreateDialogComponent, CreateDialogService, ExportDialogComponent, ExportDialogService, EntriesService } from './time-tracking';
 import { routes } from './routes';
 import { LoginComponent, LoginService } from './login';
 import { HttpInterceptor, httpFactory } from './httpCalls';
@@ -75,6 +75,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         ClientService,
         CreateDialogService,
         ExportDialogService,
+        EntriesService,
         {
             provide: Http,
             useFactory: httpFactory,

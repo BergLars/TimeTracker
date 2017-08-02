@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
 import {Observable} from 'rxjs/Rx';
+import { EntriesService } from '../../components/entries/entries.service';
 
 @Component({
 	selector: 'app-create-dialog',
@@ -56,7 +57,8 @@ export class CreateDialogComponent implements OnInit {
 		public loginService: LoginService,
 		public clientService: ClientService,
     	private http: Http,
-		private router: Router
+		private router: Router,
+		public entriesService: EntriesService
 	) { }
 
 	ngOnInit() {
@@ -143,6 +145,7 @@ export class CreateDialogComponent implements OnInit {
 				 projectName: this.newProjectName
 			}).subscribe(() => {
 				this.dialogRef.close(true);
+				this.entriesService.loadEntries();
 			},
 			error => {
 				if (error.response.status === 400 || error.response.status === 404) {
@@ -160,6 +163,7 @@ export class CreateDialogComponent implements OnInit {
 				taskDescription: this.newTaskDescription
 			}).subscribe(() => {
 				this.dialogRef.close(true);
+				this.entriesService.loadEntries();
 			},
 			error => {
 				if (error.response.status === 400 || error.response.status === 404) {
@@ -176,6 +180,7 @@ export class CreateDialogComponent implements OnInit {
 				clientName: this.newClientName
 			}).subscribe(() => {
 				this.dialogRef.close(true);
+				this.entriesService.loadEntries();
 			},
 			error => {
 				if (error.response.status === 400 || error.response.status === 404) {
@@ -195,6 +200,7 @@ export class CreateDialogComponent implements OnInit {
 					admin: this.adminRole
 				}).subscribe(() => {
 					this.dialogRef.close(true);
+					this.entriesService.loadEntries();
 				},
 				error => {
 					if (error.response.status === 400 || error.response.status === 404) {
@@ -211,7 +217,6 @@ export class CreateDialogComponent implements OnInit {
 		}
 		this.router.navigate(['entries']);
 	}
-
 
 	// private loadItems() {
 

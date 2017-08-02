@@ -10,6 +10,7 @@ import { LoginService } from '../../../login';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 import moment from 'moment/src/moment';
+import { EntriesService } from './entries.service';
 // import { SearchDialogComponent } from './components/search-dialog/search-dialog.component';
 
 @Component({
@@ -76,7 +77,8 @@ export class EntriesComponent implements OnInit {
     public userService: UserService,
     private dialog: MdDialog,
     private http: Http,
-    private router: Router) {
+    private router: Router,
+    public entriesService: EntriesService) {
   }
 
   ngOnInit() {
