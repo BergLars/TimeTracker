@@ -30,7 +30,11 @@ export class ProjectService implements IDataservice {
   // ------------------------------------------------------------------------------ CRUD operations
 
   public getProjects(): Promise<IProject[]> {
-    return store.findAll(RESOURCE_NAME, {}, { force: true });
+    return store.findAll(RESOURCE_NAME, {}, {
+      force: true, orderBy: [
+        ['id', 'ASC']
+      ]
+    });
   }
 
   public getProject(id: number): Promise<IProject> {

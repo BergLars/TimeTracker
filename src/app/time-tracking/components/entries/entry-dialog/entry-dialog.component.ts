@@ -160,6 +160,12 @@ export class EntryDialogComponent implements OnInit {
     }
     return timeSpent;
   }
+  
+  public keyDownFunction(event) {
+    if (event.keyCode == 13) {
+      this.checkMandatoryFields();
+    }
+  }
 
   public newEntry() {
     this.timeTrackingEntryService

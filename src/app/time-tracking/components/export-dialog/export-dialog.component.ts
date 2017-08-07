@@ -98,6 +98,12 @@ export class ExportDialogComponent implements OnInit {
 		window.open(this.exportURL, '_blank');
 	}
 
+	public keyDownFunction(event) {
+		if (event.keyCode == 13) {
+			this.checkFromDateAndToDate();
+		}
+	}
+
 	public exportEntries() {
 		if (this.checkIfAdmin()) {
 			this.refreshExportURL(this.userID);

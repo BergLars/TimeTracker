@@ -1,5 +1,5 @@
 <h1 md-dialog-title>{{ title }}</h1>
-<div md-dialog-content>
+<div md-dialog-content (keydown)="validateForm(description,newprojectname,clientName,project,client,username,password,confirmPassword,employmentDegree,adminRole);keyDownFunction($event);">
     <table>
         <tr>
             <td>Create new:</td>
@@ -69,6 +69,6 @@
     <br>
 </div>
 <div md-dialog-actions>
-    <button type="button" md-button (click)="validateForm(newTaskDescription,newProjectName,newClientName,username,password,confirmPassword,employmentDegree,adminRole)">OK</button>
+    <button type="button" md-button (click)="validateForm(description,newprojectname,clientName,project,client,username,password,confirmPassword,employmentDegree,adminRole);checkMandatoryFields();">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>

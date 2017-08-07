@@ -193,7 +193,24 @@ export class CreateDialogComponent implements OnInit {
 		this.router.navigate(['entries']);
 	}
 
+	public keyDownFunction(event) {
+		if (event.keyCode == 13) {
+			this.checkMandatoryFields();
+		}
+	}
+
 	private displayItems() {
+		this.clientService.getClients().then((clients) => {
+			this.clients = clients;
+		});
+
+		this.taskService.getTasks().then((tasks) => {
+			this.tasks = tasks;
+		});
+
+		this.projectService.getProjects().then((projects) => {
+			this.projects = projects;
+		});
 		if (!this.checkIfAdmin()) {
 			this.createItems.splice(1);
 			this.createItems.splice(2);
