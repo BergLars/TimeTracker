@@ -178,7 +178,10 @@ export class EntryDialogComponent implements OnInit {
         clientID: this.clientID, 
         projectID: this.projectID, 
         billable: this.isBillable 
-      }).subscribe(
+      }).subscribe(() => {
+        this.dialogRef.close(true);
+        this.loadItems();
+      },
       (err) => {
         if (err.status === 400 || err.status === 404) {
           alert('Wrong date format or fill all filed !');
@@ -187,10 +190,6 @@ export class EntryDialogComponent implements OnInit {
         if (err.status === 500) {
           alert('Internal server error !')
         }
-      },
-      () => {
-        this.dialogRef.close(true);
-        this.loadItems();
       })
   }
 
