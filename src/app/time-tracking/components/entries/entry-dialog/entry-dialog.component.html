@@ -1,5 +1,5 @@
 <h1 md-dialog-title>{{ title }}</h1>
-<div md-dialog-content (keydown)="getValues(description.value,date.value,startTime.value,endTime.value,timeSpent.value,project.value,task.value);keyDownFunction($event);">
+<div md-dialog-content (keydown)="getValues(description.value,selectedDate.value,startTime.value,endTime.value,timeSpent.value,client.value,project.value,task.value,checkBoxTimes,billable);readDate(selectedDate);keyDownFunction($event);">
     <table>
         <tr>
             <td>
@@ -81,7 +81,7 @@
   </table>
 </div>
 <div md-dialog-actions>
-  <button type="button" md-button (click)="getValues(description.value,startTime.value,endTime.value,timeSpent.value,client.value,project.value,task.value,checkBoxTimes,billable);readDate(selectedDate);checkMandatoryFields();
+  <button type="button" md-button (click)="getValues(description.value,selectedDate.value,startTime.value,endTime.value,timeSpent.value,client.value,project.value,task.value,checkBoxTimes,billable);readDate(selectedDate);checkMandatoryFields();
     ">OK</button>
   <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>

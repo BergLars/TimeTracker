@@ -65,7 +65,7 @@ export class CreateDialogComponent implements OnInit {
 		this.editMode = !this.editMode;
 	}
 
-	public getValues(valueDesc: string, valueProjName: string, valueClient: string, valueUsername: string, valuePassw: string, valueConfirmPass: string, valueEmploy: number, valueIsAdmin: boolean) {
+	public validateForm(valueDesc: string, valueProjName: string, valueClient: string, valueUsername: string, valuePassw: string, valueConfirmPass: string, valueEmploy: number, valueIsAdmin: boolean) {
 		this.newTaskDescription = valueDesc;
 		this.newProjectName = valueProjName;
 		this.newClientName = valueClient;
@@ -76,7 +76,7 @@ export class CreateDialogComponent implements OnInit {
 		this.adminRole = valueIsAdmin;
 	}
 
-	checkMandatoryFields() {
+	public checkMandatoryFields() {
 		if (this.item == this.PROJECT) {
 			if (this.newProjectName === "" || this.newProjectName === undefined) {
 				alert("Please check if all the fields are filled in");
@@ -115,11 +115,6 @@ export class CreateDialogComponent implements OnInit {
 				this.createItem();
 			}
 		}
-	}
-
-	public validateForm(description, newProjectName, clientName, username, password, confirmPassword, employmentDegree, adminRole) {
-		this.getValues(description.value, newProjectName.value, clientName.value, username.value, password.value, confirmPassword.value, employmentDegree.value, adminRole.checked);
-		this.checkMandatoryFields();
 	}
 
 	public checkIfAdmin() {
@@ -194,7 +189,7 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	public keyDownFunction(event) {
-		if (event.keyCode == 13) {
+		if (event.key === 'Enter') {
 			this.checkMandatoryFields();
 		}
 	}

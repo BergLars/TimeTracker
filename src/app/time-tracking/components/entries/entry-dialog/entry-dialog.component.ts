@@ -76,16 +76,17 @@ export class EntryDialogComponent implements OnInit {
     }
   }
 
-  public getValues(valueDesc: string, valueStartTime: string, valueEndTime: string, valueTimeSpent: string, valueClientID: string, valueProjectID: number, valueTaskID: number, valueEnableTimes: any, valueIsBillable: any) {
+  public getValues(valueDesc: string, valueDate: any, valueStartTime: string, valueEndTime: string, valueTimeSpent: string, valueClientID: string, valueProjectID: number, valueTaskID: number, valueEnableTimes: any, valueIsBillable: any) {
     this.description = valueDesc;
+    this.selectedDate = valueDate;
     this.startTime = valueStartTime;
     this.endTime = valueEndTime;
     this.timeSpent = valueTimeSpent;
     this.clientID = valueClientID;
     this.projectID = valueProjectID;
     this.taskID = valueTaskID;
-    this.checkBoxTimes = valueEnableTimes._checked;
-    this.isBillable = valueIsBillable._checked;
+    this.checkBoxTimes = valueEnableTimes.checked;
+    this.isBillable = valueIsBillable.checked;
     this.validTimePeriod = moment(this.startTime, 'HH:mm').isBefore(moment(this.endTime, 'HH:mm'));
   }
 
@@ -162,7 +163,7 @@ export class EntryDialogComponent implements OnInit {
   }
   
   public keyDownFunction(event) {
-    if (event.keyCode == 13) {
+    if (event.key == 'Enter') {
       this.checkMandatoryFields();
     }
   }
