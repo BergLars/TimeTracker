@@ -35,7 +35,7 @@ export class EntryDialogComponent implements OnInit {
   public enableTimes: boolean = false;
   @Input() checkBoxTimes: boolean;
   @Input() myFilter: any;
-  public validTimePeriod: boolean; 
+  public validTimePeriod: boolean;
   // deDateAdapter: DeDateAdapter;
 
   constructor(
@@ -104,17 +104,17 @@ export class EntryDialogComponent implements OnInit {
 
   public checkMandatoryFields() {
     if (!this.enableTimes) {
-      if (this.description === "" || this.clientID === null || this.entryDate === " " || this.projectID === null || this.taskID === null || this.timeSpent === " " || this.isBillable === null) {
+      if (this.description === "" || this.clientID === null || this.selectedDate === undefined || this.timeSpent === null || this.isBillable === null) {
         alert("Please check if all the fields are filled in");
       } else {
         this.startTime = moment().format('HH:mm');
         let endT = moment() + moment.duration().add(this.timeSpent, 'HH:mm');
         this.endTime = moment(endT).format('HH:mm');
-        this.newEntry();
+        this.decimalToTime(this.timeSpent);
       }
     }
     else {
-      if (this.description === "" || this.clientID === null || this.projectID === null || this.taskID === null || this.entryDate === " " || this.startTime === " " || this.endTime === " " || this.isBillable === null) {
+      if (this.description === "" || this.selectedDate === undefined || this.startTime === " " || this.endTime === " " || this.isBillable === null) {
         alert("Please check if all the fields are filled in");
       } else {
         this.timeSpent = this.calculateSpentTime();
@@ -161,11 +161,50 @@ export class EntryDialogComponent implements OnInit {
     }
     return timeSpent;
   }
-  
+
   public keyDownFunction(event) {
     if (event.key == 'Enter') {
       this.checkMandatoryFields();
     }
+  }
+
+  public decimalToTime(t: any) {
+    // t is a decimal value
+    if (this.isNumeric(t.toString()) === true) {
+      let hours = parseInt(t);
+      let minutes = Math.round((parseFloat(t) - hours) * 60);
+      if (hours.toString().length < 2 && minutes.toString().length > 1) {
+        this.timeSpent = '0' + hours + ':' + minutes;
+      }
+      else if (hours.toString().length < 2 && minutes > 6 && minutes.toString().length < 2) {
+        this.timeSpent = '0' + hours + ':' + minutes + '0';
+      }
+      else if (hours.toString().length < 2 && minutes < 7 && minutes.toString().length < 2) {
+        this.timeSpent = '0' + hours + ':' + '0' + minutes;
+      }
+      else if (hours.toString().length > 1 && minutes > 6 && minutes.toString().length < 2) {
+        this.timeSpent = hours + ':' + minutes + '0';
+      }
+      else if (hours.toString().length > 1 && minutes < 7 && minutes.toString().length < 2) {
+        this.timeSpent = hours + ':' + '0' + minutes;
+      }
+      else {
+        this.timeSpent = hours + ':' + minutes;
+      }
+      this.newEntry();
+    }
+    else if (t.toString().indexOf(':') !== -1) {
+      this.timeSpent = t;
+      this.newEntry();
+    }
+    else {
+      alert('Wrong format !');
+    }
+  }
+
+  private isNumeric(input) {
+    var RE = /^-{0,1}\d*\.{0,1}\d+$/;
+    return (RE.test(input));
   }
 
   public newEntry() {
