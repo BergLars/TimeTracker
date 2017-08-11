@@ -48,6 +48,10 @@ export class EntriesComponent implements OnInit {
   columns: any;
   @Input() date: string;
 
+  public tasksDictionary: any = {};
+  public projectsDictionary: any = {};
+  public clientsDictionary: any = {};
+
   public editing = {};
   public result: any;
   private limits = [
@@ -102,23 +106,27 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'client') {
-      this.clientService.getClient(event.target.value).then(res => {
+      // row.client.clientName = event.target.value;
+      row.clientID = event.target.value;
+      this.http.get(this.baseUrl + "/clients/" + event.target.value).subscribe(res => {
         row.client = res;
-        this.updateEntry(row);
+        return this.updateEntry(row);
       });
     }
 
     if (cell == 'project') {
-      this.projectService.getProject(event.target.value).then(res => {
+      row.projectID = event.target.value;
+      this.http.get(this.baseUrl + "/projects/" + event.target.value).subscribe(res => {
         row.project = res;
-        this.updateEntry(row);
+        return this.updateEntry(row);
       });
     }
 
     if (cell == 'task') {
-      this.taskService.getTask(event.target.value).then(res => {
+      row.taskID = event.target.value;
+      this.http.get(this.baseUrl + "/tasks/" + event.target.value).subscribe(res => {
         row.task = res;
-        this.updateEntry(row);
+        return this.updateEntry(row);
       });
     }
 
@@ -154,7 +162,21 @@ export class EntriesComponent implements OnInit {
   }
 
   public updateEntry(row) {
-    this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, row.entryDate, row.startTime, row.endTime, row.timeSpent, row.description, row.userprofileID, row.clientID, row.projectID, row.taskID, row.isBillable);
+    this.http.put(this.baseUrl + "/timeentries/" + row.id, {
+      entryDate: row.entryDate, 
+      startTime: row.startTime,
+      endTime: row.endTime, 
+      timeSpent: row.timeSpent,
+      description: row.description,
+      userprofileID: row.userprofileID, 
+      clientID: row.clientID, 
+      projectID: row.projectID, 
+      taskID: row.taskID, 
+      billable: row.isBillable
+    }).subscribe(
+    () => {
+      this.loadEntries();
+    });
   }
 
   // Try MomentJS to resolve this task
@@ -220,11 +242,6 @@ export class EntriesComponent implements OnInit {
       return true;
     }
     return false;
-  }
-
-  onDelete(row) {
-    this.timeTrackingEntryService.deleteTimeTrackingEntry(row.id);
-    this.loadEntries();
   }
 
   toggleEditMode() {
@@ -293,6 +310,7 @@ export class EntriesComponent implements OnInit {
   // }
 
   public openDeleteDialog(row) {
+    console.log(row.project.projectName, row.id);
     this.deleteEntryService
       .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
       .subscribe(res => {
@@ -304,36 +322,55 @@ export class EntriesComponent implements OnInit {
   }
 
   loadEntries() {
-    this.fetch((data) => {
-    });
-  }
-
-  fetch(cb) {
     this.items = [];
     this.userID = this.loginService.getLoggedUserID();
-    let url = this.baseUrl + '/timeentries/user/' + this.userID;
-    const req = new XMLHttpRequest();
-    req.open('GET', url);
 
-    req.onload = () => {
-      // Get all tasks
-      this.taskService.getTasks().then(result => { this.tasks = result; }),
-        // Get all projects
-        this.projectService.getProjects().then(result => { this.projects = result; }),
-        // Get all clients
-        this.clientService.getClients().then(result => { this.clients = result; }),
-        // Get user's entries
-        this.timeTrackingEntryService.getTimeTrackingEntriesByUser(this.userID).then((loadedItems) => {
-          this.items = loadedItems;
-          this.clonedItems = loadedItems;
+    let that = this;
+
+    this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
+      results => {
+        this.clients = results; 
+
+        results.forEach(function(result) {
+          that.clientsDictionary[result.id] = result;
         });
-    };
-    req.send();
+
+        this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+          results => {
+            this.projects = results; 
+
+            results.forEach(function(result) {
+              that.projectsDictionary[result.id] = result;
+            });
+
+             // We build the dictionary of tasks
+            this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+              results => {
+                this.tasks = results;
+                
+                results.forEach(function(result){
+                  that.tasksDictionary[result.id] = result;
+                });
+
+                this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
+                  loadedEntries => {
+                    let that = this;
+
+                    loadedEntries.forEach(function(entry){
+                      entry.task = that.tasksDictionary[entry.taskID];
+                      entry.client = that.clientsDictionary[entry.clientID];
+                      entry.project = that.projectsDictionary[entry.projectID];
+                      that.items.push(entry);
+                    });
+                  });
+              }); 
+          });
+      });
   }
 
   onPage(event) {
-    // console.log('Page Event', event);
-    this.count = this.items.length;
+    console.log('Page Event', event);
+    /*this.count = this.items.length;
     this.items = this.clonedItems;;
     const start = event.offset * event.limit;
     const end = start + Number(event.limit);
@@ -341,10 +378,10 @@ export class EntriesComponent implements OnInit {
     for (let i = start; i < end; i++) {
       rows[i] = this.items[i];
     }
-    this.items = rows;
+    // this.items = rows;
     this.items.length = this.count;
-    // console.log('Page Results', start, end, rows);
-    this.offset = event.offset;
+    console.log('Page Results', start, end, rows);
+    this.offset = event.offset;*/
   }
   private getStatistics() {
     // TODO

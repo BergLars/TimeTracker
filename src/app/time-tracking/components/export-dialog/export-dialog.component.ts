@@ -4,6 +4,7 @@ import { UserService, IClient, ClientService, TimeTrackingEntryService, IUser } 
 import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
 import { environment } from '../../../../environments/environment';
+import { Http } from '@angular/http';
 // import { MD_NATIVE_DATE_FORMATS } from "app";
 // import { DeDateAdapter } from "app/dateAdapter";
 
@@ -34,6 +35,7 @@ export class ExportDialogComponent implements OnInit {
 		public timeTrackingEntryService: TimeTrackingEntryService,
 		public userService: UserService,
 		public loginService: LoginService,
+		public http: Http,
 		public dateAdapter: DateAdapter<Date>) {
 			// this.deDateAdapter = new DeDateAdapter();
 	}
@@ -84,9 +86,10 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	loadUsers() {
-		this.userService.getUsers().then((users) => {
-			this.users = users;
-		});
+		this.http.get(this.baseUrl + "/userprofile/all").map(res => res.json()).subscribe(
+            results => {
+              	this.users = results;
+      		});
 	}
 
 	refreshExportURL(id) {

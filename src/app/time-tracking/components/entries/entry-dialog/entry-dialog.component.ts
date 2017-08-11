@@ -1,8 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MdDialogRef, MdDatepickerModule, DateAdapter, MdNativeDateModule } from '@angular/material';
 import { ITimeTrackingEntry, IClient, IProject, ITask, IUser, ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService } from '../../../../data';
 import { LoginService } from '../../../../login';
+import { Http } from '@angular/http';
+import { environment } from '../../../../../environments/environment';
 import moment from 'moment/src/moment';
+import {Observable} from 'rxjs/Rx';
+import { MdDialogRef, MdDatepickerModule, DateAdapter, MdNativeDateModule } from '@angular/material';
 // import { MD_NATIVE_DATE_FORMATS } from "app";
 // import { DeDateAdapter } from "app/dateAdapter";
 
@@ -11,6 +14,7 @@ import moment from 'moment/src/moment';
   templateUrl: './entry-dialog.component.html'
 })
 export class EntryDialogComponent implements OnInit {
+  public baseUrl: string = environment.apiBaseUrl;
   @Input() projects: IProject[] = [];
   @Input() clients: IClient[] = [];
   @Input() tasks: ITask[] = [];
@@ -31,12 +35,14 @@ export class EntryDialogComponent implements OnInit {
   @Input() startTime: any;
   public endTime: any;
   public timeSpent: any;
+
   public isBillable: boolean = false;
   public enableTimes: boolean = false;
+  @Input() date: any;
   @Input() checkBoxTimes: boolean;
   @Input() myFilter: any;
   public validTimePeriod: boolean;
-  // deDateAdapter: DeDateAdapter;
+
 
   constructor(
     public dialogRef: MdDialogRef<EntryDialogComponent>,
@@ -45,6 +51,7 @@ export class EntryDialogComponent implements OnInit {
     public taskService: TaskService,
     public timeTrackingEntryService: TimeTrackingEntryService,
     public userService: UserService,
+    private http: Http,
     public loginService: LoginService,
     private dateAdapter: DateAdapter<Date>) {
     // this.deDateAdapter = new DeDateAdapter();
@@ -208,33 +215,48 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public newEntry() {
-    this.timeTrackingEntryService
-      .createTimeTrackingEntry(this.selectedDate, this.startTime, this.endTime, this.timeSpent, this.description, this.loginService.getLoggedUserID(), this.clientID, this.projectID, this.taskID, this.isBillable)
-      .then((data) => {
+    this.loadItems();
+    return this.http.post(this.baseUrl + "/timeentries", 
+      { entryDate: this.selectedDate, 
+        startTime: this.startTime, 
+        endTime: this.endTime, 
+        timeSpent: this.timeSpent, 
+        description: this.description, 
+        userprofileID: this.loginService.getLoggedUserID(), 
+        taskID: this.taskID,
+        clientID: this.clientID, 
+        projectID: this.projectID, 
+        billable: this.isBillable 
+      }).subscribe(
+      () => {
         this.dialogRef.close(true);
         this.loadItems();
-      }).catch(
-      error => {
-        if (error.response.status === 400 || error.response.status === 404) {
+      },
+      (err) => {
+        if (err.status === 400 || err.status === 404) {
           alert('Wrong date format or fill all filed !');
+          return Observable.of(undefined);
         }
-        if (error.response.status === 500) {
+        if (err.status === 500) {
           alert('Internal server error !')
         }
-      });
+      })
   }
 
   private loadItems() {
-    this.clientService.getClients().then((clients) => {
-      this.clients = clients;
-    });
+    this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
+        results => {
+          this.clients = results;
+        });
 
-    this.projectService.getProjects().then((projects) => {
-      this.projects = projects;
-    });
+    this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+        results => {
+          this.tasks = results;
+        });
 
-    this.taskService.getTasks().then(result => {
-      this.tasks = result;
-    });
+    this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+        results => {
+          this.projects = results;
+        });
   }
 }
