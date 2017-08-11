@@ -32,16 +32,23 @@ export class TaskService implements IDataservice {
   // ------------------------------------------------------------------------------ CRUD operations
 
   public getTasks(): Promise<ITask[]> {
-    return store.findAll(RESOURCE_NAME, {}, { force: true });
+    return store.findAll(RESOURCE_NAME, {}, {
+      force: true, orderBy: [
+        ['id', 'ASC']
+      ]
+    });
   }
 
-  // public getTasksByProject(id: number): Promise<ITask[]> {
-  //   let endpoint = '/' + ENDPOINT_NAME + '/project/' + id;
-  //   return store.findAll(RESOURCE_NAME_PROJECT, { projectID: id }, {
-  //     endpoint: endpoint,
-  //     force: true
-  //   });
-  // }
+  public getTasksByProject(id: number): Promise<ITask[]> {
+    let endpoint = '/' + ENDPOINT_NAME + '/project/' + id;
+    return store.findAll(RESOURCE_NAME_PROJECT, { projectID: id }, {
+      endpoint: endpoint,
+      force: true,
+      orderBy: [
+        ['id', 'ASC']
+      ]
+    });
+  }
 
   public getTask(id: number): Promise<ITask> {
     return store.find(RESOURCE_NAME, id);
