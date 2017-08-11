@@ -1,5 +1,5 @@
 <h1 md-dialog-title>{{ title }}</h1>
-<div md-dialog-content>
+<div md-dialog-content (keydown)="readDates(fromDate,toDate);keyDownFunction($event);">
     <table>
         <tr>
             <td>
@@ -7,7 +7,7 @@
                     <input mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="fromDate" placeholder="From">
                     <button mdSuffix [mdDatepickerToggle]="fromDate"></button>
                 </md-input-container>
-                <md-datepicker startView="year" [startAt]="startDate" #fromDate></md-datepicker>
+                <md-datepicker #fromDate></md-datepicker>
             </td>
         </tr>
         <br>
@@ -17,7 +17,7 @@
                     <input mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="toDate" placeholder="To">
                     <button mdSuffix [mdDatepickerToggle]="toDate"></button>
                 </md-input-container>
-                <md-datepicker startView="year" #toDate></md-datepicker>
+                <md-datepicker #toDate></md-datepicker>
             </td>
         </tr>
         <br>
@@ -33,6 +33,6 @@
     <br>
 </div>
 <div md-dialog-actions>
-    <a md-button (click)="readDates(fromDate,toDate);userDropdown(userprofile.value);checkMandatoryFields();">OK</a>
+    <a md-button (click)="readDates(fromDate,toDate); userDropdown(userprofile.value); checkMandatoryFields();">OK</a>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>

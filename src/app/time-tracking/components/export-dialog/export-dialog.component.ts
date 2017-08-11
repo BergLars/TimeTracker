@@ -1,15 +1,19 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MdDialogRef, MdDatepickerModule, DateAdapter } from '@angular/material';
+import { MdDialogRef, MdDatepickerModule, DateAdapter, MdDateFormats } from '@angular/material';
 import { UserService, IClient, ClientService, TimeTrackingEntryService, IUser } from '../../../data';
 import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
 import { environment } from '../../../../environments/environment';
+import { Http } from '@angular/http';
+// import { MD_NATIVE_DATE_FORMATS } from "app";
+// import { DeDateAdapter } from "app/dateAdapter";
 
 @Component({
 	selector: 'app-export-dialog',
 	templateUrl: './export-dialog.component.html',
 	styleUrls: ['./export-dialog.component.scss']
 })
+
 export class ExportDialogComponent implements OnInit {
 	public title: string;
 	@Input() fromDate: any;
@@ -23,13 +27,17 @@ export class ExportDialogComponent implements OnInit {
 	@Input() users: IUser[] = [];
 	public validDatePeriod: boolean;
 	public validLength: boolean;
+	// deDateAdapter: DeDateAdapter;
 	public baseUrl: string = environment.apiBaseUrl;
 
 	constructor(
 		public dialogRef: MdDialogRef<ExportDialogComponent>,
 		public timeTrackingEntryService: TimeTrackingEntryService,
 		public userService: UserService,
-		public loginService: LoginService) {
+		public loginService: LoginService,
+		public http: Http,
+		public dateAdapter: DateAdapter<Date>) {
+			// this.deDateAdapter = new DeDateAdapter();
 	}
 
 	ngOnInit() {
@@ -50,12 +58,13 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	public readDates(valueFrom: any, valueTo: any) {
-		this.fromDate = valueFrom._selected;
-		this.toDate = valueTo._selected;
-
-		let validFrom = moment(this.fromDate).format('L');
-		let validTo = moment(this.toDate).format('L');
-		this.validDatePeriod = moment(this.fromDate).isBefore(moment(this.toDate));
+		let validFrom = moment(valueFrom._selected).format('L');
+		let validTo = moment(valueTo._selected).format('L');
+		let fromDate = validFrom.substring(6, 10) + "-" + validFrom.substring(0, 2) + "-" + validFrom.substring(3, 5);
+		let toDate = validTo.substring(6, 10) + "-" + validTo.substring(0, 2) + "-" + validTo.substring(3, 5);
+		this.fromDate = fromDate;
+		this.toDate = toDate;
+		this.validDatePeriod = moment(validFrom).isBefore(moment(validTo));
 	}
 
 	checkMandatoryFields() {
@@ -77,22 +86,25 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	loadUsers() {
-		this.userService.getUsers().then((users) => {
-			this.users = users;
-		});
+		this.http.get(this.baseUrl + "/userprofile/all").map(res => res.json()).subscribe(
+            results => {
+              	this.users = results;
+      		});
 	}
 
 	refreshExportURL(id) {
-		let validFrom = moment(this.fromDate).format('L');
-		let validTo = moment(this.toDate).format('L');
-		let fromDate = validFrom.substring(6, 10) + "/" + validFrom.substring(0, 2) + "/" + validFrom.substring(3, 5);
-		let toDate = validTo.substring(6, 10) + "/" + validTo.substring(0, 2) + "/" + validTo.substring(3, 5);
 		this.exportURL = this.baseUrl + "/export?fromDate=" +
-			fromDate +
+			this.fromDate +
 			"&toDate=" +
-			toDate +
+			this.toDate +
 			"&userprofileID=" + id;
 		window.open(this.exportURL, '_blank');
+	}
+
+	public keyDownFunction(event) {
+		if (event.key == 'Enter') {
+			this.checkFromDateAndToDate();
+		}
 	}
 
 	public exportEntries() {

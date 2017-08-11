@@ -1,11 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MdDialogRef, MdDatepickerModule, DateAdapter } from '@angular/material';
 import { ITimeTrackingEntry, IClient, IProject, ITask, IUser, ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService } from '../../../../data';
 import { LoginService } from '../../../../login';
 import { Http } from '@angular/http';
 import { environment } from '../../../../../environments/environment';
 import moment from 'moment/src/moment';
 import {Observable} from 'rxjs/Rx';
+import { MdDialogRef, MdDatepickerModule, DateAdapter, MdNativeDateModule } from '@angular/material';
+// import { MD_NATIVE_DATE_FORMATS } from "app";
+// import { DeDateAdapter } from "app/dateAdapter";
 
 @Component({
   selector: 'app-entry-dialog',
@@ -33,8 +35,6 @@ export class EntryDialogComponent implements OnInit {
   @Input() startTime: any;
   public endTime: any;
   public timeSpent: any;
-  public tasksDictionary: any = {};
-  public projectsDictionary: any = {};
 
   public isBillable: boolean = false;
   public enableTimes: boolean = false;
@@ -51,10 +51,13 @@ export class EntryDialogComponent implements OnInit {
     public timeTrackingEntryService: TimeTrackingEntryService,
     public userService: UserService,
     private http: Http,
-    public loginService: LoginService) {
+    public loginService: LoginService,
+    private dateAdapter: DateAdapter<Date>) {
+    // this.deDateAdapter = new DeDateAdapter();
   }
 
   ngOnInit() {
+    // this.dateAdapter.setLocale('de-CH');
     this.loadItems();
     this.myFilter = (d: Date): boolean => {
       const day = d.getDay();
@@ -72,25 +75,25 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public readDate(valueDate: any) {
-    this.date = valueDate._selected;
+    if (valueDate._selected) {
+      let validDate = moment(valueDate._selected).format('L');
+      let currentDate = validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
+      this.selectedDate = currentDate;
+    }
   }
 
-  public getValues(valueDesc: string, valueStartTime: string, valueEndTime: string, valueTimeSpent: string, valueClientID: string, valueProjectID: number, valueTaskID: number, valueEnableTimes: any, valueIsBillable: any) {
+  public getValues(valueDesc: string, valueDate: any, valueStartTime: string, valueEndTime: string, valueTimeSpent: string, valueClientID: string, valueProjectID: number, valueTaskID: number, valueEnableTimes: any, valueIsBillable: any) {
     this.description = valueDesc;
+    this.selectedDate = valueDate;
     this.startTime = valueStartTime;
     this.endTime = valueEndTime;
     this.timeSpent = valueTimeSpent;
     this.clientID = valueClientID;
     this.projectID = valueProjectID;
     this.taskID = valueTaskID;
-    this.checkBoxTimes = valueEnableTimes._checked;
-    this.isBillable = valueIsBillable._checked;
-
-    let validDate = moment(this.date).format('L');
-    this.entryDate = validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
+    this.checkBoxTimes = valueEnableTimes.checked;
+    this.isBillable = valueIsBillable.checked;
     this.validTimePeriod = moment(this.startTime, 'HH:mm').isBefore(moment(this.endTime, 'HH:mm'));
-    console.log(this.entryDate, this.isBillable);
-    // this.checkMandatoryFields();
   }
 
   public clientDropdown(value: string): void {
@@ -107,7 +110,7 @@ export class EntryDialogComponent implements OnInit {
 
   public checkMandatoryFields() {
     if (!this.enableTimes) {
-      if (this.description === "" || this.clientID === null || this.projectID === null || this.taskID === null || this.timeSpent === "" || this.isBillable === null) {
+      if (this.description === "" || this.clientID === null || this.entryDate === " " || this.projectID === null || this.taskID === null || this.timeSpent === " " || this.isBillable === null) {
         alert("Please check if all the fields are filled in");
       } else {
         this.startTime = moment().format('HH:mm');
@@ -121,7 +124,7 @@ export class EntryDialogComponent implements OnInit {
         alert("Please check if all the fields are filled in");
       } else {
         this.timeSpent = this.calculateSpentTime();
-        // this.checkStartAndEndTime();
+        this.checkStartAndEndTime();
       }
     }
   }
@@ -168,7 +171,7 @@ export class EntryDialogComponent implements OnInit {
   public newEntry() {
     this.loadItems();
     return this.http.post(this.baseUrl + "/timeentries", 
-      { entryDate: this.entryDate, 
+      { entryDate: this.selectedDate, 
         startTime: this.startTime, 
         endTime: this.endTime, 
         timeSpent: this.timeSpent, 
@@ -178,7 +181,8 @@ export class EntryDialogComponent implements OnInit {
         clientID: this.clientID, 
         projectID: this.projectID, 
         billable: this.isBillable 
-      }).subscribe(() => {
+      }).subscribe(
+      () => {
         this.dialogRef.close(true);
         this.loadItems();
       },
@@ -208,5 +212,11 @@ export class EntryDialogComponent implements OnInit {
         results => {
           this.projects = results;
         });
+  }
+  
+  public keyDownFunction(event) {
+    if (event.key == 'Enter') {
+      this.checkMandatoryFields();
+    }
   }
 }

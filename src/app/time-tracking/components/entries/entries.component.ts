@@ -244,11 +244,6 @@ export class EntriesComponent implements OnInit {
     return false;
   }
 
-  onDelete(row) {
-    this.timeTrackingEntryService.deleteTimeTrackingEntry(row.id);
-      this.loadEntries();
-  }
-
   toggleEditMode() {
     this.editMode = !this.editMode;
   }
