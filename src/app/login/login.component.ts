@@ -28,4 +28,7 @@ export class LoginComponent {
 
 		this.loginService.request(this.username, encodeURIComponent(this.password));
 	}
+
+	public keyDownFunction(event) {
+	}
 }
