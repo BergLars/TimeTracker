@@ -51,7 +51,7 @@ export class TimeTrackingComponent implements OnInit {
       .confirm('Create', this.viewContainerRef)
       .subscribe(res => {
         if (res) {
-          this.entriesService.loadEntries();
+          //this.entriesService.loadEntries();
         }
       });
   }

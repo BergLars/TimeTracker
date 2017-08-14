@@ -7,6 +7,7 @@ import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
 import {Observable} from 'rxjs/Rx';
 import { EntriesService } from '../../components/entries/entries.service';
+import { CreateDialogService } from './create-dialog.service';
 
 @Component({
 	selector: 'app-create-dialog',
@@ -49,6 +50,8 @@ export class CreateDialogComponent implements OnInit {
 
 	public item: number = this.createItems[0].id;
 
+	public createDialogSevice: CreateDialogService;
+
 	constructor(
 		public dialogRef: MdDialogRef<CreateDialogComponent>,
 		public projectService: ProjectService,
@@ -58,11 +61,13 @@ export class CreateDialogComponent implements OnInit {
 		public clientService: ClientService,
     	private http: Http,
 		private router: Router,
-		public entriesService: EntriesService
+		public entriesService: EntriesService,
+		//public createDialogService: CreateDialogService
 	) { }
 
 	ngOnInit() {
 		this.displayItems();
+		this.createDialogSevice = CreateDialogService;
 	}
 
 	changeItemToBeCreated(event) {
@@ -145,7 +150,7 @@ export class CreateDialogComponent implements OnInit {
 				 projectName: this.newProjectName
 			}).subscribe(() => {
 				this.dialogRef.close(true);
-				this.entriesService.loadEntries();
+				//this.entriesService.loadEntries();
 			},
 			error => {
 				if (error.response.status === 400 || error.response.status === 404) {
@@ -163,7 +168,8 @@ export class CreateDialogComponent implements OnInit {
 				taskDescription: this.newTaskDescription
 			}).subscribe(() => {
 				this.dialogRef.close(true);
-				this.entriesService.loadEntries();
+				//this.createDialogService.entriesComponent.loadEntries();
+				//this.entriesService.loadEntries();
 			},
 			error => {
 				if (error.response.status === 400 || error.response.status === 404) {
@@ -180,7 +186,7 @@ export class CreateDialogComponent implements OnInit {
 				clientName: this.newClientName
 			}).subscribe(() => {
 				this.dialogRef.close(true);
-				this.entriesService.loadEntries();
+				//this.entriesService.loadEntries();
 			},
 			error => {
 				if (error.response.status === 400 || error.response.status === 404) {
@@ -200,7 +206,7 @@ export class CreateDialogComponent implements OnInit {
 					admin: this.adminRole
 				}).subscribe(() => {
 					this.dialogRef.close(true);
-					this.entriesService.loadEntries();
+					//this.entriesService.loadEntries();
 				},
 				error => {
 					if (error.response.status === 400 || error.response.status === 404) {

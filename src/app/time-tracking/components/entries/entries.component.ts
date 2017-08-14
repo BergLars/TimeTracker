@@ -4,13 +4,14 @@ import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, TaskS
 import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
-import { UpdateDialogService } from './update-dialog/update-dialog.service';
+//import { UpdateDialogService } from './update-dialog/update-dialog.service';
 import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
 import { LoginService } from '../../../login';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 import moment from 'moment/src/moment';
 import { EntriesService } from './entries.service';
+import { CreateDialogService } from '../create-dialog/create-dialog.service';
 // import { SearchDialogComponent } from './components/search-dialog/search-dialog.component';
 
 @Component({
@@ -71,18 +72,20 @@ export class EntriesComponent implements OnInit {
     public clientService: ClientService,
     private entryDialogService: EntryDialogService,
     private deleteEntryService: DeleteEntryService,
-    private updateDialogService: UpdateDialogService,
+    //private updateDialogService: UpdateDialogService,
     private viewContainerRef: ViewContainerRef,
     private loginService: LoginService,
     public userService: UserService,
     private dialog: MdDialog,
     private http: Http,
     private router: Router,
+    private createDialogService: CreateDialogService,
     public entriesService: EntriesService) {
   }
 
   ngOnInit() {
     this.loadEntries();
+    this.createDialogService.setEntryComponent(this);
   }
 
   changeRowLimits(event) {
@@ -329,7 +332,14 @@ export class EntriesComponent implements OnInit {
   }
 
   loadEntries() {
-    this.items = [];
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = results;
+      this.clients = this.entriesService.clients;
+      this.projects = this.entriesService.projects;
+      this.tasks = this.entriesService.tasks;
+    });
+
+    /*this.items = [];
     this.userID = this.loginService.getLoggedUserID();
 
     let that = this;
@@ -372,7 +382,7 @@ export class EntriesComponent implements OnInit {
                   });
               }); 
           });
-      });
+      });*/
   }
 
   onPage(event) {
