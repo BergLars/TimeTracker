@@ -1,4 +1,4 @@
-<md-card class="app-input-section">
+<md-card class="app-input-section" (keydown)="getUsernamePassword(username.value,password.value);keyDownFunction($event);">
     <img src="assets/Logo.png" width="100px">
     <p>
         <md-input-container>
@@ -15,6 +15,6 @@
             </md-placeholder>
         </md-input-container>
         <br />
-        <button md-button (click)="getUsernamePassword(username.value,password.value)">Login</button>
+        <button md-button (click)="getUsernamePassword(username.value,password.value);">Login</button>
     </p>
 </md-card>
