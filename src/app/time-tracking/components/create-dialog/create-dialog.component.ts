@@ -5,7 +5,7 @@ import { LoginService } from '../../../login';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
-import {Observable} from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
 	selector: 'app-create-dialog',
@@ -55,7 +55,7 @@ export class CreateDialogComponent implements OnInit {
 		public userService: UserService,
 		public loginService: LoginService,
 		public clientService: ClientService,
-    	private http: Http,
+		private http: Http,
 		private router: Router
 	) { }
 
@@ -71,18 +71,18 @@ export class CreateDialogComponent implements OnInit {
 		this.editMode = !this.editMode;
 	}
 
-	// public getValues(valueDesc: string, valueProjName: string, valueClient: string, valueUsername: string, valuePassw: string, valueConfirmPass: string, valueEmploy: number, valueIsAdmin: boolean) {
-	// 	this.newTaskDescription = valueDesc;
-	// 	this.newProjectName = valueProjName;
-	// 	this.newClientName = valueClient;
-	// 	this.username = valueUsername;
-	// 	this.password = valuePassw;
-	// 	this.confirmPassword = valueConfirmPass;
-	// 	this.employmentDegree = valueEmploy;
-	// 	this.adminRole = valueIsAdmin;
-	// }
+	public validateForm(valueDesc: string, valueProjName: string, valueClient: string, valueUsername: string, valuePassw: string, valueConfirmPass: string, valueEmploy: number, valueIsAdmin: any) {
+		this.newTaskDescription = valueDesc;
+		this.newProjectName = valueProjName;
+		this.newClientName = valueClient;
+		this.username = valueUsername;
+		this.password = valuePassw;
+		this.confirmPassword = valueConfirmPass;
+		this.employmentDegree = valueEmploy;
+		this.adminRole = valueIsAdmin.checked;
+	}
 
-	checkMandatoryFields() {
+	public checkMandatoryFields() {
 		if (this.item == this.PROJECT) {
 			if (this.newProjectName === "" || this.newProjectName === undefined) {
 				alert("Please check if all the fields are filled in");
@@ -123,17 +123,6 @@ export class CreateDialogComponent implements OnInit {
 		}
 	}
 
-	public validateForm(valueDesc: string, valueProjName: string, valueClient: string, valueUsername: string, valuePassw: string, valueConfirmPass: string, valueEmploy: number, valueIsAdmin: boolean) {
-		this.newTaskDescription = valueDesc;
-		this.newProjectName = valueProjName;
-		this.newClientName = valueClient;
-		this.username = valueUsername;
-		this.password = valuePassw;
-		this.confirmPassword = valueConfirmPass;
-		this.employmentDegree = valueEmploy;
-		this.adminRole = valueIsAdmin;
-	}
-
 	public checkIfAdmin() {
 		this.showData();
 		return this.isAdmin = this.loginService.isAdmin();
@@ -147,78 +136,78 @@ export class CreateDialogComponent implements OnInit {
 		if (this.item == this.PROJECT) {
 
 			return this.http.post(this.baseUrl + "/projects", {
-				 projectName: this.newProjectName
-			}).subscribe(() => {
-				this.dialogRef.close(true);
-			},
-			error => {
-				if (error.response.status === 400 || error.response.status === 404) {
+				projectName: this.newProjectName
+			}).map(res => res.json())
+			.subscribe(
+			(data) =>
+				this.dialogRef.close(true),
+			(error) => {
+				if (error.status === 400 || error.status === 404) {
 					alert('Please check that fields are the correct input !');
-					return Observable.of(undefined);
 				}
-				if (error.response.status === 500) {
+				if (error.status === 500) {
 					alert('Internal server error !')
 				}
 			});
 		}
-		
+
 		if (this.item == this.TASK) {
 			return this.http.post(this.baseUrl + "/tasks", {
 				taskDescription: this.newTaskDescription
-			}).subscribe(() => {
-				this.dialogRef.close(true);
-			},
-			error => {
-				if (error.response.status === 400 || error.response.status === 404) {
+			}).map(res => res.json())
+			.subscribe(
+			(data) =>
+				this.dialogRef.close(true),
+			(error) => {
+				if (error.status === 400 || error.status === 404) {
 					alert('Please check that fields are the correct input !');
-				  return Observable.of(undefined);
 				}
-				if (error.response.status === 500) {
+				if (error.status === 500) {
 					alert('Internal server error !')
 				}
 			});
 		}
 
 		if (this.item == this.CLIENT) {
-			return this.http.post(this.baseUrl + "/clients", { 
+			return this.http.post(this.baseUrl + "/clients", {
 				clientName: this.newClientName
-			}).subscribe(() => {
-				this.dialogRef.close(true);
-			},
-			error => {
-				if (error.response.status === 400 || error.response.status === 404) {
-					alert('Please check that fields are the correct input !');
-					return Observable.of(undefined);
-				}
-				if (error.response.status === 500) {
-					alert('Internal server error !')
-				}
-			});
+			}).map(res => res.json())
+				.subscribe(
+				(data) =>
+					this.dialogRef.close(true),
+				(error) => {
+					if (error.status === 400 || error.status === 404) {
+						alert('Please check that fields are the correct input !');
+					}
+					if (error.status === 500) {
+						alert('Internal server error !')
+					}
+				});
 		}
 
 		if (this.item == this.USER) {
-			return this.http.post(this.baseUrl + "/userprofile", 
-				{ userName: this.username, 
-					password: this.password, 
-					employmentDegree: this.employmentDegree, 
+			return this.http.post(this.baseUrl + "/userprofile",
+				{
+					userName: this.username,
+					password: this.password,
+					employmentDegree: this.employmentDegree,
 					admin: this.adminRole
-				}).subscribe(() => {
-					this.dialogRef.close(true);
-				},
-				error => {
-					if (error.response.status === 400 || error.response.status === 404) {
+				}).map(res => res.json())
+				.subscribe(
+				(data) =>
+					this.dialogRef.close(true),
+				(error) => {
+					if (error.status === 400 || error.status === 404) {
 						alert('Please check that fields are the correct input !');
 					}
-					if (error.response.status === 409) {
-						alert('Username already exists !');
+					if (error.status === 409) {
+						alert('User already exists !');
 					}
-					if (error.response.status === 500) {
+					if (error.status === 500) {
 						alert('Internal server error !')
 					}
-					this.dialogRef.close(true);
 				});
 		}
-		this.router.navigate(['entries']);
 	}
 
 	public keyDownFunction(event) {
