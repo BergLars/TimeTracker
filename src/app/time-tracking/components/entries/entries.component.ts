@@ -163,20 +163,20 @@ export class EntriesComponent implements OnInit {
 
   public updateEntry(row) {
     this.http.put(this.baseUrl + "/timeentries/" + row.id, {
-      entryDate: row.entryDate, 
+      entryDate: row.entryDate,
       startTime: row.startTime,
-      endTime: row.endTime, 
+      endTime: row.endTime,
       timeSpent: row.timeSpent,
       description: row.description,
-      userprofileID: row.userprofileID, 
-      clientID: row.clientID, 
-      projectID: row.projectID, 
-      taskID: row.taskID, 
+      userprofileID: row.userprofileID,
+      clientID: row.clientID,
+      projectID: row.projectID,
+      taskID: row.taskID,
       billable: row.isBillable
     }).subscribe(
-    () => {
-      this.loadEntries();
-    });
+      () => {
+        this.loadEntries();
+      });
   }
 
   // Try MomentJS to resolve this task
@@ -329,59 +329,59 @@ export class EntriesComponent implements OnInit {
 
     this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
       results => {
-        this.clients = results; 
+        this.clients = results;
 
-        results.forEach(function(result) {
+        results.forEach(function (result) {
           that.clientsDictionary[result.id] = result;
         });
+      });
 
-        this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
-          results => {
-            this.projects = results; 
+    this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+      results => {
+        this.projects = results;
 
-            results.forEach(function(result) {
-              that.projectsDictionary[result.id] = result;
-            });
+        results.forEach(function (result) {
+          that.projectsDictionary[result.id] = result;
+        });
+      });
 
-             // We build the dictionary of tasks
-            this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
-              results => {
-                this.tasks = results;
-                
-                results.forEach(function(result){
-                  that.tasksDictionary[result.id] = result;
-                });
+    this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+      results => {
+        this.tasks = results;
 
-                this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
-                  loadedEntries => {
-                    let that = this;
+        results.forEach(function (result) {
+          that.tasksDictionary[result.id] = result;
+        });
+      });
 
-                    loadedEntries.forEach(function(entry){
-                      entry.task = that.tasksDictionary[entry.taskID];
-                      entry.client = that.clientsDictionary[entry.clientID];
-                      entry.project = that.projectsDictionary[entry.projectID];
-                      that.items.push(entry);
-                    });
-                  });
-              }); 
-          });
+    this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
+      loadedEntries => {
+        let that = this;
+
+        loadedEntries.forEach(function (entry) {
+          entry.task = that.tasksDictionary[entry.taskID];
+          entry.client = that.clientsDictionary[entry.clientID];
+          entry.project = that.projectsDictionary[entry.projectID];
+          that.items.push(entry);
+        });
+        this.clonedItems = this.items;
       });
   }
 
   onPage(event) {
     console.log('Page Event', event);
-    /*this.count = this.items.length;
-    this.items = this.clonedItems;;
+    this.count = this.items.length;
+    this.items = this.clonedItems;
     const start = event.offset * event.limit;
     const end = start + Number(event.limit);
     let rows = [];
     for (let i = start; i < end; i++) {
       rows[i] = this.items[i];
     }
-    // this.items = rows;
+    this.items = rows;
     this.items.length = this.count;
     console.log('Page Results', start, end, rows);
-    this.offset = event.offset;*/
+    this.offset = event.offset;
   }
   private getStatistics() {
     // TODO
