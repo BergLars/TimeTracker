@@ -44,6 +44,12 @@ export class PasswordDialogComponent implements OnInit {
 		}
 	}
 
+	public keyDownFunction(event) {
+		if (event.keyCode == 13) {
+			this.checkMandatoryFields();
+		}
+	}
+
 	private updatePassword() {
 		this.userService.updatePassword(this.currentPassword, this.newPassword, this.confirmPassword).map(res => res.json()).subscribe(
 			user => {

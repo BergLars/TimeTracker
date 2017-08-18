@@ -25,7 +25,19 @@ export class LoginComponent {
 	public getUsernamePassword(value: string, value1: string) {
 		this.username = value;
 		this.password = value1;
+	}
 
-		this.loginService.request(this.username, encodeURIComponent(this.password));
+	public keyDownFunction(event) {
+		if (event.key == 'Enter') {
+			this.checkMandatoryFields();
+		}
+	}
+
+	public checkMandatoryFields() {
+		if (this.username === "" || this.password === "") {
+			alert("Please check if all the fields are filled in");
+		} else {
+			this.loginService.request(this.username, encodeURIComponent(this.password));
+		}
 	}
 }
