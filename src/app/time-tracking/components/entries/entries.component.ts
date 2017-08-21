@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { Http } from '@angular/http';
-import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, TaskService, ProjectService, TimeTrackingEntryService, ClientService } from '../../../data';
+import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, TaskService, ProjectService, TimeTrackingEntryService, ClientService, RegistryService } from '../../../data';
 import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
@@ -79,13 +79,13 @@ export class EntriesComponent implements OnInit {
     private dialog: MdDialog,
     private http: Http,
     private router: Router,
-    private createDialogService: CreateDialogService,
+    public registryService: RegistryService,
     public entriesService: EntriesService) {
+      this.registryService.entriesComponent = this;
   }
 
   ngOnInit() {
     this.loadEntries();
-    this.createDialogService.setEntryComponent(this);
   }
 
   changeRowLimits(event) {
@@ -338,51 +338,6 @@ export class EntriesComponent implements OnInit {
       this.projects = this.entriesService.projects;
       this.tasks = this.entriesService.tasks;
     });
-
-    /*this.items = [];
-    this.userID = this.loginService.getLoggedUserID();
-
-    let that = this;
-
-    this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
-      results => {
-        this.clients = results; 
-
-        results.forEach(function(result) {
-          that.clientsDictionary[result.id] = result;
-        });
-
-        this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
-          results => {
-            this.projects = results; 
-
-            results.forEach(function(result) {
-              that.projectsDictionary[result.id] = result;
-            });
-
-             // We build the dictionary of tasks
-            this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
-              results => {
-                this.tasks = results;
-                
-                results.forEach(function(result){
-                  that.tasksDictionary[result.id] = result;
-                });
-
-                this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
-                  loadedEntries => {
-                    let that = this;
-
-                    loadedEntries.forEach(function(entry){
-                      entry.task = that.tasksDictionary[entry.taskID];
-                      entry.client = that.clientsDictionary[entry.clientID];
-                      entry.project = that.projectsDictionary[entry.projectID];
-                      that.items.push(entry);
-                    });
-                  });
-              }); 
-          });
-      });*/
   }
 
   onPage(event) {

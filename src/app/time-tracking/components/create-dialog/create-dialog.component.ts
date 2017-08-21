@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
-import { IProject, ITask, IUser, ProjectService, TaskService, UserService, IClient, ClientService } from '../../../data';
+import { IProject, ITask, IUser, ProjectService, TaskService, UserService, IClient, ClientService, RegistryService } from '../../../data';
 import { LoginService } from '../../../login';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
@@ -50,8 +50,6 @@ export class CreateDialogComponent implements OnInit {
 
 	public item: number = this.createItems[0].id;
 
-	public createDialogSevice: CreateDialogService;
-
 	constructor(
 		public dialogRef: MdDialogRef<CreateDialogComponent>,
 		public projectService: ProjectService,
@@ -62,12 +60,11 @@ export class CreateDialogComponent implements OnInit {
     	private http: Http,
 		private router: Router,
 		public entriesService: EntriesService,
-		//public createDialogService: CreateDialogService
+		public registryService: RegistryService
 	) { }
 
 	ngOnInit() {
-		this.displayItems();
-		this.createDialogSevice = CreateDialogService;
+
 	}
 
 	changeItemToBeCreated(event) {
@@ -150,7 +147,7 @@ export class CreateDialogComponent implements OnInit {
 				 projectName: this.newProjectName
 			}).subscribe(() => {
 				this.dialogRef.close(true);
-				//this.entriesService.loadEntries();
+				this.registryService.entriesComponent.loadEntries();
 			},
 			error => {
 				if (error.response.status === 400 || error.response.status === 404) {
@@ -168,8 +165,7 @@ export class CreateDialogComponent implements OnInit {
 				taskDescription: this.newTaskDescription
 			}).subscribe(() => {
 				this.dialogRef.close(true);
-				//this.createDialogService.entriesComponent.loadEntries();
-				//this.entriesService.loadEntries();
+				this.registryService.entriesComponent.loadEntries();
 			},
 			error => {
 				if (error.response.status === 400 || error.response.status === 404) {
@@ -186,7 +182,7 @@ export class CreateDialogComponent implements OnInit {
 				clientName: this.newClientName
 			}).subscribe(() => {
 				this.dialogRef.close(true);
-				//this.entriesService.loadEntries();
+				this.registryService.entriesComponent.loadEntries();
 			},
 			error => {
 				if (error.response.status === 400 || error.response.status === 404) {
@@ -206,7 +202,7 @@ export class CreateDialogComponent implements OnInit {
 					admin: this.adminRole
 				}).subscribe(() => {
 					this.dialogRef.close(true);
-					//this.entriesService.loadEntries();
+					this.registryService.entriesComponent.loadEntries();
 				},
 				error => {
 					if (error.response.status === 400 || error.response.status === 404) {
@@ -223,24 +219,6 @@ export class CreateDialogComponent implements OnInit {
 		}
 		this.router.navigate(['entries']);
 	}
-
-	// private loadItems() {
-
-	// 	this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
- //      	results => {
- //      		this.clients = results;
- //      	});
-
-	// 	this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
- //      	results => {
- //      		this.tasks = results;
- //      	});
-
-	// 	this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
- //      	results => {
- //      		this.projects = results;
- //      	});
-
 
 	private displayItems() {
 

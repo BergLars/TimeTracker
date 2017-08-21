@@ -8,7 +8,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AlertModule, ModalModule, TimepickerModule, TabsModule, DatepickerModule, TypeaheadModule } from 'ng2-bootstrap';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
-import { ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService } from './data';
+import { ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService, RegistryService } from './data';
 import { SidebarComponent, EntriesComponent, TimeTrackingComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService, CreateDialogComponent, CreateDialogService, ExportDialogComponent, ExportDialogService, EntriesService } from './time-tracking';
 import { routes } from './routes';
 import { LoginComponent, LoginService } from './login';
@@ -36,6 +36,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         MenuComponent,
         PasswordDialogComponent,
         CreateDialogComponent
+
     ],
     entryComponents: [
         EntryDialogComponent,
@@ -76,6 +77,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         CreateDialogService,
         ExportDialogService,
         EntriesService,
+        RegistryService,
         {
             provide: Http,
             useFactory: httpFactory,
