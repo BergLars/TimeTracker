@@ -5,49 +5,48 @@ import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, TaskS
 import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
 import { LoginService } from '../../../login';
-import { EntriesComponent} from './entries.component';
+import { EntriesComponent } from './entries.component';
 
 @Injectable()
 export class EntriesService {
-	public baseUrl: string = environment.apiBaseUrl;
-	public isCreated: boolean;
-	@Input() projects: IProject[] = [];
-	@Input() project: IProject;
-	@Input() tasks: ITask[] = [];
-	@Input() task: ITask;
-	@Input() clients: IClient[] = [];
-  	@Input() client: IClient;		
-	public items: ITimeTrackingEntry[] = [];
+  public baseUrl: string = environment.apiBaseUrl;
+  public isCreated: boolean;
+  @Input() projects: IProject[] = [];
+  @Input() project: IProject;
+  @Input() tasks: ITask[] = [];
+  @Input() task: ITask;
+  @Input() clients: IClient[] = [];
+  @Input() client: IClient;
+  public items: ITimeTrackingEntry[] = [];
 
 
-	public tasksDictionary: any = {};
-  	public projectsDictionary: any = {};
-  	public clientsDictionary: any = {};
+  public tasksDictionary: any = {};
+  public projectsDictionary: any = {};
+  public clientsDictionary: any = {};
 
 
-	constructor(
-		private loginService: LoginService,
-		private http: Http,) { 
-	}
+  constructor(
+    private loginService: LoginService,
+    private http: Http) {
+  }
 
   entriesAreLoaded(): Promise<any> {
-    let that = this; 
+    let that = this;
 
     return new Promise<any>((resolve, reject) => {
       this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
         results => {
-          this.clients = results; 
+          this.clients = results;
 
-          results.forEach(function(result) {
+          results.forEach(function (result)  {
             that.clientsDictionary[result.id] = result;
           });
 
           this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
             results => {
-              this.projects = results; 
-               console.log("works");
+              this.projects = results;
 
-              results.forEach(function(result) {
+              results.forEach(function (result) {
                 that.projectsDictionary[result.id] = result;
               });
 
@@ -55,8 +54,8 @@ export class EntriesService {
               this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
                 results => {
                   this.tasks = results;
-                  
-                  results.forEach(function(result){
+
+                  results.forEach(function (result) {
                     that.tasksDictionary[result.id] = result;
                   });
 
@@ -64,17 +63,17 @@ export class EntriesService {
                     loadedEntries => {
                       var items = [];
 
-                      loadedEntries.forEach(function(entry){
+                      loadedEntries.forEach(function (entry) {
                         entry.task = that.tasksDictionary[entry.taskID];
                         entry.client = that.clientsDictionary[entry.clientID];
                         entry.project = that.projectsDictionary[entry.projectID];
                         items.push(entry);
                       });
                       resolve(items);
-                    });  
-                }); 
+                    });
+                });
             });
         });
-    }); 
+    });
   }
 }
