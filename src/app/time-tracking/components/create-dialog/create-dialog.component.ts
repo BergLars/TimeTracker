@@ -75,16 +75,16 @@ export class CreateDialogComponent implements OnInit {
 		this.editMode = !this.editMode;
 	}
 
-	public getValues(valueDesc: string, valueProjName: string, valueClient: string, valueUsername: string, valuePassw: string, valueConfirmPass: string, valueEmploy: number, valueIsAdmin: boolean) {
-		this.newTaskDescription = valueDesc;
-		this.newProjectName = valueProjName;
-		this.newClientName = valueClient;
-		this.username = valueUsername;
-		this.password = valuePassw;
-		this.confirmPassword = valueConfirmPass;
-		this.employmentDegree = valueEmploy;
-		this.adminRole = valueIsAdmin;
-	}
+	// public getValues(valueDesc: string, valueProjName: string, valueClient: string, valueUsername: string, valuePassw: string, valueConfirmPass: string, valueEmploy: number, valueIsAdmin: boolean) {
+	// 	this.newTaskDescription = valueDesc;
+	// 	this.newProjectName = valueProjName;
+	// 	this.newClientName = valueClient;
+	// 	this.username = valueUsername;
+	// 	this.password = valuePassw;
+	// 	this.confirmPassword = valueConfirmPass;
+	// 	this.employmentDegree = valueEmploy;
+	// 	this.adminRole = valueIsAdmin;
+	// }
 
 	checkMandatoryFields() {
 		if (this.item == this.PROJECT) {
@@ -127,9 +127,15 @@ export class CreateDialogComponent implements OnInit {
 		}
 	}
 
-	public validateForm(description, newProjectName, clientName, username, password, confirmPassword, employmentDegree, adminRole) {
-		this.getValues(description.value, newProjectName.value, clientName.value, username.value, password.value, confirmPassword.value, employmentDegree.value, adminRole.checked);
-		this.checkMandatoryFields();
+	public validateForm(valueDesc: string, valueProjName: string, valueClient: string, valueUsername: string, valuePassw: string, valueConfirmPass: string, valueEmploy: number, valueIsAdmin: boolean) {
+		this.newTaskDescription = valueDesc;
+		this.newProjectName = valueProjName;
+		this.newClientName = valueClient;
+		this.username = valueUsername;
+		this.password = valuePassw;
+		this.confirmPassword = valueConfirmPass;
+		this.employmentDegree = valueEmploy;
+		this.adminRole = valueIsAdmin;
 	}
 
 	public checkIfAdmin() {
@@ -143,6 +149,7 @@ export class CreateDialogComponent implements OnInit {
 
 	public createItem() {
 		if (this.item == this.PROJECT) {
+
 			return this.http.post(this.baseUrl + "/projects", {
 				 projectName: this.newProjectName
 			}).subscribe(() => {
@@ -177,6 +184,7 @@ export class CreateDialogComponent implements OnInit {
 				}
 			});
 		}
+
 		if (this.item == this.CLIENT) {
 			return this.http.post(this.baseUrl + "/clients", { 
 				clientName: this.newClientName
@@ -194,6 +202,7 @@ export class CreateDialogComponent implements OnInit {
 				}
 			});
 		}
+
 		if (this.item == this.USER) {
 			return this.http.post(this.baseUrl + "/userprofile", 
 				{ userName: this.username, 
@@ -218,6 +227,12 @@ export class CreateDialogComponent implements OnInit {
 				});
 		}
 		this.router.navigate(['entries']);
+	}
+
+	public keyDownFunction(event) {
+		if (event.key == 'Enter') {
+			this.checkMandatoryFields();
+		}
 	}
 
 	private displayItems() {

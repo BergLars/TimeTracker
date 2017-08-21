@@ -168,20 +168,20 @@ export class EntriesComponent implements OnInit {
 
   public updateEntry(row) {
     this.http.put(this.baseUrl + "/timeentries/" + row.id, {
-      entryDate: row.entryDate, 
+      entryDate: row.entryDate,
       startTime: row.startTime,
-      endTime: row.endTime, 
+      endTime: row.endTime,
       timeSpent: row.timeSpent,
       description: row.description,
-      userprofileID: row.userprofileID, 
-      clientID: row.clientID, 
-      projectID: row.projectID, 
-      taskID: row.taskID, 
+      userprofileID: row.userprofileID,
+      clientID: row.clientID,
+      projectID: row.projectID,
+      taskID: row.taskID,
       billable: row.isBillable
     }).subscribe(
-    () => {
-      this.loadEntries();
-    });
+      () => {
+        this.loadEntries();
+      });
   }
 
   // Try MomentJS to resolve this task
@@ -247,11 +247,6 @@ export class EntriesComponent implements OnInit {
       return true;
     }
     return false;
-  }
-
-  onDelete(row) {
-    this.timeTrackingEntryService.deleteTimeTrackingEntry(row.id);
-      this.loadEntries();
   }
 
   toggleEditMode() {
@@ -342,18 +337,18 @@ export class EntriesComponent implements OnInit {
 
   onPage(event) {
     console.log('Page Event', event);
-    /*this.count = this.items.length;
-    this.items = this.clonedItems;;
+    this.count = this.items.length;
+    this.items = this.clonedItems;
     const start = event.offset * event.limit;
     const end = start + Number(event.limit);
     let rows = [];
     for (let i = start; i < end; i++) {
       rows[i] = this.items[i];
     }
-    // this.items = rows;
+    this.items = rows;
     this.items.length = this.count;
     console.log('Page Results', start, end, rows);
-    this.offset = event.offset;*/
+    this.offset = event.offset;
   }
   private getStatistics() {
     // TODO

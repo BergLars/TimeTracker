@@ -85,9 +85,14 @@ daypicker table {
 .app-input-section.mat-card {
     position: fixed;
     top: 40%;
-    left: 35%;
+    left: 32.5%;
     width: 35%;
     text-align: center;
+    img{
+        float: right;
+        margin-left: -75%;
+        margin-top: -20px;
+    }
 }
 
 div.mat-input-underline {
@@ -124,11 +129,6 @@ div.mat-input-underline {
     font-size: 16px;
 }
 
-// .datatable-footer {
-//     border-top: 1px solid rgba(0, 0, 0, 0.12);
-//     font-size: 16px;
-// }
-
 .md-toolbar {
     width: 1125px !important;
 }
@@ -148,7 +148,3 @@ div.mat-input-underline {
         }
     }
 }
-
-// .mat-button{
-//     float:right;
-// }

@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { HttpModule, Http, Response, RequestOptions, Headers, XHRBackend } from '@angular/http';
-import { MaterialModule, MdNativeDateModule } from '@angular/material';
+import { MaterialModule, MdDatepickerModule, MdNativeDateModule, DateAdapter } from '@angular/material';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AlertModule, ModalModule, TimepickerModule, TabsModule, DatepickerModule, TypeaheadModule } from 'ng2-bootstrap';
 import { AppComponent } from './app.component';
@@ -19,7 +19,7 @@ import { MyDatePickerModule } from 'mydatepicker';
 import { CryptoJS } from 'crypto-js';
 import { MenuComponent, PasswordDialogComponent, PasswordDialogService } from './menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { DeDateAdapter } from './dateAdapter';
 @NgModule({
     declarations: [
         AppComponent,
@@ -61,6 +61,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         TypeaheadModule,
         MyDatePickerModule,
         BrowserAnimationsModule,
+        MdDatepickerModule,
         MdNativeDateModule
     ],
     providers: [
@@ -82,8 +83,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
             provide: Http,
             useFactory: httpFactory,
             deps: [XHRBackend, RequestOptions]
-        }],
+        },
+        {
+            provide: DateAdapter,
+            useClass: DeDateAdapter
+        }
+    ],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+    constructor(private dateAdapter: DateAdapter<Date>) {
+    this.dateAdapter.setLocale('fr-CH');
+  }
+ }
 platformBrowserDynamic().bootstrapModule(AppModule);

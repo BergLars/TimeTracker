@@ -6,7 +6,7 @@
 export const environment = {
   production: false,
 
-  title: 'Fluance Timetracker - DEV',
+  title: 'Timetracker - DEV',
   apiBaseUrl: 'http://localhost:8081'
   // apiBaseUrl: 'http://htmR02.local:8081'
   
