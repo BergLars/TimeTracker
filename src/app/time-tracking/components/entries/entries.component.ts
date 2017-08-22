@@ -1,15 +1,17 @@
 import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { Http } from '@angular/http';
-import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, TaskService, ProjectService, TimeTrackingEntryService, ClientService } from '../../../data';
+import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, TaskService, ProjectService, TimeTrackingEntryService, ClientService, RegistryService } from '../../../data';
 import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
-import { UpdateDialogService } from './update-dialog/update-dialog.service';
+//import { UpdateDialogService } from './update-dialog/update-dialog.service';
 import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
 import { LoginService } from '../../../login';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 import moment from 'moment/src/moment';
+import { EntriesService } from './entries.service';
+import { CreateDialogService } from '../create-dialog/create-dialog.service';
 // import { SearchDialogComponent } from './components/search-dialog/search-dialog.component';
 
 @Component({
@@ -70,13 +72,16 @@ export class EntriesComponent implements OnInit {
     public clientService: ClientService,
     private entryDialogService: EntryDialogService,
     private deleteEntryService: DeleteEntryService,
-    private updateDialogService: UpdateDialogService,
+    //private updateDialogService: UpdateDialogService,
     private viewContainerRef: ViewContainerRef,
     private loginService: LoginService,
     public userService: UserService,
     private dialog: MdDialog,
     private http: Http,
-    private router: Router) {
+    private router: Router,
+    public registryService: RegistryService,
+    public entriesService: EntriesService) {
+      this.registryService.entriesComponent = this;
   }
 
   ngOnInit() {
@@ -322,50 +327,12 @@ export class EntriesComponent implements OnInit {
   }
 
   loadEntries() {
-    this.items = [];
-    this.userID = this.loginService.getLoggedUserID();
-
-    let that = this;
-
-    this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
-      results => {
-        this.clients = results;
-
-        results.forEach(function (result) {
-          that.clientsDictionary[result.id] = result;
-        });
-      });
-
-    this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
-      results => {
-        this.projects = results;
-
-        results.forEach(function (result) {
-          that.projectsDictionary[result.id] = result;
-        });
-      });
-
-    this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
-      results => {
-        this.tasks = results;
-
-        results.forEach(function (result) {
-          that.tasksDictionary[result.id] = result;
-        });
-      });
-
-    this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
-      loadedEntries => {
-        let that = this;
-
-        loadedEntries.forEach(function (entry) {
-          entry.task = that.tasksDictionary[entry.taskID];
-          entry.client = that.clientsDictionary[entry.clientID];
-          entry.project = that.projectsDictionary[entry.projectID];
-          that.items.push(entry);
-        });
-        this.clonedItems = this.items;
-      });
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = results;
+      this.clients = this.entriesService.clients;
+      this.projects = this.entriesService.projects;
+      this.tasks = this.entriesService.tasks;
+    });
   }
 
   onPage(event) {

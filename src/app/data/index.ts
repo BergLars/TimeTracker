@@ -13,3 +13,4 @@ export * from './task.service';
 export * from './time-tracking-entry.service';
 export * from './user.service';
 export * from './client.service';
+export * from './registry.service';

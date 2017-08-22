@@ -4,6 +4,7 @@ import { ProjectService, TaskService, TimeTrackingEntryService, UserService, IPr
 // Use the Full path instead of using index.ts path
 import { CreateDialogService } from '../time-tracking/components/create-dialog/create-dialog.service';
 import { ExportDialogService } from '../time-tracking/components/export-dialog/export-dialog.service';
+import { EntriesService } from '../time-tracking/components/entries/entries.service';
 
 import { Router } from '@angular/router';
 import moment from 'moment/src/moment';
@@ -36,7 +37,8 @@ export class TimeTrackingComponent implements OnInit {
     private exportDialogService: ExportDialogService,
     private userService: UserService,
     private router: Router,
-    private viewContainerRef: ViewContainerRef) {
+    private viewContainerRef: ViewContainerRef,
+    private entriesService: EntriesService) {
   }
 
   ngOnInit() {
@@ -46,7 +48,12 @@ export class TimeTrackingComponent implements OnInit {
   }
   public openCreateDialog() {
     this.createDialogService
-      .confirm('Create', this.viewContainerRef);
+      .confirm('Create', this.viewContainerRef)
+      .subscribe(res => {
+        if (res) {
+          //this.entriesService.loadEntries();
+        }
+      });
   }
 
   public openExportDialog() {

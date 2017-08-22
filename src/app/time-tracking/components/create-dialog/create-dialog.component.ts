@@ -1,11 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Renderer } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
-import { IProject, ITask, IUser, ProjectService, TaskService, UserService, IClient, ClientService } from '../../../data';
+import { IProject, ITask, IUser, ProjectService, TaskService, UserService, IClient, ClientService, RegistryService } from '../../../data';
 import { LoginService } from '../../../login';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs/Rx';
+import { EntriesService } from '../../components/entries/entries.service';
+import { EntriesComponent } from '../../components/entries/entries.component';
+import { CreateDialogService } from './create-dialog.service';
 
 @Component({
 	selector: 'app-create-dialog',
@@ -56,11 +59,13 @@ export class CreateDialogComponent implements OnInit {
 		public loginService: LoginService,
 		public clientService: ClientService,
 		private http: Http,
-		private router: Router
+		private router: Router,
+		public entriesService: EntriesService,
+		public registryService: RegistryService
 	) { }
 
 	ngOnInit() {
-		this.displayItems();
+
 	}
 
 	changeItemToBeCreated(event) {
@@ -134,18 +139,18 @@ export class CreateDialogComponent implements OnInit {
 
 	public createItem() {
 		if (this.item == this.PROJECT) {
-
 			return this.http.post(this.baseUrl + "/projects", {
-				projectName: this.newProjectName
-			}).map(res => res.json())
-			.subscribe(
-			(data) =>
-				this.dialogRef.close(true),
-			(error) => {
-				if (error.status === 400 || error.status === 404) {
+				 projectName: this.newProjectName
+			}).subscribe(() => {
+				this.dialogRef.close(true);
+				this.registryService.entriesComponent.loadEntries();
+			},
+			error => {
+				if (error.response.status === 400 || error.response.status === 404) {
 					alert('Please check that fields are the correct input !');
+					return Observable.of(undefined);
 				}
-				if (error.status === 500) {
+				if (error.response.status === 500) {
 					alert('Internal server error !')
 				}
 			});
@@ -154,15 +159,16 @@ export class CreateDialogComponent implements OnInit {
 		if (this.item == this.TASK) {
 			return this.http.post(this.baseUrl + "/tasks", {
 				taskDescription: this.newTaskDescription
-			}).map(res => res.json())
-			.subscribe(
-			(data) =>
-				this.dialogRef.close(true),
-			(error) => {
-				if (error.status === 400 || error.status === 404) {
+			}).subscribe(() => {
+				this.dialogRef.close(true);
+				this.registryService.entriesComponent.loadEntries();
+			},
+			error => {
+				if (error.response.status === 400 || error.response.status === 404) {
 					alert('Please check that fields are the correct input !');
+				  return Observable.of(undefined);
 				}
-				if (error.status === 500) {
+				if (error.response.status === 500) {
 					alert('Internal server error !')
 				}
 			});
@@ -171,18 +177,19 @@ export class CreateDialogComponent implements OnInit {
 		if (this.item == this.CLIENT) {
 			return this.http.post(this.baseUrl + "/clients", {
 				clientName: this.newClientName
-			}).map(res => res.json())
-				.subscribe(
-				(data) =>
-					this.dialogRef.close(true),
-				(error) => {
-					if (error.status === 400 || error.status === 404) {
-						alert('Please check that fields are the correct input !');
-					}
-					if (error.status === 500) {
-						alert('Internal server error !')
-					}
-				});
+			}).subscribe(() => {
+				this.dialogRef.close(true);
+				this.registryService.entriesComponent.loadEntries();
+			},
+			error => {
+				if (error.response.status === 400 || error.response.status === 404) {
+					alert('Please check that fields are the correct input !');
+					return Observable.of(undefined);
+				}
+				if (error.response.status === 500) {
+					alert('Internal server error !')
+				}
+			});
 		}
 
 		if (this.item == this.USER) {
@@ -194,8 +201,10 @@ export class CreateDialogComponent implements OnInit {
 					admin: this.adminRole
 				}).map(res => res.json())
 				.subscribe(
-				(data) =>
-					this.dialogRef.close(true),
+				(data) => {
+					this.dialogRef.close(true);
+					this.registryService.entriesComponent.loadEntries();
+				},
 				(error) => {
 					if (error.status === 400 || error.status === 404) {
 						alert('Please check that fields are the correct input !');
@@ -217,7 +226,6 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	private displayItems() {
-
 		if (!this.checkIfAdmin()) {
 			this.createItems.splice(1);
 			this.createItems.splice(2);
