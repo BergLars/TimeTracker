@@ -43,7 +43,7 @@ export class LoginService implements IDataservice {
 				this.http.get(this.baseUrl + "/userprofile").map(res => res.json()).subscribe(
 					user => {
 						localStorage.setItem('user', JSON.stringify(user));
-						this.router.navigate(['entries']);
+						this.router.navigate(['timeentries']);
 					},
 					() => { }
 				);

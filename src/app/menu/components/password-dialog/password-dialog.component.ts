@@ -59,7 +59,7 @@ export class PasswordDialogComponent implements OnInit {
 			error => {
 				if (error.status === 400 || error.status === 404) {
 					alert("Wrong password or passwords are not the same !");
-					this.router.navigate(['entries']);
+					this.router.navigate(['timeentries']);
 				}
 				if (error.status === 500) {
 					alert('Internal server error !')
