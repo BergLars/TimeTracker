@@ -9,7 +9,22 @@ import { AlertModule, ModalModule, TimepickerModule, TabsModule, DatepickerModul
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService, RegistryService } from './data';
-import { SidebarComponent, EntriesComponent, TimeTrackingComponent, EntryDialogComponent, EntryDialogService, DeleteEntryComponent, DeleteEntryService, UpdateDialogComponent, UpdateDialogService, CreateDialogComponent, CreateDialogService, ExportDialogComponent, ExportDialogService, EntriesService } from './time-tracking';
+import { SidebarComponent, 
+        EntriesComponent, 
+        TimeTrackingComponent, 
+        EntryDialogComponent, 
+        EntryDialogService, 
+        DeleteEntryComponent, 
+        DeleteEntryService, 
+        UpdateDialogComponent, 
+        UpdateDialogService, 
+        CreateDialogComponent, 
+        CreateDialogService, 
+        ExportDialogComponent, 
+        ExportDialogService, 
+        EntriesService, 
+        EditDialogComponent, 
+        EditDialogService } from './time-tracking';
 import { routes } from './routes';
 import { LoginComponent, LoginService } from './login';
 import { HttpInterceptor, httpFactory } from './httpCalls';
@@ -35,8 +50,8 @@ import { DeDateAdapter } from './dateAdapter';
         UserComponent,
         MenuComponent,
         PasswordDialogComponent,
-        CreateDialogComponent
-
+        CreateDialogComponent,
+        EditDialogComponent
     ],
     entryComponents: [
         EntryDialogComponent,
@@ -44,7 +59,8 @@ import { DeDateAdapter } from './dateAdapter';
         UpdateDialogComponent,
         PasswordDialogComponent,
         CreateDialogComponent,
-        ExportDialogComponent
+        ExportDialogComponent,
+        EditDialogComponent
     ],
     imports: [
         NgxDatatableModule,
@@ -79,6 +95,7 @@ import { DeDateAdapter } from './dateAdapter';
         ExportDialogService,
         EntriesService,
         RegistryService,
+        EditDialogService,
         {
             provide: Http,
             useFactory: httpFactory,
