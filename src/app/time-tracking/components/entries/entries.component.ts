@@ -31,7 +31,6 @@ export class EntriesComponent implements OnInit {
   @Input() users: IUser[] = [];
   public isLoading: Boolean = false;
   public items: ITimeTrackingEntry[] = [];
-  public clonedItems: ITimeTrackingEntry[] = [];
   rows = [];
   selected = [];
   selectedRow: any;
@@ -81,7 +80,7 @@ export class EntriesComponent implements OnInit {
     private router: Router,
     public registryService: RegistryService,
     public entriesService: EntriesService) {
-      this.registryService.entriesComponent = this;
+    this.registryService.entriesComponent = this;
   }
 
   ngOnInit() {
@@ -184,27 +183,6 @@ export class EntriesComponent implements OnInit {
       });
   }
 
-  // Try MomentJS to resolve this task
-  // calculateTimeSpent(row) {
-  //   row.timeSpent = null;
-  //   let spentTimeH = moment(row.endTime, 'HH:mm').diff(moment(row.startTime, 'HH:mm'), 'Hours');
-  //   let spentTimeM: any;
-  //   if ((moment(row.endTime, 'HH:mm').diff(moment(row.startTime, 'HH:mm'), 'Minutes')) > 59) {
-  //     spentTimeM = Math.abs(moment(row.startTime, 'HH:mm').diff(moment(row.endTime, 'HH:mm'), 'Minutes') + 60);
-  //     console.log(spentTimeM);
-  //   }
-  //   else {
-  //     spentTimeM = moment(row.endTime, 'HH:mm').diff(moment(row.startTime, 'HH:mm'), 'Minutes');
-  //   }
-  //   if ((spentTimeH.toString()).length < 2) {
-  //     spentTimeH = '0' + spentTimeH;
-  //   }
-  //   if ((spentTimeM.toString()).length < 2) {
-  //     spentTimeM = '0' + spentTimeM;
-  //   }
-  //   return spentTimeH + ':' + spentTimeM;
-  // }
-
   onSelect({ selected }) {
     if (selected) {
       this.selectedRow = selected[0];
@@ -281,39 +259,6 @@ export class EntriesComponent implements OnInit {
       });
   }
 
-  // public openUpdateDialog(row) {
-  //   this.updateDialogService
-  //     .confirm(this.viewContainerRef, row)
-  //     // .afterClosed()
-  //     .subscribe(res => {
-  //       if (res) {
-  //         // TODO : that's bad, replace the array with a dictionary or something !!!
-
-  //         let description = res[0];
-  //         let projectID = Number(res[1]);
-  //         let taskID = Number(res[2]);
-  //         let date = res[3];
-  //         let starttime = res[4];
-  //         let endtime = res[5];
-  //         // let timespent = 
-
-  //         this.projectService.getProject(projectID).then(res => {
-  //           var selectedProject = res;
-
-  //           this.items[row.$$index]['description'] = description;//this.result.description;
-  //           this.items[row.$$index]['projectID'] = projectID; //this.result.projectID;
-  //           this.items[row.$$index]['taskID'] = taskID; //this.result.taskID;
-  //           this.items[row.$$index]['startTime'] = starttime;//this.result.startDateTime;
-  //           this.items[row.$$index]['endTime'] = endtime;//this.result.endDateTime;
-
-  //           this.loadEntries();
-  //         });
-  //         // TO DO
-  //         this.timeTrackingEntryService.updateTimeTrackingEntry(row.id, date, starttime, endtime, row.timespent, row.description, row.userprofileid, Number(this.taskID));
-  //       }
-  //     });
-  // }
-
   public openDeleteDialog(row) {
     console.log(row.project.projectName, row.id);
     this.deleteEntryService
@@ -338,7 +283,7 @@ export class EntriesComponent implements OnInit {
   onPage(event) {
     console.log('Page Event', event);
     this.count = this.items.length;
-    this.items = this.clonedItems;
+    this.items = this.entriesService.clonedItems;
     const start = event.offset * event.limit;
     const end = start + Number(event.limit);
     let rows = [];
@@ -368,9 +313,10 @@ export class EntriesComponent implements OnInit {
   }
 
   public showExportDialog() {
-
+    // TODO
   }
 
   public showVacationWorkedHoursDialog() {
+    // TODO
   }
 }
