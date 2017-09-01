@@ -51,7 +51,7 @@ import { DeDateAdapter } from './dateAdapter';
         BrowserModule,
         FormsModule,
         HttpModule,
-        RouterModule.forRoot(routes),
+        RouterModule.forRoot(routes, {useHash: true}),
         MaterialModule,
         FlexLayoutModule,
         AlertModule,
