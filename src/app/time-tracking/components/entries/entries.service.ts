@@ -18,6 +18,7 @@ export class EntriesService {
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
   public items: ITimeTrackingEntry[] = [];
+  public clonedItems: ITimeTrackingEntry[] = [];
 
 
   public tasksDictionary: any = {};
@@ -69,6 +70,7 @@ export class EntriesService {
                         entry.project = that.projectsDictionary[entry.projectID];
                         items.push(entry);
                       });
+                      this.clonedItems = items;
                       resolve(items);
                     });
                 });

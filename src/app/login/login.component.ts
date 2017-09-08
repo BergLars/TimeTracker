@@ -18,7 +18,7 @@ export class LoginComponent {
 		let token = localStorage.getItem('Authorization');
 
 		if (token) {
-			this.router.navigate(['entries']);
+			this.router.navigate(['timeentries']);
 		}
 	}
 

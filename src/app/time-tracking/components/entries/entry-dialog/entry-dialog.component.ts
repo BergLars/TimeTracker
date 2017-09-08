@@ -4,7 +4,7 @@ import { LoginService } from '../../../../login';
 import { Http } from '@angular/http';
 import { environment } from '../../../../../environments/environment';
 import moment from 'moment/src/moment';
-import {Observable} from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 import { MdDialogRef, MdDatepickerModule, DateAdapter, MdNativeDateModule } from '@angular/material';
 // import { MD_NATIVE_DATE_FORMATS } from "app";
 // import { DeDateAdapter } from "app/dateAdapter";
@@ -33,7 +33,7 @@ export class EntryDialogComponent implements OnInit {
   public taskID: any;
   public entryDate: any;
   @Input() startTime: any;
-  public endTime: any;
+  @Input() endTime: any;
   public timeSpent: any;
 
   public isBillable: boolean = false;
@@ -54,11 +54,9 @@ export class EntryDialogComponent implements OnInit {
     private http: Http,
     public loginService: LoginService,
     private dateAdapter: DateAdapter<Date>) {
-    // this.deDateAdapter = new DeDateAdapter();
   }
 
   ngOnInit() {
-    // this.dateAdapter.setLocale('de-CH');
     this.loadItems();
     this.myFilter = (d: Date): boolean => {
       const day = d.getDay();
@@ -115,8 +113,6 @@ export class EntryDialogComponent implements OnInit {
         alert("Please check if all the fields are filled in");
       } else {
         this.startTime = moment().format('HH:mm');
-        let endT = moment() + moment.duration().add(this.timeSpent, 'HH:mm');
-        this.endTime = moment(endT).format('HH:mm');
         this.decimalToTime(this.timeSpent);
       }
     }
@@ -133,7 +129,8 @@ export class EntryDialogComponent implements OnInit {
   public checkStartAndEndTime() {
     if (!this.validTimePeriod) {
       alert("Please enter a valid endtime.")
-    } else {
+    }
+    else {
       this.newEntry();
     }
   }
@@ -198,10 +195,14 @@ export class EntryDialogComponent implements OnInit {
       else {
         this.timeSpent = hours + ':' + minutes;
       }
+      let endT = moment() + moment.duration().add(this.timeSpent, 'HH:mm');
+      this.endTime = moment(endT).format('HH:mm');
       this.newEntry();
     }
     else if (t.toString().indexOf(':') !== -1) {
       this.timeSpent = t;
+      let endT = moment() + moment.duration().add(this.timeSpent, 'HH:mm');
+      this.endTime = moment(endT).format('HH:mm');
       this.newEntry();
     }
     else {
@@ -215,18 +216,19 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public newEntry() {
-    this.loadItems();
-    return this.http.post(this.baseUrl + "/timeentries", 
-      { entryDate: this.selectedDate, 
-        startTime: this.startTime, 
-        endTime: this.endTime, 
-        timeSpent: this.timeSpent, 
-        description: this.description, 
-        userprofileID: this.loginService.getLoggedUserID(), 
+    // this.loadItems();
+    return this.http.post(this.baseUrl + "/timeentries",
+      {
+        entryDate: this.selectedDate,
+        startTime: this.startTime,
+        endTime: this.endTime,
+        timeSpent: this.timeSpent,
+        description: this.description,
+        userprofileID: this.loginService.getLoggedUserID(),
         taskID: this.taskID,
-        clientID: this.clientID, 
-        projectID: this.projectID, 
-        billable: this.isBillable 
+        clientID: this.clientID,
+        projectID: this.projectID,
+        billable: this.isBillable
       }).subscribe(
       () => {
         this.dialogRef.close(true);
@@ -234,7 +236,7 @@ export class EntryDialogComponent implements OnInit {
       },
       (err) => {
         if (err.status === 400 || err.status === 404) {
-          alert('Wrong date format or fill all filed !');
+          alert('Wrong date format or fill all field !');
           return Observable.of(undefined);
         }
         if (err.status === 500) {
@@ -245,18 +247,18 @@ export class EntryDialogComponent implements OnInit {
 
   private loadItems() {
     this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
-        results => {
-          this.clients = results;
-        });
+      results => {
+        this.clients = results;
+      });
 
     this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
-        results => {
-          this.tasks = results;
-        });
+      results => {
+        this.tasks = results;
+      });
 
     this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
-        results => {
-          this.projects = results;
-        });
+      results => {
+        this.projects = results;
+      });
   }
 }
