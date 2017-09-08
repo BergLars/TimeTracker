@@ -158,7 +158,7 @@ export class CreateDialogComponent implements OnInit {
 
 		if (this.item == this.TASK) {
 			return this.http.post(this.baseUrl + "/tasks", {
-				taskDescription: this.newTaskDescription
+				description: this.newTaskDescription
 			}).subscribe(() => {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();

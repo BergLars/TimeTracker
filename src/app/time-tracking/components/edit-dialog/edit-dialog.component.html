@@ -9,10 +9,11 @@
                 </select>
             </td>
         </tr>
+        <br>
         <tr [hidden]="item != PROJECT">
         	<td></td>
         	<td>
-        		<select>
+        		<select #project (change)="projectDropdown(project.value)">
         			<option *ngFor="let item of projects" [value]="item.id">{{item.projectName}}</option>
         		</select>
     		</td>
@@ -28,7 +29,7 @@
         <tr [hidden]="item != TASK">
         	<td></td>
         	<td>
-	        	<select>
+	        	<select #task (change)="taskDropdown(task.value)">
 	        		<option *ngFor="let item of tasks" [value]="item.id">{{item.taskDescription}}</option>
 	        	</select>
         	</td>
@@ -41,14 +42,16 @@
                 </md-input-container>
             </td>
         </tr>
+        
         <tr [hidden]="item != CLIENT">
         	<td></td>
         	<td>
-        		<select>
+        		<select #client (change)="clientDropdown(client.value)">
         			<option *ngFor="let item of clients" [value]="item.id">{{item.clientName}}</option>
         		</select>
         	</td>	
         </tr>
+        
         <tr [hidden]="item != CLIENT">
             <td></td>
             <td>
@@ -58,10 +61,9 @@
             </td>
         </tr>
     </table>
-    <br>
 </div>
 <div md-dialog-actions>
     <button type="button" md-button (click)="validateForm(newTaskDescription.value,newProjectName.value,newClientName.value);checkMandatoryFields();">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
-    <span ><md-icon>delete_forever</md-icon></span>
+    <span (click)="deleteItem();"><md-icon>delete_forever</md-icon></span>
 </div>
