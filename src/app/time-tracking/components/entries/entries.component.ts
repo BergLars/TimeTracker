@@ -46,7 +46,7 @@ export class EntriesComponent implements OnInit {
   selectedDescription: string;
   count: number = 0;
   @Input() offset: number = 0;
-  columns: any;
+  // columns: any;
   @Input() date: string;
 
   public tasksDictionary: any = {};
@@ -63,6 +63,24 @@ export class EntriesComponent implements OnInit {
 
   limit: number = this.limits[0].value;
   rowLimits: Array<any> = this.limits;
+
+  public createItems = [
+    { key: 'None', id: 1 },
+    { key: 'Client', id: 2 },
+    { key: 'Project', id: 3 },
+    { key: 'Task', id: 4 }
+  ];
+  item: number = this.createItems[0].id;
+  public defaultItem: any;
+
+  public NONE: number = 0;
+  public CLIENT: number = 2;
+  public PROJECT: number = 3;
+  public TASK: number = 4;
+
+  @Input() selectedClients: any;
+  @Input() selectedProjects: any;
+  @Input() selectedTasks: any;
 
   constructor(
     public projectService: ProjectService,
@@ -84,7 +102,59 @@ export class EntriesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.defaultItem = this.createItems[0].key;
     this.loadEntries();
+  }
+
+  filterEntries() {
+    var userSelectedProjects = [];
+    var userSelectedTasks = [];
+    var userSelectedClients = [];
+
+    let filteredEntries: ITimeTrackingEntry[];
+
+    // Handle if no project is seleted
+    if (this.selectedProjects) {
+      this.selectedProjects.forEach(selectionIndex => {
+        userSelectedProjects.push(selectionIndex);
+      });
+    }
+    // Handle if no task is seleted
+    if (this.selectedTasks) {
+      this.selectedTasks.forEach(selectionIndex => {
+        userSelectedTasks.push(selectionIndex);
+      });
+    }
+    // Handle if no client is seleted
+    if (this.selectedClients) {
+      this.selectedClients.forEach(selectionIndex => {
+        userSelectedClients.push(selectionIndex);
+      });
+    }
+    // We get all the entries
+    filteredEntries = this.entriesService.clonedItems;
+
+    // We filter by project
+    filteredEntries = filteredEntries.filter(function (timeEntry) {
+      let entryProjectId = timeEntry.projectID.valueOf();
+      // Does the current entryProjectId belong to user selected projects in the filter 
+      return (userSelectedProjects.indexOf(entryProjectId) != -1);
+    });
+
+    // We filter by task
+    filteredEntries = filteredEntries.filter(function (timeEntry) {
+      let entryTaskId = timeEntry.taskID.valueOf();
+      return (userSelectedTasks.indexOf(entryTaskId) != -1);
+    });
+
+    // We filter by client
+    filteredEntries = filteredEntries.filter(function (timeEntry) {
+      let entryClientId = timeEntry.clientID.valueOf();
+      return (userSelectedClients.indexOf(entryClientId) != -1);
+    });
+
+    // We assign the result to the table datasource
+    this.items = filteredEntries;
   }
 
   changeRowLimits(event) {
@@ -93,7 +163,11 @@ export class EntriesComponent implements OnInit {
     this.loadEntries();
   }
 
-  public projectDropdown(value: string): void {
+  public clientDropdown(value: string): void {
+    this.clientID = value;
+  }
+
+  public projectDropdown(value): void {
     this.projectID = value;
   }
 
@@ -110,7 +184,6 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'client') {
-      // row.client.clientName = event.target.value;
       row.clientID = event.target.value;
       this.http.get(this.baseUrl + "/clients/" + event.target.value).subscribe(res => {
         row.client = res;
@@ -260,7 +333,6 @@ export class EntriesComponent implements OnInit {
   }
 
   public openDeleteDialog(row) {
-    console.log(row.project.projectName, row.id);
     this.deleteEntryService
       .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
       .subscribe(res => {
@@ -277,6 +349,17 @@ export class EntriesComponent implements OnInit {
       this.clients = this.entriesService.clients;
       this.projects = this.entriesService.projects;
       this.tasks = this.entriesService.tasks;
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.tasks.map(function (client) {
+        return client.id;
+      });
     });
   }
 
@@ -295,6 +378,7 @@ export class EntriesComponent implements OnInit {
     console.log('Page Results', start, end, rows);
     this.offset = event.offset;
   }
+
   private getStatistics() {
     // TODO
     // this.statistics.totalAvailableVacationDays = 18;

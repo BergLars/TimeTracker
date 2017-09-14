@@ -57,6 +57,28 @@ export class TimeTrackingEntryService implements IDataservice {
     });
   }
 
+  public getTimeTrackingEntriesByProject(id: number, item: number): Promise<ITimeTrackingEntry[]> {
+    let endpoint = '/' + ENDPOINT_NAME + '/user/' + id + '/project/' + item;
+    return store.findAll(RESOURCE_NAME, {item}, {
+      endpoint: endpoint,
+      force: true
+    });
+  }
+  public getTimeTrackingEntriesByTask(id: number, item: number): Promise<ITimeTrackingEntry[]> {
+    let endpoint = '/' + ENDPOINT_NAME + '/user/' + id + '/task/' + item;
+    return store.findAll(RESOURCE_NAME, {item}, {
+      endpoint: endpoint,
+      force: true
+    });
+  }
+  public getTimeTrackingEntriesByClient(id: number, item: number): Promise<ITimeTrackingEntry[]> {
+    let endpoint = '/' + ENDPOINT_NAME + '/user/' + id + '/client/' + item;
+    return store.findAll(RESOURCE_NAME, {item}, {
+      endpoint: endpoint,
+      force: true
+    });
+  }
+
   public getTimeTrackingEntry(id: number): Promise<ITimeTrackingEntry> {
     return store.find(RESOURCE_NAME, id);
   }

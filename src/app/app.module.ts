@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { HttpModule, Http, Response, RequestOptions, Headers, XHRBackend } from '@angular/http';
-import { MaterialModule, MdDatepickerModule, MdNativeDateModule, DateAdapter } from '@angular/material';
+import { MaterialModule, MdDatepickerModule, MdNativeDateModule, DateAdapter, MdAutocompleteModule } from '@angular/material';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AlertModule, ModalModule, TimepickerModule, TabsModule, DatepickerModule, TypeaheadModule } from 'ng2-bootstrap';
 import { AppComponent } from './app.component';
@@ -62,7 +62,8 @@ import { DeDateAdapter } from './dateAdapter';
         MyDatePickerModule,
         BrowserAnimationsModule,
         MdDatepickerModule,
-        MdNativeDateModule
+        MdNativeDateModule,
+        MdAutocompleteModule
     ],
     providers: [
         ProjectService,
