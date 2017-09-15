@@ -346,9 +346,10 @@ export class EntriesComponent implements OnInit {
   loadEntries() {
     this.entriesService.entriesAreLoaded().then(results => {
       this.items = results;
-      this.clients = this.entriesService.clients;
-      this.projects = this.entriesService.projects;
-      this.tasks = this.entriesService.tasks;
+
+      this.clients = this.entriesService.clients.sort(this.registryService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.registryService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.registryService.propComparator('taskDescription'));
 
       // Set md-select true per default
       this.selectedProjects = this.projects.map(function (project) {
