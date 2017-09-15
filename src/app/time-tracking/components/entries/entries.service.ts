@@ -17,7 +17,7 @@ export class EntriesService {
   @Input() task: ITask;
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
-  public items: ITimeTrackingEntry[] = [];
+  // public items: ITimeTrackingEntry[] = [];
   public clonedItems: ITimeTrackingEntry[] = [];
 
 
