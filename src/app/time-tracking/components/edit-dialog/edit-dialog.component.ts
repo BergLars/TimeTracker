@@ -8,9 +8,9 @@ import { IProject, ITask, IUser, ProjectService, TaskService, UserService, IClie
 import { DeleteEntryService } from '../entries/delete-entry/delete-entry.service';
 
 @Component({
-  selector: 'app-edit-dialog',
-  templateUrl: './edit-dialog.component.html',
-  styleUrls: ['./edit-dialog.component.scss']
+	selector: 'app-edit-dialog',
+	templateUrl: './edit-dialog.component.html',
+	styleUrls: ['./edit-dialog.component.scss']
 })
 export class EditDialogComponent implements OnInit {
 	public baseUrl: string = environment.apiBaseUrl;
@@ -40,20 +40,20 @@ export class EditDialogComponent implements OnInit {
 	public result: any;
 	private isAdmin: boolean;
 
-	
 
-  	constructor(
-  		public dialogRef: MdDialogRef<EditDialogComponent>,
-  		public projectService: ProjectService,
+
+	constructor(
+		public dialogRef: MdDialogRef<EditDialogComponent>,
+		public projectService: ProjectService,
 		public taskService: TaskService,
 		public clientService: ClientService,
 		private http: Http,
 		public registryService: RegistryService,
 		private deleteEntryService: DeleteEntryService) { }
 
-  	ngOnInit() {
-  		this.loadItems();
-  	}
+	ngOnInit() {
+		this.loadItems();
+	}
 
 	public createItems = [
 		{ key: 'Task', id: 1 },
@@ -68,10 +68,10 @@ export class EditDialogComponent implements OnInit {
 	}
 
 	public keyDownFunction(event) {
-   	 	if (event.key == 'Enter') {
-      		this.checkMandatoryFields();
-    	}
-  	}
+		if (event.key == 'Enter') {
+			this.checkMandatoryFields();
+		}
+	}
 
 	toggleEditMode() {
 		this.editMode = !this.editMode;
@@ -107,36 +107,36 @@ export class EditDialogComponent implements OnInit {
 		}
 	}
 	private loadItems() {
-    this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
-        results => {
-          this.clients = results;
-          this.clients.sort();
-        });
+		this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
+			results => {
+				this.clients = results;
+				this.clients.sort(this.registryService.propComparator('clientName'));
+			});
 
-    this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
-        results => {
-          this.tasks = results;
-        });
+		this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+			results => {
+				this.tasks = results.sort(this.registryService.propComparator('taskDescription'));;
+			});
 
-    this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
-        results => {
-          this.projects = results;
-        });
-  	}
-
-  	public clientDropdown(value: string): void {
-	    this.clientID = value;
+		this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+			results => {
+				this.projects = results.sort(this.registryService.propComparator('projectName'));;
+			});
 	}
 
-  	public projectDropdown(value: string): void {
-    	this.projectID = value;
-  	}
+	public clientDropdown(value: string): void {
+		this.clientID = value;
+	}
 
-  	public taskDropdown(value: string): void {
-    	this.taskID = value;
-  	}
+	public projectDropdown(value: string): void {
+		this.projectID = value;
+	}
 
-  	public createItem() {
+	public taskDropdown(value: string): void {
+		this.taskID = value;
+	}
+
+	public createItem() {
 		if (this.item == this.PROJECT) {
 			return this.http.put(this.baseUrl + "/projects/" + this.projectID, {
 				projectName: this.newProjectName
@@ -144,15 +144,15 @@ export class EditDialogComponent implements OnInit {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
 			},
-			error => {
-				if (error.response.status === 400 || error.response.status === 404) {
-					alert('Please check that fields are the correct input !');
-					return Observable.of(undefined);
-				}
-				if (error.response.status === 500) {
-					alert('Internal server error !')
-				}
-			});
+				error => {
+					if (error.response.status === 400 || error.response.status === 404) {
+						alert('Please check that fields are the correct input !');
+						return Observable.of(undefined);
+					}
+					if (error.response.status === 500) {
+						alert('Internal server error !')
+					}
+				});
 		}
 		if (this.item == this.TASK) {
 			return this.http.put(this.baseUrl + "/tasks/" + this.taskID, {
@@ -161,81 +161,82 @@ export class EditDialogComponent implements OnInit {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
 			},
-			error => {
-				if (error.response.status === 400 || error.response.status === 404) {
-					alert('Please check that fields are the correct input !');
-					return Observable.of(undefined);
-				}
-				if (error.response.status === 500) {
-					alert('Internal server error !')
-				}
-			});
+				error => {
+					if (error.response.status === 400 || error.response.status === 404) {
+						alert('Please check that fields are the correct input !');
+						return Observable.of(undefined);
+					}
+					if (error.response.status === 500) {
+						alert('Internal server error !')
+					}
+				});
 		}
 		if (this.item == this.CLIENT) {
 			return this.http.put(this.baseUrl + "/clients/" + this.clientID, {
 				clientName: this.newClientName
 			}).subscribe(
-			() => {
-				this.dialogRef.close(true);
-				this.registryService.entriesComponent.loadEntries();
-			},
-			error => {
-				if (error.response.status === 400 || error.response.status === 404) {
-					alert('Please check that fields are the correct input !');
-					return Observable.of(undefined);
-				}
-				if (error.response.status === 500) {
-					alert('Internal server error !')
-				}
-			});
+				() => {
+					this.dialogRef.close(true);
+					this.registryService.entriesComponent.loadEntries();
+				},
+				error => {
+					if (error.response.status === 400 || error.response.status === 404) {
+						alert('Please check that fields are the correct input !');
+						return Observable.of(undefined);
+					}
+					if (error.response.status === 500) {
+						alert('Internal server error !')
+					}
+				});
 		}
 	}
 
 	public deleteItem() {
-		if (this.item == this.PROJECT) {
+		if (this.item == this.PROJECT)  {
 			return this.http.delete(this.baseUrl + "/projects/" + this.projectID)
-			.subscribe(() => {
-				this.dialogRef.close(true);
-				this.registryService.entriesComponent.loadEntries();	
-			},
-			(error) => {				if (error.status === 500) {
-					alert('This project is used on entries. Cannot be deleted')
-				}
-			});
+				.subscribe(() => {
+					this.dialogRef.close(true);
+					this.registryService.entriesComponent.loadEntries();
+				},
+				(error) => {
+					if (error.status === 500) {
+						alert('This project is used on entries. Cannot be deleted')
+					}
+				});
 		}
-		if (this.item == this.TASK) {
+		if (this.item == this.TASK)  {
 			return this.http.delete(this.baseUrl + "/tasks/" + this.taskID)
-			.subscribe(() => {
-				this.dialogRef.close(true);
-				this.registryService.entriesComponent.loadEntries();	
-			},
-			(error) => {
-				if (error.status === 500) {
-					alert('This task is used on entries. Cannot be deleted')
-				}
-			});
+				.subscribe(() => {
+					this.dialogRef.close(true);
+					this.registryService.entriesComponent.loadEntries();
+				},
+				(error) => {
+					if (error.status === 500) {
+						alert('This task is used on entries. Cannot be deleted')
+					}
+				});
 		}
-		if (this.item == this.CLIENT) {
+		if (this.item == this.CLIENT)  {
 			return this.http.delete(this.baseUrl + "/clients/" + this.clientID)
-			.subscribe(() => {
-				this.dialogRef.close(true);
-				this.registryService.entriesComponent.loadEntries();	
-			},
-			(error) => {
-				if (error.status === 500) {
-					alert('This client is used on entries. Cannot be deleted')
-				}
-			});
+				.subscribe(() => {
+					this.dialogRef.close(true);
+					this.registryService.entriesComponent.loadEntries();
+				},
+				(error) => {
+					if (error.status === 500) {
+						alert('This client is used on entries. Cannot be deleted')
+					}
+				});
 		}
 	}
 
 	private displayItems() {
 		//if (!this.checkIfAdmin()) {
-			this.createItems.splice(1);
-			this.createItems.splice(2);
-			this.createItems.splice(3);
+		this.createItems.splice(1);
+		this.createItems.splice(2);
+		this.createItems.splice(3);
 		//}
 	}
 
-	
+
 }

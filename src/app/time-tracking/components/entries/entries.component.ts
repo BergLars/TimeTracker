@@ -81,6 +81,7 @@ export class EntriesComponent implements OnInit {
   @Input() selectedClients: any;
   @Input() selectedProjects: any;
   @Input() selectedTasks: any;
+  @Input() itemTotalTimeSpent: any;
 
   constructor(
     public projectService: ProjectService,
@@ -155,6 +156,53 @@ export class EntriesComponent implements OnInit {
 
     // We assign the result to the table datasource
     this.items = filteredEntries;
+    this.itemTotalTimeSpent = this.totalTimeSpent(this.items);
+  }
+
+  // Calcul total time spent
+  public totalTimeSpent(entries) {
+    let endTimeH: number = 0;
+    let endTimeMin: number = 0;
+    let hour: number = 0;
+    let timeSpent: any;
+    for (let entry of entries) {
+      endTimeH = endTimeH + parseInt(entry.timeSpent.substring(0, 2));
+      endTimeMin = endTimeMin + parseInt(entry.timeSpent.substring(3, 5));
+    }
+
+    // Handle conversion Minute over 60mn to 1h
+    if (endTimeMin > 60) {
+      hour = Math.round(endTimeMin / 60);
+      endTimeH = endTimeH + hour;
+      endTimeMin = Math.abs(endTimeMin - (60 * hour));
+      if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
+        timeSpent = '0' + endTimeH + ':0' + endTimeMin;
+      }
+      else if ((endTimeH.toString()).length < 2) {
+        timeSpent = '0' + endTimeH + ':' + endTimeMin;
+      }
+      else if ((endTimeMin.toString()).length < 2) {
+        timeSpent = endTimeH + ':0' + endTimeMin;
+      } else {
+        timeSpent = endTimeH + ':' + endTimeMin;
+      }
+      return timeSpent;
+    }
+    // Handle Minute below 60mn
+    else {
+      if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
+        timeSpent = '0' + endTimeH + ':0' + endTimeMin;
+      }
+      else if ((endTimeH.toString()).length < 2) {
+        timeSpent = '0' + endTimeH + ':' + endTimeMin;
+      }
+      else if ((endTimeMin.toString()).length < 2) {
+        timeSpent = endTimeH + ':0' + endTimeMin;
+      } else {
+        timeSpent = endTimeH + ':' + endTimeMin;
+      }
+      return timeSpent;
+    }
   }
 
   changeRowLimits(event) {
@@ -346,9 +394,13 @@ export class EntriesComponent implements OnInit {
   loadEntries() {
     this.entriesService.entriesAreLoaded().then(results => {
       this.items = results;
-      this.clients = this.entriesService.clients;
-      this.projects = this.entriesService.projects;
-      this.tasks = this.entriesService.tasks;
+
+      this.clients = this.entriesService.clients.sort(this.registryService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.registryService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.registryService.propComparator('taskDescription'));
+
+      // Set itemTotalTimeSpent per default
+      this.itemTotalTimeSpent = this.totalTimeSpent(this.items);
 
       // Set md-select true per default
       this.selectedProjects = this.projects.map(function (project) {

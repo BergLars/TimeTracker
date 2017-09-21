@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ITimeTrackingEntry, IClient, IProject, ITask, IUser, ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService } from '../../../../data';
+import { ITimeTrackingEntry, IClient, IProject, ITask, IUser, ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService, RegistryService } from '../../../../data';
 import { LoginService } from '../../../../login';
 import { Http } from '@angular/http';
 import { environment } from '../../../../../environments/environment';
@@ -53,7 +53,9 @@ export class EntryDialogComponent implements OnInit {
     public userService: UserService,
     private http: Http,
     public loginService: LoginService,
-    private dateAdapter: DateAdapter<Date>) {
+    private dateAdapter: DateAdapter<Date>,
+    public registryService: RegistryService
+  ) {
   }
 
   ngOnInit() {
@@ -248,17 +250,17 @@ export class EntryDialogComponent implements OnInit {
   private loadItems() {
     this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
       results => {
-        this.clients = results;
+        this.clients = results.sort(this.registryService.propComparator('clientName'));
       });
 
     this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
       results => {
-        this.tasks = results;
+        this.tasks = results.sort(this.registryService.propComparator('taskDescription'));
       });
 
     this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
       results => {
-        this.projects = results;
+        this.projects = results.sort(this.registryService.propComparator('projectName'));
       });
   }
 }
