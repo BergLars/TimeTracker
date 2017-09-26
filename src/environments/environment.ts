@@ -7,5 +7,5 @@ export const environment = {
   production: false,
 
   title: 'Timetracker - PROD',
-  apiBaseUrl: 'https://timetracker.fluance.net'
+  apiBaseUrl: 'https://timetracker.fluance.net/timetracker'
 };
