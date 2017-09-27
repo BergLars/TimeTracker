@@ -33,7 +33,6 @@ export class CreateDialogComponent implements OnInit {
 	public confirmPassword: string;
 	public employmentDegree: number;
 	public adminRole: boolean;
-
 	editMode: boolean = false;
 	public TASK: number = 1;
 	public PROJECT: number = 2;
@@ -193,29 +192,28 @@ export class CreateDialogComponent implements OnInit {
 		}
 
 		if (this.item == this.USER) {
-			return this.http.post(this.baseUrl + "/userprofile",
-				{
-					userName: this.username,
-					password: this.password,
-					employmentDegree: this.employmentDegree,
-					admin: this.adminRole
-				}).map(res => res.json())
-				.subscribe(
-				(data) => {
-					this.dialogRef.close(true);
-					this.registryService.entriesComponent.loadEntries();
-				},
-				(error) => {
-					if (error.status === 400 || error.status === 404) {
-						alert('Please check that fields are the correct input !');
-					}
-					if (error.status === 409) {
-						alert('User already exists !');
-					}
-					if (error.status === 500) {
-						alert('Internal server error !')
-					}
-				});
+			return this.http.post(this.baseUrl + "/userprofile", {
+				userName: this.username,
+				password: this.password,
+				employmentDegree: this.employmentDegree,
+				admin: this.adminRole
+			}).map(res => res.json())
+			.subscribe(
+			(data) => {
+				this.dialogRef.close(true);
+				this.registryService.entriesComponent.loadEntries();
+			},
+			(error) => {
+				if (error.status === 400 || error.status === 404) {
+					alert('Please check that fields are the correct input !');
+				}
+				if (error.status === 409) {
+					alert('User already exists !');
+				}
+				if (error.status === 500) {
+					alert('Internal server error !')
+				}
+			});
 		}
 	}
 

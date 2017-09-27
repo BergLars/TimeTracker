@@ -40,8 +40,6 @@ export class EditDialogComponent implements OnInit {
 	public result: any;
 	private isAdmin: boolean;
 
-
-
 	constructor(
 		public dialogRef: MdDialogRef<EditDialogComponent>,
 		public projectService: ProjectService,
@@ -233,12 +231,8 @@ export class EditDialogComponent implements OnInit {
 	}
 
 	private displayItems() {
-		//if (!this.checkIfAdmin()) {
 		this.createItems.splice(1);
 		this.createItems.splice(2);
 		this.createItems.splice(3);
-		//}
 	}
-
-
 }

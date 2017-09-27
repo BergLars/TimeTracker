@@ -6,8 +6,7 @@ import { environment } from '../../../../../environments/environment';
 import moment from 'moment/src/moment';
 import { Observable } from 'rxjs/Rx';
 import { MdDialogRef, MdDatepickerModule, DateAdapter, MdNativeDateModule } from '@angular/material';
-// import { MD_NATIVE_DATE_FORMATS } from "app";
-// import { DeDateAdapter } from "app/dateAdapter";
+
 
 @Component({
   selector: 'app-entry-dialog',
@@ -20,13 +19,10 @@ export class EntryDialogComponent implements OnInit {
   @Input() tasks: ITask[] = [];
   public title: string;
   public description: string;
-  public selectedProjectID: string;
-  public rowid: number;
   public selectedTaskID: string;
   @Input() selectedDate: string;
   @Input() selectedStartTime: string;
   public user: IUser;
-  public selectedEndTime: any;
   public userprofileID: any;
   public clientID: any;
   public projectID: any;
@@ -35,7 +31,6 @@ export class EntryDialogComponent implements OnInit {
   @Input() startTime: any;
   @Input() endTime: any;
   public timeSpent: any;
-
   public isBillable: boolean = false;
   public enableTimes: boolean = false;
   @Input() date: any;
@@ -218,9 +213,7 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public newEntry() {
-    // this.loadItems();
-    return this.http.post(this.baseUrl + "/timeentries",
-      {
+    return this.http.post(this.baseUrl + "/timeentries", {
         entryDate: this.selectedDate,
         startTime: this.startTime,
         endTime: this.endTime,
