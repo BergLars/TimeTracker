@@ -1,6 +1,6 @@
-// import { IClient } from './i-client';
-// import { IProject } from './i-project';
-// import { ITask } from './i-task';
+import { IClient } from './i-client';
+import { IProject } from './i-project';
+import { ITask } from './i-task';
 
 export interface ITimeTrackingEntry {
     readonly id: number;
@@ -12,6 +12,10 @@ export interface ITimeTrackingEntry {
     userprofileID: number;
     clientID: number;
     clientName: string;
+    project: IProject;
+    projects: IProject[];
+    task: ITask;
+    client: IClient;
     projectID: number;
     projectName: string;
     taskID: number;
