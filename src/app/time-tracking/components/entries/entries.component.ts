@@ -46,7 +46,6 @@ export class EntriesComponent implements OnInit {
   selectedDescription: string;
   count: number = 0;
   @Input() offset: number = 0;
-  // columns: any;
   @Input() date: string;
 
   public tasksDictionary: any = {};
@@ -107,6 +106,7 @@ export class EntriesComponent implements OnInit {
     this.loadEntries();
   }
 
+  // Filter all entries with one or more parameter
   filterEntries() {
     var userSelectedProjects = [];
     var userSelectedTasks = [];
@@ -114,19 +114,19 @@ export class EntriesComponent implements OnInit {
 
     let filteredEntries: ITimeTrackingEntry[];
 
-    // Handle if no project is seleted
+    // Handle if no project is selected
     if (this.selectedProjects) {
       this.selectedProjects.forEach(selectionIndex => {
         userSelectedProjects.push(selectionIndex);
       });
     }
-    // Handle if no task is seleted
+    // Handle if no task is selected
     if (this.selectedTasks) {
       this.selectedTasks.forEach(selectionIndex => {
         userSelectedTasks.push(selectionIndex);
       });
     }
-    // Handle if no client is seleted
+    // Handle if no client is selected
     if (this.selectedClients) {
       this.selectedClients.forEach(selectionIndex => {
         userSelectedClients.push(selectionIndex);
@@ -409,8 +409,15 @@ export class EntriesComponent implements OnInit {
       this.selectedTasks = this.tasks.map(function (task) {
         return task.id;
       });
-      this.selectedClients = this.tasks.map(function (client) {
+      this.selectedClients = this.clients.map(function (client) {
         return client.id;
+      });
+
+      // Map projectName, taskDescription, clientName and entryDate to row in rows
+      this.items.forEach(function (entry) {
+        entry.projectName = entry.project.projectName;
+        entry.taskDescription = entry.task.taskDescription;
+        entry.clientName = entry.client.clientName;
       });
     });
   }
