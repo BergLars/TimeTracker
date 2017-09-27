@@ -192,37 +192,49 @@ export class EditDialogComponent implements OnInit {
 	}
 
 	public deleteItem() {
-		if (this.item == this.PROJECT)  {
+		if (this.item == this.PROJECT) {
 			return this.http.delete(this.baseUrl + "/projects/" + this.projectID)
 				.subscribe(() => {
 					this.dialogRef.close(true);
 					this.registryService.entriesComponent.loadEntries();
 				},
 				(error) => {
+					if (error.status === 400 || error.status === 404) {
+						alert('Please check if a project is selected!');
+						return Observable.of(undefined);
+					}
 					if (error.status === 500) {
 						alert('This project is used on entries. Cannot be deleted')
 					}
 				});
 		}
-		if (this.item == this.TASK)  {
+		if (this.item == this.TASK) {
 			return this.http.delete(this.baseUrl + "/tasks/" + this.taskID)
 				.subscribe(() => {
 					this.dialogRef.close(true);
 					this.registryService.entriesComponent.loadEntries();
 				},
 				(error) => {
+					if (error.status === 400 || error.status === 404) {
+						alert('Please check if a task is selected!');
+						return Observable.of(undefined);
+					}
 					if (error.status === 500) {
 						alert('This task is used on entries. Cannot be deleted')
 					}
 				});
 		}
-		if (this.item == this.CLIENT)  {
+		if (this.item == this.CLIENT) {
 			return this.http.delete(this.baseUrl + "/clients/" + this.clientID)
 				.subscribe(() => {
 					this.dialogRef.close(true);
 					this.registryService.entriesComponent.loadEntries();
 				},
 				(error) => {
+					if (error.status === 400 || error.status === 404) {
+						alert('Please check if a client is selected!');
+						return Observable.of(undefined);
+					}
 					if (error.status === 500) {
 						alert('This client is used on entries. Cannot be deleted')
 					}
