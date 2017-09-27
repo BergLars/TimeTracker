@@ -17,7 +17,6 @@ export class EntriesService {
   @Input() task: ITask;
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
-  // public items: ITimeTrackingEntry[] = [];
   public clonedItems: ITimeTrackingEntry[] = [];
 
 
@@ -39,7 +38,7 @@ export class EntriesService {
         results => {
           this.clients = results;
 
-          results.forEach(function (result)  {
+          results.forEach(function (result) {
             that.clientsDictionary[result.id] = result;
           });
 
