@@ -23,9 +23,9 @@ export class EditDialogComponent implements OnInit {
 	public newProjectName: string;
 	public newClientName: string;
 	public user;
-	public projectID: any;
-	public clientID: any;
-	public taskID: any;
+	public projectID: any = null;
+	public clientID: any = null;
+	public taskID: any = null;
 	public username: string;
 	public password: string;
 	public confirmPassword: string;
@@ -109,18 +109,20 @@ export class EditDialogComponent implements OnInit {
 	private loadItems() {
 		this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
 			results => {
-				this.clients = results;
-				this.clients.sort(this.registryService.propComparator('clientName'));
+				this.clients = results.sort(this.registryService.propComparator('clientName'));
+				this.clientID = this.clients[0].id;
 			});
 
 		this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
 			results => {
 				this.tasks = results.sort(this.registryService.propComparator('taskDescription'));;
+				this.taskID = this.tasks[0].id;
 			});
 
 		this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
 			results => {
-				this.projects = results.sort(this.registryService.propComparator('projectName'));;
+				this.projects = results.sort(this.registryService.propComparator('projectName'));
+				this.projectID = this.projects[0].id;
 			});
 	}
 
