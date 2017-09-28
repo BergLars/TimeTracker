@@ -1,16 +1,16 @@
 <md-toolbar>
     <button md-raised-button color="primary" (click)="openDialog()">NEW ENTRY</button>
     <span class="flex"></span>
-    <span color="primary">
+    <span color="primary" class="filter-position">
         <i class="material-icons">sort</i>
-    <md-select multiple placeholder="Project name" floatPlaceholder="never" [(ngModel)]="selectedProjects">
+    <md-select multiple placeholder="Project"  [(ngModel)]="selectedProjects">
         <md-option class="data-filter-header" *ngFor="let item of projects" [value]='item.id'>{{ item.projectName }}</md-option>
     </md-select>
-    <md-select multiple placeholder="Task description" floatPlaceholder="never" [(ngModel)]="selectedTasks">
-        <md-option class="data-filter-header" *ngFor="let item of tasks" [value]='item.id'>{{ item.taskDescription }}</md-option>
-    </md-select>
-    <md-select multiple placeholder="Client name" floatPlaceholder="never" [(ngModel)]="selectedClients">
+    <md-select multiple placeholder="Client"  [(ngModel)]="selectedClients">
         <md-option class="data-filter-header" *ngFor="let item of clients" [value]='item.id'>{{ item.clientName }}</md-option>
+    </md-select>
+    <md-select multiple placeholder="Task"  [(ngModel)]="selectedTasks">
+        <md-option class="data-filter-header" *ngFor="let item of tasks" [value]='item.id'>{{ item.taskDescription }}</md-option>
     </md-select>
     <i (click)="filterEntries();" class="material-icons">check</i>
     </span>
