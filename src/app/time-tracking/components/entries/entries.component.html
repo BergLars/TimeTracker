@@ -2,7 +2,7 @@
     <button md-raised-button color="primary" (click)="openDialog()">NEW ENTRY</button>
     <span class="flex"></span>
     <span color="primary">
-        <i class="material-icons">sort</i>
+    <span class="totalTimeSpent">&nbsp;Filter entries by:&nbsp;</span>
     <md-select multiple placeholder="Project name" floatPlaceholder="never" [(ngModel)]="selectedProjects">
         <md-option class="data-filter-header" *ngFor="let item of projects" [value]='item.id'>{{ item.projectName }}</md-option>
     </md-select>
