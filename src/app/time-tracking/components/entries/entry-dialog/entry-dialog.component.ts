@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ITimeTrackingEntry, IClient, IProject, ITask, IUser, ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService, RegistryService } from '../../../../data';
+import { ITimeTrackingEntry, IClient, IProject, ITask, IUser, RegistryService } from '../../../../data';
 import { LoginService } from '../../../../login';
 import { Http } from '@angular/http';
 import { environment } from '../../../../../environments/environment';
 import moment from 'moment/src/moment';
 import { Observable } from 'rxjs/Rx';
-import { MdDialogRef, MdDatepickerModule, DateAdapter, MdNativeDateModule } from '@angular/material';
+import { MdDialogRef, MdDatepickerModule, DateAdapter } from '@angular/material';
 
 
 @Component({
@@ -41,11 +41,6 @@ export class EntryDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MdDialogRef<EntryDialogComponent>,
-    public clientService: ClientService,
-    public projectService: ProjectService,
-    public taskService: TaskService,
-    public timeTrackingEntryService: TimeTrackingEntryService,
-    public userService: UserService,
     private http: Http,
     public loginService: LoginService,
     private dateAdapter: DateAdapter<Date>,

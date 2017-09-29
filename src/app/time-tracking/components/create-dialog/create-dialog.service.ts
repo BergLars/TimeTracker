@@ -4,8 +4,6 @@ import { CreateDialogComponent } from './create-dialog.component';
 import { MdDialogRef, MdDialog, MdDialogConfig } from '@angular/material';
 import { IProject, ProjectService, ITask, TaskService, TimeTrackingEntryService, RegistryService } from '../../../data';
 
-//import { EntriesComponent } from '../entries/entries.component';
-
 @Injectable()
 export class CreateDialogService {
 

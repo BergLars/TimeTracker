@@ -1,15 +1,12 @@
 import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
 import { Http } from '@angular/http';
-import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, TaskService, ProjectService, TimeTrackingEntryService, ClientService, RegistryService } from '../../../data';
-import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
+import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, RegistryService } from '../../../data';
+import { MdDialog } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
-import { LoginService } from '../../../login';
 import { environment } from '../../../../environments/environment';
-import { Router } from '@angular/router';
 import moment from 'moment/src/moment';
 import { EntriesService } from './entries.service';
-import { CreateDialogService } from '../create-dialog/create-dialog.service';
 
 @Component({
   selector: 'app-entries',
@@ -62,18 +59,11 @@ export class EntriesComponent implements OnInit {
   @Input() itemTotalTimeSpent: any;
 
   constructor(
-    public projectService: ProjectService,
-    public timeTrackingEntryService: TimeTrackingEntryService,
-    public taskService: TaskService,
-    public clientService: ClientService,
     private entryDialogService: EntryDialogService,
     private deleteEntryService: DeleteEntryService,
     private viewContainerRef: ViewContainerRef,
-    private loginService: LoginService,
-    public userService: UserService,
     private dialog: MdDialog,
     private http: Http,
-    private router: Router,
     public registryService: RegistryService,
     public entriesService: EntriesService) {
     this.registryService.entriesComponent = this;

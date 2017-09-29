@@ -4,7 +4,7 @@ import { EditDialogService } from './edit-dialog.service';
 import { environment } from '../../../../environments/environment';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-import { IProject, ITask, IUser, ProjectService, TaskService, UserService, IClient, ClientService, RegistryService } from '../../../data';
+import { IProject, ITask, IUser, UserService, IClient, RegistryService } from '../../../data';
 import { DeleteEntryService } from '../entries/delete-entry/delete-entry.service';
 
 @Component({
@@ -22,29 +22,18 @@ export class EditDialogComponent implements OnInit {
 	public newTaskDescription: string;
 	public newProjectName: string;
 	public newClientName: string;
-	public user;
 	public projectID: any = null;
 	public clientID: any = null;
 	public taskID: any = null;
-	public username: string;
-	public password: string;
-	public confirmPassword: string;
-	public employmentDegree: number;
-	public adminRole: boolean;
-
 	editMode: boolean = false;
 	public TASK: number = 1;
 	public PROJECT: number = 2;
 	public CLIENT: number = 3;
 	public USER: number = 4;
 	public result: any;
-	private isAdmin: boolean;
 
 	constructor(
 		public dialogRef: MdDialogRef<EditDialogComponent>,
-		public projectService: ProjectService,
-		public taskService: TaskService,
-		public clientService: ClientService,
 		private http: Http,
 		public registryService: RegistryService,
 		private deleteEntryService: DeleteEntryService) { }

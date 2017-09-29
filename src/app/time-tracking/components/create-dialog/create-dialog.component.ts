@@ -1,13 +1,11 @@
 import { Component, OnInit, Input, Renderer } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
-import { IProject, ITask, IUser, ProjectService, TaskService, UserService, IClient, ClientService, RegistryService } from '../../../data';
+import { IProject, ITask, IUser, IClient, RegistryService } from '../../../data';
 import { LoginService } from '../../../login';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs/Rx';
-import { EntriesService } from '../../components/entries/entries.service';
-import { EntriesComponent } from '../../components/entries/entries.component';
 import { CreateDialogService } from './create-dialog.service';
 
 @Component({
@@ -26,8 +24,6 @@ export class CreateDialogComponent implements OnInit {
 	public newProjectName: string;
 	public newClientName: string;
 	public user;
-	public projectID: any;
-	public clientID: any;
 	public username: string;
 	public password: string;
 	public confirmPassword: string;
@@ -38,7 +34,6 @@ export class CreateDialogComponent implements OnInit {
 	public PROJECT: number = 2;
 	public CLIENT: number = 3;
 	public USER: number = 4;
-	public result: any;
 	private isAdmin: boolean;
 
 	public createItems = [
@@ -52,14 +47,9 @@ export class CreateDialogComponent implements OnInit {
 
 	constructor(
 		public dialogRef: MdDialogRef<CreateDialogComponent>,
-		public projectService: ProjectService,
-		public taskService: TaskService,
-		public userService: UserService,
 		public loginService: LoginService,
-		public clientService: ClientService,
 		private http: Http,
 		private router: Router,
-		public entriesService: EntriesService,
 		public registryService: RegistryService
 	) { }
 
@@ -93,22 +83,19 @@ export class CreateDialogComponent implements OnInit {
 			} else {
 				this.createItem();
 			}
-		}
-		if (this.item == this.TASK) {
+		} else if (this.item == this.TASK) {
 			if (this.newTaskDescription === "" || this.newTaskDescription === undefined) {
 				alert("Please check if all the fields are filled in");
 			} else {
 				this.createItem();
 			}
-		}
-		if (this.item == this.CLIENT) {
+		} else if (this.item == this.CLIENT) {
 			if (this.newClientName === "" || this.newClientName === undefined) {
 				alert("Please check if all the fields are filled in");
 			} else {
 				this.createItem();
 			}
-		}
-		if (this.item == this.USER) {
+		} else if (this.item == this.USER) {
 			if (this.username === "" || this.password === "" || this.confirmPassword === "" || this.employmentDegree === undefined || this.adminRole === undefined) {
 				alert("Please check if all the fields are filled in");
 			}
@@ -153,9 +140,7 @@ export class CreateDialogComponent implements OnInit {
 						alert('Internal server error !')
 					}
 				});
-		}
-
-		if (this.item == this.TASK) {
+		} else if (this.item == this.TASK) {
 			return this.http.post(this.baseUrl + "/tasks", {
 				taskDescription: this.newTaskDescription
 			}).subscribe(() => {
@@ -171,9 +156,7 @@ export class CreateDialogComponent implements OnInit {
 						alert('Internal server error !')
 					}
 				});
-		}
-
-		if (this.item == this.CLIENT) {
+		} else if (this.item == this.CLIENT) {
 			return this.http.post(this.baseUrl + "/clients", {
 				clientName: this.newClientName
 			}).subscribe(() => {
@@ -189,9 +172,7 @@ export class CreateDialogComponent implements OnInit {
 						alert('Internal server error !')
 					}
 				});
-		}
-
-		if (this.item == this.USER) {
+		} else if (this.item == this.USER) {
 			return this.http.post(this.baseUrl + "/userprofile", {
 				userName: this.username,
 				password: this.password,
