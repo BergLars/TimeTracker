@@ -12,7 +12,7 @@
     <md-select multiple placeholder="Client name" floatPlaceholder="never" [(ngModel)]="selectedClients">
         <md-option class="data-filter-header" *ngFor="let item of clients" [value]='item.id'>{{ item.clientName }}</md-option>
     </md-select>
-    <i (click)="filterEntries();" class="material-icons">check</i>
+    <i (click)="filterEntries();" class="material-icons clickable-icon">check</i>
     </span>
     <span class="flex"></span>
     <span class="totalTimeSpent">&nbsp;Total =&nbsp;</span><span class="totalTimeSpent">{{itemTotalTimeSpent}}</span>
