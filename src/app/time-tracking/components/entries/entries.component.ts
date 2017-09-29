@@ -172,7 +172,7 @@ export class EntriesComponent implements OnInit {
 
     // Handle conversion Minute over 60mn to 1h
     if (endTimeMin > 60) {
-      hour = Math.round(endTimeMin / 60);
+      hour = Math.floor(endTimeMin / 60);
       endTimeH = endTimeH + hour;
       endTimeMin = Math.abs(endTimeMin - (60 * hour));
       if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
