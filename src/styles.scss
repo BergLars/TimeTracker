@@ -94,14 +94,9 @@ div.mat-input-underline {
     }
 }
 
-.single-selection,
-.multi-selection,
-.multi-click-selection {
-    .active,
-    .active .datatable-row-group {
-        background-color: rgba(69, 79, 179, 0.12);
-        color: black;
-    }
+.active{
+    background-color: rgba(69, 79, 179, 0.12) !important;
+    color: black;
 }
 
 .datatable-header {
