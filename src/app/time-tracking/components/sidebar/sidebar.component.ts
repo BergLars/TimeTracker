@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ITimeTrackingEntry, IStatistics } from '../../../data';
+import { ITimeTrackingEntry, IStatistics, RegistryService } from '../../../data';
 import { EntriesService } from '../entries/entries.service';
 import moment from 'moment/src/moment';
 
@@ -20,7 +20,8 @@ export class SidebarComponent implements OnInit {
   public startOfMonth: any;
   public endOfMonth: any;
 
-  constructor(private entriesService: EntriesService) {
+  constructor(private entriesService: EntriesService, public registryService: RegistryService) {
+    this.registryService.sidebarComponent = this;
   }
   ngOnInit() {
     this.getCurrentDayWeekMonth();
@@ -82,7 +83,7 @@ export class SidebarComponent implements OnInit {
         endTimeMin = endTimeMin + parseInt(element.substring(3, 5));
         // Handle conversion Minute over 60mn to 1h
         if (endTimeMin > 60) {
-          hour = Math.round(endTimeMin / 60);
+          hour = Math.floor(endTimeMin / 60);
           endTimeH = endTimeH + hour;
           endTimeMin = Math.abs(endTimeMin - (60 * hour));
           if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
@@ -132,7 +133,7 @@ export class SidebarComponent implements OnInit {
         endTimeMin = endTimeMin + parseInt(element.substring(3, 5));
         // Handle conversion Minute over 60mn to 1h
         if (endTimeMin > 60) {
-          hour = Math.round(endTimeMin / 60);
+          hour = Math.floor(endTimeMin / 60);
           endTimeH = endTimeH + hour;
           endTimeMin = Math.abs(endTimeMin - (60 * hour));
           if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {

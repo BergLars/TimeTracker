@@ -301,6 +301,7 @@ export class EntriesComponent implements OnInit {
     }).subscribe(
       () => {
         this.loadEntries();
+        this.registryService.sidebarComponent.loadEntries();
       });
   }
 
