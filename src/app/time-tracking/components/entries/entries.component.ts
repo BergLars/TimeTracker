@@ -225,7 +225,6 @@ export class EntriesComponent implements OnInit {
 
   updateValue(event, cell, cellValue, row) {
     this.editing[row.$$index + '-' + cell] = false;
-
     if (cell == 'description') {
       row.description = event.target.value;
       this.updateEntry(row);

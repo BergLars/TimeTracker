@@ -24,7 +24,7 @@
     </span>
 </md-toolbar>
 <ngx-datatable #mydatatable class="material striped" [scrollbarH]="true" [rows]="items" [columnMode]="'force'" [headerHeight]="50"
-    [footerHeight]="50" [selected]="selected" [selectionType]="'single'" [limit]="limit" [count]="count" [offset]="offset" (page)='onPage($event)'
+    [footerHeight]="50" [selectionType]="'single'" [limit]="limit" [count]="count" [offset]="offset" (page)='onPage($event)'
     (select)='onSelect($event)'>
     <ngx-datatable-column name="Description">
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
@@ -35,31 +35,31 @@
     </ngx-datatable-column>
     <ngx-datatable-column name="Project Name">
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
-            <span title="Double click to edit" (click)="editing[row.$$index + '-project'] = true" *ngIf="row && row.project && !editing[row.$$index + '-project']">
+            <span title="Double click to edit" (click)="editing[row.$$index + '-project'] = true" *ngIf="!editing[row.$$index + '-project']">
               {{row.projectName}}
             </span>
-            <select *ngIf="editing[row.$$index + '-project']" (change)="updateValue($event, 'project', value, row)" [value]="value">
-                <option *ngFor="let project of projects" [value]="project.id">{{ project.projectName}}</option>
+            <select *ngIf="editing[row.$$index + '-project']" (change)="updateValue($event, 'project', value, row);">
+                <option *ngFor="let project of projects" [value]="project.id" [selected]="project.id == row.project.id ? 'selected':''">{{ project.projectName}}</option>
             </select>
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Client Name">
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
-            <span title="Double click to edit" (click)="editing[row.$$index + '-client'] = true" *ngIf="row && row.client && !editing[row.$$index + '-client']">
+            <span title="Double click to edit" (click)="editing[row.$$index + '-client'] = true" *ngIf="!editing[row.$$index + '-client']">
               {{row.clientName}}
             </span>
-            <select *ngIf="editing[row.$$index + '-client']" (change)="updateValue($event, 'client', value, row)" [value]="value">
-                <option *ngFor="let client of clients" [value]="client.id">{{ client.clientName}}</option>
+            <select *ngIf="editing[row.$$index + '-client']" (change)="updateValue($event, 'client', value, row)">
+                <option *ngFor="let client of clients" [value]="client.id" [selected]="client.id == row.client.id ? 'selected':''">{{ client.clientName}}</option>
             </select>
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Task Description">
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
-            <span title="Double click to edit" (click)="editing[row.$$index + '-task'] = true" *ngIf="row && row.task && !editing[row.$$index + '-task']">
+            <span title="Double click to edit" (click)="editing[row.$$index + '-task'] = true" *ngIf="!editing[row.$$index + '-task']">
               {{row.taskDescription}}
             </span>
-            <select *ngIf="editing[row.$$index + '-task']" (change)="updateValue($event, 'task', value, row)" [value]="value">
-                <option *ngFor="let task of tasks" [value]="task.id">{{ task.taskDescription }}</option>
+            <select *ngIf="editing[row.$$index + '-task']" (change)="updateValue($event, 'task', value, row)">
+                <option *ngFor="let task of tasks" [value]="task.id" [selected]="task.id == row.task.id ? 'selected':''">{{ task.taskDescription }}</option>
             </select>
         </ng-template>
     </ngx-datatable-column>
