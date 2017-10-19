@@ -74,6 +74,11 @@ export class EntriesService {
                     });
                 });
             });
+        },
+        (err) => {
+          if (err.status === 500) {
+          this.loginService.logout();
+        }
         });
     });
   }

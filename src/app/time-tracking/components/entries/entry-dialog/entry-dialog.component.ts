@@ -242,7 +242,8 @@ export class EntryDialogComponent implements OnInit {
           return Observable.of(undefined);
         }
         if (err.status === 500) {
-          alert('Internal server error !')
+          alert('Token expired. Please log in again!')
+          this.dialogRef.close(true);
         }
       })
   }
@@ -251,6 +252,11 @@ export class EntryDialogComponent implements OnInit {
     this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
       results => {
         this.clients = results.sort(this.registryService.propComparator('clientName'));
+      },
+      (err) => {
+        if (err.status === 500) {
+          this.dialogRef.close(true);
+        }
       });
 
     this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(

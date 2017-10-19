@@ -151,7 +151,8 @@ export class CreateDialogComponent implements OnInit {
 						return Observable.of(undefined);
 					}
 					if (error.response.status === 500) {
-						alert('Internal server error !')
+						alert('Token expired. Please log in again!')
+          				this.dialogRef.close(true);
 					}
 				});
 		}
@@ -169,7 +170,8 @@ export class CreateDialogComponent implements OnInit {
 						return Observable.of(undefined);
 					}
 					if (error.response.status === 500) {
-						alert('Internal server error !')
+						alert('Token expired. Please log in again!')
+          				this.dialogRef.close(true);
 					}
 				});
 		}
@@ -187,7 +189,8 @@ export class CreateDialogComponent implements OnInit {
 						return Observable.of(undefined);
 					}
 					if (error.response.status === 500) {
-						alert('Internal server error !')
+						alert('Token expired. Please log in again!')
+          				this.dialogRef.close(true);
 					}
 				});
 		}
@@ -213,7 +216,8 @@ export class CreateDialogComponent implements OnInit {
 						alert('User already exists !');
 					}
 					if (error.status === 500) {
-						alert('Internal server error !')
+						alert('Token expired. Please log in again!')
+          				this.dialogRef.close(true);
 					}
 				});
 		}
