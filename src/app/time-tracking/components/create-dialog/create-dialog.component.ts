@@ -88,43 +88,48 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	public checkMandatoryFields() {
-		if (this.item == this.PROJECT) {
-			if (this.newProjectName === "" || this.newProjectName === undefined) {
-				alert("Please check if all the fields are filled in");
-			} else {
-				this.createItem();
+		if (this.loginService.loggedIn()) {
+			if (this.item == this.PROJECT) {
+				if (this.newProjectName === "" || this.newProjectName === undefined) {
+					alert("Please check if all the fields are filled in");
+				} else {
+					this.createItem();
+				}
 			}
-		}
-		if (this.item == this.TASK) {
-			if (this.newTaskDescription === "" || this.newTaskDescription === undefined) {
-				alert("Please check if all the fields are filled in");
-			} else {
-				this.createItem();
+			if (this.item == this.TASK) {
+				if (this.newTaskDescription === "" || this.newTaskDescription === undefined) {
+					alert("Please check if all the fields are filled in");
+				} else {
+					this.createItem();
+				}
 			}
-		}
-		if (this.item == this.CLIENT) {
-			if (this.newClientName === "" || this.newClientName === undefined) {
-				alert("Please check if all the fields are filled in");
-			} else {
-				this.createItem();
+			if (this.item == this.CLIENT) {
+				if (this.newClientName === "" || this.newClientName === undefined) {
+					alert("Please check if all the fields are filled in");
+				} else {
+					this.createItem();
+				}
 			}
-		}
-		if (this.item == this.USER) {
-			if (this.username === "" || this.password === "" || this.confirmPassword === "" || this.employmentDegree === undefined || this.adminRole === undefined) {
-				alert("Please check if all the fields are filled in");
+			if (this.item == this.USER) {
+				if (this.username === "" || this.password === "" || this.confirmPassword === "" || this.employmentDegree === undefined || this.adminRole === undefined) {
+					alert("Please check if all the fields are filled in");
+				}
+				else if (this.password.length < 8) {
+					alert("Password length should be at least 9 !");
+				}
+				else if (this.password !== this.confirmPassword) {
+					alert("Passwords are not the same !")
+				}
+				else if (!(this.employmentDegree <= 1 && this.employmentDegree > 0)) {
+					alert("Employment degree should be between 0.10 and 1.0 !");
+				}
+				else {
+					this.createItem();
+				}
 			}
-			else if (this.password.length < 8) {
-				alert("Password length should be at least 9 !");
-			}
-			else if (this.password !== this.confirmPassword) {
-				alert("Passwords are not the same !")
-			}
-			else if (!(this.employmentDegree <= 1 && this.employmentDegree > 0)) {
-				alert("Employment degree should be between 0.10 and 1.0 !");
-			}
-			else {
-				this.createItem();
-			}
+		} else {
+			alert("Your token has expired. Please log in again!");
+			this.dialogRef.close(true);
 		}
 	}
 
@@ -151,8 +156,7 @@ export class CreateDialogComponent implements OnInit {
 						return Observable.of(undefined);
 					}
 					if (error.response.status === 500) {
-						alert('Token expired. Please log in again!')
-          				this.dialogRef.close(true);
+						alert('Internal server error !')
 					}
 				});
 		}
@@ -170,8 +174,7 @@ export class CreateDialogComponent implements OnInit {
 						return Observable.of(undefined);
 					}
 					if (error.response.status === 500) {
-						alert('Token expired. Please log in again!')
-          				this.dialogRef.close(true);
+						alert('Internal server error !')
 					}
 				});
 		}
@@ -189,37 +192,34 @@ export class CreateDialogComponent implements OnInit {
 						return Observable.of(undefined);
 					}
 					if (error.response.status === 500) {
-						alert('Token expired. Please log in again!')
-          				this.dialogRef.close(true);
+						alert('Internal server error !')
 					}
 				});
 		}
 
 		if (this.item == this.USER) {
-			return this.http.post(this.baseUrl + "/userprofile",
-				{
-					userName: this.username,
-					password: this.password,
-					employmentDegree: this.employmentDegree,
-					admin: this.adminRole
-				}).map(res => res.json())
-				.subscribe(
-				(data) => {
-					this.dialogRef.close(true);
-					this.registryService.entriesComponent.loadEntries();
-				},
-				(error) => {
-					if (error.status === 400 || error.status === 404) {
-						alert('Please check that fields are the correct input !');
-					}
-					if (error.status === 409) {
-						alert('User already exists !');
-					}
-					if (error.status === 500) {
-						alert('Token expired. Please log in again!')
-          				this.dialogRef.close(true);
-					}
-				});
+			return this.http.post(this.baseUrl + "/userprofile", {
+				userName: this.username,
+				password: this.password,
+				employmentDegree: this.employmentDegree,
+				admin: this.adminRole
+			}).map(res => res.json())
+			.subscribe(
+			(data) => {
+				this.dialogRef.close(true);
+				this.registryService.entriesComponent.loadEntries();
+			},
+			(error) => {
+				if (error.status === 400 || error.status === 404) {
+					alert('Please check that fields are the correct input !');
+				}
+				if (error.status === 409) {
+					alert('User already exists !');
+				}
+				if (error.status === 500) {
+					alert('Internal server error !')
+				}
+			});
 		}
 	}
 

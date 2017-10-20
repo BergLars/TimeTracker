@@ -6,6 +6,7 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { IProject, ITask, IUser, ProjectService, TaskService, UserService, IClient, ClientService, RegistryService } from '../../../data';
 import { DeleteEntryService } from '../entries/delete-entry/delete-entry.service';
+import { LoginService } from '../../../login';
 
 @Component({
 	selector: 'app-edit-dialog',
@@ -47,6 +48,7 @@ export class EditDialogComponent implements OnInit {
 		public projectService: ProjectService,
 		public taskService: TaskService,
 		public clientService: ClientService,
+		public loginService: LoginService,
 		private http: Http,
 		public registryService: RegistryService,
 		private deleteEntryService: DeleteEntryService) { }
@@ -84,46 +86,57 @@ export class EditDialogComponent implements OnInit {
 	}
 
 	public checkMandatoryFields() {
-		if (this.item == this.PROJECT) {
-			if (this.newProjectName === "" || this.newProjectName === undefined) {
-				alert("Please check if all the fields are filled in");
-			} else {
-				this.createItem();
-			}
+		if (this.loginService.loggedIn()) {
+			if (this.item == this.PROJECT) {
+				if (this.newProjectName === "" || this.newProjectName === undefined) {
+					alert("Please check if all the fields are filled in");
+				} else {
+					this.createItem();
+				}
 		}
-		if (this.item == this.TASK) {
-			if (this.newTaskDescription === "" || this.newTaskDescription === undefined) {
-				alert("Please check if all the fields are filled in");
-			} else {
-				this.createItem();
+			if (this.item == this.TASK) {
+				if (this.newTaskDescription === "" || this.newTaskDescription === undefined) {
+					alert("Please check if all the fields are filled in");
+				} else {
+					this.createItem();
+				}
 			}
-		}
-		if (this.item == this.CLIENT) {
-			if (this.newClientName === "" || this.newClientName === undefined) {
-				alert("Please check if all the fields are filled in");
-			} else {
-				this.createItem();
+			if (this.item == this.CLIENT) {
+				if (this.newClientName === "" || this.newClientName === undefined) {
+					alert("Please check if all the fields are filled in");
+				} else {
+					this.createItem();					
+				}
 			}
+		} else {
+			alert("Your token has expired. Please log in again!");
+			this.dialogRef.close(true);
 		}
+		
 	}
 	private loadItems() {
-		this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
+		if (this.loginService.loggedIn()) {
+			this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
 			results => {
 				this.clients = results.sort(this.registryService.propComparator('clientName'));
 				this.clientID = this.clients[0].id;
 			});
 
-		this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
-			results => {
-				this.tasks = results.sort(this.registryService.propComparator('taskDescription'));;
-				this.taskID = this.tasks[0].id;
+			this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+				results => {
+					this.tasks = results.sort(this.registryService.propComparator('taskDescription'));;
+					this.taskID = this.tasks[0].id;
 			});
 
-		this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
-			results => {
-				this.projects = results.sort(this.registryService.propComparator('projectName'));
-				this.projectID = this.projects[0].id;
+			this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+				results => {
+					this.projects = results.sort(this.registryService.propComparator('projectName'));
+					this.projectID = this.projects[0].id;
 			});
+		} else {
+			alert("Your token has expired. Please log in again!");
+			this.dialogRef.close(true);
+		}
 	}
 
 	public clientDropdown(value: string): void {
@@ -185,63 +198,68 @@ export class EditDialogComponent implements OnInit {
 					if (error.response.status === 400 || error.response.status === 404) {
 						alert('Please check that fields are the correct input !');
 						return Observable.of(undefined);
-					}
-					if (error.response.status === 500) {
-						alert('Internal server error !')
-					}
+					} else if (error.response.status === 500) {
+						alert('Internal server error !');
+					} 
 				});
 		}
 	}
 
 	public deleteItem() {
-		if (this.item == this.PROJECT) {
-			return this.http.delete(this.baseUrl + "/projects/" + this.projectID)
-				.subscribe(() => {
-					this.dialogRef.close(true);
-					this.registryService.entriesComponent.loadEntries();
-				},
-				(error) => {
-					if (error.status === 400 || error.status === 404) {
-						alert('Please check if a project is selected!');
-						return Observable.of(undefined);
-					}
-					if (error.status === 500) {
-						alert('This project is used on entries. Cannot be deleted')
-					}
-				});
+		if (this.loginService.loggedIn()) {
+			if (this.item == this.PROJECT) {
+				return this.http.delete(this.baseUrl + "/projects/" + this.projectID)
+					.subscribe(() => {
+						this.dialogRef.close(true);
+						this.registryService.entriesComponent.loadEntries();
+					},
+					(error) => {
+						if (error.status === 400 || error.status === 404) {
+							alert('Please check if a project is selected!');
+							return Observable.of(undefined);
+						}
+						if (error.status === 500) {
+							alert('This project is used on entries. Cannot be deleted')
+						}
+					});
+			}
+			if (this.item == this.TASK) {
+				return this.http.delete(this.baseUrl + "/tasks/" + this.taskID)
+					.subscribe(() => {
+						this.dialogRef.close(true);
+						this.registryService.entriesComponent.loadEntries();
+					},
+					(error) => {
+						if (error.status === 400 || error.status === 404) {
+							alert('Please check if a task is selected!');
+							return Observable.of(undefined);
+						}
+						if (error.status === 500) {
+							alert('This task is used on entries. Cannot be deleted')
+						}
+					});
+			}
+			if (this.item == this.CLIENT) {
+				return this.http.delete(this.baseUrl + "/clients/" + this.clientID)
+					.subscribe(() => {
+						this.dialogRef.close(true);
+						this.registryService.entriesComponent.loadEntries();
+					},
+					(error) => {
+						if (error.status === 400 || error.status === 404) {
+							alert('Please check if a client is selected!');
+							return Observable.of(undefined);
+						}
+						if (error.status === 500) {
+							alert('This client is used on entries. Cannot be deleted')
+						}
+					});
+			}	
+		} else {
+			alert("Your token has expired. Please log in again!");
+			this.dialogRef.close(true);
 		}
-		if (this.item == this.TASK) {
-			return this.http.delete(this.baseUrl + "/tasks/" + this.taskID)
-				.subscribe(() => {
-					this.dialogRef.close(true);
-					this.registryService.entriesComponent.loadEntries();
-				},
-				(error) => {
-					if (error.status === 400 || error.status === 404) {
-						alert('Please check if a task is selected!');
-						return Observable.of(undefined);
-					}
-					if (error.status === 500) {
-						alert('This task is used on entries. Cannot be deleted')
-					}
-				});
-		}
-		if (this.item == this.CLIENT) {
-			return this.http.delete(this.baseUrl + "/clients/" + this.clientID)
-				.subscribe(() => {
-					this.dialogRef.close(true);
-					this.registryService.entriesComponent.loadEntries();
-				},
-				(error) => {
-					if (error.status === 400 || error.status === 404) {
-						alert('Please check if a client is selected!');
-						return Observable.of(undefined);
-					}
-					if (error.status === 500) {
-						alert('This client is used on entries. Cannot be deleted')
-					}
-				});
-		}
+		
 	}
 
 	private displayItems() {
@@ -251,6 +269,4 @@ export class EditDialogComponent implements OnInit {
 		this.createItems.splice(3);
 		//}
 	}
-
-
 }

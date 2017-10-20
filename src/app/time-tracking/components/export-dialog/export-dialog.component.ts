@@ -5,6 +5,7 @@ import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
 import { environment } from '../../../../environments/environment';
 import { Http } from '@angular/http';
+import { EntriesService } from '../entries/entries.service';
 // import { MD_NATIVE_DATE_FORMATS } from "app";
 // import { DeDateAdapter } from "app/dateAdapter";
 
@@ -36,6 +37,7 @@ export class ExportDialogComponent implements OnInit {
 		public userService: UserService,
 		public loginService: LoginService,
 		public http: Http,
+		public entriesService: EntriesService,
 		public dateAdapter: DateAdapter<Date>) {
 			// this.deDateAdapter = new DeDateAdapter();
 	}
@@ -68,6 +70,7 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	checkMandatoryFields() {
+
 		if (this.fromDate === "" || this.toDate === "") {
 			alert("Please check if all the fields are filled in");
 		} else {
@@ -86,10 +89,16 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	loadUsers() {
-		this.http.get(this.baseUrl + "/userprofile/all").map(res => res.json()).subscribe(
-            results => {
-              	this.users = results;
-      		});
+		if (this.loginService.loggedIn()) {
+			this.http.get(this.baseUrl + "/userprofile/all").map(res => res.json()).subscribe(
+            	results => {
+              		this.users = results;
+      			});
+		} else {
+			alert("Your token has expired. Please log in again!");
+			this.dialogRef.close(true);
+			this.entriesService.entriesAreLoaded();
+		}
 	}
 
 	refreshExportURL(id) {

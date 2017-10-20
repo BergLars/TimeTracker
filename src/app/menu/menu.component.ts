@@ -21,7 +21,12 @@ export class MenuComponent implements OnInit {
 	}
 
 	public openDialog() {
-		this.passwordDialogService.confirm('Update password', this.viewContainerRef);
+		if (this.loginService.loggedIn()) {
+			this.passwordDialogService.confirm('Update password', this.viewContainerRef);
+		} else {
+			alert("Your token has expired. Please log in again!");
+      		this.loginService.logout();
+		}
 	}
 
 	public logout() {

@@ -110,21 +110,26 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public checkMandatoryFields() {
-    if (!this.enableTimes) {
-      if (this.description === "" || this.clientID === null || this.selectedDate === undefined || this.timeSpent === null || this.isBillable === null) {
-        alert("Please check if all the fields are filled in");
-      } else {
-        this.startTime = moment().format('HH:mm');
-        this.decimalToTime(this.timeSpent);
+    if (this.loginService.loggedIn()) {
+      if (!this.enableTimes) {
+        if (this.description === "" || this.clientID === null || this.selectedDate === undefined || this.timeSpent === null || this.isBillable === null) {
+          alert("Please check if all the fields are filled in");
+        } else {
+          this.startTime = moment().format('HH:mm');
+          this.decimalToTime(this.timeSpent);
+        }
       }
-    }
-    else {
-      if (this.description === "" || this.selectedDate === undefined || this.startTime === " " || this.endTime === " " || this.isBillable === null) {
-        alert("Please check if all the fields are filled in");
-      } else {
-        this.timeSpent = this.calculateSpentTime();
-        this.checkStartAndEndTime();
+      else {
+        if (this.description === "" || this.selectedDate === undefined || this.startTime === " " || this.endTime === " " || this.isBillable === null) {
+          alert("Please check if all the fields are filled in");
+        } else {
+          this.timeSpent = this.calculateSpentTime();
+          this.checkStartAndEndTime();
+        }
       }
+    } else {
+      alert("Your token has expired. Please log in again!");
+      this.dialogRef.close(true);
     }
   }
 
@@ -218,45 +223,38 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public newEntry() {
-    // this.loadItems();
-    return this.http.post(this.baseUrl + "/timeentries",
-      {
-        entryDate: this.selectedDate,
-        startTime: this.startTime,
-        endTime: this.endTime,
-        timeSpent: this.timeSpent,
-        description: this.description,
-        userprofileID: this.loginService.getLoggedUserID(),
-        taskID: this.taskID,
-        clientID: this.clientID,
-        projectID: this.projectID,
-        billable: this.isBillable
-      }).subscribe(
-      () => {
-        this.dialogRef.close(true);
-        this.loadItems();
-      },
-      (err) => {
-        if (err.status === 400 || err.status === 404) {
-          alert('Wrong date format or fill all field !');
-          return Observable.of(undefined);
-        }
-        if (err.status === 500) {
-          alert('Token expired. Please log in again!')
-          this.dialogRef.close(true);
-        }
-      })
+    return this.http.post(this.baseUrl + "/timeentries", {
+      entryDate: this.selectedDate,
+      startTime: this.startTime,
+      endTime: this.endTime,
+      timeSpent: this.timeSpent,
+      description: this.description,
+      userprofileID: this.loginService.getLoggedUserID(),
+      taskID: this.taskID,
+      clientID: this.clientID,
+      projectID: this.projectID,
+      billable: this.isBillable
+    }).subscribe(
+    () => {
+      this.dialogRef.close(true);
+      this.loadItems();
+    },
+    (err) => {
+      if (err.status === 400 || err.status === 404) {
+        alert('Wrong date format or fill all field !');
+        return Observable.of(undefined);
+      }
+      if (err.status === 500) {
+        alert('Internal server error !')
+      }
+    });
   }
 
   private loadItems() {
-    this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
+    if (this.loginService.loggedIn()) {
+      this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
       results => {
         this.clients = results.sort(this.registryService.propComparator('clientName'));
-      },
-      (err) => {
-        if (err.status === 500) {
-          this.dialogRef.close(true);
-        }
       });
 
     this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
@@ -268,5 +266,9 @@ export class EntryDialogComponent implements OnInit {
       results => {
         this.projects = results.sort(this.registryService.propComparator('projectName'));
       });
+    } else {
+      alert("Your token has expired. Please log in again!");
+      this.dialogRef.close(true);
+    }
   }
 }
