@@ -1,18 +1,18 @@
 <h1 md-dialog-title>{{ title }}</h1>
 <div md-dialog-content (keydown)="getValues(description.value,selectedDate.value,startTime.value,endTime.value,timeSpent.value,client.value,project.value,task.value,checkBoxTimes,billable);readDate(selectedDate);keyDownFunction($event);">
-    <table>
-        <tr>
-            <td>
-                <md-input-container>
-                    <input mdInput #description placeholder="Description">
-                </md-input-container>
-            </td>
-        </tr>
-        <br>
+  <table>
+    <tr>
+      <td>
+        <md-input-container>
+          <input class="clickable-icon" mdInput #description placeholder="Description">
+        </md-input-container>*
+      </td>
+    </tr>
+    <br>
     <tr>
       <td>Client:</td>
       <td>
-        <select #client (change)="clientDropdown(client.value)">
+        <select class="clickable-icon" #client (change)="clientDropdown(client.value)">
           <option *ngFor="let item of clients" [value]='item.id'>{{ item.clientName }}</option>
         </select>
       </td>
@@ -21,7 +21,7 @@
     <tr>
       <td>Project:</td>
       <td>
-        <select #project (change)="projectDropdown(project.value)">
+        <select class="clickable-icon" #project (change)="projectDropdown(project.value)">
           <option *ngFor="let item of projects" [value]='item.id'>{{ item.projectName }}</option>
         </select>
       </td>
@@ -30,7 +30,7 @@
     <tr>
       <td>Task:</td>
       <td>
-        <select #task (change)="taskDropdown(task.value)">
+        <select class="clickable-icon" #task (change)="taskDropdown(task.value)">
           <option *ngFor="let item of tasks" [value]="item.id">{{ item.taskDescription }}</option>
         </select>
       </td>
@@ -39,10 +39,10 @@
     <tr>
       <td>
         <md-input-container>
-          <input mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="selectedDate" placeholder="Date">
-           <button mdSuffix [mdDatepickerToggle]="selectedDate"></button>
+          <input class="clickable-icon" mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="selectedDate" placeholder="Date">
+          <button mdSuffix [mdDatepickerToggle]="selectedDate"></button>
         </md-input-container>
-         <md-datepicker #selectedDate></md-datepicker>*
+        <md-datepicker #selectedDate></md-datepicker>*
       </td>
     </tr>
     <br>
@@ -54,13 +54,13 @@
     <tr [hidden]="!enableTimes">
       <td>
         <md-input-container>
-          <input mdInput placeholder="Start Time" #startTime>
+          <input class="clickable-icon" mdInput placeholder="Start Time" #startTime>
         </md-input-container>*
       </td>
       <td>&nbsp;</td>
       <td>
         <md-input-container>
-          <input mdInput placeholder="End Time" #endTime>
+          <input class="clickable-icon" mdInput placeholder="End Time" #endTime>
         </md-input-container>*
       </td>
     </tr>
@@ -70,7 +70,7 @@
       <td>
         <label>Decimal or hh:mm</label>&nbsp;
         <md-input-container>
-          <input mdInput placeholder="Time Spent" #timeSpent>
+          <input class="clickable-icon" mdInput placeholder="Time Spent" #timeSpent>
         </md-input-container>*
       </td>
     </tr>

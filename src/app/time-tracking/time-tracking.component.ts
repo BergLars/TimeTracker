@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { ProjectService, TaskService, TimeTrackingEntryService, UserService, IProject, ITask, ITimeTrackingEntry, IUser, IStatistics } from '../data';
+import { ProjectService, TaskService, TimeTrackingEntryService, UserService, IProject, ITask, ITimeTrackingEntry, IUser, IStatistics, RegistryService } from '../data';
 // Use the Full path instead of using index.ts path
 import { CreateDialogService } from '../time-tracking/components/create-dialog/create-dialog.service';
 import { ExportDialogService } from '../time-tracking/components/export-dialog/export-dialog.service';
@@ -40,7 +40,8 @@ export class TimeTrackingComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private viewContainerRef: ViewContainerRef,
-    private entriesService: EntriesService) {
+    private entriesService: EntriesService,
+    private registryService: RegistryService) {
   }
 
   ngOnInit() {
@@ -49,6 +50,7 @@ export class TimeTrackingComponent implements OnInit {
     this.checkIfLoggedIn();
   }
   public openCreateDialog() {
+    this.registryService.entriesComponent.unselectEntry();
     this.createDialogService
       .confirm('Create', this.viewContainerRef)
       .subscribe(res => {
@@ -59,16 +61,17 @@ export class TimeTrackingComponent implements OnInit {
   }
 
   public openEditDialog() {
+    this.registryService.entriesComponent.unselectEntry();
     this.editDialogService
       .confirm('Edit', this.viewContainerRef)
       .subscribe(res => {
         if (res) {
-
         }
       });
   }
 
   public openExportDialog() {
+    this.registryService.entriesComponent.unselectEntry();
     this.exportDialogService
       .confirm('Export', this.viewContainerRef);
   }

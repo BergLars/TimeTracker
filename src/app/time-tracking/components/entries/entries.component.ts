@@ -172,7 +172,7 @@ export class EntriesComponent implements OnInit {
 
     // Handle conversion Minute over 60mn to 1h
     if (endTimeMin > 60) {
-      hour = Math.round(endTimeMin / 60);
+      hour = Math.floor(endTimeMin / 60);
       endTimeH = endTimeH + hour;
       endTimeMin = Math.abs(endTimeMin - (60 * hour));
       if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
@@ -300,13 +300,19 @@ export class EntriesComponent implements OnInit {
     }).subscribe(
       () => {
         this.loadEntries();
+        this.registryService.sidebarComponent.loadEntries();
       });
   }
 
-  onSelect({ selected }) {
+  selectEntry({ selected }) {
     if (selected) {
       this.selectedRow = selected[0];
     }
+  }
+
+  // Set the value of a selected entry to empty
+  unselectEntry() {
+    this.selected = [];
   }
 
   public calculateSpentTime(row) {
@@ -347,6 +353,7 @@ export class EntriesComponent implements OnInit {
     return false;
   }
 
+
   toggleEditMode() {
     this.editMode = !this.editMode;
   }
@@ -369,6 +376,7 @@ export class EntriesComponent implements OnInit {
   }
 
   public openDialog() {
+    this.unselectEntry();
     this.entryDialogService
       .confirm('New Entry', this.viewContainerRef)
       .subscribe(res => {
