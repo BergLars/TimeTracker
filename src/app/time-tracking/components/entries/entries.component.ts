@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, Input, OnInit, ViewContainerRef, ElementRef } from '@angular/core';
 import { Http } from '@angular/http';
 import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, TaskService, ProjectService, TimeTrackingEntryService, ClientService, RegistryService } from '../../../data';
 import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
@@ -97,13 +97,29 @@ export class EntriesComponent implements OnInit {
     private http: Http,
     private router: Router,
     public registryService: RegistryService,
-    public entriesService: EntriesService) {
+    public entriesService: EntriesService,
+    private elementRef: ElementRef) {
     this.registryService.entriesComponent = this;
   }
 
   ngOnInit() {
     this.defaultItem = this.createItems[0].key;
     this.loadEntries();
+  }
+
+  setSelectFocus(event, row) {
+    let element = event.target;
+    let parentElement = element.parentElement;
+    setTimeout(() => {
+      let parentElementTag = parentElement.getElementsByTagName('select')[0];
+      parentElementTag.focus();
+    }, 100);
+  }
+
+  removeSelectFocus(row, cell) {
+    this.editing[row.$$index + cell] = false;
+    setTimeout(() => {
+    }, 100);
   }
 
   // Filter all entries with one or more parameter
