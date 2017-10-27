@@ -54,7 +54,7 @@ export class PasswordDialogComponent implements OnInit {
 	}
 
 	private updatePassword() {
-		this.userService.updatePassword(this.currentPassword, this.newPassword, this.confirmPassword).map(res => res.json()).subscribe(
+		this.userService.updatePassword(encodeURIComponent(this.currentPassword), encodeURIComponent(this.newPassword), encodeURIComponent(this.confirmPassword)).map(res => res.json()).subscribe(
 			user => {
 				this.dialogRef.close(true);
 				this.loginService.logout();
