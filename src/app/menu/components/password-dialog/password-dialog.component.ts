@@ -43,7 +43,7 @@ export class PasswordDialogComponent implements OnInit {
 			alert('Please read password requirement above !');
 		}
 		else {
-			alert('Hello');
+			this.updatePassword();
 		}
 	}
 
