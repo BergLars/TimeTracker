@@ -110,11 +110,17 @@ export class CreateDialogComponent implements OnInit {
 			}
 		}
 		if (this.item == this.USER) {
+			let usernameRequirement = (/^(?=.*[a-z])[0-9a-zA-Z._-]{2,25}$/);
+			let passwordRequirement = (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#\$%\^\&*\)\(+=._-]{8,15}$/);
+
 			if (this.username === "" || this.password === "" || this.confirmPassword === "" || this.employmentDegree === undefined || this.adminRole === undefined) {
 				alert("Please check if all the fields are filled in");
 			}
-			else if (this.password.length < 8) {
-				alert("Password length should be at least 9 !");
+			else if (!this.username.match(usernameRequirement)) {
+				alert("Please read username requirement !");
+			}
+			else if (!this.password.match(passwordRequirement)) {
+				alert('Please read password requirement above !');
 			}
 			else if (this.password !== this.confirmPassword) {
 				alert("Passwords are not the same !")
