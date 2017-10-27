@@ -36,6 +36,9 @@ export class PasswordDialogComponent implements OnInit {
 		if (this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
 			alert("Please check if all the fields are filled in !");
 		}
+		else if (this.currentPassword === this.newPassword) {
+			alert("Please choose another password !");
+		}
 		else if (this.newPassword.length < 8) {
 			alert("Password length should be at least 9 !");
 		}
