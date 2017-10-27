@@ -33,14 +33,17 @@ export class PasswordDialogComponent implements OnInit {
 	}
 
 	checkMandatoryFields() {
+		let passwordRequirement = (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#\$%\^\&*\)\(+=._-]{8,15}$/);
+
 		if (this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
 			alert("Please check if all the fields are filled in !");
 		}
-		else if (this.newPassword.length < 8) {
-			alert("Password length should be at least 9 !");
+
+		else if (!this.newPassword.match(passwordRequirement)) {
+			alert('Please read password requirement above !');
 		}
 		else {
-			this.updatePassword();
+			alert('Hello');
 		}
 	}
 
