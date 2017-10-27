@@ -271,9 +271,15 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'date') {
-      let selectedDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
-      row.entryDate = selectedDate;
-      this.updateEntry(row);
+      let selectedDate = cellValue;
+      if (event.target.value === "") {
+        row.entryDate = selectedDate;
+      }
+      else {
+        selectedDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
+        row.entryDate = selectedDate;
+        this.updateEntry(row);
+      }
     }
 
     if (cell == 'startTime') {
