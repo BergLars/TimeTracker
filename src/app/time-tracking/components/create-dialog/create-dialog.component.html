@@ -32,8 +32,17 @@
         </tr>
         <tr [hidden]="item != USER">
             <td>
-            <label>Password length should be at least 9 !</label>
-            <br>
+                <label> Password length should be between 8-15.
+                    <br> Should contain at least one digit,
+                    <br> one lower case and one upper case.
+                    <br> No space.
+
+                    <br>
+                    <br>Username length should be between 2-25.
+                    <br> Should contain a character and no special character.
+                    <br> No space.
+                </label>
+                <br>
                 <md-input-container>
                     <input mdInput placeholder="Username" #username>
                 </md-input-container>
@@ -60,7 +69,7 @@
                 </md-input-container>
             </td>
         </tr>
-         <tr [hidden]="item != USER">
+        <tr [hidden]="item != USER">
             <td>
                 <md-checkbox #adminRole>Administrator</md-checkbox>
             </td>

@@ -34,7 +34,7 @@ export class EntriesService {
         results => {
           this.clients = results;
 
-          results.forEach(function (result)  {
+          results.forEach(function (result) {
             that.clientsDictionary[result.id] = result;
           });
 

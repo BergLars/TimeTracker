@@ -31,6 +31,7 @@ import { CryptoJS } from 'crypto-js';
 import { MenuComponent, PasswordDialogComponent, PasswordDialogService } from './menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DeDateAdapter } from './dateAdapter';
+import { SetFocusDirective } from './directives/setFocus/set-focus.directive';
 @NgModule({
     declarations: [
         AppComponent,
@@ -46,7 +47,8 @@ import { DeDateAdapter } from './dateAdapter';
         MenuComponent,
         PasswordDialogComponent,
         CreateDialogComponent,
-        EditDialogComponent
+        EditDialogComponent,
+        SetFocusDirective
     ],
     entryComponents: [
         EntryDialogComponent,
@@ -61,7 +63,7 @@ import { DeDateAdapter } from './dateAdapter';
         BrowserModule,
         FormsModule,
         HttpModule,
-        RouterModule.forRoot(routes, {useHash: true}),
+        RouterModule.forRoot(routes, { useHash: true }),
         MaterialModule,
         FlexLayoutModule,
         BrowserAnimationsModule,
@@ -96,7 +98,7 @@ import { DeDateAdapter } from './dateAdapter';
 })
 export class AppModule {
     constructor(private dateAdapter: DateAdapter<Date>) {
-    this.dateAdapter.setLocale('fr-CH');
-  }
- }
+        this.dateAdapter.setLocale('fr-CH');
+    }
+}
 platformBrowserDynamic().bootstrapModule(AppModule);

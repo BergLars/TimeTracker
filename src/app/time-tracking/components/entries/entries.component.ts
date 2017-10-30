@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, Input, OnInit, ViewContainerRef, ElementRef } from '@angular/core';
 import { Http } from '@angular/http';
 import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, RegistryService } from '../../../data';
 import { MdDialog } from '@angular/material';
@@ -65,13 +65,29 @@ export class EntriesComponent implements OnInit {
     private dialog: MdDialog,
     private http: Http,
     public registryService: RegistryService,
-    public entriesService: EntriesService) {
+    public entriesService: EntriesService,
+    private elementRef: ElementRef) {
     this.registryService.entriesComponent = this;
   }
 
   ngOnInit() {
     this.defaultItem = this.createItems[0].key;
     this.loadEntries();
+  }
+
+  setSelectFocus(event, row) {
+    let element = event.target;
+    let parentElement = element.parentElement;
+    setTimeout(() => {
+      let parentElementTag = parentElement.getElementsByTagName('select')[0];
+      parentElementTag.focus();
+    }, 100);
+  }
+
+  removeSelectFocus(row, cell) {
+    this.editing[row.$$index + cell] = false;
+    setTimeout(() => {
+    }, 100);
   }
 
   // Filter all entries with one or more parameter
@@ -140,7 +156,7 @@ export class EntriesComponent implements OnInit {
 
     // Handle conversion Minute over 60mn to 1h
     if (endTimeMin > 60) {
-      hour = Math.round(endTimeMin / 60);
+      hour = Math.floor(endTimeMin / 60);
       endTimeH = endTimeH + hour;
       endTimeMin = Math.abs(endTimeMin - (60 * hour));
       if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
@@ -193,7 +209,6 @@ export class EntriesComponent implements OnInit {
 
   updateValue(event, cell, cellValue, row) {
     this.editing[row.$$index + '-' + cell] = false;
-
     if (cell == 'description') {
       row.description = event.target.value;
       this.updateEntry(row);
@@ -224,9 +239,15 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'date') {
-      let selectedDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
-      row.entryDate = selectedDate;
-      this.updateEntry(row);
+      let selectedDate = cellValue;
+      if (event.target.value === "") {
+        row.entryDate = selectedDate;
+      }
+      else {
+        selectedDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
+        row.entryDate = selectedDate;
+        this.updateEntry(row);
+      }
     }
 
     if (cell == 'startTime') {
@@ -269,13 +290,19 @@ export class EntriesComponent implements OnInit {
     }).subscribe(
       () => {
         this.loadEntries();
+        this.registryService.sidebarComponent.loadEntries();
       });
   }
 
-  onSelect({ selected }) {
+  selectEntry({ selected }) {
     if (selected) {
       this.selectedRow = selected[0];
     }
+  }
+
+  // Set the value of a selected entry to empty
+  unselectEntry() {
+    this.selected = [];
   }
 
   public calculateSpentTime(row) {
@@ -316,6 +343,7 @@ export class EntriesComponent implements OnInit {
     return false;
   }
 
+
   toggleEditMode() {
     this.editMode = !this.editMode;
   }
@@ -333,6 +361,7 @@ export class EntriesComponent implements OnInit {
   }
 
   public openDialog() {
+    this.unselectEntry();
     this.entryDialogService
       .confirm('New Entry', this.viewContainerRef)
       .subscribe(res => {
