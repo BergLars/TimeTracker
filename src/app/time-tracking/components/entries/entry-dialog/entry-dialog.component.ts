@@ -7,7 +7,6 @@ import moment from 'moment/src/moment';
 import { Observable } from 'rxjs/Rx';
 import { MdDialogRef, MdDatepickerModule, DateAdapter } from '@angular/material';
 
-
 @Component({
   selector: 'app-entry-dialog',
   templateUrl: './entry-dialog.component.html'

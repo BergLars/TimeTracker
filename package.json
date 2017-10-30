@@ -14,11 +14,11 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "*",
+    "@angular/cdk": "*",
     "@angular/common": "*",
     "@angular/compiler": "*",
     "@angular/compiler-cli": "*",
     "@angular/core": "*",
-    "@angular/cdk": "*",
     "@angular/flex-layout": "*",
     "@angular/forms": "*",
     "@angular/http": "*",
@@ -32,8 +32,6 @@
     "js-data": "^3.0.0-rc.9",
     "js-data-http": "^3.0.0-rc.9",
     "moment": "*",
-    "mydatepicker": "*",
-    "ng2-bootstrap": "*",
     "rxjs": "*",
     "ts-helpers": "*",
     "zone.js": "*"
