@@ -172,6 +172,10 @@ export class EntriesComponent implements OnInit {
 
     // We assign the result to the table datasource
     this.items = filteredEntries;
+
+    // Map projectName, taskDescription, clientName and entryDate to row in rows
+    this.mapEntryValue(this.items);
+
     this.itemTotalTimeSpent = this.totalTimeSpent(this.items);
   }
 
@@ -441,13 +445,16 @@ export class EntriesComponent implements OnInit {
       this.selectedClients = this.clients.map(function (client) {
         return client.id;
       });
+      this.mapEntryValue(this.items);
+    });
+  }
 
-      // Map projectName, taskDescription, clientName and entryDate to row in rows
-      this.items.forEach(function (entry) {
-        entry.projectName = entry.project.projectName;
-        entry.taskDescription = entry.task.taskDescription;
-        entry.clientName = entry.client.clientName;
-      });
+  // Map projectName, taskDescription, clientName and entryDate to row in rows
+  private mapEntryValue(items) {
+    items.forEach(function (entry) {
+      entry.projectName = entry.project.projectName;
+      entry.taskDescription = entry.task.taskDescription;
+      entry.clientName = entry.client.clientName;
     });
   }
 
