@@ -48,7 +48,6 @@
     "karma-chrome-launcher": "*",
     "karma-cli": "*",
     "karma-jasmine": "*",
-    "karma-remap-istanbul": "*",
     "protractor": "*",
     "ts-node": "*",
     "tslint": "*",
