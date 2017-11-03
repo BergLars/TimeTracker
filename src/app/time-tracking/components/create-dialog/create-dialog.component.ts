@@ -202,7 +202,7 @@ export class CreateDialogComponent implements OnInit {
 			return this.http.post(this.baseUrl + "/userprofile",
 				{
 					userName: this.username,
-					password: this.password,
+					password: encodeURIComponent(this.password),
 					employmentDegree: this.employmentDegree,
 					admin: this.adminRole
 				}).map(res => res.json())
