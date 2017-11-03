@@ -7,6 +7,9 @@ import { CreateDialogService } from '../time-tracking/components/create-dialog/c
 import { ExportDialogService } from '../time-tracking/components/export-dialog/export-dialog.service';
 import { EditDialogService } from '../time-tracking/components/edit-dialog/edit-dialog.service';
 
+import { EntriesService } from '../time-tracking/components/entries/entries.service';
+import { LoginService } from '../login/login.service';
+
 import { Router } from '@angular/router';
 import moment from 'moment/src/moment';
 
@@ -23,11 +26,14 @@ export class TimeTrackingComponent implements OnInit {
 
 
   constructor(
+    public loginService: LoginService,
+    private dialog: MdDialog,
     private createDialogService: CreateDialogService,
     private exportDialogService: ExportDialogService,
     private editDialogService: EditDialogService,
     private router: Router,
     private viewContainerRef: ViewContainerRef,
+    private entriesService: EntriesService,
     private registryService: RegistryService) {
     
   }
@@ -39,13 +45,19 @@ export class TimeTrackingComponent implements OnInit {
   }
   public openCreateDialog() {
     this.registryService.entriesComponent.unselectEntry();
-    this.createDialogService
+    if (this.loginService.loggedIn()) {
+      this.createDialogService
       .confirm('Create', this.viewContainerRef)
       .subscribe(res => {
         if (res) {
-
+          this.entriesService.entriesAreLoaded();
         }
-      });
+      });  
+    } else {
+      alert("Your token has expired. Please log in again!");
+      this.loginService.logout();
+    }
+    
   }
 
   public openEditDialog() {
@@ -54,6 +66,7 @@ export class TimeTrackingComponent implements OnInit {
       .confirm('Edit', this.viewContainerRef)
       .subscribe(res => {
         if (res) {
+          this.entriesService.entriesAreLoaded();
         }
       });
   }

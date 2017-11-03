@@ -3,6 +3,7 @@ import { MdDialogRef } from '@angular/material';
 import { LoginService } from '../../../login';
 import { UserService } from '../../../data';
 import { Router } from '@angular/router';
+import { EntriesService } from '../../../time-tracking/components/entries/entries.service';
 
 @Component({
 	selector: 'app-password-dialog',
@@ -20,6 +21,7 @@ export class PasswordDialogComponent implements OnInit {
 		public dialogRef: MdDialogRef<PasswordDialogComponent>,
 		public loginService: LoginService,
 		public userService: UserService,
+		public entriesService: EntriesService,
 		private router: Router) { }
 
 	ngOnInit() {
@@ -33,17 +35,23 @@ export class PasswordDialogComponent implements OnInit {
 	}
 
 	checkMandatoryFields() {
-		let passwordRequirement = (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#\$%\^\&*\)\(+=._-]{8,15}$/);
 
-		if (this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
-			alert("Please check if all the fields are filled in !");
-		}
+		if (this.loginService.loggedIn()) {
+			let passwordRequirement = (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#\$%\^\&*\)\(+=._-]{8,15}$/);
 
-		else if (!this.newPassword.match(passwordRequirement)) {
-			alert('Please read password requirement above !');
-		}
-		else {
-			this.updatePassword();
+			if (this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
+				alert("Please check if all the fields are filled in !");
+			}
+
+			else if (!this.newPassword.match(passwordRequirement)) {
+				alert('Please read password requirement above !');
+			} else {
+				this.updatePassword();
+			}
+		} else {
+			alert("Your token has expired. Please log in again!");
+      		this.dialogRef.close(true);
+      		this.entriesService.entriesAreLoaded();
 		}
 	}
 

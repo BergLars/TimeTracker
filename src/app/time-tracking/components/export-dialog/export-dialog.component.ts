@@ -5,6 +5,7 @@ import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
 import { environment } from '../../../../environments/environment';
 import { Http } from '@angular/http';
+import { EntriesService } from '../entries/entries.service';
 
 @Component({
 	selector: 'app-export-dialog',
@@ -30,6 +31,7 @@ export class ExportDialogComponent implements OnInit {
 		public dialogRef: MdDialogRef<ExportDialogComponent>,
 		public loginService: LoginService,
 		public http: Http,
+		public entriesService: EntriesService,
 		public dateAdapter: DateAdapter<Date>) {
 	}
 
@@ -79,10 +81,16 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	loadUsers() {
-		this.http.get(this.baseUrl + "/userprofile/all").map(res => res.json()).subscribe(
-            results => {
-              	this.users = results;
-      		});
+		if (this.loginService.loggedIn()) {
+			this.http.get(this.baseUrl + "/userprofile/all").map(res => res.json()).subscribe(
+            	results => {
+              		this.users = results;
+      			});
+		} else {
+			alert("Your token has expired. Please log in again!");
+			this.dialogRef.close(true);
+			this.entriesService.entriesAreLoaded();
+		}
 	}
 
 	refreshExportURL(id) {
