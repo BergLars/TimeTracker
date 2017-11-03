@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { LoginService } from '../../../login';
-import { IUser } from '../../../data';
 
 @Component({
 	selector: 'app-user',

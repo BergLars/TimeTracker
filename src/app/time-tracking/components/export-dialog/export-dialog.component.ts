@@ -1,12 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef, MdDatepickerModule, DateAdapter, MdDateFormats } from '@angular/material';
-import { UserService, IClient, ClientService, TimeTrackingEntryService, IUser } from '../../../data';
+import { IUser } from '../../../data';
 import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
 import { environment } from '../../../../environments/environment';
 import { Http } from '@angular/http';
-// import { MD_NATIVE_DATE_FORMATS } from "app";
-// import { DeDateAdapter } from "app/dateAdapter";
+import { EntriesService } from '../entries/entries.service';
 
 @Component({
 	selector: 'app-export-dialog',
@@ -23,21 +22,17 @@ export class ExportDialogComponent implements OnInit {
 	public username: string;
 	public userID: any;
 	public exportURL: string;
-	private user: IUser;
 	@Input() users: IUser[] = [];
 	public validDatePeriod: boolean;
 	public validLength: boolean;
-	// deDateAdapter: DeDateAdapter;
 	public baseUrl: string = environment.apiBaseUrl;
 
 	constructor(
 		public dialogRef: MdDialogRef<ExportDialogComponent>,
-		public timeTrackingEntryService: TimeTrackingEntryService,
-		public userService: UserService,
 		public loginService: LoginService,
 		public http: Http,
+		public entriesService: EntriesService,
 		public dateAdapter: DateAdapter<Date>) {
-			// this.deDateAdapter = new DeDateAdapter();
 	}
 
 	ngOnInit() {
@@ -86,10 +81,16 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	loadUsers() {
-		this.http.get(this.baseUrl + "/userprofile/all").map(res => res.json()).subscribe(
-            results => {
-              	this.users = results;
-      		});
+		if (this.loginService.loggedIn()) {
+			this.http.get(this.baseUrl + "/userprofile/all").map(res => res.json()).subscribe(
+            	results => {
+              		this.users = results;
+      			});
+		} else {
+			alert("Your token has expired. Please log in again!");
+			this.dialogRef.close(true);
+			this.entriesService.entriesAreLoaded();
+		}
 	}
 
 	refreshExportURL(id) {

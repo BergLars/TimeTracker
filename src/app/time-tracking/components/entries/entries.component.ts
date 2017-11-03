@@ -1,18 +1,12 @@
 import { Component, Input, OnInit, ViewContainerRef, ElementRef } from '@angular/core';
 import { Http } from '@angular/http';
-import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, TaskService, ProjectService, TimeTrackingEntryService, ClientService, RegistryService } from '../../../data';
-import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
+import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, RegistryService } from '../../../data';
+import { MdDialog } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
-//import { UpdateDialogService } from './update-dialog/update-dialog.service';
-import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
-import { LoginService } from '../../../login';
 import { environment } from '../../../../environments/environment';
-import { Router } from '@angular/router';
 import moment from 'moment/src/moment';
 import { EntriesService } from './entries.service';
-import { CreateDialogService } from '../create-dialog/create-dialog.service';
-// import { SearchDialogComponent } from './components/search-dialog/search-dialog.component';
 
 @Component({
   selector: 'app-entries',
@@ -28,14 +22,10 @@ export class EntriesComponent implements OnInit {
   @Input() task: ITask;
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
-  @Input() users: IUser[] = [];
-  public isLoading: Boolean = false;
   public items: ITimeTrackingEntry[] = [];
   rows = [];
   selected = [];
   selectedRow: any;
-  cloneSelectedRow: any;
-  timeTrackingEntry: ITimeTrackingEntry;
   editMode: boolean = false;
   rowID: number;
   userID: number;
@@ -43,15 +33,9 @@ export class EntriesComponent implements OnInit {
   projectID: any;
   taskID: any;
   isBillable: boolean;
-  selectedDescription: string;
   count: number = 0;
   @Input() offset: number = 0;
   @Input() date: string;
-
-  public tasksDictionary: any = {};
-  public projectsDictionary: any = {};
-  public clientsDictionary: any = {};
-
   public editing = {};
   public result: any;
   private limits = [
@@ -59,10 +43,8 @@ export class EntriesComponent implements OnInit {
     { key: '10 Entries', value: 10 },
     { key: '5 Entries', value: 5 }
   ];
-
   limit: number = this.limits[0].value;
   rowLimits: Array<any> = this.limits;
-
   public createItems = [
     { key: 'None', id: 1 },
     { key: 'Client', id: 2 },
@@ -71,31 +53,17 @@ export class EntriesComponent implements OnInit {
   ];
   item: number = this.createItems[0].id;
   public defaultItem: any;
-
-  public NONE: number = 0;
-  public CLIENT: number = 2;
-  public PROJECT: number = 3;
-  public TASK: number = 4;
-
   @Input() selectedClients: any;
   @Input() selectedProjects: any;
   @Input() selectedTasks: any;
   @Input() itemTotalTimeSpent: any;
 
   constructor(
-    public projectService: ProjectService,
-    public timeTrackingEntryService: TimeTrackingEntryService,
-    public taskService: TaskService,
-    public clientService: ClientService,
     private entryDialogService: EntryDialogService,
     private deleteEntryService: DeleteEntryService,
-    //private updateDialogService: UpdateDialogService,
     private viewContainerRef: ViewContainerRef,
-    private loginService: LoginService,
-    public userService: UserService,
     private dialog: MdDialog,
     private http: Http,
-    private router: Router,
     public registryService: RegistryService,
     public entriesService: EntriesService,
     private elementRef: ElementRef) {
@@ -384,11 +352,6 @@ export class EntriesComponent implements OnInit {
     this.editMode = !this.editMode;
   }
 
-  discardChange() {
-    this.selectedRow.description = this.cloneSelectedRow.description;
-    this.toggleEditMode();
-  }
-
   updateRowPosition() {
     let ix = this.getSelectedIx();
     let arr = [...this.rows];
@@ -459,7 +422,6 @@ export class EntriesComponent implements OnInit {
   }
 
   onPage(event) {
-    console.log('Page Event', event);
     this.count = this.items.length;
     this.items = this.entriesService.clonedItems;
     const start = event.offset * event.limit;
@@ -470,32 +432,6 @@ export class EntriesComponent implements OnInit {
     }
     this.items = rows;
     this.items.length = this.count;
-    console.log('Page Results', start, end, rows);
     this.offset = event.offset;
-  }
-
-  private getStatistics() {
-    // TODO
-    // this.statistics.totalAvailableVacationDays = 18;
-    // this.statistics.totalHousWorkedMonth = 69;
-    // this.statistics.totalHousWorkedWeek = 21;
-  }
-
-  public showSearchDialog() {
-    // this.dialogRefSearch = this.dialog.open(SearchDialogComponent);
-
-    // this.dialogRefSearch
-    //   .afterClosed()
-    //   .subscribe(result => {
-    //     this.dialogRefSearch = null;
-    //   });
-  }
-
-  public showExportDialog() {
-    // TODO
-  }
-
-  public showVacationWorkedHoursDialog() {
-    // TODO
   }
 }
