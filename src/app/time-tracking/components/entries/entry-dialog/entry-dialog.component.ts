@@ -213,20 +213,20 @@ export class EntryDialogComponent implements OnInit {
 
   public newEntry() {
     return this.http.post(this.baseUrl + "/timeentries", {
-        entryDate: this.selectedDate,
-        startTime: this.startTime,
-        endTime: this.endTime,
-        timeSpent: this.timeSpent,
-        description: this.description,
-        userprofileID: this.loginService.getLoggedUserID(),
-        taskID: this.taskID,
-        clientID: this.clientID,
-        projectID: this.projectID,
-        billable: this.isBillable
-      }).subscribe(
+      entryDate: this.selectedDate,
+      startTime: this.startTime,
+      endTime: this.endTime,
+      timeSpent: this.timeSpent,
+      description: this.description,
+      userprofileID: this.loginService.getLoggedUserID(),
+      taskID: this.taskID,
+      clientID: this.clientID,
+      projectID: this.projectID,
+      billable: this.isBillable
+    }).subscribe(
       () => {
         this.dialogRef.close(true);
-        this.loadItems();
+        this.registryService.entriesComponent.offset = 0;
       },
       (err) => {
         if (err.status === 400 || err.status === 404) {
@@ -242,19 +242,19 @@ export class EntryDialogComponent implements OnInit {
   private loadItems() {
     if (this.loginService.loggedIn()) {
       this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
-      results => {
-        this.clients = results.sort(this.registryService.propComparator('clientName'));
-      });
+        results => {
+          this.clients = results.sort(this.registryService.propComparator('clientName'));
+        });
 
-    this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
-      results => {
-        this.tasks = results.sort(this.registryService.propComparator('taskDescription'));
-      });
+      this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+        results => {
+          this.tasks = results.sort(this.registryService.propComparator('taskDescription'));
+        });
 
-    this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
-      results => {
-        this.projects = results.sort(this.registryService.propComparator('projectName'));
-      });
+      this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+        results => {
+          this.projects = results.sort(this.registryService.propComparator('projectName'));
+        });
     } else {
       alert("Your token has expired. Please log in again!");
       this.dialogRef.close(true);
