@@ -94,14 +94,9 @@ div.mat-input-underline {
     }
 }
 
-.single-selection,
-.multi-selection,
-.multi-click-selection {
-    .active,
-    .active .datatable-row-group {
-        background-color: rgba(69, 79, 179, 0.12);
-        color: black;
-    }
+.active{
+    background-color: rgba(69, 79, 179, 0.12) !important;
+    color: black;
 }
 
 .datatable-header {
@@ -132,6 +127,7 @@ div.mat-input-underline {
 .totalTimeSpent{
     font-family: Roboto,"Helvetica Neue",sans-serif;
     font-size: 75%;
+    padding-top: 10px;
 }
 
 [data-icon]:before {
@@ -215,6 +211,16 @@ div.mat-input-underline {
   .mat-select-value{
       font-size: 80%;
   }
+
+  .clickable-icon{
+      cursor: pointer;
+      cursor: hand;
+    }
+
   .select-field{
       width: 100%; 
+  }
+
+  .filter-position{
+      padding-top: 15px;
   }

@@ -301,13 +301,19 @@ export class EntriesComponent implements OnInit {
     }).subscribe(
       () => {
         this.loadEntries();
+        this.registryService.sidebarComponent.loadEntries();
       });
   }
 
-  onSelect({ selected }) {
+  selectEntry({ selected }) {
     if (selected) {
       this.selectedRow = selected[0];
     }
+  }
+
+  // Set the value of a selected entry to empty
+  unselectEntry() {
+    this.selected = [];
   }
 
   public calculateSpentTime(row) {
@@ -348,6 +354,7 @@ export class EntriesComponent implements OnInit {
     return false;
   }
 
+
   toggleEditMode() {
     this.editMode = !this.editMode;
   }
@@ -370,6 +377,7 @@ export class EntriesComponent implements OnInit {
   }
 
   public openDialog() {
+    this.unselectEntry();
     this.entryDialogService
       .confirm('New Entry', this.viewContainerRef)
       .subscribe(res => {

@@ -57,7 +57,7 @@ export class PasswordDialogComponent implements OnInit {
 				this.loginService.logout();
 			},
 			error => {
-				if (error.status === 400 || error.status === 404) {
+				if (error.status === 400 || error.status === 404 || error.status === 412) {
 					alert("Wrong password or passwords are not the same !");
 					this.router.navigate(['timeentries']);
 				}
