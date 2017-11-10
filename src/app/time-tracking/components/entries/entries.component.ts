@@ -75,11 +75,11 @@ export class EntriesComponent implements OnInit {
     this.loadEntries();
   }
 
-  setSelectFocus(event, row) {
+  setSelectFocus(event, row, value) {
     let element = event.target;
     let parentElement = element.parentElement;
     setTimeout(() => {
-      let parentElementTag = parentElement.getElementsByTagName('select')[0];
+      let parentElementTag = parentElement.getElementsByTagName(value)[0];
       parentElementTag.focus();
     }, 100);
   }
@@ -87,7 +87,8 @@ export class EntriesComponent implements OnInit {
   removeSelectFocus(row, cell) {
     this.editing[row.$$index + cell] = false;
     setTimeout(() => {
-    }, 100);
+      // this.unselectEntry();
+    }, 50);
   }
 
   // Filter all entries with one or more parameter
@@ -248,8 +249,13 @@ export class EntriesComponent implements OnInit {
         row.entryDate = selectedDate;
       }
       else {
-        selectedDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
-        row.entryDate = selectedDate;
+        if ((event.target.value).includes('-')) {
+          selectedDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
+          row.entryDate = selectedDate;
+
+        } else {
+          row.entryDate = event.target.value;
+        }
         this.updateEntry(row);
       }
     }
