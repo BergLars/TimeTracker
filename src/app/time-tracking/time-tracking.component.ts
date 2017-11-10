@@ -1,11 +1,14 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { ProjectService, TaskService, TimeTrackingEntryService, UserService, IProject, ITask, ITimeTrackingEntry, IUser, IStatistics, RegistryService } from '../data';
+
+import { RegistryService } from '../data';
 // Use the Full path instead of using index.ts path
 import { CreateDialogService } from '../time-tracking/components/create-dialog/create-dialog.service';
 import { ExportDialogService } from '../time-tracking/components/export-dialog/export-dialog.service';
 import { EditDialogService } from '../time-tracking/components/edit-dialog/edit-dialog.service';
+
 import { EntriesService } from '../time-tracking/components/entries/entries.service';
+import { LoginService } from '../login/login.service';
 
 import { Router } from '@angular/router';
 import moment from 'moment/src/moment';
@@ -19,29 +22,20 @@ export class TimeTrackingComponent implements OnInit {
 
   public isLoading: Boolean = false;
 
-  private projects: IProject[];
-  private project: IProject;
-  private tasks: ITask[];
-  private entries: ITimeTrackingEntry[];
-  private entry: ITimeTrackingEntry;
-  private user: IUser;
-  private users: IUser[];
-  private statistics: IStatistics;
   public currentDate: any;
 
 
   constructor(
+    public loginService: LoginService,
     private dialog: MdDialog,
-    private projectService: ProjectService,
-    private taskService: TaskService,
     private createDialogService: CreateDialogService,
     private exportDialogService: ExportDialogService,
     private editDialogService: EditDialogService,
-    private userService: UserService,
     private router: Router,
     private viewContainerRef: ViewContainerRef,
     private entriesService: EntriesService,
     private registryService: RegistryService) {
+    
   }
 
   ngOnInit() {
@@ -51,13 +45,19 @@ export class TimeTrackingComponent implements OnInit {
   }
   public openCreateDialog() {
     this.registryService.entriesComponent.unselectEntry();
-    this.createDialogService
+    if (this.loginService.loggedIn()) {
+      this.createDialogService
       .confirm('Create', this.viewContainerRef)
       .subscribe(res => {
         if (res) {
-          //this.entriesService.loadEntries();
+          this.entriesService.entriesAreLoaded();
         }
-      });
+      });  
+    } else {
+      alert("Your token has expired. Please log in again!");
+      this.loginService.logout();
+    }
+    
   }
 
   public openEditDialog() {
@@ -66,6 +66,7 @@ export class TimeTrackingComponent implements OnInit {
       .confirm('Edit', this.viewContainerRef)
       .subscribe(res => {
         if (res) {
+          this.entriesService.entriesAreLoaded();
         }
       });
   }

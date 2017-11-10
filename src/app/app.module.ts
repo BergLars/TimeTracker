@@ -3,9 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { HttpModule, Http, Response, RequestOptions, Headers, XHRBackend } from '@angular/http';
-import { MaterialModule, MdDatepickerModule, MdNativeDateModule, DateAdapter, MdAutocompleteModule } from '@angular/material';
+import { MaterialModule, MdNativeDateModule, DateAdapter } from '@angular/material';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { AlertModule, ModalModule, TimepickerModule, TabsModule, DatepickerModule, TypeaheadModule } from 'ng2-bootstrap';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService, RegistryService } from './data';
@@ -16,8 +15,6 @@ import { SidebarComponent,
         EntryDialogService, 
         DeleteEntryComponent, 
         DeleteEntryService, 
-        UpdateDialogComponent, 
-        UpdateDialogService, 
         CreateDialogComponent, 
         CreateDialogService, 
         ExportDialogComponent, 
@@ -30,11 +27,11 @@ import { LoginComponent, LoginService } from './login';
 import { HttpInterceptor, httpFactory } from './httpCalls';
 import { UserComponent } from './time-tracking/components/user/user.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MyDatePickerModule } from 'mydatepicker';
 import { CryptoJS } from 'crypto-js';
 import { MenuComponent, PasswordDialogComponent, PasswordDialogService } from './menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DeDateAdapter } from './dateAdapter';
+import { SetFocusDirective } from './directives/setFocus/set-focus.directive';
 @NgModule({
     declarations: [
         AppComponent,
@@ -46,17 +43,16 @@ import { DeDateAdapter } from './dateAdapter';
         TimeTrackingComponent,
         EntryDialogComponent,
         DeleteEntryComponent,
-        UpdateDialogComponent,
         UserComponent,
         MenuComponent,
         PasswordDialogComponent,
         CreateDialogComponent,
-        EditDialogComponent
+        EditDialogComponent,
+        SetFocusDirective
     ],
     entryComponents: [
         EntryDialogComponent,
         DeleteEntryComponent,
-        UpdateDialogComponent,
         PasswordDialogComponent,
         CreateDialogComponent,
         ExportDialogComponent,
@@ -67,19 +63,11 @@ import { DeDateAdapter } from './dateAdapter';
         BrowserModule,
         FormsModule,
         HttpModule,
-        RouterModule.forRoot(routes, {useHash: true}),
+        RouterModule.forRoot(routes, { useHash: true }),
         MaterialModule,
         FlexLayoutModule,
-        AlertModule,
-        ModalModule,
-        TimepickerModule,
-        TabsModule,
-        TypeaheadModule,
-        MyDatePickerModule,
         BrowserAnimationsModule,
-        MdDatepickerModule,
-        MdNativeDateModule,
-        MdAutocompleteModule
+        MdNativeDateModule
     ],
     providers: [
         ProjectService,
@@ -89,7 +77,6 @@ import { DeDateAdapter } from './dateAdapter';
         LoginService,
         EntryDialogService,
         DeleteEntryService,
-        UpdateDialogService,
         PasswordDialogService,
         ClientService,
         CreateDialogService,
@@ -111,7 +98,7 @@ import { DeDateAdapter } from './dateAdapter';
 })
 export class AppModule {
     constructor(private dateAdapter: DateAdapter<Date>) {
-    this.dateAdapter.setLocale('fr-CH');
-  }
- }
+        this.dateAdapter.setLocale('fr-CH');
+    }
+}
 platformBrowserDynamic().bootstrapModule(AppModule);

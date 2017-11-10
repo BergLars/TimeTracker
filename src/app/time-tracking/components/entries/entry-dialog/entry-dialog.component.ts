@@ -1,13 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ITimeTrackingEntry, IClient, IProject, ITask, IUser, ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService, RegistryService } from '../../../../data';
+import { ITimeTrackingEntry, IClient, IProject, ITask, IUser, RegistryService } from '../../../../data';
 import { LoginService } from '../../../../login';
 import { Http } from '@angular/http';
 import { environment } from '../../../../../environments/environment';
 import moment from 'moment/src/moment';
 import { Observable } from 'rxjs/Rx';
-import { MdDialogRef, MdDatepickerModule, DateAdapter, MdNativeDateModule } from '@angular/material';
-// import { MD_NATIVE_DATE_FORMATS } from "app";
-// import { DeDateAdapter } from "app/dateAdapter";
+import { MdDialogRef, MdDatepickerModule, DateAdapter } from '@angular/material';
 
 @Component({
   selector: 'app-entry-dialog',
@@ -20,13 +18,10 @@ export class EntryDialogComponent implements OnInit {
   @Input() tasks: ITask[] = [];
   public title: string;
   public description: string;
-  public selectedProjectID: string;
-  public rowid: number;
   public selectedTaskID: string;
   @Input() selectedDate: string;
   @Input() selectedStartTime: string;
   public user: IUser;
-  public selectedEndTime: any;
   public userprofileID: any;
   public clientID: any;
   public projectID: any;
@@ -35,7 +30,6 @@ export class EntryDialogComponent implements OnInit {
   @Input() startTime: any;
   @Input() endTime: any;
   public timeSpent: any;
-
   public isBillable: boolean = false;
   public enableTimes: boolean = false;
   @Input() date: any;
@@ -46,11 +40,6 @@ export class EntryDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MdDialogRef<EntryDialogComponent>,
-    public clientService: ClientService,
-    public projectService: ProjectService,
-    public taskService: TaskService,
-    public timeTrackingEntryService: TimeTrackingEntryService,
-    public userService: UserService,
     private http: Http,
     public loginService: LoginService,
     private dateAdapter: DateAdapter<Date>,
@@ -110,21 +99,26 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public checkMandatoryFields() {
-    if (!this.enableTimes) {
-      if (this.description === "" || this.clientID === null || this.selectedDate === undefined || this.timeSpent === null || this.isBillable === null) {
-        alert("Please check if all the fields are filled in");
-      } else {
-        this.startTime = moment().format('HH:mm');
-        this.decimalToTime(this.timeSpent);
+    if (this.loginService.loggedIn()) {
+      if (!this.enableTimes) {
+        if (this.description === "" || this.clientID === null || this.selectedDate === undefined || this.timeSpent === null || this.isBillable === null) {
+          alert("Please check if all the fields are filled in");
+        } else {
+          this.startTime = moment().format('HH:mm');
+          this.decimalToTime(this.timeSpent);
+        }
       }
-    }
-    else {
-      if (this.description === "" || this.selectedDate === undefined || this.startTime === " " || this.endTime === " " || this.isBillable === null) {
-        alert("Please check if all the fields are filled in");
-      } else {
-        this.timeSpent = this.calculateSpentTime();
-        this.checkStartAndEndTime();
+      else {
+        if (this.description === "" || this.selectedDate === undefined || this.startTime === " " || this.endTime === " " || this.isBillable === null) {
+          alert("Please check if all the fields are filled in");
+        } else {
+          this.timeSpent = this.calculateSpentTime();
+          this.checkStartAndEndTime();
+        }
       }
+    } else {
+      alert("Your token has expired. Please log in again!");
+      this.dialogRef.close(true);
     }
   }
 
@@ -218,23 +212,21 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public newEntry() {
-    // this.loadItems();
-    return this.http.post(this.baseUrl + "/timeentries",
-      {
-        entryDate: this.selectedDate,
-        startTime: this.startTime,
-        endTime: this.endTime,
-        timeSpent: this.timeSpent,
-        description: this.description,
-        userprofileID: this.loginService.getLoggedUserID(),
-        taskID: this.taskID,
-        clientID: this.clientID,
-        projectID: this.projectID,
-        billable: this.isBillable
-      }).subscribe(
+    return this.http.post(this.baseUrl + "/timeentries", {
+      entryDate: this.selectedDate,
+      startTime: this.startTime,
+      endTime: this.endTime,
+      timeSpent: this.timeSpent,
+      description: this.description,
+      userprofileID: this.loginService.getLoggedUserID(),
+      taskID: this.taskID,
+      clientID: this.clientID,
+      projectID: this.projectID,
+      billable: this.isBillable
+    }).subscribe(
       () => {
         this.dialogRef.close(true);
-        this.loadItems();
+        this.registryService.entriesComponent.offset = 0;
       },
       (err) => {
         if (err.status === 400 || err.status === 404) {
@@ -244,23 +236,28 @@ export class EntryDialogComponent implements OnInit {
         if (err.status === 500) {
           alert('Internal server error !')
         }
-      })
+      });
   }
 
   private loadItems() {
-    this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
-      results => {
-        this.clients = results.sort(this.registryService.propComparator('clientName'));
-      });
+    if (this.loginService.loggedIn()) {
+      this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
+        results => {
+          this.clients = results.sort(this.registryService.propComparator('clientName'));
+        });
 
-    this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
-      results => {
-        this.tasks = results.sort(this.registryService.propComparator('taskDescription'));
-      });
+      this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+        results => {
+          this.tasks = results.sort(this.registryService.propComparator('taskDescription'));
+        });
 
-    this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
-      results => {
-        this.projects = results.sort(this.registryService.propComparator('projectName'));
-      });
+      this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+        results => {
+          this.projects = results.sort(this.registryService.propComparator('projectName'));
+        });
+    } else {
+      alert("Your token has expired. Please log in again!");
+      this.dialogRef.close(true);
+    }
   }
 }

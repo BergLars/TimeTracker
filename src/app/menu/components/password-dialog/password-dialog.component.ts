@@ -3,6 +3,7 @@ import { MdDialogRef } from '@angular/material';
 import { LoginService } from '../../../login';
 import { UserService } from '../../../data';
 import { Router } from '@angular/router';
+import { EntriesService } from '../../../time-tracking/components/entries/entries.service';
 
 @Component({
 	selector: 'app-password-dialog',
@@ -20,6 +21,7 @@ export class PasswordDialogComponent implements OnInit {
 		public dialogRef: MdDialogRef<PasswordDialogComponent>,
 		public loginService: LoginService,
 		public userService: UserService,
+		public entriesService: EntriesService,
 		private router: Router) { }
 
 	ngOnInit() {
@@ -33,14 +35,23 @@ export class PasswordDialogComponent implements OnInit {
 	}
 
 	checkMandatoryFields() {
-		if (this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
-			alert("Please check if all the fields are filled in !");
-		}
-		else if (this.newPassword.length < 8) {
-			alert("Password length should be at least 9 !");
-		}
-		else {
-			this.updatePassword();
+
+		if (this.loginService.loggedIn()) {
+			let passwordRequirement = (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#\$%\^\&*\)\(+=._-]{8,15}$/);
+
+			if (this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
+				alert("Please check if all the fields are filled in !");
+			}
+
+			else if (!this.newPassword.match(passwordRequirement)) {
+				alert('Please read password requirement above !');
+			} else {
+				this.updatePassword();
+			}
+		} else {
+			alert("Your token has expired. Please log in again!");
+      		this.dialogRef.close(true);
+      		this.entriesService.entriesAreLoaded();
 		}
 	}
 
@@ -51,7 +62,7 @@ export class PasswordDialogComponent implements OnInit {
 	}
 
 	private updatePassword() {
-		this.userService.updatePassword(this.currentPassword, this.newPassword, this.confirmPassword).map(res => res.json()).subscribe(
+		this.userService.updatePassword(encodeURIComponent(this.currentPassword), encodeURIComponent(this.newPassword), encodeURIComponent(this.confirmPassword)).map(res => res.json()).subscribe(
 			user => {
 				this.dialogRef.close(true);
 				this.loginService.logout();

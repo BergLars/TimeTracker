@@ -1,11 +1,9 @@
 import { Observable } from 'rxjs/Rx';
 import { Injectable, Input, ViewContainerRef } from '@angular/core';
-import { MdDialogRef, MdDialog, MdDialogConfig } from '@angular/material';
-import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, TaskService, ProjectService, TimeTrackingEntryService, ClientService } from '../../../data';
+import { ITimeTrackingEntry, IProject, ITask, IClient } from '../../../data';
 import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
 import { LoginService } from '../../../login';
-import { EntriesComponent } from './entries.component';
 
 @Injectable()
 export class EntriesService {
@@ -18,8 +16,6 @@ export class EntriesService {
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
   public clonedItems: ITimeTrackingEntry[] = [];
-
-
   public tasksDictionary: any = {};
   public projectsDictionary: any = {};
   public clientsDictionary: any = {};
@@ -74,6 +70,11 @@ export class EntriesService {
                     });
                 });
             });
+        },
+        (err) => {
+          if (err.status === 500) {
+          this.loginService.logout();
+        }
         });
     });
   }
