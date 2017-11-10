@@ -30,9 +30,8 @@
     <ngx-datatable-column name="Description">
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
             <span class="clickable-icon" title="Double click to edit" (click)="editing[row.$$index + '-description'] = true" *ngIf="!editing[row.$$index + '-description']">{{ row.description }}</span>
-            <input (blur)="updateValue($event, 'description', value, row)" *ngIf="editing[row.$$index + '-description']" type="text"
-                [value]="row.description" appSetFocus/>
-
+            <input class="description-field" (blur)="updateValue($event, 'description', value, row)" *ngIf="editing[row.$$index + '-description']"
+                type="text" [value]="row.description" appSetFocus/>
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Project Name">

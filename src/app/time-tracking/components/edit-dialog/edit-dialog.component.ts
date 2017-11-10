@@ -80,7 +80,7 @@ export class EditDialogComponent implements OnInit {
 				} else {
 					this.createItem();
 				}
-		}
+			}
 			if (this.item == this.TASK) {
 				if (this.newTaskDescription === "" || this.newTaskDescription === undefined) {
 					alert("Please check if all the fields are filled in");
@@ -92,34 +92,34 @@ export class EditDialogComponent implements OnInit {
 				if (this.newClientName === "" || this.newClientName === undefined) {
 					alert("Please check if all the fields are filled in");
 				} else {
-					this.createItem();					
+					this.createItem();
 				}
 			}
 		} else {
 			alert("Your token has expired. Please log in again!");
 			this.dialogRef.close(true);
 		}
-		
+
 	}
 	private loadItems() {
 		if (this.loginService.loggedIn()) {
 			this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
-			results => {
-				this.clients = results.sort(this.registryService.propComparator('clientName'));
-				this.clientID = this.clients[0].id;
-			});
+				results => {
+					this.clients = results.sort(this.registryService.propComparator('clientName'));
+					this.clientID = this.clients[0].id;
+				});
 
 			this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
 				results => {
 					this.tasks = results.sort(this.registryService.propComparator('taskDescription'));;
 					this.taskID = this.tasks[0].id;
-			});
+				});
 
 			this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
 				results => {
 					this.projects = results.sort(this.registryService.propComparator('projectName'));
 					this.projectID = this.projects[0].id;
-			});
+				});
 		} else {
 			alert("Your token has expired. Please log in again!");
 			this.dialogRef.close(true);
@@ -141,7 +141,7 @@ export class EditDialogComponent implements OnInit {
 	public createItem() {
 		if (this.item == this.PROJECT) {
 			return this.http.put(this.baseUrl + "/projects/" + this.projectID, {
-				projectName: this.newProjectName
+				projectName: this.newProjectName.trim()
 			}).subscribe(() => {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
@@ -158,7 +158,7 @@ export class EditDialogComponent implements OnInit {
 		}
 		if (this.item == this.TASK) {
 			return this.http.put(this.baseUrl + "/tasks/" + this.taskID, {
-				taskDescription: this.newTaskDescription
+				taskDescription: this.newTaskDescription.trim()
 			}).subscribe(() => {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
@@ -175,7 +175,7 @@ export class EditDialogComponent implements OnInit {
 		}
 		if (this.item == this.CLIENT) {
 			return this.http.put(this.baseUrl + "/clients/" + this.clientID, {
-				clientName: this.newClientName
+				clientName: this.newClientName.trim()
 			}).subscribe(
 				() => {
 					this.dialogRef.close(true);
@@ -187,13 +187,13 @@ export class EditDialogComponent implements OnInit {
 						return Observable.of(undefined);
 					} else if (error.response.status === 500) {
 						alert('Internal server error !');
-					} 
+					}
 				});
 		}
 	}
 
 	public deleteItem() {
-		if (this.loginService.loggedIn()) {
+		if (this.loginService.loggedIn())  {
 			if (this.item == this.PROJECT) {
 				return this.http.delete(this.baseUrl + "/projects/" + this.projectID)
 					.subscribe(() => {
@@ -241,12 +241,12 @@ export class EditDialogComponent implements OnInit {
 							alert('This client is used on entries. Cannot be deleted')
 						}
 					});
-			}	
+			}
 		} else {
 			alert("Your token has expired. Please log in again!");
 			this.dialogRef.close(true);
 		}
-		
+
 	}
 
 	private displayItems() {

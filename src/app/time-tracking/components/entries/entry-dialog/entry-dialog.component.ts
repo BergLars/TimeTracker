@@ -217,7 +217,7 @@ export class EntryDialogComponent implements OnInit {
       startTime: this.startTime,
       endTime: this.endTime,
       timeSpent: this.timeSpent,
-      description: this.description,
+      description: this.description.trim(),
       userprofileID: this.loginService.getLoggedUserID(),
       taskID: this.taskID,
       clientID: this.clientID,
