@@ -62,6 +62,10 @@ daypicker table {
     margin: 175px auto !important;
 }
 
+.hide-dialog-scrollbar {
+  overflow: hidden !important;
+}
+
 .app-input-section.mat-card {
     position: fixed;
     top: 40%;
