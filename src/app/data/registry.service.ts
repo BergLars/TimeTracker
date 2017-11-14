@@ -11,6 +11,8 @@ export class RegistryService {
 	public createDialogService: CreateDialogService;
 	public sidebarComponent: SidebarComponent;
 
+	public dateRequirement = (/^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](2)\d{3}$/);
+
 	// Allow you to sort items with a String value
 	public propComparator = (propName) => (a, b) => a[propName] == b[propName] ? 0 : a[propName] < b[propName] ? -1 : 1;
 }
