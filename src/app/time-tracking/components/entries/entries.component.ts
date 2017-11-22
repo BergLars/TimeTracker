@@ -57,6 +57,7 @@ export class EntriesComponent implements OnInit {
   @Input() selectedProjects: any;
   @Input() selectedTasks: any;
   @Input() itemTotalTimeSpent: any;
+  isValid: boolean = false;
 
   constructor(
     private entryDialogService: EntryDialogService,
@@ -73,6 +74,7 @@ export class EntriesComponent implements OnInit {
   ngOnInit() {
     this.defaultItem = this.createItems[0].key;
     this.loadEntries();
+
   }
 
   setSelectFocus(event, row, value) {
@@ -353,7 +355,6 @@ export class EntriesComponent implements OnInit {
     return false;
   }
 
-
   toggleEditMode() {
     this.editMode = !this.editMode;
   }
@@ -415,6 +416,18 @@ export class EntriesComponent implements OnInit {
         return client.id;
       });
       this.mapEntryValue(this.items);
+      this.setColor(this.items);
+    });
+  }
+
+  setColor(items) {
+    items.forEach(function (entry) {
+      if (moment(entry.endTime, 'HH:mm').isBefore(moment(entry.startTime, 'HH:mm'))) {
+        entry.isColored = true;
+      }
+      else {
+        entry.isColored = false;
+      }
     });
   }
 

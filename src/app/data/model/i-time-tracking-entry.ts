@@ -21,4 +21,5 @@ export interface ITimeTrackingEntry {
     taskID: number;
     taskDescription: string;
     isBillable: boolean;
+    isColored?: boolean;
 }

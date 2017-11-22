@@ -92,20 +92,19 @@
                 " type="time" [value]="value" />
         </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column name="Time Spent ">
-        <ng-template ngx-datatable-cell-template let-value="value " let-row="row ">
-            <div class="clickable-icon ">
+    <ngx-datatable-column name="Time Spent">
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <div class="clickable-icon" [ngClass]="{'colored': row.isColored === true}">
                 {{ row.timeSpent }}
             </div>
         </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column name="Actions ">
-        <ng-template ngx-datatable-cell-template let-value="value " let-row="row ">
-            <div [hidden]="!isSelected(row) ">
-                <div [hidden]="editMode ">
-
-                    <span (click)="openDeleteDialog(row) ">
-                        <md-icon class="clickable-icon ">delete_forever</md-icon>
+    <ngx-datatable-column name="Actions">
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <div [hidden]="!isSelected(row)">
+                <div [hidden]="editMode">
+                    <span (click)="openDeleteDialog(row)">
+                        <md-icon class="clickable-icon">delete_forever</md-icon>
                     </span>
                 </div>
             </div>
