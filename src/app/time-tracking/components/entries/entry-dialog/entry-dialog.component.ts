@@ -20,6 +20,7 @@ export class EntryDialogComponent implements OnInit {
   public description: string;
   public selectedTaskID: string;
   @Input() selectedDate: string;
+  @Input() inputSelectedDate: string;
   @Input() selectedStartTime: string;
   public user: IUser;
   public userprofileID: any;
@@ -36,6 +37,7 @@ export class EntryDialogComponent implements OnInit {
   @Input() checkBoxTimes: boolean;
   @Input() myFilter: any;
   public validTimePeriod: boolean;
+  @Input() validDate: boolean = false;
 
 
   constructor(
@@ -72,9 +74,10 @@ export class EntryDialogComponent implements OnInit {
     }
   }
 
-  public getValues(valueDesc: string, valueDate: any, valueStartTime: string, valueEndTime: string, valueTimeSpent: string, valueClientID: string, valueProjectID: number, valueTaskID: number, valueEnableTimes: any, valueIsBillable: any) {
+  public getValues(valueDesc: string, valueDate: any, valueInputDate: any, valueStartTime: string, valueEndTime: string, valueTimeSpent: string, valueClientID: string, valueProjectID: number, valueTaskID: number, valueEnableTimes: any, valueIsBillable: any) {
     this.description = valueDesc;
     this.selectedDate = valueDate;
+    this.inputSelectedDate = valueInputDate;
     this.startTime = valueStartTime;
     this.endTime = valueEndTime;
     this.timeSpent = valueTimeSpent;
@@ -84,6 +87,17 @@ export class EntryDialogComponent implements OnInit {
     this.checkBoxTimes = valueEnableTimes.checked;
     this.isBillable = valueIsBillable.checked;
     this.validTimePeriod = moment(this.startTime, 'HH:mm').isBefore(moment(this.endTime, 'HH:mm'));
+  }
+
+  public readDateOnInputField() {
+    console.log(this.registryService.dateRequirement.test(this.inputSelectedDate));
+    if (this.registryService.dateRequirement.test(this.inputSelectedDate)) {
+      this.validDate = true;
+      this.selectedDate = this.inputSelectedDate;
+    }
+    else {
+      this.validDate = false;
+    }
   }
 
   public clientDropdown(value: string): void {
@@ -99,11 +113,21 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public checkMandatoryFields() {
+    if (this.selectedDate === undefined) {
+      this.selectedDate = this.inputSelectedDate;
+    }
+    else {
+      this.inputSelectedDate = this.selectedDate;
+    }
     if (this.loginService.loggedIn()) {
       if (!this.enableTimes) {
-        if (this.description === "" || this.clientID === null || this.selectedDate === undefined || this.timeSpent === null || this.isBillable === null) {
+        if (this.description === "" || this.clientID === null || this.selectedDate === undefined || this.inputSelectedDate === undefined || this.timeSpent === null || this.isBillable === null) {
           alert("Please check if all the fields are filled in");
-        } else {
+        }
+        else if (this.validDate === false) {
+          alert('Wrong date format!');
+        }
+        else {
           this.startTime = moment().format('HH:mm');
           this.decimalToTime(this.timeSpent);
         }
@@ -111,7 +135,11 @@ export class EntryDialogComponent implements OnInit {
       else {
         if (this.description === "" || this.selectedDate === undefined || this.startTime === " " || this.endTime === " " || this.isBillable === null) {
           alert("Please check if all the fields are filled in");
-        } else {
+        }
+        else if (this.validDate === false) {
+          alert('Wrong date format!');
+        }
+        else {
           this.timeSpent = this.calculateSpentTime();
           this.checkStartAndEndTime();
         }
@@ -164,6 +192,7 @@ export class EntryDialogComponent implements OnInit {
 
   public keyDownFunction(event) {
     if (event.key == 'Enter') {
+      this.readDateOnInputField();
       this.checkMandatoryFields();
     }
   }
