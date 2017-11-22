@@ -11,6 +11,7 @@ export class RegistryService {
 	public createDialogService: CreateDialogService;
 	public sidebarComponent: SidebarComponent;
 
+	public timeRequirement = (/^(0[0-9]|1[0-9]|2[0-3])[:]([0-5][0-9])$/);
 	// Allow you to sort items with a String value
 	public propComparator = (propName) => (a, b) => a[propName] == b[propName] ? 0 : a[propName] < b[propName] ? -1 : 1;
 }
