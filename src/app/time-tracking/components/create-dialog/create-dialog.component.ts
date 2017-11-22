@@ -102,13 +102,13 @@ export class CreateDialogComponent implements OnInit {
 					alert("Please check if all the fields are filled in");
 				}
 				else if (this.password.length < 8) {
-					alert("Password length should be at least 9 !");
+					alert("See password requirement !");
 				}
 				else if (this.password !== this.confirmPassword) {
 					alert("Passwords are not the same !")
 				}
-				else if (!(this.employmentDegree <= 1 && this.employmentDegree > 0)) {
-					alert("Employment degree should be between 0.10 and 1.0 !");
+				else if (!(this.employmentDegree <= 1 && this.employmentDegree >= 0.10)) {
+					alert("See employment degree requirement !");
 				}
 				else {
 					this.createItem();
