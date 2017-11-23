@@ -227,24 +227,36 @@ export class EntryDialogComponent implements OnInit {
   public decimalToTime(t: any) {
     // t is a decimal value
     if (this.isNumeric(t.toString()) === true) {
-      if (t >= 0.1 && t <= 23.59) {
-        let hours = parseInt(t);
-        let minutes = parseInt(t.split('.')[1]);
-        if (hours.toString().length < 2 && minutes.toString().length > 1) {
-          this.timeSpent = '0' + hours + ':' + minutes;
+      if (t >= 0.1) {
+        // let hours = parseInt(t);
+        // let minutes = parseInt(t.split('.')[1]);
+        // if (hours.toString().length < 2 && minutes.toString().length > 1) {
+        //   this.timeSpent = '0' + hours + ':' + minutes;
+        // }
+        // else if (hours.toString().length < 2 && minutes.toString().length < 2) {
+        //   this.timeSpent = '0' + hours + ':0' + minutes;
+        // }
+        // else if (hours.toString().length > 1 && minutes.toString().length < 2) {
+        //   this.timeSpent = hours + ':0' + minutes;
+        // }
+        // else if (minutes.toString() === "NaN") {
+        //   this.timeSpent = hours + ':00';
+        // }
+        // else {
+        //   this.timeSpent = hours + ':' + minutes;
+        // }
+        let decimalTime = parseFloat(t);
+        decimalTime = decimalTime * 60 * 60;
+        let hours: any = Math.floor((decimalTime / (60 * 60)));
+        decimalTime = decimalTime - (hours * 60 * 60);
+        let minutes: any = Math.floor((decimalTime / 60));
+        if (hours < 10) {
+          hours = "0" + hours;
         }
-        else if (hours.toString().length < 2 && minutes.toString().length < 2) {
-          this.timeSpent = '0' + hours + ':0' + minutes;
+        if (minutes < 10) {
+          minutes = "0" + minutes;
         }
-        else if (hours.toString().length > 1 && minutes.toString().length < 2) {
-          this.timeSpent = hours + ':0' + minutes;
-        }
-        else if (minutes.toString() === "NaN") {
-          this.timeSpent = hours + ':00';
-        }
-        else {
-          this.timeSpent = hours + ':' + minutes;
-        }
+        this.timeSpent = hours + ":" + minutes;
         let endT = moment() + moment.duration().add(this.timeSpent, 'HH:mm');
         this.endTime = moment(endT).format('HH:mm');
         this.newEntry();
