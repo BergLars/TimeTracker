@@ -217,7 +217,7 @@ export class EntriesComponent implements OnInit {
   updateValue(event, cell, cellValue, row) {
     this.editing[row.$$index + '-' + cell] = false;
     if (cell == 'description') {
-      row.description = event.target.value;
+      row.description = (event.target.value).trim();
       this.updateEntry(row);
     }
 
@@ -253,20 +253,25 @@ export class EntriesComponent implements OnInit {
       else {
         if ((event.target.value).includes('-')) {
           selectedDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
-          row.entryDate = selectedDate;
-
+          if (!this.registryService.dateRequirement.test(selectedDate)) {
+            alert('Wrong date format !');
+          }
+          else {
+            row.entryDate = selectedDate;
+            this.updateEntry(row);
+          }
         } else {
           row.entryDate = event.target.value;
+          this.updateEntry(row);
         }
-        this.updateEntry(row);
       }
     }
 
     if (cell == 'startTime') {
       row.startTime = event.target.value;
-      if (row.startTime > row.endTime || row.startTime == row.endTime) {
+      if (!this.registryService.timeRequirement.test(row.startTime)) {
         row.startTime = cellValue;
-        alert("Start time should be less than end time.");
+        alert("Wrong time format !");
       }
       else {
         row.timeSpent = this.calculateSpentTime(row);
@@ -276,9 +281,9 @@ export class EntriesComponent implements OnInit {
 
     if (cell == 'endTime') {
       row.endTime = event.target.value;
-      if (row.startTime > row.endTime || row.startTime == row.endTime) {
+      if (!this.registryService.timeRequirement.test(row.endTime)) {
         row.endTime = cellValue;
-        alert("Start time should be less than end time.");
+        alert("Wrong time format !");
       }
       else {
         row.timeSpent = this.calculateSpentTime(row);
