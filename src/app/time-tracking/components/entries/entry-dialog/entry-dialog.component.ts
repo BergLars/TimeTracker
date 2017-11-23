@@ -228,23 +228,6 @@ export class EntryDialogComponent implements OnInit {
     // t is a decimal value
     if (this.isNumeric(t.toString()) === true) {
       if (t >= 0.1) {
-        // let hours = parseInt(t);
-        // let minutes = parseInt(t.split('.')[1]);
-        // if (hours.toString().length < 2 && minutes.toString().length > 1) {
-        //   this.timeSpent = '0' + hours + ':' + minutes;
-        // }
-        // else if (hours.toString().length < 2 && minutes.toString().length < 2) {
-        //   this.timeSpent = '0' + hours + ':0' + minutes;
-        // }
-        // else if (hours.toString().length > 1 && minutes.toString().length < 2) {
-        //   this.timeSpent = hours + ':0' + minutes;
-        // }
-        // else if (minutes.toString() === "NaN") {
-        //   this.timeSpent = hours + ':00';
-        // }
-        // else {
-        //   this.timeSpent = hours + ':' + minutes;
-        // }
         let decimalTime = parseFloat(t);
         decimalTime = decimalTime * 60 * 60;
         let hours: any = Math.floor((decimalTime / (60 * 60)));
