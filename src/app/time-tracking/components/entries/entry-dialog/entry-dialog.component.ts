@@ -93,7 +93,6 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public readDateOnInputField() {
-    console.log(this.registryService.dateRequirement.test(this.inputSelectedDate));
     if (this.registryService.dateRequirement.test(this.inputSelectedDate)) {
       this.validDate = true;
       this.selectedDate = this.inputSelectedDate;
@@ -212,7 +211,6 @@ export class EntryDialogComponent implements OnInit {
       } else {
         timeSpent = timeSpentH + ':' + timeSpentMin;
       }
-      console.log(timeSpent);
     }
     return timeSpent;
   }

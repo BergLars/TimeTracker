@@ -72,7 +72,7 @@
             <span class="clickable-icon" title="Double click to edit" (click)="editing[row.$$index + '-date'] = true;" *ngIf="!editing[row.$$index + '-date']">
                 {{ row.entryDate }}</span>
             <input (mouseleave)="updateValue($event, 'date', value, row);removeSelectFocus(row,'-date')" *ngIf=" editing[row.$$index +
-                '-date']" type="date" [value]="value" />
+                '-date']" type="text" [value]="value" />
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Start Time ">

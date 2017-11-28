@@ -251,16 +251,10 @@ export class EntriesComponent implements OnInit {
         row.entryDate = selectedDate;
       }
       else {
-        if ((event.target.value).includes('-')) {
-          selectedDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
-          if (!this.registryService.dateRequirement.test(selectedDate)) {
-            alert('Wrong date format !');
-          }
-          else {
-            row.entryDate = selectedDate;
-            this.updateEntry(row);
-          }
-        } else {
+        if (!this.registryService.dateRequirement.test(event.target.value)) {
+          alert('Wrong date format !');
+        }
+        else {
           row.entryDate = event.target.value;
           this.updateEntry(row);
         }
