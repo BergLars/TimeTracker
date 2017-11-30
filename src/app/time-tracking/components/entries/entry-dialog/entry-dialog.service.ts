@@ -13,10 +13,8 @@ export class EntryDialogService {
 	public confirm(title: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 
 		let dialogRef: MdDialogRef<EntryDialogComponent>;
-		let config = new MdDialogConfig();
-		config.viewContainerRef = viewContainerRef;
 
-		dialogRef = this.dialog.open(EntryDialogComponent, config);
+		dialogRef = this.dialog.open(EntryDialogComponent, {disableClose:true});
 
 		dialogRef.componentInstance.title = title;
 
