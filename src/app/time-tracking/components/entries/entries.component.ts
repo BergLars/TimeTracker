@@ -264,8 +264,7 @@ export class EntriesComponent implements OnInit {
     if (cell == 'startTime') {
       row.startTime = event.target.value;
       if (!this.registryService.timeRequirement.test(row.startTime)) {
-        row.startTime = cellValue;
-        alert("Wrong time format !");
+        row.startTime = cellValue.trim();
       }
       else {
         row.timeSpent = this.calculateSpentTime(row);
@@ -276,8 +275,7 @@ export class EntriesComponent implements OnInit {
     if (cell == 'endTime') {
       row.endTime = event.target.value;
       if (!this.registryService.timeRequirement.test(row.endTime)) {
-        row.endTime = cellValue;
-        alert("Wrong time format !");
+        row.endTime = cellValue.trim();
       }
       else {
         row.timeSpent = this.calculateSpentTime(row);
