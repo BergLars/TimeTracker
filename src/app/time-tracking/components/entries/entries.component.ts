@@ -246,12 +246,12 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'date') {
-      let selectedDate = cellValue;
+      let selectedDate = cellValue.trim();
       if (event.target.value === "") {
         row.entryDate = selectedDate;
       }
       else {
-        if (!this.registryService.dateRequirement.test(event.target.value)) {
+        if (!this.registryService.dateRequirement.test(event.target.value.trim())) {
           alert('Wrong date format !');
         }
         else {
