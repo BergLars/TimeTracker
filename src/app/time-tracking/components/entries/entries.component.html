@@ -84,6 +84,13 @@
                 " type="time " [value]="value " />
         </ng-template>
     </ngx-datatable-column>
+    <ngx-datatable-column name="End Date">
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <span>
+                {{ row.endDate }}
+            </span>
+        </ng-template>
+    </ngx-datatable-column>
     <ngx-datatable-column name="End Time ">
         <ng-template ngx-datatable-cell-template let-value="value " let-row="row ">
             <span class="clickable-icon " title="Double click to edit " (click)="editing[row.$$index + '-endTime']=true;" *ngIf="!editing[row.$$index + '-endTime'] ">

@@ -4,7 +4,10 @@ import { ITask } from './i-task';
 
 export interface ITimeTrackingEntry {
     readonly id: number;
+    startDateTime: string;
+    endDateTime: string;
     entryDate: string;
+    endDate: string;
     startTime: string;
     endTime: string;
     timeSpent: string;
