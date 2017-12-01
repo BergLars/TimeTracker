@@ -246,7 +246,7 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'date') {
-      let selectedDate = cellValue.trim();
+      let selectedDate = cellValue;
       if (event.target.value === "") {
         row.entryDate = selectedDate;
       }
@@ -255,7 +255,7 @@ export class EntriesComponent implements OnInit {
           alert('Wrong date format !');
         }
         else {
-          row.entryDate = event.target.value;
+          row.entryDate = event.target.value.trim();
           this.updateEntry(row);
         }
       }
