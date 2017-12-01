@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MdDialogRef, MdDatepickerModule, DateAdapter, MdDateFormats } from '@angular/material';
-import { IUser } from '../../../data';
+import { IUser, RegistryService } from '../../../data';
 import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
 import { environment } from '../../../../environments/environment';
@@ -26,13 +27,17 @@ export class ExportDialogComponent implements OnInit {
 	public validDatePeriod: boolean;
 	public validLength: boolean;
 	public baseUrl: string = environment.apiBaseUrl;
+	@Input() inputFromDate: string;
+	@Input() inputToDate: string;
+	@Input() validDate: boolean = false;
 
 	constructor(
 		public dialogRef: MdDialogRef<ExportDialogComponent>,
 		public loginService: LoginService,
 		public http: Http,
 		public entriesService: EntriesService,
-		public dateAdapter: DateAdapter<Date>) {
+		public dateAdapter: DateAdapter<Date>,
+		public registryService: RegistryService) {
 	}
 
 	ngOnInit() {
@@ -48,30 +53,48 @@ export class ExportDialogComponent implements OnInit {
 		return this.loginService.isAdmin();
 	}
 
-	public userDropdown(value: string): void {
+	public currentUserID(value: number): void {
 		this.userID = value;
 	}
 
 	public readDates(valueFrom: any, valueTo: any) {
-		let validFrom = moment(valueFrom._selected).format('L');
-		let validTo = moment(valueTo._selected).format('L');
-		let fromDate = validFrom.substring(6, 10) + "-" + validFrom.substring(0, 2) + "-" + validFrom.substring(3, 5);
-		let toDate = validTo.substring(6, 10) + "-" + validTo.substring(0, 2) + "-" + validTo.substring(3, 5);
-		this.fromDate = fromDate;
-		this.toDate = toDate;
-		this.validDatePeriod = moment(validFrom).isBefore(moment(validTo));
-	}
-
-	checkMandatoryFields() {
-		if (this.fromDate === "" || this.toDate === "") {
-			alert("Please check if all the fields are filled in");
-		} else {
-			this.checkFromDateAndToDate();
+		if (valueFrom._selected) {
+			let validDate = moment(valueFrom._selected).format('L');
+			let currentDate = validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
+			this.fromDate = currentDate;
+		}
+		if (valueTo._selected) {
+			let validDate = moment(valueTo._selected).format('L');
+			let currentDate = validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
+			this.toDate = currentDate;
 		}
 	}
 
-	checkFromDateAndToDate() {
-		if (!this.validDatePeriod) {
+	public getValues(valueFromDate: any, valueInputFromDate: any, valueToDate: any, valueInputToDate: any) {
+		this.fromDate = valueFromDate;
+		this.inputFromDate = valueInputFromDate.trim();
+		this.toDate = valueToDate;
+		this.inputToDate = valueInputToDate.trim();
+		this.validDatePeriod = moment(this.inputToDate, 'YYYY-MM-DD').isBefore(moment(this.inputFromDate, 'YYYY-MM-DD'));
+	}
+
+	public readDatesOnInputField() {
+		if (this.registryService.dateRequirement.test(this.inputFromDate) && this.registryService.dateRequirement.test(this.inputToDate)) {
+			this.validDate = true;
+		}
+		else {
+			this.validDate = false;
+		}
+	}
+
+	public checkMandatoryFields() {
+		if (this.inputFromDate === undefined || this.inputToDate === undefined) {
+			alert("Please check if all the fields are filled in");
+		}
+		else if (this.validDate === false) {
+			alert("Wrong date format !");
+		}
+		else if (this.validDatePeriod) {
 			alert("Please a valid Period");
 		}
 		else {
@@ -94,17 +117,22 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	refreshExportURL(id) {
+		this.inputFromDate.trim();
+		this.inputToDate.trim();
+		let fromDate = this.inputFromDate.substring(6, 10) + "-" + this.inputFromDate.substring(3, 5) + "-" + this.inputFromDate.substring(0, 2);
+		let toDate = this.inputToDate.substring(6, 10) + "-" + this.inputToDate.substring(3, 5) + "-" + this.inputToDate.substring(0, 2);
 		this.exportURL = this.baseUrl + "/export?fromDate=" +
-			this.fromDate +
+			fromDate +
 			"&toDate=" +
-			this.toDate +
+			toDate +
 			"&userprofileID=" + id;
 		window.open(this.exportURL, '_blank');
 	}
 
 	public keyDownFunction(event) {
 		if (event.key == 'Enter') {
-			this.checkFromDateAndToDate();
+			this.readDatesOnInputField();
+			this.checkMandatoryFields();
 		}
 	}
 
