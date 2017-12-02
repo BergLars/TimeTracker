@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ITimeTrackingEntry, IClient, IProject, ITask, IUser, RegistryService } from '../../../../data';
 import { LoginService } from '../../../../login';
 import { Http } from '@angular/http';
@@ -33,12 +34,12 @@ export class EntryDialogComponent implements OnInit {
   public timeSpent: any;
   public isBillable: boolean = false;
   public enableTimes: boolean = false;
-  @Input() date: any;
   @Input() checkBoxTimes: boolean;
   @Input() myFilter: any;
   public validTimePeriod: boolean;
   @Input() validDate: boolean = false;
   public validTimeSpentPeriod: boolean;
+  @Input() today = new FormControl(new Date());
 
 
   constructor(

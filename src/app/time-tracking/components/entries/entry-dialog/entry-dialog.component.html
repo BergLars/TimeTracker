@@ -39,7 +39,8 @@
     <tr>
       <td>
         <md-input-container>
-          <input class="clickable-icon" mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="selectedDate" placeholder="Date" #inputSelectedDate>
+          <input class="clickable-icon" mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="selectedDate" placeholder="Date" [value]="today.value"
+            #inputSelectedDate>
           <button mdSuffix [mdDatepickerToggle]="selectedDate"></button>
         </md-input-container>
         <md-datepicker #selectedDate></md-datepicker>* dd.mm.2yyy
