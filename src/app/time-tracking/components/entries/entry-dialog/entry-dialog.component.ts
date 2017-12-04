@@ -269,9 +269,6 @@ export class EntryDialogComponent implements OnInit {
 
   public newEntry() {
     return this.http.post(this.baseUrl + "/timeentries", {
-      entryDate: this.selectedDate,
-      startTime: this.startTime,
-      endTime: this.endTime,
       startDateTime: this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2) + " " + this.startTime,
       endDateTime: this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2) + " " + this.endTime,
       description: this.description.trim(),
