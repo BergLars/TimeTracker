@@ -252,7 +252,7 @@ export class EntriesComponent implements OnInit {
         row.entryDate = selectedDate;
       }
       else {
-        if (!this.registryService.dateRequirement.test(event.target.value)) {
+        if (!this.registryService.dateRequirement.test(event.target.value.trim())) {
           alert('Wrong date format !');
         }
         else if (moment(formatedDate, 'YYYY-MM-DD').isAfter(moment(formatedEndDate, 'YYYY-MM-DD'))) {
@@ -271,7 +271,7 @@ export class EntriesComponent implements OnInit {
           this.updateEntry(row);
         }
         else {
-          row.entryDate = event.target.value;
+          row.entryDate = event.target.value.trim();
           row.startDateTime = formatedDate + ' ' + row.startTime;
           this.updateEntry(row);
         }
@@ -281,8 +281,7 @@ export class EntriesComponent implements OnInit {
     if (cell == 'startTime') {
       row.startTime = event.target.value;
       if (!this.registryService.timeRequirement.test(row.startTime)) {
-        row.startTime = cellValue;
-        alert("Wrong time format !");
+        row.startTime = cellValue.trim();
       }
       else {
         row.timeSpent = this.calculateSpentTime(row);
@@ -295,8 +294,7 @@ export class EntriesComponent implements OnInit {
       let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
       row.endTime = event.target.value;
       if (!this.registryService.timeRequirement.test(row.endTime)) {
-        row.endTime = cellValue;
-        alert("Wrong time format !");
+        row.endTime = cellValue.trim();
       }
       else if (moment(formatedDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
         let longEndDate = moment(formatedEndDate, 'YYYY-MM-DD').add(1, 'd');
