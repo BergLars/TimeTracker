@@ -7,7 +7,7 @@ import { MaterialModule, MdNativeDateModule, DateAdapter } from '@angular/materi
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
-import { ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService, RegistryService } from './data';
+import { ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService, RegistryService, TimespentService } from './data';
 import {
     SidebarComponent,
     EntriesComponent,
@@ -85,6 +85,7 @@ import { DeDateAdapter } from './dateAdapter';
         EntriesService,
         RegistryService,
         EditDialogService,
+        TimespentService,
         {
             provide: Http,
             useFactory: httpFactory,

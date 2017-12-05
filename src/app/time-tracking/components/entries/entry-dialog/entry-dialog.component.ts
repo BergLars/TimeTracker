@@ -140,7 +140,7 @@ export class EntryDialogComponent implements OnInit {
           alert("Please check if all the fields are filled in");
         }
         else {
-          this.timeSpent = this.calculateSpentTime();
+          this.timeSpent = this.calculateTimeSpent();
           this.checkStartAndEndTime();
         }
       }
@@ -159,7 +159,7 @@ export class EntryDialogComponent implements OnInit {
     }
   }
 
-  public calculateSpentTime() {
+  public calculateTimeSpent() {
     let timeSpent: string;
     let timeSpentH: number;
     let timeSpentMin: number;
@@ -285,6 +285,7 @@ export class EntryDialogComponent implements OnInit {
       () => {
         this.dialogRef.close(true);
         this.registryService.entriesComponent.offset = 0;
+        this.registryService.sidebarComponent.displaySidebarData();
       },
       (err) => {
         if (err.status === 400 || err.status === 404) {
