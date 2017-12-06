@@ -199,7 +199,7 @@ export class EntriesComponent implements OnInit {
 
     if (cell == 'date') {
       let selectedDate = cellValue;
-      let formatedDate = event.target.value.substring(6, 10) + "-" + event.target.value.substring(3, 5) + "-" + event.target.value.substring(0, 2);
+      let formatedStartDate = event.target.value.substring(6, 10) + "-" + event.target.value.substring(3, 5) + "-" + event.target.value.substring(0, 2);
       let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
       if (event.target.value === "") {
         row.entryDate = selectedDate;
@@ -208,24 +208,21 @@ export class EntriesComponent implements OnInit {
         if (!this.registryService.dateRequirement.test(event.target.value.trim())) {
           alert('Wrong date format !');
         }
-        else if (moment(formatedDate, 'YYYY-MM-DD').isAfter(moment(formatedEndDate, 'YYYY-MM-DD'))) {
-          row.startDateTime = formatedDate + ' ' + row.startTime;
-
-          let endT = moment(row.startTime, 'HH:mm') + moment.duration().add(row.timeSpent, 'HH:mm');
-          row.endTime = moment(endT).format('HH:mm');
-          row.endDateTime = formatedDate + ' ' + row.endTime;
-          this.updateEntry(row);
-        }
-        else if (moment(formatedDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
+        else if (moment(formatedStartDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
           let longEndDate = moment(formatedEndDate, 'YYYY-MM-DD').add(1, 'd');
           let validateFormatEndDate = moment(longEndDate).format('YYYY-MM-DD');
-          row.startDateTime = formatedDate + ' ' + row.startTime;
+          row.startDateTime = formatedStartDate + ' ' + row.startTime;
           row.endDateTime = validateFormatEndDate + ' ' + row.endTime;
           this.updateEntry(row);
         }
         else {
-          row.entryDate = event.target.value.trim();
-          row.startDateTime = formatedDate + ' ' + row.startTime;
+          row.startDateTime = formatedStartDate + ' ' + row.startTime;
+          let numberOfDate = Number(event.target.value.substring(0, 2)) - Math.abs(Number(row.entryDate.substring(0, 2)));
+          let endT = moment(row.startTime, 'HH:mm') + moment.duration().add(row.timeSpent, 'HH:mm');
+          row.endTime = moment(endT).format('HH:mm');
+          let validateFormatEndDate = moment(row.endDateTime).add(numberOfDate, 'days');
+          validateFormatEndDate = moment(validateFormatEndDate).format('YYYY-MM-DD');
+          row.endDateTime = validateFormatEndDate + ' ' + row.endTime;
           this.updateEntry(row);
         }
       }
@@ -245,13 +242,13 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'endTime') {
-      let formatedDate = row.entryDate.substring(6, 10) + "-" + row.entryDate.substring(3, 5) + "-" + row.entryDate.substring(0, 2);
+      let formatedStartDate = row.entryDate.substring(6, 10) + "-" + row.entryDate.substring(3, 5) + "-" + row.entryDate.substring(0, 2);
       let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
       row.endTime = event.target.value;
       if (!this.registryService.timeRequirement.test(row.endTime)) {
         row.endTime = cellValue.trim();
       }
-      else if (moment(formatedDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
+      else if (moment(formatedStartDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
         let longEndDate = moment(formatedEndDate, 'YYYY-MM-DD').add(1, 'd');
         let validateFormatDate = moment(longEndDate).format('YYYY-MM-DD');
         row.endDateTime = validateFormatDate + ' ' + row.endTime;
