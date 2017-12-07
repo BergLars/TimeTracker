@@ -30,7 +30,7 @@ export class ExportDialogComponent implements OnInit {
 	@Input() inputFromDate: string;
 	@Input() inputToDate: string;
 	@Input() validDate: boolean = false;
-	@Input() date = new FormControl(new Date());
+	// @Input() date = new FormControl(new Date());
 
 	constructor(
 		public dialogRef: MdDialogRef<ExportDialogComponent>,
