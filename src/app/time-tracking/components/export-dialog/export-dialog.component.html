@@ -4,7 +4,7 @@
         <tr>
             <td>
                 <md-input-container>
-                    <input mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="fromDate" placeholder="From" [value]="date.value" #inputFromDate>
+                    <input mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="fromDate" placeholder="From" #inputFromDate>
                     <button mdSuffix [mdDatepickerToggle]="fromDate"></button>
                 </md-input-container>
                 <md-datepicker #fromDate></md-datepicker>* dd.mm.2yyy
@@ -14,7 +14,7 @@
         <tr>
             <td>
                 <md-input-container>
-                    <input mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="toDate" placeholder="To" [value]="date.value" #inputToDate>
+                    <input mdInput [mdDatepickerFilter]="myFilter" [mdDatepicker]="toDate" placeholder="To" #inputToDate>
                     <button mdSuffix [mdDatepickerToggle]="toDate"></button>
                 </md-input-container>
                 <md-datepicker #toDate></md-datepicker>*
