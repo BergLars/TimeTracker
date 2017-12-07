@@ -34,7 +34,7 @@ export class CreateDialogComponent implements OnInit {
 	public PROJECT: number = 2;
 	public CLIENT: number = 3;
 	public USER: number = 4;
-	private isAdmin: boolean;
+	public isAdmin: boolean = false;
 
 	public createItems = [
 		{ key: 'Task', id: 1 },
@@ -54,7 +54,8 @@ export class CreateDialogComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-
+		this.isAdmin = this.loginService.isAdmin();
+		this.displayItems();
 	}
 
 	changeItemToBeCreated(event) {
@@ -77,7 +78,7 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	public checkMandatoryFields() {
-		if (this.loginService.loggedIn())  {
+		if (this.loginService.loggedIn()) {
 			if (this.item == this.PROJECT) {
 				if (this.newProjectName === "" || this.newProjectName === undefined) {
 					alert("Please check if all the fields are filled in");
@@ -101,13 +102,13 @@ export class CreateDialogComponent implements OnInit {
 					alert("Please check if all the fields are filled in");
 				}
 				else if (this.password.length < 8) {
-					alert("Password length should be at least 9 !");
+					alert("See password requirement !");
 				}
 				else if (this.password !== this.confirmPassword) {
 					alert("Passwords are not the same !")
 				}
-				else if (!(this.employmentDegree <= 1 && this.employmentDegree > 0)) {
-					alert("Employment degree should be between 0.10 and 1.0 !");
+				else if (!(this.employmentDegree <= 1 && this.employmentDegree >= 0.10)) {
+					alert("See employment degree requirement !");
 				}
 				else {
 					this.createItem();
@@ -119,19 +120,10 @@ export class CreateDialogComponent implements OnInit {
 		}
 	}
 
-	public checkIfAdmin() {
-		this.showData();
-		return this.isAdmin = this.loginService.isAdmin();
-	}
-
-	public showData() {
-		this.user = this.loginService.getUser();
-	}
-
 	public createItem() {
 		if (this.item == this.PROJECT) {
 			return this.http.post(this.baseUrl + "/projects", {
-				projectName: this.newProjectName
+				projectName: this.newProjectName.trim()
 			}).subscribe(() => {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
@@ -147,7 +139,7 @@ export class CreateDialogComponent implements OnInit {
 				});
 		} else if (this.item == this.TASK) {
 			return this.http.post(this.baseUrl + "/tasks", {
-				taskDescription: this.newTaskDescription
+				taskDescription: this.newTaskDescription.trim()
 			}).subscribe(() => {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
@@ -163,7 +155,7 @@ export class CreateDialogComponent implements OnInit {
 				});
 		} else if (this.item == this.CLIENT) {
 			return this.http.post(this.baseUrl + "/clients", {
-				clientName: this.newClientName
+				clientName: this.newClientName.trim()
 			}).subscribe(() => {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
@@ -182,8 +174,8 @@ export class CreateDialogComponent implements OnInit {
 		if (this.item == this.USER) {
 			return this.http.post(this.baseUrl + "/userprofile",
 				{
-					userName: this.username,
-					password: encodeURIComponent(this.password),
+					userName: this.username.trim(),
+					password: encodeURIComponent(this.password.trim()),
 					employmentDegree: this.employmentDegree,
 					admin: this.adminRole
 				}).map(res => res.json())
@@ -213,9 +205,7 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	private displayItems() {
-		if (!this.checkIfAdmin()) {
-			this.createItems.splice(1);
-			this.createItems.splice(2);
+		if (!this.isAdmin) {
 			this.createItems.splice(3);
 		}
 	}

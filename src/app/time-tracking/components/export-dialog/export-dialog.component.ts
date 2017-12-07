@@ -81,11 +81,11 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	loadUsers() {
-		if (this.loginService.loggedIn()) {
+		if (this.loginService.loggedIn()) {
 			this.http.get(this.baseUrl + "/userprofile/all").map(res => res.json()).subscribe(
-            	results => {
-              		this.users = results;
-      			});
+				results => {
+					this.users = results;
+				});
 		} else {
 			alert("Your token has expired. Please log in again!");
 			this.dialogRef.close(true);

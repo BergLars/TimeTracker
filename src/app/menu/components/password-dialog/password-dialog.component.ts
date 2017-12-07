@@ -35,23 +35,17 @@ export class PasswordDialogComponent implements OnInit {
 	}
 
 	checkMandatoryFields() {
-
 		if (this.loginService.loggedIn()) {
-			let passwordRequirement = (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#\$%\^\&*\)\(+=._-]{8,15}$/);
-
 			if (this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
 				alert("Please check if all the fields are filled in !");
 			}
-
-			else if (!this.newPassword.match(passwordRequirement)) {
-				alert('Please read password requirement above !');
-			} else {
+			else {
 				this.updatePassword();
 			}
 		} else {
 			alert("Your token has expired. Please log in again!");
-      		this.dialogRef.close(true);
-      		this.entriesService.entriesAreLoaded();
+			this.dialogRef.close(true);
+			this.entriesService.entriesAreLoaded();
 		}
 	}
 
@@ -68,11 +62,15 @@ export class PasswordDialogComponent implements OnInit {
 				this.loginService.logout();
 			},
 			error => {
-				if (error.status === 400 || error.status === 404 || error.status === 412) {
-					alert("Wrong password or passwords are not the same !");
+				if (error.status === 400 || error.status === 404) {
+					alert("Passwords are not the same !");
 					this.router.navigate(['timeentries']);
 				}
-				if (error.status === 500) {
+				else if (error.status === 412) {
+					alert("Wrong current password or See password requirement !");
+					this.router.navigate(['timeentries']);
+				}
+				else if (error.status === 500) {
 					alert('Internal server error !')
 				}
 			}
