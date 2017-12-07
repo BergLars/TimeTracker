@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ITimeTrackingEntry, IStatistics, RegistryService } from '../../../data';
+import { ITimeTrackingEntry, IStatistics, RegistryService, TimespentService } from '../../../data';
 import { EntriesService } from '../entries/entries.service';
 import moment from 'moment/src/moment';
 
@@ -20,28 +20,29 @@ export class SidebarComponent implements OnInit {
   public startOfMonth: any;
   public endOfMonth: any;
 
-  constructor(private entriesService: EntriesService, public registryService: RegistryService) {
+  constructor(private entriesService: EntriesService, public registryService: RegistryService, public timespentService: TimespentService) {
     this.registryService.sidebarComponent = this;
   }
   ngOnInit() {
     this.getCurrentDayWeekMonth();
-    this.loadEntries();
+    this.displaySidebarData();
   }
 
   getCurrentDayWeekMonth() {
     this.currentMonth = moment().startOf("month").format('MMMM');
     this.startOfMonth = moment().startOf('month').subtract(1, 'days').format('DD.MM.YYYY');
     this.endOfMonth = moment().endOf('month').subtract(1, 'days').format('DD.MM.YYYY');
-    this.startOfWeek = moment().startOf('week').subtract(1, 'days').format('DD.MM.YYYY');
-    this.endOfWeek = moment().endOf('week').subtract(1, 'days').format('DD.MM.YYYY');
+    this.startOfWeek = moment().startOf('week').format('DD.MM.YYYY');
+    this.endOfWeek = moment().endOf('week').format('DD.MM.YYYY');
     const today = moment().format('DD.MM.YYYY');
     this.weekNumber = moment(today, 'DD.MM.YYYY').isoWeek();
     this.totalAvailableVacationDays = '*_*';
   }
 
-  loadEntries() {
+  displaySidebarData() {
     this.entriesService.entriesAreLoaded().then(results => {
       this.items = results;
+      this.timespentService.mapCurrentWeekMonthEntryValue(this.items);
       this.totalHoursWorkedWeek(this.items);
       this.totalHoursWorkedMonth(this.items);
     });
@@ -51,7 +52,7 @@ export class SidebarComponent implements OnInit {
     let timeSpents = [];
     entries.forEach(element => {
       // Check if entry date is between the start and the end of the current Week
-      // If yes add it to an array
+      // If yes, add it to an array
       if (moment(element.entryDate, 'DD.MM.YYYY').isBetween(moment(this.startOfWeek, 'DD.MM.YYYY'), moment(this.endOfWeek, 'DD.MM.YYYY'))) {
         timeSpents.push(element.timeSpent);
       }
@@ -63,12 +64,12 @@ export class SidebarComponent implements OnInit {
     let timeSpents = [];
     entries.forEach(element => {
       // Check if entry date is between the start and the end of the current Month
-      // If yes add it to an array
+      // If yes, add it to an array
       if (moment(element.entryDate, 'DD.MM.YYYY').isBetween(moment(this.startOfMonth, 'DD.MM.YYYY'), moment(this.endOfMonth, 'DD.MM.YYYY'))) {
         timeSpents.push(element.timeSpent);
       }
     });
-    this.totalTimeSpentM(timeSpents);
+    this.totalTimeSpentMonth(timeSpents);
   }
 
   // Calcul total time spent of the current Week
@@ -122,7 +123,7 @@ export class SidebarComponent implements OnInit {
   }
 
   // Calcul total time spent of the current Month
-  public totalTimeSpentM(timeSpents) {
+  public totalTimeSpentMonth(timeSpents) {
     if (timeSpents.length > 0) {
       let endTimeH: number = 0;
       let endTimeMin: number = 0;
