@@ -72,7 +72,7 @@
             <span class="clickable-icon" title="Double click to edit" (click)="editing[row.$$index + '-date'] = true;" *ngIf="!editing[row.$$index + '-date']">
                 {{ row.entryDate }}</span>
             <input (mouseleave)="updateValue($event, 'date', value, row);removeSelectFocus(row,'-date')" *ngIf=" editing[row.$$index +
-                '-date']" type="date" [value]="value" />
+                '-date']" type="text" [value]="value" />
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Start Time ">
@@ -84,28 +84,34 @@
                 " type="time " [value]="value " />
         </ng-template>
     </ngx-datatable-column>
+    <ngx-datatable-column name="End Date">
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <span>
+                {{ row.endDate }}
+            </span>
+        </ng-template>
+    </ngx-datatable-column>
     <ngx-datatable-column name="End Time ">
         <ng-template ngx-datatable-cell-template let-value="value " let-row="row ">
             <span class="clickable-icon " title="Double click to edit " (click)="editing[row.$$index + '-endTime']=true;" *ngIf="!editing[row.$$index + '-endTime'] ">
                 {{ row.endTime }}</span>
             <input class="input-field" (mouseleave)="updateValue($event, 'endTime', value, row);removeSelectFocus(row,'-endTime')" *ngIf="editing[row.$$index + '-endTime']
-                " type="time" [value]="value" />
+                " type="time " [value]="value " />
         </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column name="Time Spent ">
-        <ng-template ngx-datatable-cell-template let-value="value " let-row="row ">
-            <div class="clickable-icon ">
+    <ngx-datatable-column name="Time Spent">
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <div class="clickable-icon" [ngClass]="{'colored': row.isColored === true}">
                 {{ row.timeSpent }}
             </div>
         </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column name="Actions ">
-        <ng-template ngx-datatable-cell-template let-value="value " let-row="row ">
-            <div [hidden]="!isSelected(row) ">
-                <div [hidden]="editMode ">
-
-                    <span (click)="openDeleteDialog(row) ">
-                        <md-icon class="clickable-icon ">delete_forever</md-icon>
+    <ngx-datatable-column name="Actions">
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <div [hidden]="!isSelected(row)">
+                <div [hidden]="editMode">
+                    <span (click)="openDeleteDialog(row)">
+                        <md-icon class="clickable-icon">delete_forever</md-icon>
                     </span>
                 </div>
             </div>

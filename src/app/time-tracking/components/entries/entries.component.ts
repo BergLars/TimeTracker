@@ -57,6 +57,7 @@ export class EntriesComponent implements OnInit {
   @Input() selectedProjects: any;
   @Input() selectedTasks: any;
   @Input() itemTotalTimeSpent: any;
+  isValid: boolean = false;
 
   constructor(
     private entryDialogService: EntryDialogService,
@@ -68,11 +69,11 @@ export class EntriesComponent implements OnInit {
     public entriesService: EntriesService,
     private elementRef: ElementRef) {
     this.registryService.entriesComponent = this;
+    this.loadEntries();
   }
 
   ngOnInit() {
     this.defaultItem = this.createItems[0].key;
-    this.loadEntries();
   }
 
   setSelectFocus(event, row, value) {
@@ -155,8 +156,8 @@ export class EntriesComponent implements OnInit {
     let hour: number = 0;
     let timeSpent: any;
     for (let entry of entries) {
-      endTimeH = endTimeH + parseInt(entry.timeSpent.substring(0, 2));
-      endTimeMin = endTimeMin + parseInt(entry.timeSpent.substring(3, 5));
+      // endTimeH = endTimeH + parseInt(entry.timeSpent.substring(0, 2));
+      // endTimeMin = endTimeMin + parseInt(entry.timeSpent.substring(3, 5));
     }
 
     // Handle conversion Minute over 60mn to 1h
@@ -215,7 +216,7 @@ export class EntriesComponent implements OnInit {
   updateValue(event, cell, cellValue, row) {
     this.editing[row.$$index + '-' + cell] = false;
     if (cell == 'description') {
-      row.description = event.target.value;
+      row.description = (event.target.value).trim();
       this.updateEntry(row);
     }
 
@@ -245,26 +246,42 @@ export class EntriesComponent implements OnInit {
 
     if (cell == 'date') {
       let selectedDate = cellValue;
+      let formatedDate = event.target.value.substring(6, 10) + "-" + event.target.value.substring(3, 5) + "-" + event.target.value.substring(0, 2);
+      let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
       if (event.target.value === "") {
         row.entryDate = selectedDate;
       }
       else {
-        if ((event.target.value).includes('-')) {
-          selectedDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
-          row.entryDate = selectedDate;
-
-        } else {
-          row.entryDate = event.target.value;
+        if (!this.registryService.dateRequirement.test(event.target.value.trim())) {
+          alert('Wrong date format !');
         }
-        this.updateEntry(row);
+        else if (moment(formatedDate, 'YYYY-MM-DD').isAfter(moment(formatedEndDate, 'YYYY-MM-DD'))) {
+          row.startDateTime = formatedDate + ' ' + row.startTime;
+
+          let endT = moment(row.startTime, 'HH:mm') + moment.duration().add(row.timeSpent, 'HH:mm');
+          row.endTime = moment(endT).format('HH:mm');
+          row.endDateTime = formatedDate + ' ' + row.endTime;
+          this.updateEntry(row);
+        }
+        else if (moment(formatedDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
+          let longEndDate = moment(formatedEndDate, 'YYYY-MM-DD').add(1, 'd');
+          let validateFormatEndDate = moment(longEndDate).format('YYYY-MM-DD');
+          row.startDateTime = formatedDate + ' ' + row.startTime;
+          row.endDateTime = validateFormatEndDate + ' ' + row.endTime;
+          this.updateEntry(row);
+        }
+        else {
+          row.entryDate = event.target.value.trim();
+          row.startDateTime = formatedDate + ' ' + row.startTime;
+          this.updateEntry(row);
+        }
       }
     }
 
     if (cell == 'startTime') {
       row.startTime = event.target.value;
-      if (row.startTime > row.endTime || row.startTime == row.endTime) {
-        row.startTime = cellValue;
-        alert("Start time should be less than end time.");
+      if (!this.registryService.timeRequirement.test(row.startTime)) {
+        row.startTime = cellValue.trim();
       }
       else {
         row.timeSpent = this.calculateSpentTime(row);
@@ -273,10 +290,18 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'endTime') {
+      let formatedDate = row.entryDate.substring(6, 10) + "-" + row.entryDate.substring(3, 5) + "-" + row.entryDate.substring(0, 2);
+      let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
       row.endTime = event.target.value;
-      if (row.startTime > row.endTime || row.startTime == row.endTime) {
-        row.endTime = cellValue;
-        alert("Start time should be less than end time.");
+      if (!this.registryService.timeRequirement.test(row.endTime)) {
+        row.endTime = cellValue.trim();
+      }
+      else if (moment(formatedDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
+        let longEndDate = moment(formatedEndDate, 'YYYY-MM-DD').add(1, 'd');
+        let validateFormatDate = moment(longEndDate).format('YYYY-MM-DD');
+        row.endDateTime = validateFormatDate + ' ' + row.endTime;
+        row.timeSpent = this.calculateSpentTime(row);
+        this.updateEntry(row);
       }
       else {
         row.timeSpent = this.calculateSpentTime(row);
@@ -287,10 +312,8 @@ export class EntriesComponent implements OnInit {
 
   public updateEntry(row) {
     this.http.put(this.baseUrl + "/timeentries/" + row.id, {
-      entryDate: row.entryDate,
-      startTime: row.startTime,
-      endTime: row.endTime,
-      timeSpent: row.timeSpent,
+      startDateTime: row.startDateTime.substring(0, 4) + "-" + row.startDateTime.substring(5, 7) + "-" + row.startDateTime.substring(8, 10) + " " + row.startTime,
+      endDateTime: row.endDateTime.substring(0, 4) + "-" + row.endDateTime.substring(5, 7) + "-" + row.endDateTime.substring(8, 10) + " " + row.endTime,
       description: row.description,
       userprofileID: row.userprofileID,
       clientID: row.clientID,
@@ -351,7 +374,6 @@ export class EntriesComponent implements OnInit {
     }
     return false;
   }
-
 
   toggleEditMode() {
     this.editMode = !this.editMode;
@@ -417,12 +439,53 @@ export class EntriesComponent implements OnInit {
     });
   }
 
+  // Set orange color of an entry over 1 day
+  setColor(items) {
+    items.forEach(function (entry) {
+      let startDateTime = moment().format(entry.startDateTime, 'yyyy-MM-dd HH:mm:ss');
+      let endDateTime = moment().format(entry.endDateTime, 'yyyy-MM-dd HH:mm:ss');
+
+      // Split to catch the startDate and endDate
+      let start = startDateTime.split(" ");
+      let end = endDateTime.split(" ");
+
+      // Compare start and endDate are not the same
+      if (moment(start[0], 'YYYY-MM-DD').isBefore(moment(end[0], 'YYYY-MM-DD'))) {
+        entry.isColored = true;
+      }
+      else {
+        entry.isColored = false;
+      }
+    });
+  }
+
   // Map projectName, taskDescription, clientName and entryDate to row in rows
   private mapEntryValue(items) {
     items.forEach(function (entry) {
       entry.projectName = entry.project.projectName;
       entry.taskDescription = entry.task.taskDescription;
       entry.clientName = entry.client.clientName;
+      entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
+      entry.startTime = entry.startDateTime.substring(11, 16);
+      entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
+      entry.endTime = entry.endDateTime.substring(11, 16);
+    });
+    this.entryTimeSPent(this.items);
+    this.setColor(this.items);
+  }
+
+  // calculate timeSpent for each entry in items and format it correctly
+  entryTimeSPent(items) {
+    items.forEach(function (entry) {
+      let ms = moment(entry.entryDate + ' ' + entry.startTime, "DD.MM.YYYY HH:mm").diff(moment(entry.endDate + ' ' + entry.endTime, "DD.MM.YYYY HH:mm"));
+      let d = moment.duration(Math.abs(ms));
+      let s = Math.floor(d.asHours()) + moment.utc(Math.abs(ms)).format(":mm");
+      if (s.length < 5) {
+        entry.timeSpent = '0' + s;
+      }
+      else {
+        entry.timeSpent = s;
+      }
     });
   }
 
