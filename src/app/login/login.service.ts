@@ -72,7 +72,7 @@ export class LoginService implements IDataservice {
 	}
 
 	loggedIn() {
- 	 	return tokenNotExpired('Authorization');
+		return tokenNotExpired('Authorization');
 	}
 
 	public isLoggedIn() {

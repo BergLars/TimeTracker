@@ -193,7 +193,7 @@ export class EditDialogComponent implements OnInit {
 	}
 
 	public deleteItem() {
-		if (this.loginService.loggedIn())  {
+		if (this.loginService.loggedIn()) {
 			if (this.item == this.PROJECT) {
 				return this.http.delete(this.baseUrl + "/projects/" + this.projectID)
 					.subscribe(() => {
@@ -246,7 +246,6 @@ export class EditDialogComponent implements OnInit {
 			alert("Your token has expired. Please log in again!");
 			this.dialogRef.close(true);
 		}
-
 	}
 
 	private displayItems() {
