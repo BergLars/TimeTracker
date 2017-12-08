@@ -233,8 +233,7 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'startTime') {
-      row.startTime = event.target.value;
-      if (!this.registryService.timeRequirement.test(row.startTime)) {
+      if (!this.registryService.timeRequirement.test(event.target.value.trim())) {
         row.startTime = cellValue.trim();
       }
       else {
@@ -247,11 +246,12 @@ export class EntriesComponent implements OnInit {
     if (cell == 'endTime') {
       let formatedDate = row.entryDate.substring(6, 10) + "-" + row.entryDate.substring(3, 5) + "-" + row.entryDate.substring(0, 2);
       let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
-      row.endTime = event.target.value;
-      if (!this.registryService.timeRequirement.test(row.endTime)) {
-        row.endTime = cellValue.trim();
+      row.endTime = event.target.value.trim();
+      if (!this.registryService.timeRequirement.test(event.target.value.trim())) {
+        row.endTime = cellValue;
       }
       else if (moment(formatedDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
+        row.endTime = event.target.value;
         let longEndDate = moment(formatedEndDate, 'YYYY-MM-DD').add(1, 'd');
         let validateFormatDate = moment(longEndDate).format('YYYY-MM-DD');
         row.endDateTime = validateFormatDate + ' ' + row.endTime;
