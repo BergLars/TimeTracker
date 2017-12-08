@@ -260,7 +260,57 @@ export class EntriesComponent implements OnInit {
         this.updateEntry(row);
       }
     }
-    this.registryService.sidebarComponent.displaySidebarData();
+
+    if (cell == 'timeSpent') {
+      if (!this.registryService.timeSpentRequirement.test(event.target.value) || row.timeSpent === event.target.value) {
+        row.timeSpent = cellValue.trim();
+      }
+      else {
+        let decimalTime = parseFloat(moment.duration(event.target.value).asHours());
+        let decimalStartTime = parseFloat(moment.duration(row.startTime).asHours());
+        let totalDecimalEndTime = Number(decimalTime + decimalStartTime);
+        totalDecimalEndTime = totalDecimalEndTime * 60 * 60;
+        let hours: any = Math.floor((totalDecimalEndTime / (60 * 60)));
+        totalDecimalEndTime = totalDecimalEndTime - (hours * 60 * 60);
+        let minutes: any = Math.floor((totalDecimalEndTime / 60));
+
+        if (hours < 10) {
+          hours = "0" + hours;
+        }
+        if (minutes < 10) {
+          minutes = "0" + minutes;
+        }
+        let numberOfDays = Math.floor(hours / 24);
+        let hoursEndTime = hours % 24;
+
+        let longEndDate = moment(row.startDateTime, 'YYYY-MM-DD').add(numberOfDays, 'd');
+        let validFormatEndDate = moment(longEndDate).format('YYYY-MM-DD');
+        let validFormatStartDate = moment(row.startDateTime).format('YYYY-MM-DD');
+        if (hoursEndTime < 10) {
+          hours = "0" + hoursEndTime;
+        }
+        else {
+          hours = hoursEndTime;
+        }
+        let endTime = hours + ':' + minutes;
+        if (moment(row.startDateTime, 'YYYY-MM-DD').isBefore(moment(row.endDateTime, 'YYYY-MM-DD')) && moment(row.startTime, 'HH:mm').isBefore(moment(row.endTime, 'HH:mm'))) {
+          row.timeSpent = event.target.value;
+          row.endDateTime = validFormatStartDate + ' ' + endTime;
+          row.endTime = moment(row.endDateTime).format('HH:mm');
+          this.registryService.sidebarComponent.displaySidebarData();
+          this.updateEntry(row);
+        }
+        else {
+          row.timeSpent = event.target.value;
+          row.startDateTime = row.startDateTime;
+          row.endDateTime = validFormatEndDate + ' ' + endTime;
+          row.endTime = moment(row.endDateTime).format('HH:mm');
+          row.endDate = validFormatEndDate.substring(8, 10) + '.' + validFormatEndDate.substring(5, 7) + '.' + validFormatEndDate.substring(0, 4);
+          this.registryService.sidebarComponent.displaySidebarData();
+          this.updateEntry(row);
+        }
+      }
+    }
   }
 
   public updateEntry(row) {
