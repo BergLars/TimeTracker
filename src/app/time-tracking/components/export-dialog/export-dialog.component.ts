@@ -71,7 +71,9 @@ export class ExportDialogComponent implements OnInit {
 		this.inputFromDate = valueInputFromDate.trim();
 		this.toDate = valueToDate;
 		this.inputToDate = valueInputToDate.trim();
-		this.validDatePeriod = moment(this.inputToDate, 'YYYY-MM-DD').isBefore(moment(this.inputFromDate, 'YYYY-MM-DD'));
+		let fromDate = this.inputFromDate.substring(6, 10) + "-" + this.inputFromDate.substring(3, 5) + "-" + this.inputFromDate.substring(0, 2);
+		let toDate = this.inputToDate.substring(6, 10) + "-" + this.inputToDate.substring(3, 5) + "-" + this.inputToDate.substring(0, 2);
+		this.validDatePeriod = moment(toDate, 'YYYY-MM-DD').isBefore(moment(fromDate, 'YYYY-MM-DD'));
 	}
 
 	public readDatesOnInputField() {

@@ -33,6 +33,8 @@ import { CryptoJS } from 'crypto-js';
 import { MenuComponent, PasswordDialogComponent, PasswordDialogService } from './menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DeDateAdapter } from './dateAdapter';
+import { DeleteUserComponent } from './menu/components/delete-user/delete-user.component';
+import { DeleteUserService } from './menu/components/delete-user/delete-user.service';
 
 @NgModule({
     declarations: [
@@ -49,7 +51,8 @@ import { DeDateAdapter } from './dateAdapter';
         MenuComponent,
         PasswordDialogComponent,
         CreateDialogComponent,
-        EditDialogComponent
+        EditDialogComponent,
+        DeleteUserComponent
     ],
     entryComponents: [
         EntryDialogComponent,
@@ -57,7 +60,8 @@ import { DeDateAdapter } from './dateAdapter';
         PasswordDialogComponent,
         CreateDialogComponent,
         ExportDialogComponent,
-        EditDialogComponent
+        EditDialogComponent,
+        DeleteUserComponent
     ],
     imports: [
         NgxDatatableModule,
@@ -86,6 +90,7 @@ import { DeDateAdapter } from './dateAdapter';
         RegistryService,
         EditDialogService,
         TimespentService,
+        DeleteUserService,
         {
             provide: Http,
             useFactory: httpFactory,
