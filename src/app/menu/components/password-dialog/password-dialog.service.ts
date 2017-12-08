@@ -12,10 +12,8 @@ export class PasswordDialogService {
   public confirm(title: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 
   	let dialogRef: MdDialogRef<PasswordDialogComponent>;
-    let config = new MdDialogConfig();
-    config.viewContainerRef = viewContainerRef;
 
-    dialogRef = this.dialog.open(PasswordDialogComponent, config);
+    dialogRef = this.dialog.open(PasswordDialogComponent, {disableClose:true});
 
     dialogRef.componentInstance.title = title;
 

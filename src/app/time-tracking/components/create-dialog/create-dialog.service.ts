@@ -18,10 +18,8 @@ export class CreateDialogService {
 
 	public confirm(title: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 		let dialogRef: MdDialogRef<CreateDialogComponent>;
-		let config = new MdDialogConfig();
-		config.viewContainerRef = viewContainerRef;
 
-		dialogRef = this.dialog.open(CreateDialogComponent, config);
+		dialogRef = this.dialog.open(CreateDialogComponent, {disableClose:true});
 
 		dialogRef.componentInstance.title = title;
 

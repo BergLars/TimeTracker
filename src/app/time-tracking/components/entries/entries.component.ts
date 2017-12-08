@@ -278,7 +278,7 @@ export class EntriesComponent implements OnInit {
       billable: row.isBillable
     }).subscribe(
       () => {
-        this.loadEntries();
+        
       });
   }
 
@@ -334,8 +334,7 @@ export class EntriesComponent implements OnInit {
       .subscribe(res => {
         this.result = res;
         if (this.result) {
-          this.loadEntries();
-          this.registryService.sidebarComponent.displaySidebarData();
+         this.loadEntries();
         }
       });
   }

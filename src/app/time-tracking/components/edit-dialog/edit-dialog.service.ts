@@ -12,10 +12,8 @@ export class EditDialogService {
 
   public confirm(title: string, viewContainerRef: ViewContainerRef): Observable<boolean>{
   	let dialogRef: MdDialogRef<EditDialogComponent>;
-  	let config = new MdDialogConfig();
-  	config.viewContainerRef = viewContainerRef;
 
-  	dialogRef = this.dialog.open(EditDialogComponent, config);
+  	dialogRef = this.dialog.open(EditDialogComponent, {disableClose:true});
   	dialogRef.componentInstance.title = title;
 
   	return dialogRef.afterClosed();
