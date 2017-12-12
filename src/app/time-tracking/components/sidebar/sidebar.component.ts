@@ -41,10 +41,9 @@ export class SidebarComponent implements OnInit {
 
   displaySidebarData() {
     this.entriesService.entriesAreLoaded().then(results => {
-      this.items = results;
-      this.timespentService.mapCurrentWeekMonthEntryValue(this.items);
-      this.totalHoursWorkedWeek(this.items);
-      this.totalHoursWorkedMonth(this.items);
+      this.timespentService.mapCurrentWeekMonthEntryValue(results);
+      this.totalHoursWorkedWeek(results);
+      this.totalHoursWorkedMonth(results);
     });
   }
 

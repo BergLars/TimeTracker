@@ -44,12 +44,12 @@ export class TimespentService {
     let endTimeMin: number = 0;
     let hour: number = 0;
     let timeSpent: any;
-    for (let entry of entries) {
+    entries.forEach(entry => {
       endTimeH = endTimeH + parseInt(entry.timeSpent.substring(0, 2));
       endTimeMin = endTimeMin + parseInt(entry.timeSpent.substring(3, 5));
-    }
+    });
 
-    // Handle conversion Minute over 60mn to 1h
+    //Handle conversion Minute over 60mn to 1h
     if (endTimeMin > 60) {
       hour = Math.floor(endTimeMin / 60);
       endTimeH = endTimeH + hour;
@@ -109,9 +109,10 @@ export class TimespentService {
       entry.startTime = entry.startDateTime.substring(11, 16);
       entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
       entry.endTime = entry.endDateTime.substring(11, 16);
+    }).then(results => {
+      this.entryTimeSPent(results);
+      this.itemTotalTimeSpent = this.totalTimeSpent(results);
     });
-    this.entryTimeSPent(items);
-    this.itemTotalTimeSpent = this.totalTimeSpent(items);
   }
 
   // Map timeSpent of each entry for Sidebar
