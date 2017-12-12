@@ -199,7 +199,7 @@ export class EntriesComponent implements OnInit {
 
     if (cell == 'date') {
       let selectedDate = cellValue;
-      let formatedDate = event.target.value.substring(6, 10) + "-" + event.target.value.substring(3, 5) + "-" + event.target.value.substring(0, 2);
+      let formatedStartDate = event.target.value.substring(6, 10) + "-" + event.target.value.substring(3, 5) + "-" + event.target.value.substring(0, 2);
       let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
       if (event.target.value === "") {
         row.entryDate = selectedDate;
@@ -208,24 +208,21 @@ export class EntriesComponent implements OnInit {
         if (!this.registryService.dateRequirement.test(event.target.value.trim())) {
           alert('Wrong date format !');
         }
-        else if (moment(formatedDate, 'YYYY-MM-DD').isAfter(moment(formatedEndDate, 'YYYY-MM-DD'))) {
-          row.startDateTime = formatedDate + ' ' + row.startTime;
-
-          let endT = moment(row.startTime, 'HH:mm') + moment.duration().add(row.timeSpent, 'HH:mm');
-          row.endTime = moment(endT).format('HH:mm');
-          row.endDateTime = formatedDate + ' ' + row.endTime;
-          this.updateEntry(row);
-        }
-        else if (moment(formatedDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
+        else if (moment(formatedStartDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
           let longEndDate = moment(formatedEndDate, 'YYYY-MM-DD').add(1, 'd');
           let validateFormatEndDate = moment(longEndDate).format('YYYY-MM-DD');
-          row.startDateTime = formatedDate + ' ' + row.startTime;
+          row.startDateTime = formatedStartDate + ' ' + row.startTime;
           row.endDateTime = validateFormatEndDate + ' ' + row.endTime;
           this.updateEntry(row);
         }
         else {
-          row.entryDate = event.target.value.trim();
-          row.startDateTime = formatedDate + ' ' + row.startTime;
+          row.startDateTime = formatedStartDate + ' ' + row.startTime;
+          let numberOfDate = Number(event.target.value.substring(0, 2)) - Math.abs(Number(row.entryDate.substring(0, 2)));
+          let endT = moment(row.startTime, 'HH:mm') + moment.duration().add(row.timeSpent, 'HH:mm');
+          row.endTime = moment(endT).format('HH:mm');
+          let validateFormatEndDate = moment(row.endDateTime).add(numberOfDate, 'days');
+          validateFormatEndDate = moment(validateFormatEndDate).format('YYYY-MM-DD');
+          row.endDateTime = validateFormatEndDate + ' ' + row.endTime;
           this.updateEntry(row);
         }
       }
@@ -244,14 +241,14 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'endTime') {
-      let formatedDate = row.entryDate.substring(6, 10) + "-" + row.entryDate.substring(3, 5) + "-" + row.entryDate.substring(0, 2);
+      let formatedStartDate = row.entryDate.substring(6, 10) + "-" + row.entryDate.substring(3, 5) + "-" + row.entryDate.substring(0, 2);
       let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
       row.endTime = event.target.value.trim();
       if (!this.registryService.timeRequirement.test(event.target.value.trim())) {
         row.endTime = cellValue;
       }
-      else if (moment(formatedDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
-        row.endTime = event.target.value;
+      else if (moment(formatedStartDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
+
         let longEndDate = moment(formatedEndDate, 'YYYY-MM-DD').add(1, 'd');
         let validateFormatDate = moment(longEndDate).format('YYYY-MM-DD');
         row.endDateTime = validateFormatDate + ' ' + row.endTime;
@@ -263,7 +260,57 @@ export class EntriesComponent implements OnInit {
         this.updateEntry(row);
       }
     }
-    this.registryService.sidebarComponent.displaySidebarData();
+
+    if (cell == 'timeSpent') {
+      if (!this.registryService.timeSpentRequirement.test(event.target.value) || row.timeSpent === event.target.value) {
+        row.timeSpent = cellValue.trim();
+      }
+      else {
+        let decimalTime = parseFloat(moment.duration(event.target.value).asHours());
+        let decimalStartTime = parseFloat(moment.duration(row.startTime).asHours());
+        let totalDecimalEndTime = Number(decimalTime + decimalStartTime);
+        totalDecimalEndTime = totalDecimalEndTime * 60 * 60;
+        let hours: any = Math.floor((totalDecimalEndTime / (60 * 60)));
+        totalDecimalEndTime = totalDecimalEndTime - (hours * 60 * 60);
+        let minutes: any = Math.floor((totalDecimalEndTime / 60));
+
+        if (hours < 10) {
+          hours = "0" + hours;
+        }
+        if (minutes < 10) {
+          minutes = "0" + minutes;
+        }
+        let numberOfDays = Math.floor(hours / 24);
+        let hoursEndTime = hours % 24;
+
+        let longEndDate = moment(row.startDateTime, 'YYYY-MM-DD').add(numberOfDays, 'd');
+        let validFormatEndDate = moment(longEndDate).format('YYYY-MM-DD');
+        let validFormatStartDate = moment(row.startDateTime).format('YYYY-MM-DD');
+        if (hoursEndTime < 10) {
+          hours = "0" + hoursEndTime;
+        }
+        else {
+          hours = hoursEndTime;
+        }
+        let endTime = hours + ':' + minutes;
+        if (moment(row.startDateTime, 'YYYY-MM-DD').isBefore(moment(row.endDateTime, 'YYYY-MM-DD')) && moment(row.startTime, 'HH:mm').isBefore(moment(row.endTime, 'HH:mm'))) {
+          row.timeSpent = event.target.value;
+          row.endDateTime = validFormatStartDate + ' ' + endTime;
+          row.endTime = moment(row.endDateTime).format('HH:mm');
+          this.registryService.sidebarComponent.displaySidebarData();
+          this.updateEntry(row);
+        }
+        else {
+          row.timeSpent = event.target.value;
+          row.startDateTime = row.startDateTime;
+          row.endDateTime = validFormatEndDate + ' ' + endTime;
+          row.endTime = moment(row.endDateTime).format('HH:mm');
+          row.endDate = validFormatEndDate.substring(8, 10) + '.' + validFormatEndDate.substring(5, 7) + '.' + validFormatEndDate.substring(0, 4);
+          this.registryService.sidebarComponent.displaySidebarData();
+          this.updateEntry(row);
+        }
+      }
+    }
   }
 
   public updateEntry(row) {

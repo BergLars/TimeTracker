@@ -101,9 +101,13 @@
     </ngx-datatable-column>
     <ngx-datatable-column name="Time Spent">
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
-            <div class="clickable-icon" [ngClass]="{'colored': row.isColored === true}">
+            <span class="clickable-icon" title="Double click to edit " (click)="editing[row.$$index + '-timeSpent']=true;" *ngIf="!editing[row.$$index + '-timeSpent'] "
+                [ngClass]="{'colored': row.isColored === true}">
                 {{ row.timeSpent }}
-            </div>
+            </span>
+            <input class="input-field" (mouseleave)="updateValue($event, 'timeSpent', value, row);removeSelectFocus(row,'-timeSpent')"
+                *ngIf="editing[row.$$index + '-timeSpent']
+            " type="text " [value]="value " />
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Actions">
