@@ -25,15 +25,15 @@ export class TimespentService {
     }
 
     if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
-      timeSpent = '0' + timeSpentH + ':0' + timeSpentMin;
+      timeSpent = '0' + Math.abs(timeSpentH) + ':0' + timeSpentMin;
     }
     else if ((timeSpentH.toString()).length < 2) {
-      timeSpent = '0' + timeSpentH + ':' + timeSpentMin;
+      timeSpent = '0' + Math.abs(timeSpentH) + ':' + timeSpentMin;
     }
     else if ((timeSpentMin.toString()).length < 2) {
-      timeSpent = timeSpentH + ':0' + timeSpentMin;
+      timeSpent = Math.abs(timeSpentH) + ':0' + timeSpentMin;
     } else {
-      timeSpent = timeSpentH + ':' + timeSpentMin;
+      timeSpent = Math.abs(timeSpentH) + ':' + timeSpentMin;
     }
     return timeSpent;
   }

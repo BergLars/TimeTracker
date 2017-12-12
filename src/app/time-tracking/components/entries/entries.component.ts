@@ -230,8 +230,15 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'startTime') {
+      let formatedStartDate = row.entryDate.substring(6, 10) + "-" + row.entryDate.substring(3, 5) + "-" + row.entryDate.substring(0, 2);
+      let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
+      row.startTime = event.target.value.trim();
       if (!this.registryService.timeRequirement.test(event.target.value.trim())) {
         row.startTime = cellValue.trim();
+      }
+      else if (moment(formatedStartDate, 'YYYY-MM-DD').isBefore(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
+        row.timeSpent = this.timespentService.calculateInlineFieldTimeSpent(row);
+        this.updateEntry(row);
       }
       else {
         row.timeSpent = this.timespentService.calculateInlineFieldTimeSpent(row);
@@ -248,7 +255,6 @@ export class EntriesComponent implements OnInit {
         row.endTime = cellValue;
       }
       else if (moment(formatedStartDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
-
         let longEndDate = moment(formatedEndDate, 'YYYY-MM-DD').add(1, 'd');
         let validateFormatDate = moment(longEndDate).format('YYYY-MM-DD');
         row.endDateTime = validateFormatDate + ' ' + row.endTime;
@@ -282,10 +288,8 @@ export class EntriesComponent implements OnInit {
         }
         let numberOfDays = Math.floor(hours / 24);
         let hoursEndTime = hours % 24;
-
-        let longEndDate = moment(row.startDateTime, 'YYYY-MM-DD').add(numberOfDays, 'd');
+        let longEndDate = moment(row.startDateTime, 'YYYY-MM-DD HH:mm').add(numberOfDays, 'd');
         let validFormatEndDate = moment(longEndDate).format('YYYY-MM-DD');
-        let validFormatStartDate = moment(row.startDateTime).format('YYYY-MM-DD');
         if (hoursEndTime < 10) {
           hours = "0" + hoursEndTime;
         }
@@ -293,22 +297,13 @@ export class EntriesComponent implements OnInit {
           hours = hoursEndTime;
         }
         let endTime = hours + ':' + minutes;
-        if (moment(row.startDateTime, 'YYYY-MM-DD').isBefore(moment(row.endDateTime, 'YYYY-MM-DD')) && moment(row.startTime, 'HH:mm').isBefore(moment(row.endTime, 'HH:mm'))) {
-          row.timeSpent = event.target.value;
-          row.endDateTime = validFormatStartDate + ' ' + endTime;
-          row.endTime = moment(row.endDateTime).format('HH:mm');
-          this.registryService.sidebarComponent.displaySidebarData();
-          this.updateEntry(row);
-        }
-        else {
-          row.timeSpent = event.target.value;
-          row.startDateTime = row.startDateTime;
-          row.endDateTime = validFormatEndDate + ' ' + endTime;
-          row.endTime = moment(row.endDateTime).format('HH:mm');
-          row.endDate = validFormatEndDate.substring(8, 10) + '.' + validFormatEndDate.substring(5, 7) + '.' + validFormatEndDate.substring(0, 4);
-          this.registryService.sidebarComponent.displaySidebarData();
-          this.updateEntry(row);
-        }
+        row.timeSpent = event.target.value;
+        row.startDateTime = row.startDateTime;
+        row.endDateTime = validFormatEndDate + ' ' + endTime;
+        row.endTime = moment(row.endDateTime).format('HH:mm');
+        row.endDate = validFormatEndDate.substring(8, 10) + '.' + validFormatEndDate.substring(5, 7) + '.' + validFormatEndDate.substring(0, 4);
+        this.registryService.sidebarComponent.displaySidebarData();
+        this.updateEntry(row);
       }
     }
   }
@@ -325,7 +320,7 @@ export class EntriesComponent implements OnInit {
       billable: row.isBillable
     }).subscribe(
       () => {
-        
+        this.loadEntries();
       });
   }
 
@@ -381,7 +376,7 @@ export class EntriesComponent implements OnInit {
       .subscribe(res => {
         this.result = res;
         if (this.result) {
-         this.loadEntries();
+          this.loadEntries();
         }
       });
   }
