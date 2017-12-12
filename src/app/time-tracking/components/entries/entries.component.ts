@@ -237,11 +237,9 @@ export class EntriesComponent implements OnInit {
         row.startTime = cellValue.trim();
       }
       else if (moment(formatedStartDate, 'YYYY-MM-DD').isBefore(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
-        row.timeSpent = this.timespentService.calculateInlineFieldTimeSpent(row);
         this.updateEntry(row);
       }
       else {
-        row.timeSpent = this.timespentService.calculateInlineFieldTimeSpent(row);
         this.updateEntry(row);
       }
       this.registryService.sidebarComponent.displaySidebarData();
@@ -258,11 +256,9 @@ export class EntriesComponent implements OnInit {
         let longEndDate = moment(formatedEndDate, 'YYYY-MM-DD').add(1, 'd');
         let validateFormatDate = moment(longEndDate).format('YYYY-MM-DD');
         row.endDateTime = validateFormatDate + ' ' + row.endTime;
-        row.timeSpent = this.timespentService.calculateInlineFieldTimeSpent(row);
         this.updateEntry(row);
       }
       else {
-        row.timeSpent = this.timespentService.calculateInlineFieldTimeSpent(row);
         this.updateEntry(row);
       }
     }
