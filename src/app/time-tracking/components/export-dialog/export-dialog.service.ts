@@ -12,10 +12,8 @@ export class ExportDialogService {
 	public confirm(title: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 
 		let dialogRef: MdDialogRef<ExportDialogComponent>;
-		let config = new MdDialogConfig();
-		config.viewContainerRef = viewContainerRef;
 
-		dialogRef = this.dialog.open(ExportDialogComponent, config);
+		dialogRef = this.dialog.open(ExportDialogComponent, {disableClose:true});
 
 		dialogRef.componentInstance.title = title;
 

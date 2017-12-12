@@ -25,7 +25,7 @@
     </span>
 </md-toolbar>
 <ngx-datatable #mydatatable class="material striped" [scrollbarH]="true" [rows]="items" [columnMode]="'force'" [headerHeight]="50"
-    [footerHeight]="50" [selected]="selected" [selectionType]="'single'" [limit]="limit" [count]="count" [offset]="offset" (page)='onPage($event)'
+    [footerHeight]="50" [selected]="selected" [selectionType]="'single'" [limit]="limit" [count]="count" [offset]="offset" [sorts]="[{prop: 'entryDate', dir: 'asc'}]" (page)='onPage($event)'
     (select)='selectEntry($event)'>
     <ngx-datatable-column name="Description">
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
