@@ -87,7 +87,7 @@ export class TimespentService {
   // calculate timeSpent for each entry in items and format it correctly
   entryTimeSPent(items) {
     items.forEach(function (entry) {
-      let ms = moment(entry.entryDate + ' ' + entry.startTime, "DD.MM.YYYY HH:mm").diff(moment(entry.endDate + ' ' + entry.endTime, "DD.MM.YYYY HH:mm"));
+      let ms = moment(entry.startDateTime, "YYYY-MM-DD HH:mm").diff(moment(entry.endDateTime, "YYYY-MM-DD HH:mm"));
       let d = moment.duration(Math.abs(ms));
       let s = Math.floor(d.asHours()) + moment.utc(Math.abs(ms)).format(":mm");
       if (s.length < 5) {
