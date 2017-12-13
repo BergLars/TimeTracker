@@ -56,7 +56,6 @@ export class EntriesComponent implements OnInit {
   @Input() selectedClients: any;
   @Input() selectedProjects: any;
   @Input() selectedTasks: any;
-  @Input() itemTotalTimeSpent: any;
   isValid: boolean = false;
 
   constructor(
@@ -396,7 +395,6 @@ export class EntriesComponent implements OnInit {
         return client.id;
       });
       this.timespentService.mapEntryValueToSetColor(this.items);
-      this.itemTotalTimeSpent = this.timespentService.itemTotalTimeSpent;
     });
   }
 
