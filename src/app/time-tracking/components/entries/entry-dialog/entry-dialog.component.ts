@@ -208,6 +208,20 @@ export class EntryDialogComponent implements OnInit {
     }
   }
 
+  public adjustEndDate(){
+    if (this.timeSpent > "23:59") {
+      let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
+      let hours = this.timeSpent.substring(0,2);
+      let numberofdays = Math.floor(hours / 24);
+      let entryEndDate = moment(endDate, 'YYYY-MM-DD').add(numberofdays, 'd');
+      this.entryEndDate = moment(entryEndDate).format('YYYY-MM-DD');
+    } else {
+      let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
+
+      this.entryEndDate = moment(endDate).format('YYYY-MM-DD');
+    }
+  }
+
   public decimalToTime(t: any) {
     // t is a decimal value
     if (this.isNumeric(t.toString()) === true) {
@@ -227,17 +241,7 @@ export class EntryDialogComponent implements OnInit {
         let endT = moment() + moment.duration().add(this.timeSpent, 'HH:mm');
         this.endTime = moment(endT).format('HH:mm');
 
-         if (this.timeSpent > "23:59") {
-            let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
-            let hours = this.timeSpent.substring(0,2);
-            let numberofdays = Math.floor(hours / 24);
-            let entryEndDate = moment(endDate, 'YYYY-MM-DD').add(numberofdays, 'd');
-            this.entryEndDate = moment(entryEndDate).format('YYYY-MM-DD');
-          } else {
-            let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
-
-            this.entryEndDate = moment(endDate).format('YYYY-MM-DD');
-          }
+        this.adjustEndDate();
         this.newEntry();
       } else {
         alert('Wrong time format !');
@@ -246,6 +250,7 @@ export class EntryDialogComponent implements OnInit {
         this.timeSpent = t;
         let endT = moment() + moment.duration().add(this.timeSpent, 'HH:mm');
         this.endTime = moment(endT).format('HH:mm');
+        this.adjustEndDate();
         this.newEntry();
     } else {
       alert('Wrong time format !');
