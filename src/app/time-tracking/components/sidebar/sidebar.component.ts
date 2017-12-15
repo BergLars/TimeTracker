@@ -19,11 +19,14 @@ export class SidebarComponent implements OnInit {
   public endOfWeek: any;
   public startOfMonth: any;
   public endOfMonth: any;
+  @Input() totalTimeSpent: any;
+  public total: string;
 
   constructor(private entriesService: EntriesService, public registryService: RegistryService, public timespentService: TimespentService) {
     this.registryService.sidebarComponent = this;
   }
   ngOnInit() {
+    this.total = 'Total';
     this.getCurrentDayWeekMonth();
     this.displaySidebarData();
   }
@@ -44,6 +47,7 @@ export class SidebarComponent implements OnInit {
       this.timespentService.mapCurrentWeekMonthEntryValue(results);
       this.totalHoursWorkedWeek(results);
       this.totalHoursWorkedMonth(results);
+      this.totalTimeSpent = this.timespentService.totalTimeSpent(results);
     });
   }
 

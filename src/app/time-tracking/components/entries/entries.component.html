@@ -15,9 +15,6 @@
         <i (click)="filterEntries();" class="material-icons clickable-icon">check</i>
     </span>
     <span class="flex"></span>
-    <span class="totalTimeSpent">&nbsp;Total =&nbsp;</span>
-    <span class="totalTimeSpent">{{itemTotalTimeSpent}}</span>
-    <span class="flex"></span>
     <span color="primary">
         <select class="clickable-icon" (change)="changeRowLimits($event)">
             <option *ngFor="let limit of rowLimits" [value]="limit.value">{{limit.key}}</option>

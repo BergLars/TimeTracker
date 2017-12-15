@@ -9,17 +9,17 @@
       <button md-raised-button color="primary" (click)="openExportDialog()">EXPORT</button>
     </span>
   </md-toolbar>
-
-  <div class="layout-row flex">
-    <md-card class="flex">
+  <div class="ftt-content">
+    <md-card>
       <app-entries></app-entries>
     </md-card>
-
-    <md-card class="tt-sidebar">
+  </div>
+  <div class="ftt-sidebar">
+    <md-card>
       <app-sidebar></app-sidebar>
     </md-card>
   </div>
 </div>
-<div fxLayout="column" fxLayoutAlign="center center">
-  <img src="assets/Logo.png" width="200px">
+<div class="layout-row footer">
+  <img src="assets/Logo.png">
 </div>
