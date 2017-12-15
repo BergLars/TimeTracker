@@ -29,6 +29,7 @@ export class EntryDialogComponent implements OnInit {
   public projectID: any;
   public taskID: any;
   public entryDate: any;
+  public entryEndDate: any;
   @Input() startTime: any;
   @Input() endTime: any;
   public timeSpent: any;
@@ -92,8 +93,7 @@ export class EntryDialogComponent implements OnInit {
     if (this.registryService.dateRequirement.test(this.inputSelectedDate)) {
       this.validDate = true;
       this.selectedDate = this.inputSelectedDate;
-    }
-    else {
+    } else {
       this.validDate = false;
     }
   }
@@ -113,28 +113,23 @@ export class EntryDialogComponent implements OnInit {
   public checkMandatoryFields() {
     if (this.selectedDate === undefined) {
       this.selectedDate = this.inputSelectedDate;
-    }
-    else {
+    } else {
       this.inputSelectedDate = this.selectedDate;
     }
     if (this.loginService.loggedIn()) {
       if (!this.enableTimes) {
         if (this.description === "" || this.clientID === null || this.selectedDate === undefined || this.inputSelectedDate === undefined || this.timeSpent === null || this.isBillable === null) {
           alert("Please check if all the fields are filled in");
-        }
-        else if (this.validDate === false) {
+        } else if (this.validDate === false) {
           alert('Wrong date format!');
-        }
-        else {
+        } else {
           this.startTime = moment().format('HH:mm');
           this.decimalToTime(this.timeSpent);
         }
-      }
-      else {
+      } else {
         if (this.description === "" || this.selectedDate === undefined || this.startTime === " " || this.endTime === " " || this.isBillable === null) {
           alert("Please check if all the fields are filled in");
-        }
-        else {
+        } else {
           this.timeSpent = this.calculateTimeSpent();
           this.checkStartAndEndTime();
         }
@@ -146,12 +141,14 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public checkStartAndEndTime() {
-    if (!(this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime))) {
-      alert('Wrong time format!');
-    }
-    else {
+      let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
+      if (this.endTime < this.startTime) {
+        let entryEndDate = moment(endDate, 'YYYY-MM-DD').add(1, 'd');
+        this.entryEndDate = moment(entryEndDate).format('YYYY-MM-DD');
+      } else {
+        this.entryEndDate = moment(endDate).format('YYYY-MM-DD');
+      }
       this.newEntry();
-    }
   }
 
   public calculateTimeSpent() {
@@ -174,35 +171,28 @@ export class EntryDialogComponent implements OnInit {
 
       if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
         timeSpent = '0' + timeSpentH + ':0' + timeSpentMin;
-      }
-      else if ((timeSpentH.toString()).length < 2) {
+      } else if ((timeSpentH.toString()).length < 2) {
         timeSpent = '0' + timeSpentH + ':' + timeSpentMin;
-      }
-      else if ((timeSpentMin.toString()).length < 2) {
+      } else if ((timeSpentMin.toString()).length < 2) {
         timeSpent = timeSpentH + ':0' + timeSpentMin;
       } else {
         timeSpent = timeSpentH + ':' + timeSpentMin;
       }
-    }
-    else {
+    } else {
       if (endTimeMin < startTimeMin) {
         timeSpentMin = (endTimeMin + 60) - startTimeMin;
         timeSpentH = (endTimeH + 23) - startTimeH;
-      }
-      else if (endTimeMin === startTimeMin) {
+      } else if (endTimeMin === startTimeMin) {
         timeSpentMin = endTimeMin - startTimeMin;
         timeSpentH = (endTimeH + 24) - startTimeH;
       } else {
         timeSpentH = ((endTimeH + 24) - startTimeH);
         timeSpentMin = endTimeMin - startTimeMin;
-      }
-      if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
+      } if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
         timeSpent = '0' + timeSpentH + ':0' + timeSpentMin;
-      }
-      else if ((timeSpentH.toString()).length < 2) {
+      } else if ((timeSpentH.toString()).length < 2) {
         timeSpent = '0' + timeSpentH + ':' + timeSpentMin;
-      }
-      else if ((timeSpentMin.toString()).length < 2) {
+      } else if ((timeSpentMin.toString()).length < 2) {
         timeSpent = timeSpentH + ':0' + timeSpentMin;
       } else {
         timeSpent = timeSpentH + ':' + timeSpentMin;
@@ -236,24 +226,28 @@ export class EntryDialogComponent implements OnInit {
         this.timeSpent = hours + ":" + minutes;
         let endT = moment() + moment.duration().add(this.timeSpent, 'HH:mm');
         this.endTime = moment(endT).format('HH:mm');
+
+         if (this.timeSpent > "23:59") {
+            let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
+            let hours = this.timeSpent.substring(0,2);
+            let numberofdays = Math.floor(hours / 24);
+            let entryEndDate = moment(endDate, 'YYYY-MM-DD').add(numberofdays, 'd');
+            this.entryEndDate = moment(entryEndDate).format('YYYY-MM-DD');
+          } else {
+            let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
+
+            this.entryEndDate = moment(endDate).format('YYYY-MM-DD');
+          }
         this.newEntry();
-      }
-      else {
+      } else {
         alert('Wrong time format !');
       }
-    }
-    else if (t.toString().indexOf(':') !== -1) {
-      if (!this.registryService.timeRequirement.test(this.timeSpent) || t.toString() === '00:00') {
-        alert('Wrong time format!');
-      }
-      else {
+    } else if (t.toString().indexOf(':') !== -1) {
         this.timeSpent = t;
         let endT = moment() + moment.duration().add(this.timeSpent, 'HH:mm');
         this.endTime = moment(endT).format('HH:mm');
         this.newEntry();
-      }
-    }
-    else {
+    } else {
       alert('Wrong time format !');
     }
   }
@@ -266,7 +260,7 @@ export class EntryDialogComponent implements OnInit {
   public newEntry() {
     return this.http.post(this.baseUrl + "/timeentries", {
       startDateTime: this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2) + " " + this.startTime,
-      endDateTime: this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2) + " " + this.endTime,
+      endDateTime: this.entryEndDate + " " + this.endTime,
       description: this.description.trim(),
       userprofileID: this.loginService.getLoggedUserID(),
       taskID: this.taskID,
