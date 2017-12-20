@@ -73,9 +73,25 @@ export class EntriesService {
         },
         (err) => {
           if (err.status === 500) {
-          this.loginService.logout();
-        }
+            this.loginService.logout();
+          }
         });
     });
+  }
+
+  sortEntriesByDefault(items) {
+    return items.sort((a, b) => new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime());
+  }
+
+  sortEntriesByStartDateAsc(items) {
+    return items.sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime());
+  }
+
+  sortEntriesByEndDateDesc(items) {
+    return items.sort((a, b) => new Date(b.endDateTime).getTime() - new Date(a.endDateTime).getTime());
+  }
+
+  sortEntriesByEndDateAsc(items) {
+    return items.sort((a, b) => new Date(a.endDateTime).getTime() - new Date(b.endDateTime).getTime());
   }
 }

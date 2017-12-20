@@ -43,8 +43,21 @@ export class EntriesComponent implements OnInit {
     { key: '10 Entries', value: 10 },
     { key: '5 Entries', value: 5 }
   ];
+
   limit: number = this.limits[0].value;
   rowLimits: Array<any> = this.limits;
+  private columns = [
+    { key: 'Entry date', id: 0 },
+    { key: 'End date', id: 1 }
+  ];
+  selectedColumn = this.columns[0].id;
+
+  private sorts = [
+    { key: 'Desc', id: 0 },
+    { key: 'Asc', id: 1 }
+  ];
+  selectedSort = this.sorts[0].id;
+
   public createItems = [
     { key: 'None', id: 1 },
     { key: 'Client', id: 2 },
@@ -52,11 +65,14 @@ export class EntriesComponent implements OnInit {
     { key: 'Task', id: 4 }
   ];
   item: number = this.createItems[0].id;
+
   public defaultItem: any;
   @Input() selectedClients: any;
   @Input() selectedProjects: any;
   @Input() selectedTasks: any;
   isValid: boolean = false;
+
+  loading: boolean = false;
 
   constructor(
     private entryDialogService: EntryDialogService,
@@ -353,7 +369,7 @@ export class EntriesComponent implements OnInit {
     return this.selected[0]['$$index'];
   }
 
-  public openDialog() {
+  openDialog() {
     this.unselectEntry();
     this.entryDialogService
       .confirm('New Entry', this.viewContainerRef)
@@ -365,7 +381,7 @@ export class EntriesComponent implements OnInit {
       });
   }
 
-  public openDeleteDialog(row) {
+  openDeleteDialog(row) {
     this.deleteEntryService
       .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
       .subscribe(res => {
@@ -379,6 +395,7 @@ export class EntriesComponent implements OnInit {
   loadEntries() {
     this.entriesService.entriesAreLoaded().then(results => {
       this.items = results;
+      this.items = this.loadEntriesByDefault();
 
       this.clients = this.entriesService.clients.sort(this.registryService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.registryService.propComparator('projectName'));
@@ -398,6 +415,104 @@ export class EntriesComponent implements OnInit {
     });
   }
 
+  sortEntries(valueDate: any, valueSort: any) {
+    if (valueDate.selected.viewValue === 'Entry date' && valueSort.selected.viewValue === 'Desc') {
+      this.loadEntries();
+    }
+    else if (valueDate.selected.viewValue === 'Entry date' && valueSort.selected.viewValue === 'Asc') {
+      this.loadEntriesByStartDateTimeAscending();
+    }
+    else if (valueDate.selected.viewValue === 'End date' && valueSort.selected.viewValue === 'Desc') {
+      this.loadEntriesByEndDateTimeDescending();
+    }
+    else if (valueDate.selected.viewValue === 'End date' && valueSort.selected.viewValue === 'Asc') {
+      this.loadEntriesByEndDateTimeAscending();
+    }
+  }
+
+  loadEntriesByStartDateTimeAscending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = results;
+      this.items = this.loadEntriesByStartDateAsc();
+
+      this.clients = this.entriesService.clients.sort(this.registryService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.registryService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.registryService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  loadEntriesByEndDateTimeAscending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByEndDateAsc(results);
+
+      this.clients = this.entriesService.clients.sort(this.registryService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.registryService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.registryService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  loadEntriesByEndDateTimeDescending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = results;
+      this.items = this.loadEntriesByEndDateTimeDesc();
+
+      this.clients = this.entriesService.clients.sort(this.registryService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.registryService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.registryService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  private loadEntriesByStartDateAsc() {
+    return this.entriesService.sortEntriesByStartDateAsc(this.items);
+  }
+
+  private loadEntriesByDefault() {
+    return this.entriesService.sortEntriesByDefault(this.items);
+  }
+
+  private loadEntriesByEndDateTimeAsc() {
+    return this.entriesService.sortEntriesByEndDateAsc(this.items);
+  }
+
+  private loadEntriesByEndDateTimeDesc() {
+    return this.entriesService.sortEntriesByEndDateDesc(this.items);
+  }
   onPage(event) {
     this.count = this.items.length;
     this.items = this.entriesService.clonedItems;
