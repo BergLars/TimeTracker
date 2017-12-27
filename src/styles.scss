@@ -220,6 +220,9 @@ div.mat-input-underline {
       cursor: pointer;
       cursor: hand;
     }
+.not-clickable-icon{
+    cursor: null !important;
+}
 
   .select-field{
       width: 100%; 
@@ -237,3 +240,27 @@ div.mat-input-underline {
   .colored{
       color: rgba(255, 166, 0, 0.959);
   }
+
+  .datatable-header-cell-label{
+      color: white;
+  }
+
+  .datatable-header{
+    background-color: rgba(66, 80, 175, 0.975);
+    padding-top: 10px;
+    padding-left: 2px;
+  }
+  .sort-btn{
+    color: white !important;
+  }
+
+  .set-margin{
+      margin-top: 17.5px;
+  }
+  
+  .datatable-header-cell-label{
+      cursor: default;
+  }
+//   .mat-toolbar.mat-primary{
+//     background-color: rgba(51, 106, 185, 0.975) !important;
+//   }

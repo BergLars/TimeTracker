@@ -85,8 +85,8 @@ export class TimespentService {
   }
 
   // calculate timeSpent for each entry in items and format it correctly
-  entryTimeSPent(items) {
-    items.forEach(function (entry) {
+  entriesTimeSpent(items) {
+    items.forEach(entry => {
       let ms = moment(entry.startDateTime, "YYYY-MM-DD HH:mm").diff(moment(entry.endDateTime, "YYYY-MM-DD HH:mm"));
       let d = moment.duration(Math.abs(ms));
       let s = Math.floor(d.asHours()) + moment.utc(Math.abs(ms)).format(":mm");
@@ -99,9 +99,23 @@ export class TimespentService {
     });
   }
 
+  // calculate timeSpent for one entry and format it correctly
+  entryTimeSpent(entry) {
+    let ms = moment(entry.startDateTime, "YYYY-MM-DD HH:mm").diff(moment(entry.endDateTime, "YYYY-MM-DD HH:mm"));
+    let d = moment.duration(Math.abs(ms));
+    let s = Math.floor(d.asHours()) + moment.utc(Math.abs(ms)).format(":mm");
+    if (s.length < 5) {
+      entry.timeSpent = '0' + s;
+    }
+    else {
+      entry.timeSpent = s;
+    }
+    return entry.timeSpent;
+  }
+
   // Map projectName, taskDescription, clientName and entryDate of each entry for Filter
   public mapEntryValue(items) {
-    items.forEach(function (entry) {
+    items.forEach(entry => {
       entry.projectName = entry.project.projectName;
       entry.taskDescription = entry.task.taskDescription;
       entry.clientName = entry.client.clientName;
@@ -109,26 +123,38 @@ export class TimespentService {
       entry.startTime = entry.startDateTime.substring(11, 16);
       entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
       entry.endTime = entry.endDateTime.substring(11, 16);
-    }).then(results => {
-      this.entryTimeSPent(results);
-      this.itemTotalTimeSpent = this.totalTimeSpent(results);
     });
+    this.entriesTimeSpent(items);
+    this.itemTotalTimeSpent = this.totalTimeSpent(items);
+  }
+  // Map projectName, taskDescription, clientName and entryDate of each entry for Sort
+  public mapEntryValueSort(items) {
+    items.forEach(entry => {
+      entry.projectName = entry.project.projectName;
+      entry.taskDescription = entry.task.taskDescription;
+      entry.clientName = entry.client.clientName;
+      entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
+      entry.startTime = entry.startDateTime.substring(11, 16);
+      entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
+      entry.endTime = entry.endDateTime.substring(11, 16);
+    });
+    this.entriesTimeSpent(items);
   }
 
   // Map timeSpent of each entry for Sidebar
   public mapCurrentWeekMonthEntryValue(items) {
-    items.forEach(function (entry) {
+    items.forEach(entry => {
       entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
       entry.startTime = entry.startDateTime.substring(11, 16);
       entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
       entry.endTime = entry.endDateTime.substring(11, 16);
     });
-    this.entryTimeSPent(items);
+    this.entriesTimeSpent(items);
   }
 
   // Map projectName, taskDescription, clientName and entryDate of each entry for loading entries
   public mapEntryValueToSetColor(items) {
-    items.forEach(function (entry) {
+    items.forEach(entry => {
       entry.projectName = entry.project.projectName;
       entry.taskDescription = entry.task.taskDescription;
       entry.clientName = entry.client.clientName;
@@ -137,14 +163,14 @@ export class TimespentService {
       entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
       entry.endTime = entry.endDateTime.substring(11, 16);
     });
-    this.entryTimeSPent(items);
+    this.entriesTimeSpent(items);
     this.itemTotalTimeSpent = this.totalTimeSpent(items);
     this.setColor(items);
   }
 
   // Set orange color of an entry over 1 day
   setColor(items) {
-    items.forEach(function (entry) {
+    items.forEach(entry => {
       let startDateTime = moment().format(entry.startDateTime, 'yyyy-MM-dd HH:mm:ss');
       let endDateTime = moment().format(entry.endDateTime, 'yyyy-MM-dd HH:mm:ss');
 

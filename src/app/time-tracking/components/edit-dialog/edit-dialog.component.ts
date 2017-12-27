@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Rx';
 import { IProject, ITask, IUser, UserService, IClient, RegistryService } from '../../../data';
 import { DeleteEntryService } from '../entries/delete-entry/delete-entry.service';
 import { LoginService } from '../../../login';
+import { EntriesService } from 'app/time-tracking';
 
 @Component({
 	selector: 'app-edit-dialog',
@@ -38,7 +39,8 @@ export class EditDialogComponent implements OnInit {
 		public loginService: LoginService,
 		private http: Http,
 		public registryService: RegistryService,
-		private deleteEntryService: DeleteEntryService) { }
+		private deleteEntryService: DeleteEntryService,
+		public entriesService: EntriesService) { }
 
 	ngOnInit() {
 		this.loadItems();
@@ -105,19 +107,19 @@ export class EditDialogComponent implements OnInit {
 		if (this.loginService.loggedIn()) {
 			this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
 				results => {
-					this.clients = results.sort(this.registryService.propComparator('clientName'));
+					this.clients = results.sort(this.entriesService.propComparator('clientName'));
 					this.clientID = this.clients[0].id;
 				});
 
 			this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
 				results => {
-					this.tasks = results.sort(this.registryService.propComparator('taskDescription'));;
+					this.tasks = results.sort(this.entriesService.propComparator('taskDescription'));;
 					this.taskID = this.tasks[0].id;
 				});
 
 			this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
 				results => {
-					this.projects = results.sort(this.registryService.propComparator('projectName'));
+					this.projects = results.sort(this.entriesService.propComparator('projectName'));
 					this.projectID = this.projects[0].id;
 				});
 		} else {

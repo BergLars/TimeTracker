@@ -7,6 +7,7 @@ import { environment } from '../../../../../environments/environment';
 import moment from 'moment/src/moment';
 import { Observable } from 'rxjs/Rx';
 import { MdDialogRef, MdDatepickerModule, DateAdapter } from '@angular/material';
+import { EntriesService } from '../entries.service';
 
 @Component({
   selector: 'app-entry-dialog',
@@ -48,7 +49,8 @@ export class EntryDialogComponent implements OnInit {
     private http: Http,
     public loginService: LoginService,
     private dateAdapter: DateAdapter<Date>,
-    public registryService: RegistryService
+    public registryService: RegistryService,
+    public entriesService: EntriesService
   ) {
   }
 
@@ -293,17 +295,17 @@ export class EntryDialogComponent implements OnInit {
     if (this.loginService.loggedIn()) {
       this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
         results => {
-          this.clients = results.sort(this.registryService.propComparator('clientName'));
+          this.clients = results.sort(this.entriesService.propComparator('clientName'));
         });
 
       this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
         results => {
-          this.tasks = results.sort(this.registryService.propComparator('taskDescription'));
+          this.tasks = results.sort(this.entriesService.propComparator('taskDescription'));
         });
 
       this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
         results => {
-          this.projects = results.sort(this.registryService.propComparator('projectName'));
+          this.projects = results.sort(this.entriesService.propComparator('projectName'));
         });
     } else {
       alert("Your token has expired. Please log in again!");

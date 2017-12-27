@@ -43,8 +43,28 @@ export class EntriesComponent implements OnInit {
     { key: '10 Entries', value: 10 },
     { key: '5 Entries', value: 5 }
   ];
+
   limit: number = this.limits[0].value;
   rowLimits: Array<any> = this.limits;
+  private columns = [
+    { key: 'Description', id: 0 },
+    { key: 'Project Name', id: 1 },
+    { key: 'Client Name', id: 2 },
+    { key: 'Task Description', id: 3 },
+    { key: 'Entry date', id: 4 },
+    { key: 'Start Time', id: 5 },
+    { key: 'End date', id: 6 },
+    { key: 'End Time', id: 7 },
+    { key: 'Time Spent', id: 8 }
+  ];
+  selectedColumn = this.columns[4].id;
+
+  private sorts = [
+    { key: 'Desc', id: 0 },
+    { key: 'Asc', id: 1 }
+  ];
+  selectedSort = this.sorts[0].id;
+
   public createItems = [
     { key: 'None', id: 1 },
     { key: 'Client', id: 2 },
@@ -52,11 +72,14 @@ export class EntriesComponent implements OnInit {
     { key: 'Task', id: 4 }
   ];
   item: number = this.createItems[0].id;
+
   public defaultItem: any;
   @Input() selectedClients: any;
   @Input() selectedProjects: any;
   @Input() selectedTasks: any;
   isValid: boolean = false;
+
+  loading: boolean = false;
 
   constructor(
     private entryDialogService: EntryDialogService,
@@ -353,7 +376,7 @@ export class EntriesComponent implements OnInit {
     return this.selected[0]['$$index'];
   }
 
-  public openDialog() {
+  openDialog() {
     this.unselectEntry();
     this.entryDialogService
       .confirm('New Entry', this.viewContainerRef)
@@ -365,7 +388,7 @@ export class EntriesComponent implements OnInit {
       });
   }
 
-  public openDeleteDialog(row) {
+  openDeleteDialog(row) {
     this.deleteEntryService
       .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
       .subscribe(res => {
@@ -376,13 +399,475 @@ export class EntriesComponent implements OnInit {
       });
   }
 
+  sortEntries(valueDate: any, valueSort: any) {
+    if (valueDate.selected.viewValue === 'Entry date' && valueSort.selected.viewValue === 'Desc') {
+      return this.loadEntries();
+    }
+    if (valueDate.selected.viewValue === 'Entry date' && valueSort.selected.viewValue === 'Asc') {
+      return this.loadEntriesByStartDateTimeAscending();
+    }
+    if (valueDate.selected.viewValue === 'End date' && valueSort.selected.viewValue === 'Desc') {
+      return this.loadEntriesByEndDateTimeDescending();
+    }
+    if (valueDate.selected.viewValue === 'End date' && valueSort.selected.viewValue === 'Asc') {
+      return this.loadEntriesByEndDateTimeAscending();
+    }
+    if (valueDate.selected.viewValue === 'Description' && valueSort.selected.viewValue === 'Desc') {
+      return this.loadEntriesByDescriptionDescending();
+    }
+    if (valueDate.selected.viewValue === 'Description' && valueSort.selected.viewValue === 'Asc') {
+      return this.loadEntriesByDescriptionAscending();
+    }
+    if (valueDate.selected.viewValue === 'Start Time' && valueSort.selected.viewValue === 'Desc') {
+      return this.loadEntriesByStartTimeDescending();
+    }
+    if (valueDate.selected.viewValue === 'Start Time' && valueSort.selected.viewValue === 'Asc') {
+      return this.loadEntriesByStartTimeAscending();
+    }
+    if (valueDate.selected.viewValue === 'End Time' && valueSort.selected.viewValue === 'Desc') {
+      return this.loadEntriesByEndTimeDescending();
+    }
+    if (valueDate.selected.viewValue === 'End Time' && valueSort.selected.viewValue === 'Asc') {
+      return this.loadEntriesByEndTimeAscending();
+    }
+    if (valueDate.selected.viewValue === 'Time Spent' && valueSort.selected.viewValue === 'Desc') {
+      return this.loadEntriesByTimeSpentDescending();
+    }
+    if (valueDate.selected.viewValue === 'Time Spent' && valueSort.selected.viewValue === 'Asc') {
+      return this.loadEntriesByTimeSpentAscending();
+    }
+    if (valueDate.selected.viewValue === 'Project Name' && valueSort.selected.viewValue === 'Desc') {
+      return this.loadEntriesByProjectDescending();
+    }
+    if (valueDate.selected.viewValue === 'Project Name' && valueSort.selected.viewValue === 'Asc') {
+      return this.loadEntriesByProjectAscending();
+    }
+    if (valueDate.selected.viewValue === 'Client Name' && valueSort.selected.viewValue === 'Desc') {
+      return this.loadEntriesByClientDescending();
+    }
+    if (valueDate.selected.viewValue === 'Client Name' && valueSort.selected.viewValue === 'Asc') {
+      return this.loadEntriesByClientAscending();
+    }
+    if (valueDate.selected.viewValue === 'Task Description' && valueSort.selected.viewValue === 'Desc') {
+      return this.loadEntriesByTaskDescending();
+    }
+    if (valueDate.selected.viewValue === 'Task Description' && valueSort.selected.viewValue === 'Asc') {
+      return this.loadEntriesByTaskAscending();
+    }
+  }
+
+  /**
+   * Sort by Start date
+   */
   loadEntries() {
     this.entriesService.entriesAreLoaded().then(results => {
       this.items = results;
+      this.items = this.entriesService.sortEntriesByDefault(results);
 
-      this.clients = this.entriesService.clients.sort(this.registryService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.registryService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.registryService.propComparator('taskDescription'));
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  loadEntriesByStartDateTimeAscending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = results;
+      this.items = this.entriesService.sortEntriesByStartDateAsc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  /**
+   * Sort by End date
+   */
+  loadEntriesByEndDateTimeAscending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByEndDateAsc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  loadEntriesByEndDateTimeDescending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = results;
+      this.items = this.entriesService.sortEntriesByEndDateDesc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  /**
+   * Sort by description
+   */
+  loadEntriesByDescriptionDescending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByDescriptionDesc(results);
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  loadEntriesByDescriptionAscending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByDescriptionAsc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  /**
+   * Sort by Start time
+   */
+  loadEntriesByStartTimeDescending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByStartTimeDesc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  loadEntriesByStartTimeAscending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByStartTimeAsc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  /**
+   * Sort by End Time
+   */
+  loadEntriesByEndTimeDescending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByEndTimeDesc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  loadEntriesByEndTimeAscending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByEndTimeAsc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  /**
+   * Sort by Time spent
+   */
+  loadEntriesByTimeSpentDescending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.timespentService.entriesTimeSpent(results);
+      this.items = this.entriesService.sortEntriesByTimeSpentDesc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  loadEntriesByTimeSpentAscending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.timespentService.entriesTimeSpent(results);
+      this.items = this.entriesService.sortEntriesByTimeSpentAsc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  /**
+   * Sort by Client name
+   */
+  loadEntriesByClientDescending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByClientDesc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  loadEntriesByClientAscending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByClientAsc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  /**
+   * Sort by Project name
+   */
+  loadEntriesByProjectDescending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByProjectDesc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  loadEntriesByProjectAscending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByProjectAsc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  /**
+  * Sort by Task description
+  */
+  loadEntriesByTaskDescending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByTaskDesc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      // Set md-select true per default
+      this.selectedProjects = this.projects.map(function (project) {
+        return project.id;
+      });
+      this.selectedTasks = this.tasks.map(function (task) {
+        return task.id;
+      });
+      this.selectedClients = this.clients.map(function (client) {
+        return client.id;
+      });
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
+
+  loadEntriesByTaskAscending() {
+    this.entriesService.entriesAreLoaded().then(results => {
+      this.items = this.entriesService.sortEntriesByTaskAsc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
       // Set md-select true per default
       this.selectedProjects = this.projects.map(function (project) {
