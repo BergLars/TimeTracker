@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Rx';
 import { Injectable, Input, ViewContainerRef } from '@angular/core';
-import { ITimeTrackingEntry, IProject, ITask, IClient } from '../../../data';
+import { ITimeTrackingEntry, IProject, ITask, IClient, RegistryService } from '../../../data';
 import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
 import { LoginService } from '../../../login';
@@ -27,7 +27,8 @@ export class EntriesService {
 
   constructor(
     private loginService: LoginService,
-    private http: Http) {
+    private http: Http,
+    private registryService: RegistryService) {
   }
 
   entriesAreLoaded(): Promise<any> {
@@ -83,11 +84,56 @@ export class EntriesService {
     });
   }
 
+  loadFilteredEntries(): Promise<any> {
+    let that = this;
+    var items = [];
+
+    return new Promise<any>((resolve, reject) => {
+      this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
+        results => {
+          this.clients = results;
+
+          results.forEach(function (result) {
+            that.clientsDictionary[result.id] = result;
+          });
+
+          this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+            results => {
+              this.projects = results;
+
+              results.forEach(function (result) {
+                that.projectsDictionary[result.id] = result;
+              });
+
+              // We build the dictionary of tasks
+              this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+                results => {
+                  this.tasks = results;
+
+                  results.forEach(function (result) {
+                    that.tasksDictionary[result.id] = result;
+                  });
+
+                  this.registryService.entriesComponent.filteredEntries.forEach(result => {
+                    items.push(result);
+                    resolve(items);
+                  });
+                });
+            });
+        },
+        (err) => {
+          if (err.status === 500) {
+            this.loginService.logout();
+          }
+        });
+    });
+  }
+
   /**
   * Sort by Start date
   * @param items 
   */
-  sortEntriesByDefault(items) {
+  sortEntriesByStartDateDesc(items) {
     return items.sort((a, b) => new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime());
   }
 
@@ -129,9 +175,9 @@ export class EntriesService {
   }
 
   /**
- * Sort by End time
- * @param items 
- */
+  * Sort by End time
+  * @param items 
+  */
   sortEntriesByEndTimeAsc(items) {
     return items.sort((a, b) => {
       let x = moment(a.endDateTime).format('HH:mm');
@@ -157,9 +203,9 @@ export class EntriesService {
   }
 
   /**
- * Sort by Start time
- * @param items 
- */
+  * Sort by Start time
+  * @param items 
+  */
   sortEntriesByStartTimeAsc(items) {
     return items.sort((a, b) => {
       let x = moment(a.startDateTime).format('HH:mm');
@@ -223,9 +269,9 @@ export class EntriesService {
   }
 
   /**
- * Sort by Client name
- * @param items 
- */
+  * Sort by Client name
+  * @param items 
+  */
   sortEntriesByClientAsc(items) {
     return items.sort(function (a, b) {
       if (isNaN(a.client.clientName) || isNaN(b.client.clientName)) {
@@ -245,9 +291,9 @@ export class EntriesService {
   }
 
   /**
- * Sort by Task description
- * @param items 
- */
+  * Sort by Task description
+  * @param items 
+  */
   sortEntriesByTaskAsc(items) {
     return items.sort(function (a, b) {
       if (isNaN(a.task.taskDescription) || isNaN(b.task.taskDescription)) {
