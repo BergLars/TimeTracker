@@ -81,6 +81,8 @@ export class EntriesComponent implements OnInit {
 
   loading: boolean = false;
 
+  filteredEntries: ITimeTrackingEntry[];
+
   constructor(
     private entryDialogService: EntryDialogService,
     private deleteEntryService: DeleteEntryService,
@@ -117,11 +119,10 @@ export class EntriesComponent implements OnInit {
 
   // Filter all entries with one or more parameter
   filterEntries() {
-    var userSelectedProjects = [];
-    var userSelectedTasks = [];
-    var userSelectedClients = [];
-
-    let filteredEntries: ITimeTrackingEntry[];
+    let userSelectedProjects = [];
+    let userSelectedTasks = [];
+    let userSelectedClients = [];
+    let tempItems: any;
 
     // Handle if no project is selected
     if (this.selectedProjects) {
@@ -142,29 +143,33 @@ export class EntriesComponent implements OnInit {
       });
     }
     // We get all the entries
-    filteredEntries = this.entriesService.clonedItems;
+    this.filteredEntries = this.entriesService.clonedItems;
 
     // We filter by project
-    filteredEntries = filteredEntries.filter(function (timeEntry) {
+    this.filteredEntries = this.filteredEntries.filter(function (timeEntry) {
       let entryProjectId = timeEntry.projectID.valueOf();
       // Does the current entryProjectId belong to user selected projects in the filter 
       return (userSelectedProjects.indexOf(entryProjectId) != -1);
     });
 
     // We filter by task
-    filteredEntries = filteredEntries.filter(function (timeEntry) {
+    this.filteredEntries = this.filteredEntries.filter(function (timeEntry) {
       let entryTaskId = timeEntry.taskID.valueOf();
       return (userSelectedTasks.indexOf(entryTaskId) != -1);
     });
 
     // We filter by client
-    filteredEntries = filteredEntries.filter(function (timeEntry) {
+    this.filteredEntries = this.filteredEntries.filter(function (timeEntry) {
       let entryClientId = timeEntry.clientID.valueOf();
       return (userSelectedClients.indexOf(entryClientId) != -1);
     });
 
+    this.selectedClients = userSelectedClients;
+    this.selectedProjects = userSelectedProjects;
+    this.selectedTasks = userSelectedTasks;
+
     // We assign the result to the table datasource
-    this.items = filteredEntries;
+    this.items = this.filteredEntries;
 
     // Map projectName, taskDescription, clientName and entryDate to row in rows
     this.timespentService.mapEntryValue(this.items);
@@ -401,7 +406,7 @@ export class EntriesComponent implements OnInit {
 
   sortEntries(valueDate: any, valueSort: any) {
     if (valueDate.selected.viewValue === 'Entry date' && valueSort.selected.viewValue === 'Desc') {
-      return this.loadEntries();
+      return this.loadEntriesByStartDateTimeDescending();
     }
     if (valueDate.selected.viewValue === 'Entry date' && valueSort.selected.viewValue === 'Asc') {
       return this.loadEntriesByStartDateTimeAscending();
@@ -456,13 +461,12 @@ export class EntriesComponent implements OnInit {
     }
   }
 
-  /**
-   * Sort by Start date
-   */
   loadEntries() {
     this.entriesService.entriesAreLoaded().then(results => {
-      this.items = results;
-      this.items = this.entriesService.sortEntriesByDefault(results);
+      this.items = this.entriesService.sortEntriesByStartDateDesc(results);
+
+      // Set filtered Entries per default
+      this.filteredEntries = this.items;
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
@@ -481,26 +485,29 @@ export class EntriesComponent implements OnInit {
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
+  /**
+   * Sort by Start date
+   */
+  loadEntriesByStartDateTimeDescending() {
+    this.entriesService.loadFilteredEntries().then(results => {
+      this.items = this.entriesService.sortEntriesByStartDateDesc(results);
+
+      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
+      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
+      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+
+      this.timespentService.mapEntryValueToSetColor(this.items);
+    });
+  }
 
   loadEntriesByStartDateTimeAscending() {
-    this.entriesService.entriesAreLoaded().then(results => {
-      this.items = results;
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByStartDateAsc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
@@ -509,46 +516,25 @@ export class EntriesComponent implements OnInit {
    * Sort by End date
    */
   loadEntriesByEndDateTimeAscending() {
-    this.entriesService.entriesAreLoaded().then(results => {
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByEndDateAsc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
 
   loadEntriesByEndDateTimeDescending() {
-    this.entriesService.entriesAreLoaded().then(results => {
-      this.items = results;
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByEndDateDesc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
@@ -557,44 +543,24 @@ export class EntriesComponent implements OnInit {
    * Sort by description
    */
   loadEntriesByDescriptionDescending() {
-    this.entriesService.entriesAreLoaded().then(results => {
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByDescriptionDesc(results);
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
 
   loadEntriesByDescriptionAscending() {
-    this.entriesService.entriesAreLoaded().then(results => {
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByDescriptionAsc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
@@ -603,45 +569,25 @@ export class EntriesComponent implements OnInit {
    * Sort by Start time
    */
   loadEntriesByStartTimeDescending() {
-    this.entriesService.entriesAreLoaded().then(results => {
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByStartTimeDesc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
 
   loadEntriesByStartTimeAscending() {
-    this.entriesService.entriesAreLoaded().then(results => {
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByStartTimeAsc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
@@ -650,45 +596,25 @@ export class EntriesComponent implements OnInit {
    * Sort by End Time
    */
   loadEntriesByEndTimeDescending() {
-    this.entriesService.entriesAreLoaded().then(results => {
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByEndTimeDesc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
 
   loadEntriesByEndTimeAscending() {
-    this.entriesService.entriesAreLoaded().then(results => {
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByEndTimeAsc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
@@ -697,47 +623,27 @@ export class EntriesComponent implements OnInit {
    * Sort by Time spent
    */
   loadEntriesByTimeSpentDescending() {
-    this.entriesService.entriesAreLoaded().then(results => {
-      this.timespentService.entriesTimeSpent(results);
+    this.entriesService.loadFilteredEntries().then(results => {
+      //this.timespentService.entriesTimeSpent(results);
       this.items = this.entriesService.sortEntriesByTimeSpentDesc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
 
   loadEntriesByTimeSpentAscending() {
-    this.entriesService.entriesAreLoaded().then(results => {
-      this.timespentService.entriesTimeSpent(results);
+    this.entriesService.loadFilteredEntries().then(results => {
+      //this.timespentService.entriesTimeSpent(results);
       this.items = this.entriesService.sortEntriesByTimeSpentAsc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
@@ -746,45 +652,25 @@ export class EntriesComponent implements OnInit {
    * Sort by Client name
    */
   loadEntriesByClientDescending() {
-    this.entriesService.entriesAreLoaded().then(results => {
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByClientDesc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
 
   loadEntriesByClientAscending() {
-    this.entriesService.entriesAreLoaded().then(results => {
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByClientAsc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
@@ -793,45 +679,25 @@ export class EntriesComponent implements OnInit {
    * Sort by Project name
    */
   loadEntriesByProjectDescending() {
-    this.entriesService.entriesAreLoaded().then(results => {
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByProjectDesc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
 
   loadEntriesByProjectAscending() {
-    this.entriesService.entriesAreLoaded().then(results => {
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByProjectAsc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
@@ -840,45 +706,25 @@ export class EntriesComponent implements OnInit {
   * Sort by Task description
   */
   loadEntriesByTaskDescending() {
-    this.entriesService.entriesAreLoaded().then(results => {
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByTaskDesc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
 
   loadEntriesByTaskAscending() {
-    this.entriesService.entriesAreLoaded().then(results => {
+    this.entriesService.loadFilteredEntries().then(results => {
       this.items = this.entriesService.sortEntriesByTaskAsc(results);
 
       this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
       this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
       this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
