@@ -48,6 +48,7 @@ export class DeleteUserComponent implements OnInit {
       return this.http.delete(this.baseUrl + "/userprofile/" + this.userID)
         .subscribe(() => {
           this.dialogRef.close(true);
+          this.openSnackBar('User ID: ' + this.userID, ', deleted !');
         },
         (error) => {
           if (error.status === 500) {
@@ -62,7 +63,7 @@ export class DeleteUserComponent implements OnInit {
   }
 
   openSnackBar(message: string, action: string) {
-    this.snackBar.open('User deleted !', '', { duration: 1000 });
+    this.snackBar.open(message + ' ' + action, '', { duration: 2500 });
   }
 
   public keyDownFunction(event) {

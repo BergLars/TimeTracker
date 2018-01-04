@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Renderer } from '@angular/core';
-import { MdDialogRef } from '@angular/material';
+import { MdDialogRef, MdSnackBar } from '@angular/material';
 import { IProject, ITask, IUser, IClient, RegistryService } from '../../../data';
 import { LoginService } from '../../../login';
 import { Router } from '@angular/router';
@@ -50,7 +50,8 @@ export class CreateDialogComponent implements OnInit {
 		public loginService: LoginService,
 		private http: Http,
 		private router: Router,
-		public registryService: RegistryService
+		public registryService: RegistryService,
+		public snackBar: MdSnackBar
 	) { }
 
 	ngOnInit() {
@@ -127,6 +128,7 @@ export class CreateDialogComponent implements OnInit {
 			}).subscribe(() => {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
+				this.openSnackBar('Project ' + this.newProjectName.toUpperCase(), 'created !');
 			},
 				error => {
 					if (error.response.status === 400 || error.response.status === 404) {
@@ -143,6 +145,7 @@ export class CreateDialogComponent implements OnInit {
 			}).subscribe(() => {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
+				this.openSnackBar('Task ' + this.newTaskDescription.toUpperCase(), 'created !');
 			},
 				error => {
 					if (error.response.status === 400 || error.response.status === 404) {
@@ -159,6 +162,7 @@ export class CreateDialogComponent implements OnInit {
 			}).subscribe(() => {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
+				this.openSnackBar('Client ' + this.newClientName.toUpperCase(), 'created !');
 			},
 				error => {
 					if (error.response.status === 400 || error.response.status === 404) {
@@ -183,10 +187,11 @@ export class CreateDialogComponent implements OnInit {
 				(data) => {
 					this.dialogRef.close(true);
 					this.registryService.entriesComponent.loadEntries();
+					this.openSnackBar('User ' + this.username.toUpperCase(), 'created !');
 				},
 				(error) => {
 					if (error.status === 400 || error.status === 404) {
-						alert('Please check that fields are the correct input !');
+						alert('Please check that all fields have the correct input !');
 					}
 					if (error.status === 409) {
 						alert('User already exists !');
@@ -196,6 +201,10 @@ export class CreateDialogComponent implements OnInit {
 					}
 				});
 		}
+	}
+
+	public openSnackBar(message: string, action: string) {
+		this.snackBar.open(message + ' ' + action, '', { duration: 2500 });
 	}
 
 	public keyDownFunction(event) {
