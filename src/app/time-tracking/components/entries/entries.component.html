@@ -2,7 +2,7 @@
     <button md-raised-button color="primary" (click)="openDialog()">NEW ENTRY</button>
     <span class="flex"></span>
     <span color="primary">
-        <select class="clickable-icon" (change)="changeRowLimits($event)">
+        <select class="clickable-icon" (change)="changeRowLimits($event);">
             <option *ngFor="let limit of rowLimits" [value]="limit.value">{{limit.key}}</option>
         </select>
     </span>
@@ -14,13 +14,13 @@
         </md-chip>
         &nbsp;
         <span color="primary" class="filter-position">
-            <md-select multiple placeholder="Project" [(ngModel)]="selectedProjects" (change)="filterEntries();">
+            <md-select multiple placeholder="Project" [(ngModel)]="selectedProjects" (change)="setCurrentSort();filterEntries();">
                 <md-option class="data-filter-header" *ngFor="let item of projects" [value]='item.id'>{{ item.projectName }}</md-option>
             </md-select>
-            <md-select multiple placeholder="Client" [(ngModel)]="selectedClients" (change)="filterEntries();">
+            <md-select multiple placeholder="Client" [(ngModel)]="selectedClients" (change)="setCurrentSort();filterEntries();">
                 <md-option class="data-filter-header" *ngFor="let item of clients" [value]='item.id'>{{ item.clientName }}</md-option>
             </md-select>
-            <md-select multiple placeholder="Task" [(ngModel)]="selectedTasks" (change)="filterEntries();">
+            <md-select multiple placeholder="Task" [(ngModel)]="selectedTasks" (change)="setCurrentSort();filterEntries();">
                 <md-option class="data-filter-header" *ngFor="let item of tasks" [value]='item.id'>{{ item.taskDescription }}</md-option>
             </md-select>
         </span>
@@ -31,7 +31,7 @@
         </md-chip>
         &nbsp;
         <span color="primary" class="filter-position">
-            <md-select placeholder="Date" [ngModel]="selectedColumn" #selectColumn (change)="sortEntries(selectColumn, selectSort);">
+            <md-select placeholder="Column" [ngModel]="selectedColumn" #selectColumn (change)="sortEntries(selectColumn, selectSort);">
                 <md-option class="data-filter-header" *ngFor="let item of columns" [value]='item.id'>{{ item.key }}</md-option>
             </md-select>
             <md-select placeholder="Sort" [ngModel]="selectedSort" #selectSort (change)="sortEntries(selectColumn, selectSort);">

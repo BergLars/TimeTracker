@@ -7,6 +7,7 @@ import { DeleteEntryService } from './delete-entry/delete-entry.service';
 import { environment } from '../../../../environments/environment';
 import moment from 'moment/src/moment';
 import { EntriesService } from './entries.service';
+import { elementAt } from 'rxjs/operator/elementAt';
 
 @Component({
   selector: 'app-entries',
@@ -57,13 +58,12 @@ export class EntriesComponent implements OnInit {
     { key: 'End Time', id: 7 },
     { key: 'Time Spent', id: 8 }
   ];
-  selectedColumn = this.columns[4].id;
-
+  @Input() selectColumn: any;
   private sorts = [
     { key: 'Desc', id: 0 },
     { key: 'Asc', id: 1 }
   ];
-  selectedSort = this.sorts[0].id;
+  @Input() selectSort: any;
 
   public createItems = [
     { key: 'None', id: 1 },
@@ -77,6 +77,9 @@ export class EntriesComponent implements OnInit {
   @Input() selectedClients: any;
   @Input() selectedProjects: any;
   @Input() selectedTasks: any;
+
+  @Input() selectedColumn: any;
+  @Input() selectedSort: any;
   isValid: boolean = false;
 
   loading: boolean = false;
@@ -119,10 +122,11 @@ export class EntriesComponent implements OnInit {
 
   // Filter all entries with one or more parameter
   filterEntries() {
+    this.sortEntries(this.selectColumn, this.selectSort);
+    this.offset = 0;
     let userSelectedProjects = [];
     let userSelectedTasks = [];
     let userSelectedClients = [];
-    let tempItems: any;
 
     // Handle if no project is selected
     if (this.selectedProjects) {
@@ -178,7 +182,9 @@ export class EntriesComponent implements OnInit {
   changeRowLimits(event) {
     this.limit = event.target.value;
     this.offset = 0;
-    this.loadEntries();
+    this.selectedRow
+    this.setCurrentSort();
+    this.sortEntries(this.selectColumn, this.selectSort);
   }
 
   public clientDropdown(value: string): void {
@@ -404,64 +410,113 @@ export class EntriesComponent implements OnInit {
       });
   }
 
-  sortEntries(valueDate: any, valueSort: any) {
-    if (valueDate.selected.viewValue === 'Entry date' && valueSort.selected.viewValue === 'Desc') {
+  sortEntries(valueColumn: any, valueSort: any) {
+    this.offset = 0;
+    let currentColumnValue: any;
+    let currentSortValue: any;
+    if (valueColumn.selected === undefined && valueSort.selected === undefined) {
+      currentColumnValue = valueColumn.key;
+      currentSortValue = valueSort.key;
+
+      this.selectedColumn = valueColumn.id;
+      this.selectedSort = valueSort.id;
+    }
+    else {
+      currentColumnValue = valueColumn.selected.viewValue;
+      currentSortValue = valueSort.selected.viewValue;
+
+      this.selectedColumn = valueColumn.selected.value;
+      this.selectedSort = valueSort.selected.value;
+    }
+
+    if (currentColumnValue === 'Entry date' && currentSortValue === 'Desc') {
       return this.loadEntriesByStartDateTimeDescending();
     }
-    if (valueDate.selected.viewValue === 'Entry date' && valueSort.selected.viewValue === 'Asc') {
+    else if (currentColumnValue === 'Entry date' && currentSortValue === 'Asc') {
       return this.loadEntriesByStartDateTimeAscending();
     }
-    if (valueDate.selected.viewValue === 'End date' && valueSort.selected.viewValue === 'Desc') {
+    else if (currentColumnValue === 'End date' && currentSortValue === 'Desc') {
       return this.loadEntriesByEndDateTimeDescending();
     }
-    if (valueDate.selected.viewValue === 'End date' && valueSort.selected.viewValue === 'Asc') {
+    else if (currentColumnValue === 'End date' && currentSortValue === 'Asc') {
       return this.loadEntriesByEndDateTimeAscending();
     }
-    if (valueDate.selected.viewValue === 'Description' && valueSort.selected.viewValue === 'Desc') {
+    else if (currentColumnValue === 'Description' && currentSortValue === 'Desc') {
       return this.loadEntriesByDescriptionDescending();
     }
-    if (valueDate.selected.viewValue === 'Description' && valueSort.selected.viewValue === 'Asc') {
+    else if (currentColumnValue === 'Description' && currentSortValue === 'Asc') {
       return this.loadEntriesByDescriptionAscending();
     }
-    if (valueDate.selected.viewValue === 'Start Time' && valueSort.selected.viewValue === 'Desc') {
+    else if (currentColumnValue === 'Start Time' && currentSortValue === 'Desc') {
       return this.loadEntriesByStartTimeDescending();
     }
-    if (valueDate.selected.viewValue === 'Start Time' && valueSort.selected.viewValue === 'Asc') {
+    else if (currentColumnValue === 'Start Time' && currentSortValue === 'Asc') {
       return this.loadEntriesByStartTimeAscending();
     }
-    if (valueDate.selected.viewValue === 'End Time' && valueSort.selected.viewValue === 'Desc') {
+    else if (currentColumnValue === 'End Time' && currentSortValue === 'Desc') {
       return this.loadEntriesByEndTimeDescending();
     }
-    if (valueDate.selected.viewValue === 'End Time' && valueSort.selected.viewValue === 'Asc') {
+    else if (currentColumnValue === 'End Time' && currentSortValue === 'Asc') {
       return this.loadEntriesByEndTimeAscending();
     }
-    if (valueDate.selected.viewValue === 'Time Spent' && valueSort.selected.viewValue === 'Desc') {
+    else if (currentColumnValue === 'Time Spent' && currentSortValue === 'Desc') {
       return this.loadEntriesByTimeSpentDescending();
     }
-    if (valueDate.selected.viewValue === 'Time Spent' && valueSort.selected.viewValue === 'Asc') {
+    else if (currentColumnValue === 'Time Spent' && currentSortValue === 'Asc') {
       return this.loadEntriesByTimeSpentAscending();
     }
-    if (valueDate.selected.viewValue === 'Project Name' && valueSort.selected.viewValue === 'Desc') {
+    else if (currentColumnValue === 'Project Name' && currentSortValue === 'Desc') {
       return this.loadEntriesByProjectDescending();
     }
-    if (valueDate.selected.viewValue === 'Project Name' && valueSort.selected.viewValue === 'Asc') {
+    else if (currentColumnValue === 'Project Name' && currentSortValue === 'Asc') {
       return this.loadEntriesByProjectAscending();
     }
-    if (valueDate.selected.viewValue === 'Client Name' && valueSort.selected.viewValue === 'Desc') {
+    else if (currentColumnValue === 'Client Name' && currentSortValue === 'Desc') {
       return this.loadEntriesByClientDescending();
     }
-    if (valueDate.selected.viewValue === 'Client Name' && valueSort.selected.viewValue === 'Asc') {
+    else if (currentColumnValue === 'Client Name' && currentSortValue === 'Asc') {
       return this.loadEntriesByClientAscending();
     }
-    if (valueDate.selected.viewValue === 'Task Description' && valueSort.selected.viewValue === 'Desc') {
+    else if (currentColumnValue === 'Task Description' && currentSortValue === 'Desc') {
       return this.loadEntriesByTaskDescending();
     }
-    if (valueDate.selected.viewValue === 'Task Description' && valueSort.selected.viewValue === 'Asc') {
+    else if (currentColumnValue === 'Task Description' && currentSortValue === 'Asc') {
       return this.loadEntriesByTaskAscending();
     }
   }
 
+  /**
+  * Set user's current Sort and sort items
+  */
+  setCurrentSort() {
+    this.columns.forEach(element => {
+      if (element.id === this.selectedColumn) {
+        this.selectColumn = element;
+      }
+    });
+    this.sorts.forEach(element => {
+      if (element.id === this.selectedSort) {
+        this.selectSort = element;
+      }
+    });
+  }
+
+  /**
+  * Set current Sort Per default
+  */
+  setCurrentSortPerDefault() {
+    this.selectedColumn = this.columns[4].id;
+    this.selectedSort = this.sorts[0].id;
+
+    this.selectColumn = this.columns[4];
+    this.selectSort = this.sorts[0];
+  }
+
+  /**
+  * Load entries per default
+  */
   loadEntries() {
+    this.setCurrentSortPerDefault();
     this.entriesService.entriesAreLoaded().then(results => {
       this.items = this.entriesService.sortEntriesByStartDateDesc(results);
 
@@ -485,6 +540,7 @@ export class EntriesComponent implements OnInit {
       this.timespentService.mapEntryValueToSetColor(this.items);
     });
   }
+
   /**
    * Sort by Start date
    */
@@ -730,13 +786,13 @@ export class EntriesComponent implements OnInit {
   }
 
   onPage(event) {
-    this.count = this.items.length;
-    this.items = this.entriesService.clonedItems;
+    this.sortEntries(this.selectColumn, this.selectSort);
+    this.count = this.filteredEntries.length;
     const start = event.offset * event.limit;
     const end = start + Number(event.limit);
     let rows = [];
     for (let i = start; i < end; i++) {
-      rows[i] = this.items[i];
+      rows[i] = this.filteredEntries[i];
     }
     this.items = rows;
     this.items.length = this.count;
