@@ -34,12 +34,7 @@ export class MenuComponent implements OnInit {
 		}
 	}
 	public openDeleteUserDialog() {
-		if (this.loginService.loggedIn()) {
-			this.deleteUserService.confirm('Delete User', this.viewContainerRef);
-		} else {
-			alert("Your token has expired. Please log in again!");
-			this.loginService.logout();
-		}
+		this.deleteUserService.openDeleteUserDialog('Delete', this.viewContainerRef);
 	}
 
 	public checkIfAdmin() {

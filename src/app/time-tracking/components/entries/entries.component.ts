@@ -401,7 +401,7 @@ export class EntriesComponent implements OnInit {
 
   openDeleteDialog(row) {
     this.deleteEntryService
-      .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
+      .confirm('Delete', 'Are you sure that you want to delete this entry?', this.viewContainerRef, row.id)
       .subscribe(res => {
         this.result = res;
         if (this.result) {

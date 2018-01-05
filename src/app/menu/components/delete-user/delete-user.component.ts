@@ -44,17 +44,27 @@ export class DeleteUserComponent implements OnInit {
   }
 
   public deleteUser() {
+    this.http.delete(this.baseUrl + "/userprofile/" + this.userID)
+      .subscribe(
+      () => {
+        this.dialogRef.close(true);
+        this.openSnackBar('User ID: ' + this.userID, ', deleted !');
+      },
+      (error) => {
+        if (error.status === 500) {
+          alert('Internal server error !');
+        }
+      });
+  }
+
+  public confirmDeleteUser() {
     if (this.loginService.loggedIn()) {
-      return this.http.delete(this.baseUrl + "/userprofile/" + this.userID)
-        .subscribe(() => {
-          this.dialogRef.close(true);
-          this.openSnackBar('User ID: ' + this.userID, ', deleted !');
-        },
-        (error) => {
-          if (error.status === 500) {
-            alert('Internal server error !');
-          }
-        });
+      if (confirm('Are you sure that you want to delete this user?')) {
+        this.deleteUser();
+      }
+      else {
+        this.dialogRef.close(true);
+      }
     }
     else {
       alert("Your token has expired. Please log in again!");

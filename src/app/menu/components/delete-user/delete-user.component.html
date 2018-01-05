@@ -2,7 +2,7 @@
 <div md-dialog-content class="hide-dialog-scrollbar" (keydown)="userDropdown(userprofile.value);deleteUser();keyDownFunction($event);">
   <table>
     <tr>
-      <td>User: </td>
+      <td>User:&nbsp;</td>
       <br>
       <td>
         <select #userprofile>
@@ -13,6 +13,6 @@
   </table>
 </div>
 <div md-dialog-actions>
-  <button type="button" md-button (click)="userDropdown(userprofile.value);deleteUser();">OK</button>
-  <button type=" button " md-button (click)="dialogRef.close() ">Cancel</button>
+  <button type="button" md-button (click)="userDropdown(userprofile.value);confirmDeleteUser();">OK</button>
+  <button type="button" md-button (click)="dialogRef.close() ">Cancel</button>
 </div>

@@ -8,7 +8,7 @@ import { UserService } from '../../../data';
 export class DeleteUserService {
   constructor(private dialog: MdDialog, public userService: UserService) { }
 
-  public confirm(title: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
+  public openDeleteUserDialog(title: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 
     let dialogRef: MdDialogRef<DeleteUserComponent>;
 
@@ -18,5 +18,4 @@ export class DeleteUserService {
 
     return dialogRef.afterClosed();
   }
-
 }
