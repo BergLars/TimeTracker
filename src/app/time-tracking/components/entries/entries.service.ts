@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Rx';
 import { Injectable, Input, ViewContainerRef } from '@angular/core';
-import { ITimeTrackingEntry, IProject, ITask, IClient, RegistryService } from '../../../data';
+import { ITimeTrackingEntry, IProject, ITask, IClient, RegistryService, TimespentService } from '../../../data';
 import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
 import { LoginService } from '../../../login';
@@ -16,19 +16,197 @@ export class EntriesService {
   @Input() task: ITask;
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
-  public clonedItems: ITimeTrackingEntry[] = [];
   public tasksDictionary: any = {};
   public projectsDictionary: any = {};
   public clientsDictionary: any = {};
+  public totalTimeSpent: any;
+
+  @Input() static clonedEntries: ITimeTrackingEntry[] = [];
+  @Input() static filteredEntries: ITimeTrackingEntry[] = [];
+
+  private projectsFilter = [];
+  private clientsFilter = [];
+  private tasksFilter = [];
+
+  private sortingColumn: string;
+  private sortingDirection: string;
+
+  private sscanf = require('scanf').sscanf;
+  private sprintf = require("sprintf-js").sprintf;
 
   // Allow to sort items with a String value Asc
   public propComparator = (propName) => (a, b) => a[propName] == b[propName] ? 0 : a[propName] < b[propName] ? -1 : 1;
 
-
   constructor(
     private loginService: LoginService,
     private http: Http,
-    private registryService: RegistryService) {
+    private registryService: RegistryService,
+    private timeSpentService: TimespentService) {
+  }
+
+  /**
+    * Sort by Start date
+    * @param a
+    * @param b
+    */
+
+  private static sortEntriesByStartDateAsc = (a, b) => {
+    return new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime();
+  }
+
+  /**
+  * Sort by End date
+  * @param a
+  * @param b 
+  */
+
+  private static sortEntriesByEndDateAsc = (a, b) => {
+    return new Date(a.endDateTime).getTime() - new Date(b.endDateTime).getTime();
+  }
+
+  /**
+   * Sort by Descripiton
+   * @param a
+    * @param b
+   */
+  private static sortEntriesByDescriptionAsc = (a, b) => {
+    if (isNaN(a.description) || isNaN(b.description))
+      return a.description > b.description ? 1 : -1;
+    return a.description - b.description;
+  }
+
+  /**
+  * Sort by Start time
+   * @param a
+    * @param b
+  */
+  private static sortEntriesByStartTimeAsc = (a, b) => {
+    let x = moment(a.startDateTime).format('HH:mm');
+    let y = moment(b.startDateTime).format('HH:mm');
+    if (moment(x, 'HH:mm').isBefore(moment(y, 'HH:mm')))
+      return -1
+    if (moment(x, 'HH:mm').isAfter(moment(y, 'HH:mm')))
+      return 1
+    return 0;
+  }
+
+  /**
+  * Sort by End time
+  * @param a
+    * @param b 
+  */
+  private static sortEntriesByEndTimeAsc = (a, b) => {
+    let x = moment(a.endDateTime).format('HH:mm');
+    let y = moment(b.endDateTime).format('HH:mm');
+    if (moment(x, 'HH:mm').isBefore(moment(y, 'HH:mm')))
+      return -1
+    if (moment(x, 'HH:mm').isAfter(moment(y, 'HH:mm')))
+      return 1
+    return 0;
+  }
+
+  /**
+  * Sort by Time spent
+  * @param a
+    * @param b  
+  */
+  private static sortEntriesByTimeSpentAsc = (a, b) => {
+    return a.timeSpent > b.timeSpent ? 1 : -1;
+  }
+
+  /**
+  * Sort by Project name
+  * @param a
+    * @param b 
+  */
+  private static sortEntriesByProjectAsc = (a, b) => {
+    if (isNaN(a.project.projectName) || isNaN(b.project.projectName))
+      return a.project.projectName.toLowerCase() > b.project.projectName.toLowerCase() ? 1 : -1;
+    return a.project.projectName - b.project.projectName;
+  }
+
+  /**
+ * Sort by Client name
+ * @param a
+   * @param b 
+ */
+  private static sortEntriesByClientAsc = (a, b) => {
+    if (isNaN(a.client.clientName) || isNaN(b.client.clientName))
+      return a.client.clientName.toLowerCase() > b.client.clientName.toLowerCase() ? 1 : -1;
+    return a.client.clientName - b.client.clientName;
+  }
+
+  /**
+  * Sort by Task description
+  * @param a
+   * @param b  
+  */
+  private static sortEntriesByTaskAsc = (a, b) => {
+    if (isNaN(a.task.taskDescription) || isNaN(b.task.taskDescription))
+      return a.task.taskDescription.toLowerCase() > b.task.taskDescription.toLowerCase() ? 1 : -1;
+    return a.task.taskDescription - b.task.taskDescription;
+  }
+
+  private static ascendingSortingHookTable = {
+    "Description": EntriesService.sortEntriesByDescriptionAsc,
+    "Entry Date": EntriesService.sortEntriesByStartDateAsc,
+    "Start Time": EntriesService.sortEntriesByStartTimeAsc,
+    "End Date": EntriesService.sortEntriesByEndDateAsc,
+    "End Time": EntriesService.sortEntriesByEndTimeAsc,
+    "Time Spent": EntriesService.sortEntriesByTimeSpentAsc,
+    "Project Name": EntriesService.sortEntriesByProjectAsc,
+    "Client Name": EntriesService.sortEntriesByClientAsc,
+    "Task Description": EntriesService.sortEntriesByTaskAsc
+  }
+
+  // Filter all entries with one or more parameter
+  private filterEntries(entries) {
+    // We filter by 
+    let self = this;
+    entries = entries.filter((timeEntry) => {
+      let entryProjectId = timeEntry.projectID.valueOf();
+      // Does the current entryProjectId belong to user selected projects in the filter 
+      return (self.projectsFilter.indexOf(entryProjectId) != -1);
+    });
+
+    // We filter by task
+    entries = entries.filter(function (timeEntry) {
+      let entryTaskId = timeEntry.taskID.valueOf();
+      return (self.tasksFilter.indexOf(entryTaskId) != -1);
+    });
+
+    // We filter by client
+    entries = entries.filter(function (timeEntry) {
+      let entryClientId = timeEntry.clientID.valueOf();
+      return (self.clientsFilter.indexOf(entryClientId) != -1);
+    });
+    return entries;
+  }
+
+  private sortEntriesBy(propertyName: string, order: string) {
+    let sortedEntries;
+    let sortHook = EntriesService.ascendingSortingHookTable[propertyName];
+    sortedEntries = EntriesService.clonedEntries.sort(sortHook);
+    sortedEntries = order === "Desc" ? sortedEntries.reverse() : sortedEntries;
+
+    let filteredEntries = this.filterEntries(sortedEntries);
+
+    return filteredEntries;
+  }
+
+  public setFilteringBy(parameterObject) {
+    this.projectsFilter = parameterObject["projects"];
+    this.clientsFilter = parameterObject["clients"];
+    this.tasksFilter = parameterObject["tasks"];
+  }
+
+  public setSortingBy(parameterObject) {
+    this.sortingColumn = parameterObject["column"];
+    this.sortingDirection = parameterObject["direction"];
+  }
+
+  public getEntries() {
+    return this.sortEntriesBy(this.sortingColumn, this.sortingDirection);
   }
 
   entriesAreLoaded(): Promise<any> {
@@ -68,9 +246,20 @@ export class EntriesService {
                         entry.task = that.tasksDictionary[entry.taskID];
                         entry.client = that.clientsDictionary[entry.clientID];
                         entry.project = that.projectsDictionary[entry.projectID];
+                        entry.projectName = entry.project.projectName;
+                        entry.taskDescription = entry.task.taskDescription;
+                        entry.clientName = entry.client.clientName;
+                        entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
+                        entry.startTime = entry.startDateTime.substring(11, 16);
+                        entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
+                        entry.endTime = entry.endDateTime.substring(11, 16);
                         items.push(entry);
                       });
-                      this.clonedItems = items;
+                      this.timeSpentService.calculateEntriesTimeSpent(items);
+                      this.totalTimeSpent = this.calculateTotalTimeSpent(items);
+                      this.setColor(items);
+                      EntriesService.clonedEntries = items;
+
                       resolve(items);
                     });
                 });
@@ -84,85 +273,48 @@ export class EntriesService {
     });
   }
 
-  loadFilteredEntries(): Promise<any> {
-    let that = this;
-    var items = [];
+  // Set orange color of an entry over 1 day
+  setColor(items) {
+    items.forEach(entry => {
+      let startDateTime = moment().format(entry.startDateTime, 'yyyy-MM-dd HH:mm:ss');
+      let endDateTime = moment().format(entry.endDateTime, 'yyyy-MM-dd HH:mm:ss');
 
-    return new Promise<any>((resolve, reject) => {
-      this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
-        results => {
-          this.clients = results;
+      // Split to catch the startDate and endDate
+      let start = startDateTime.split(" ");
+      let end = endDateTime.split(" ");
 
-          results.forEach(function (result) {
-            that.clientsDictionary[result.id] = result;
-          });
-
-          this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
-            results => {
-              this.projects = results;
-
-              results.forEach(function (result) {
-                that.projectsDictionary[result.id] = result;
-              });
-
-              // We build the dictionary of tasks
-              this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
-                results => {
-                  this.tasks = results;
-
-                  results.forEach(function (result) {
-                    that.tasksDictionary[result.id] = result;
-                  });
-
-                  this.registryService.entriesComponent.filteredEntries.forEach(result => {
-                    items.push(result);
-                    resolve(items);
-                  });
-                });
-            });
-        },
-        (err) => {
-          if (err.status === 500) {
-            this.loginService.logout();
-          }
-        });
-    });
-  }
-
-  /**
-  * Sort by Start date
-  * @param items 
-  */
-  sortEntriesByStartDateDesc(items) {
-    return items.sort((a, b) => new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime());
-  }
-
-  sortEntriesByStartDateAsc(items) {
-    return items.sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime());
-  }
-  /**
-  * Sort by End date
-  * @param items 
-  */
-  sortEntriesByEndDateDesc(items) {
-    return items.sort((a, b) => new Date(b.endDateTime).getTime() - new Date(a.endDateTime).getTime());
-  }
-
-  sortEntriesByEndDateAsc(items) {
-    return items.sort((a, b) => new Date(a.endDateTime).getTime() - new Date(b.endDateTime).getTime());
-  }
-
-  /**
-   * Sort by Descripiton
-   * @param items 
-   */
-  sortEntriesByDescriptionAsc(items) {
-    return items.sort(function (a, b) {
-      if (isNaN(a.description) || isNaN(b.description)) {
-        return a.description > b.description ? 1 : -1;
+      // Compare start and endDate are not the same
+      if (moment(start[0], 'YYYY-MM-DD').isBefore(moment(end[0], 'YYYY-MM-DD'))) {
+        entry.isColored = true;
       }
-      return a.description - b.description;
+      else {
+        entry.isColored = false;
+      }
     });
+  }
+
+  public calculateTotalTimeSpent(entries) {
+    let hours = 0;
+    let minutes = 0;
+    entries.forEach(element => {
+      let timeComponents = this.sscanf(element.timeSpent, "%d:%d");
+      hours += timeComponents[0];
+      minutes += timeComponents[1];
+    });
+    let timeSpents = this.sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
+    return timeSpents;
+  }
+
+  sortedProjects() {
+    return this.projects.sort(this.propComparator('projectName'));
+  }
+
+  sortedClients() {
+    return this.clients.sort(this.propComparator('clientName'));
+  }
+
+  sortedTasks() {
+    return this.tasks.sort(this.propComparator('taskDescription'));
   }
 
   sortEntriesByDescriptionDesc(items) {
@@ -171,22 +323,6 @@ export class EntriesService {
         return a.description > b.description ? -1 : 1;
       }
       return b.description - a.description;
-    });
-  }
-
-  /**
-  * Sort by End time
-  * @param items 
-  */
-  sortEntriesByEndTimeAsc(items) {
-    return items.sort((a, b) => {
-      let x = moment(a.endDateTime).format('HH:mm');
-      let y = moment(b.endDateTime).format('HH:mm');
-      if (moment(x, 'HH:mm').isBefore(moment(y, 'HH:mm')))
-        return -1
-      if (moment(x, 'HH:mm').isAfter(moment(y, 'HH:mm')))
-        return 1
-      return 0
     });
   }
 
@@ -202,22 +338,6 @@ export class EntriesService {
     });
   }
 
-  /**
-  * Sort by Start time
-  * @param items 
-  */
-  sortEntriesByStartTimeAsc(items) {
-    return items.sort((a, b) => {
-      let x = moment(a.startDateTime).format('HH:mm');
-      let y = moment(b.startDateTime).format('HH:mm');
-      if (moment(x, 'HH:mm').isBefore(moment(y, 'HH:mm')))
-        return -1
-      if (moment(x, 'HH:mm').isAfter(moment(y, 'HH:mm')))
-        return 1
-      return 0
-    });
-  }
-
   sortEntriesByStartTimeDesc(items) {
     return items.sort((a, b) => {
       let x = moment(a.startDateTime).format('HH:mm');
@@ -227,88 +347,6 @@ export class EntriesService {
       if (moment(x, 'HH:mm').isAfter(moment(y, 'HH:mm')))
         return -1
       return 0
-    });
-  }
-
-  /**
-  * Sort by Time spent
-  * @param items 
-  */
-  sortEntriesByTimeSpentAsc(items) {
-    return items.sort(function (a, b) {
-      return a.timeSpent > b.timeSpent ? 1 : -1;
-    });
-  }
-
-  sortEntriesByTimeSpentDesc(items) {
-    return items.sort(function (a, b) {
-      return a.timeSpent > b.timeSpent ? -1 : 1;
-    });
-  }
-
-  /**
-  * Sort by Project name
-  * @param items 
-  */
-  sortEntriesByProjectAsc(items) {
-    return items.sort(function (a, b) {
-      if (isNaN(a.project.projectName) || isNaN(b.project.projectName)) {
-        return a.project.projectName.toLowerCase() > b.project.projectName.toLowerCase() ? 1 : -1;
-      }
-      return a.project.projectName - b.project.projectName;
-    });
-  }
-
-  sortEntriesByProjectDesc(items) {
-    return items.sort(function (a, b) {
-      if (isNaN(a.project.projectName) || isNaN(b.project.projectName)) {
-        return a.project.projectName.toLowerCase() > b.project.projectName.toLowerCase() ? -1 : 1;
-      }
-      return b.project.projectName - a.project.projectName;
-    });
-  }
-
-  /**
-  * Sort by Client name
-  * @param items 
-  */
-  sortEntriesByClientAsc(items) {
-    return items.sort(function (a, b) {
-      if (isNaN(a.client.clientName) || isNaN(b.client.clientName)) {
-        return a.client.clientName.toLowerCase() > b.client.clientName.toLowerCase() ? 1 : -1;
-      }
-      return a.client.clientName - b.client.clientName;
-    });
-  }
-
-  sortEntriesByClientDesc(items) {
-    return items.sort(function (a, b) {
-      if (isNaN(a.client.clientName) || isNaN(b.client.clientName)) {
-        return a.client.clientName.toLowerCase() > b.client.clientName.toLowerCase() ? -1 : 1;
-      }
-      return b.client.clientName - a.client.clientName;
-    });
-  }
-
-  /**
-  * Sort by Task description
-  * @param items 
-  */
-  sortEntriesByTaskAsc(items) {
-    return items.sort(function (a, b) {
-      if (isNaN(a.task.taskDescription) || isNaN(b.task.taskDescription)) {
-        return a.task.taskDescription.toLowerCase() > b.task.taskDescription.toLowerCase() ? 1 : -1;
-      }
-      return a.task.taskDescription - b.task.taskDescription;
-    });
-  }
-
-  sortEntriesByTaskDesc(items) {
-    return items.sort(function (a, b) {
-      if (isNaN(a.task.taskDescription) || isNaN(b.task.taskDescription)) {
-        return a.task.taskDescription.toLowerCase() > b.task.taskDescription.toLowerCase() ? -1 : 1;
-      }
-      return b.task.taskDescription - a.task.taskDescription;
     });
   }
 }

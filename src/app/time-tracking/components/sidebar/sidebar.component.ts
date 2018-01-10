@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ITimeTrackingEntry, IStatistics, RegistryService, TimespentService } from '../../../data';
 import { EntriesService } from '../entries/entries.service';
 import moment from 'moment/src/moment';
+import { elementAt } from 'rxjs/operator/elementAt';
 
 @Component({
   selector: 'app-sidebar',
@@ -21,6 +22,9 @@ export class SidebarComponent implements OnInit {
   public endOfMonth: any;
   @Input() totalTimeSpent: any;
   public total: string;
+
+  private sscanf = require('scanf').sscanf;
+  private sprintf = require("sprintf-js").sprintf;
 
   constructor(private entriesService: EntriesService, public registryService: RegistryService, public timespentService: TimespentService) {
     this.registryService.sidebarComponent = this;
@@ -44,10 +48,9 @@ export class SidebarComponent implements OnInit {
 
   displaySidebarData() {
     this.entriesService.entriesAreLoaded().then(results => {
-      this.timespentService.mapCurrentWeekMonthEntryValue(results);
       this.totalHoursWorkedWeek(results);
       this.totalHoursWorkedMonth(results);
-      this.totalTimeSpent = this.timespentService.totalTimeSpent(results);
+      this.totalTimeSpent = this.entriesService.totalTimeSpent;
     });
   }
 
@@ -77,102 +80,28 @@ export class SidebarComponent implements OnInit {
 
   // Calcul total time spent of the current Week
   public totalTimeSpentW(timeSpents) {
-    if (timeSpents.length > 0) {
-      let endTimeH: number = 0;
-      let endTimeMin: number = 0;
-      let hour: number = 0;
-      let timeSpent: any;
-      for (let element of timeSpents) {
-        endTimeH = endTimeH + parseInt(element.substring(0, 2));
-        endTimeMin = endTimeMin + parseInt(element.substring(3, 5));
-        // Handle conversion Minute over 60mn to 1h
-        if (endTimeMin > 60) {
-          hour = Math.floor(endTimeMin / 60);
-          endTimeH = endTimeH + hour;
-          endTimeMin = Math.abs(endTimeMin - (60 * hour));
-          if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
-            timeSpent = '0' + endTimeH + ':0' + endTimeMin;
-          }
-          else if ((endTimeH.toString()).length < 2) {
-            timeSpent = '0' + endTimeH + ':' + endTimeMin;
-          }
-          else if ((endTimeMin.toString()).length < 2) {
-            timeSpent = endTimeH + ':0' + endTimeMin;
-          } else {
-            timeSpent = endTimeH + ':' + endTimeMin;
-          }
-          this.totalHoursWorkedW = timeSpent;
-        }
-        // Handle Minute below 60mn
-        else {
-          if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
-            timeSpent = '0' + endTimeH + ':0' + endTimeMin;
-          }
-          else if ((endTimeH.toString()).length < 2) {
-            timeSpent = '0' + endTimeH + ':' + endTimeMin;
-          }
-          else if ((endTimeMin.toString()).length < 2) {
-            timeSpent = endTimeH + ':0' + endTimeMin;
-          } else {
-            timeSpent = endTimeH + ':' + endTimeMin;
-          }
-          this.totalHoursWorkedW = timeSpent;
-        }
-      }
-    } else {
-      this.totalHoursWorkedW = '00:00';
-    }
-    return this.totalHoursWorkedW;
+    let hours = 0;
+    let minutes = 0;
+    timeSpents.forEach(element => {
+      let timeComponents = this.sscanf(element, "%d:%d");
+      hours += timeComponents[0];
+      minutes += timeComponents[1];
+    });
+    let result = this.sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
+    return this.totalHoursWorkedW = result;
   }
 
   // Calcul total time spent of the current Month
   public totalTimeSpentMonth(timeSpents) {
-    if (timeSpents.length > 0) {
-      let endTimeH: number = 0;
-      let endTimeMin: number = 0;
-      let hour: number = 0;
-      let timeSpent: any;
-      for (let element of timeSpents) {
-        endTimeH = endTimeH + parseInt(element.substring(0, 2));
-        endTimeMin = endTimeMin + parseInt(element.substring(3, 5));
-        // Handle conversion Minute over 60mn to 1h
-        if (endTimeMin > 60) {
-          hour = Math.floor(endTimeMin / 60);
-          endTimeH = endTimeH + hour;
-          endTimeMin = Math.abs(endTimeMin - (60 * hour));
-          if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
-            timeSpent = '0' + endTimeH + ':0' + endTimeMin;
-          }
-          else if ((endTimeH.toString()).length < 2) {
-            timeSpent = '0' + endTimeH + ':' + endTimeMin;
-          }
-          else if ((endTimeMin.toString()).length < 2) {
-            timeSpent = endTimeH + ':0' + endTimeMin;
-          } else {
-            timeSpent = endTimeH + ':' + endTimeMin;
-          }
-          this.totalHoursWorkedM = timeSpent;
-        }
-        // Handle Minute below 60mn
-        else {
-          if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
-            timeSpent = '0' + endTimeH + ':0' + endTimeMin;
-          }
-          else if ((endTimeH.toString()).length < 2) {
-            timeSpent = '0' + endTimeH + ':' + endTimeMin;
-          }
-          else if ((endTimeMin.toString()).length < 2) {
-            timeSpent = endTimeH + ':0' + endTimeMin;
-          } else {
-            timeSpent = endTimeH + ':' + endTimeMin;
-          }
-          this.totalHoursWorkedM = timeSpent;
-        }
-      }
-    } else {
-      this.totalHoursWorkedM = '00:00';
-    }
-    return this.totalHoursWorkedM;
+    let hours = 0;
+    let minutes = 0;
+    timeSpents.forEach(element => {
+      let timeComponents = this.sscanf(element, "%d:%d");
+      hours += timeComponents[0];
+      minutes += timeComponents[1];
+    });
+    let result = this.sprintf("%02d:%02d", hours + Math.round(minutes / 60), minutes % 60);
+    return this.totalHoursWorkedM = result;
   }
 
   getNextWeekStart() {

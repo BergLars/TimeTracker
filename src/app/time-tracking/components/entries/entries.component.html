@@ -3,7 +3,7 @@
     <span class="flex"></span>
     <span color="primary">
         <select class="clickable-icon" (change)="changeRowLimits($event);">
-            <option *ngFor="let limit of rowLimits" [value]="limit.value">{{limit.key}}</option>
+            <option *ngFor="let limit of limits" [value]=limit.value>{{limit.key}}</option>
         </select>
     </span>
 </md-toolbar>
@@ -14,13 +14,13 @@
         </md-chip>
         &nbsp;
         <span color="primary" class="filter-position">
-            <md-select multiple placeholder="Project" [(ngModel)]="selectedProjects" (change)="setCurrentSort();filterEntries();">
+            <md-select multiple placeholder="Project" [(ngModel)]="selectedProjects" (change)="updateFilterSelection();">
                 <md-option class="data-filter-header" *ngFor="let item of projects" [value]='item.id'>{{ item.projectName }}</md-option>
             </md-select>
-            <md-select multiple placeholder="Client" [(ngModel)]="selectedClients" (change)="setCurrentSort();filterEntries();">
+            <md-select multiple placeholder="Client" [(ngModel)]="selectedClients" (change)="updateFilterSelection();">
                 <md-option class="data-filter-header" *ngFor="let item of clients" [value]='item.id'>{{ item.clientName }}</md-option>
             </md-select>
-            <md-select multiple placeholder="Task" [(ngModel)]="selectedTasks" (change)="setCurrentSort();filterEntries();">
+            <md-select multiple placeholder="Task" [(ngModel)]="selectedTasks" (change)="updateFilterSelection();">
                 <md-option class="data-filter-header" *ngFor="let item of tasks" [value]='item.id'>{{ item.taskDescription }}</md-option>
             </md-select>
         </span>
@@ -31,10 +31,10 @@
         </md-chip>
         &nbsp;
         <span color="primary" class="filter-position">
-            <md-select placeholder="Column" [ngModel]="selectedColumn" #selectColumn (change)="sortEntries(selectColumn, selectSort);">
+            <md-select placeholder="Column" [(ngModel)]="selectedColumn" (change)="updateSortingSelection();">
                 <md-option class="data-filter-header" *ngFor="let item of columns" [value]='item.id'>{{ item.key }}</md-option>
             </md-select>
-            <md-select placeholder="Sort" [ngModel]="selectedSort" #selectSort (change)="sortEntries(selectColumn, selectSort);">
+            <md-select placeholder="Sort" [(ngModel)]="selectedSort" (change)="updateSortingSelection();">
                 <md-option class="data-filter-header" *ngFor="let item of sorts" [value]='item.id'>{{ item.key }}</md-option>
             </md-select>
         </span>
@@ -43,7 +43,7 @@
 <br>
 <ngx-datatable #mydatatable class="material striped" [scrollbarH]="true" [rows]="items" [columnMode]="'force'" [headerHeight]="50"
     [footerHeight]="50" [sortType]="'multi'" [selected]="selected" [selectionType]="'single'" [limit]="limit" [count]="count"
-    [offset]="offset" (page)='onPage($event)' (select)='selectEntry($event)'>
+    (select)='selectEntry($event)'>
     <ngx-datatable-column name="Description" sortable>
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
             <span class="clickable-icon" title="Double click to edit" (click)="editing[row.$$index + '-description'] = true;" *ngIf="!editing[row.$$index + '-description']">{{ row.description }}</span>

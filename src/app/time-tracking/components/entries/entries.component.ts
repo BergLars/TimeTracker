@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewContainerRef, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, ViewContainerRef, ElementRef, ViewChild } from '@angular/core';
 import { Http } from '@angular/http';
 import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, RegistryService, TimespentService } from '../../../data';
 import { MdDialog } from '@angular/material';
@@ -8,6 +8,7 @@ import { environment } from '../../../../environments/environment';
 import moment from 'moment/src/moment';
 import { EntriesService } from './entries.service';
 import { elementAt } from 'rxjs/operator/elementAt';
+import { DatatableComponent } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'app-entries',
@@ -23,7 +24,10 @@ export class EntriesComponent implements OnInit {
   @Input() task: ITask;
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
-  public items: ITimeTrackingEntry[] = [];
+
+  @ViewChild('mydatatable') datatable: DatatableComponent;
+
+  @Input() items: ITimeTrackingEntry[] = [];
   rows = [];
   selected = [];
   selectedRow: any;
@@ -39,38 +43,34 @@ export class EntriesComponent implements OnInit {
   @Input() date: string;
   public editing = {};
   public result: any;
-  private limits = [
-    { key: 'All Entries', value: 50 },
-    { key: '10 Entries', value: 10 },
-    { key: '5 Entries', value: 5 }
-  ];
 
-  limit: number = this.limits[0].value;
-  rowLimits: Array<any> = this.limits;
   private columns = [
     { key: 'Description', id: 0 },
     { key: 'Project Name', id: 1 },
     { key: 'Client Name', id: 2 },
     { key: 'Task Description', id: 3 },
-    { key: 'Entry date', id: 4 },
+    { key: 'Entry Date', id: 4 },
     { key: 'Start Time', id: 5 },
-    { key: 'End date', id: 6 },
+    { key: 'End Date', id: 6 },
     { key: 'End Time', id: 7 },
     { key: 'Time Spent', id: 8 }
   ];
-  @Input() selectColumn: any;
+  private limits = [
+    { key: 'All Entries', value: 50 },
+    { key: '10 Entries', value: 10 },
+    { key: '5 Entries', value: 5 }
+  ];
   private sorts = [
     { key: 'Desc', id: 0 },
     { key: 'Asc', id: 1 }
   ];
-  @Input() selectSort: any;
-
   public createItems = [
     { key: 'None', id: 1 },
     { key: 'Client', id: 2 },
     { key: 'Project', id: 3 },
     { key: 'Task', id: 4 }
   ];
+  @Input() limit: number;
   item: number = this.createItems[0].id;
 
   public defaultItem: any;
@@ -81,10 +81,6 @@ export class EntriesComponent implements OnInit {
   @Input() selectedColumn: any;
   @Input() selectedSort: any;
   isValid: boolean = false;
-
-  loading: boolean = false;
-
-  filteredEntries: ITimeTrackingEntry[];
 
   constructor(
     private entryDialogService: EntryDialogService,
@@ -120,71 +116,18 @@ export class EntriesComponent implements OnInit {
     }, 50);
   }
 
-  // Filter all entries with one or more parameter
-  filterEntries() {
-    this.sortEntries(this.selectColumn, this.selectSort);
-    this.offset = 0;
-    let userSelectedProjects = [];
-    let userSelectedTasks = [];
-    let userSelectedClients = [];
+  updateFilterSelection() {
+    this.refreshDatatable();
+  }
 
-    // Handle if no project is selected
-    if (this.selectedProjects) {
-      this.selectedProjects.forEach(selectionIndex => {
-        userSelectedProjects.push(selectionIndex);
-      });
-    }
-    // Handle if no task is selected
-    if (this.selectedTasks) {
-      this.selectedTasks.forEach(selectionIndex => {
-        userSelectedTasks.push(selectionIndex);
-      });
-    }
-    // Handle if no client is selected
-    if (this.selectedClients) {
-      this.selectedClients.forEach(selectionIndex => {
-        userSelectedClients.push(selectionIndex);
-      });
-    }
-    // We get all the entries
-    this.filteredEntries = this.entriesService.clonedItems;
-
-    // We filter by project
-    this.filteredEntries = this.filteredEntries.filter(function (timeEntry) {
-      let entryProjectId = timeEntry.projectID.valueOf();
-      // Does the current entryProjectId belong to user selected projects in the filter 
-      return (userSelectedProjects.indexOf(entryProjectId) != -1);
-    });
-
-    // We filter by task
-    this.filteredEntries = this.filteredEntries.filter(function (timeEntry) {
-      let entryTaskId = timeEntry.taskID.valueOf();
-      return (userSelectedTasks.indexOf(entryTaskId) != -1);
-    });
-
-    // We filter by client
-    this.filteredEntries = this.filteredEntries.filter(function (timeEntry) {
-      let entryClientId = timeEntry.clientID.valueOf();
-      return (userSelectedClients.indexOf(entryClientId) != -1);
-    });
-
-    this.selectedClients = userSelectedClients;
-    this.selectedProjects = userSelectedProjects;
-    this.selectedTasks = userSelectedTasks;
-
-    // We assign the result to the table datasource
-    this.items = this.filteredEntries;
-
-    // Map projectName, taskDescription, clientName and entryDate to row in rows
-    this.timespentService.mapEntryValue(this.items);
+  updateSortingSelection() {
+    this.refreshDatatable();
   }
 
   changeRowLimits(event) {
-    this.limit = event.target.value;
-    this.offset = 0;
-    this.selectedRow
-    this.setCurrentSort();
-    this.sortEntries(this.selectColumn, this.selectSort);
+    this.datatable.offset = 0;
+    this.limit = Number(event.target.value);
+    this.refreshDatatable();
   }
 
   public clientDropdown(value: string): void {
@@ -410,122 +353,43 @@ export class EntriesComponent implements OnInit {
       });
   }
 
-  sortEntries(valueColumn: any, valueSort: any) {
-    this.offset = 0;
-    let currentColumnValue: any;
-    let currentSortValue: any;
-    if (valueColumn.selected === undefined && valueSort.selected === undefined) {
-      currentColumnValue = valueColumn.key;
-      currentSortValue = valueSort.key;
+  private refreshDatatable() {
+    let self = this;
 
-      this.selectedColumn = valueColumn.id;
-      this.selectedSort = valueSort.id;
-    }
-    else {
-      currentColumnValue = valueColumn.selected.viewValue;
-      currentSortValue = valueSort.selected.viewValue;
-
-      this.selectedColumn = valueColumn.selected.value;
-      this.selectedSort = valueSort.selected.value;
-    }
-
-    if (currentColumnValue === 'Entry date' && currentSortValue === 'Desc') {
-      return this.loadEntriesByStartDateTimeDescending();
-    }
-    else if (currentColumnValue === 'Entry date' && currentSortValue === 'Asc') {
-      return this.loadEntriesByStartDateTimeAscending();
-    }
-    else if (currentColumnValue === 'End date' && currentSortValue === 'Desc') {
-      return this.loadEntriesByEndDateTimeDescending();
-    }
-    else if (currentColumnValue === 'End date' && currentSortValue === 'Asc') {
-      return this.loadEntriesByEndDateTimeAscending();
-    }
-    else if (currentColumnValue === 'Description' && currentSortValue === 'Desc') {
-      return this.loadEntriesByDescriptionDescending();
-    }
-    else if (currentColumnValue === 'Description' && currentSortValue === 'Asc') {
-      return this.loadEntriesByDescriptionAscending();
-    }
-    else if (currentColumnValue === 'Start Time' && currentSortValue === 'Desc') {
-      return this.loadEntriesByStartTimeDescending();
-    }
-    else if (currentColumnValue === 'Start Time' && currentSortValue === 'Asc') {
-      return this.loadEntriesByStartTimeAscending();
-    }
-    else if (currentColumnValue === 'End Time' && currentSortValue === 'Desc') {
-      return this.loadEntriesByEndTimeDescending();
-    }
-    else if (currentColumnValue === 'End Time' && currentSortValue === 'Asc') {
-      return this.loadEntriesByEndTimeAscending();
-    }
-    else if (currentColumnValue === 'Time Spent' && currentSortValue === 'Desc') {
-      return this.loadEntriesByTimeSpentDescending();
-    }
-    else if (currentColumnValue === 'Time Spent' && currentSortValue === 'Asc') {
-      return this.loadEntriesByTimeSpentAscending();
-    }
-    else if (currentColumnValue === 'Project Name' && currentSortValue === 'Desc') {
-      return this.loadEntriesByProjectDescending();
-    }
-    else if (currentColumnValue === 'Project Name' && currentSortValue === 'Asc') {
-      return this.loadEntriesByProjectAscending();
-    }
-    else if (currentColumnValue === 'Client Name' && currentSortValue === 'Desc') {
-      return this.loadEntriesByClientDescending();
-    }
-    else if (currentColumnValue === 'Client Name' && currentSortValue === 'Asc') {
-      return this.loadEntriesByClientAscending();
-    }
-    else if (currentColumnValue === 'Task Description' && currentSortValue === 'Desc') {
-      return this.loadEntriesByTaskDescending();
-    }
-    else if (currentColumnValue === 'Task Description' && currentSortValue === 'Asc') {
-      return this.loadEntriesByTaskAscending();
-    }
-  }
-
-  /**
-  * Set user's current Sort and sort items
-  */
-  setCurrentSort() {
-    this.columns.forEach(element => {
-      if (element.id === this.selectedColumn) {
-        this.selectColumn = element;
-      }
+    // Take in acount the filtering
+    this.entriesService.setFilteringBy({
+      clients: this.selectedClients,
+      projects: this.selectedProjects,
+      tasks: this.selectedTasks
     });
-    this.sorts.forEach(element => {
-      if (element.id === this.selectedSort) {
-        this.selectSort = element;
-      }
+
+    // Take in acount the sorting
+    this.entriesService.setSortingBy({
+      column: this.columns[this.selectedColumn].key,
+      direction: this.sorts[this.selectedSort].key
     });
-  }
 
-  /**
-  * Set current Sort Per default
-  */
-  setCurrentSortPerDefault() {
-    this.selectedColumn = this.columns[4].id;
-    this.selectedSort = this.sorts[0].id;
-
-    this.selectColumn = this.columns[4];
-    this.selectSort = this.sorts[0];
+    self.items = this.entriesService.getEntries();
+    setTimeout(() => {
+      self.datatable.pageSize = self.limit;
+    }, 10);
   }
 
   /**
   * Load entries per default
   */
   loadEntries() {
-    this.setCurrentSortPerDefault();
-    this.entriesService.entriesAreLoaded().then(results => {
-      this.items = this.entriesService.sortEntriesByStartDateDesc(results);
+    // Set column per default
+    this.selectedColumn = this.columns[4].id;
+    // Set direction per default
+    this.selectedSort = this.sorts[0].id;
+    // Set limit per default
+    this.limit = this.limits[0].value;
 
-      // Set filtered Entries per default
-      this.filteredEntries = this.items;
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
+    this.entriesService.entriesAreLoaded().then(() => {
+      this.clients = this.entriesService.sortedClients();
+      this.projects = this.entriesService.sortedProjects();
+      this.tasks = this.entriesService.sortedTasks();
 
       // Set md-select true per default
       this.selectedProjects = this.projects.map(function (project) {
@@ -537,265 +401,7 @@ export class EntriesComponent implements OnInit {
       this.selectedClients = this.clients.map(function (client) {
         return client.id;
       });
-      this.timespentService.mapEntryValueToSetColor(this.items);
+      this.refreshDatatable();
     });
-  }
-
-  /**
-   * Sort by Start date
-   */
-  loadEntriesByStartDateTimeDescending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByStartDateDesc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  loadEntriesByStartDateTimeAscending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByStartDateAsc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  /**
-   * Sort by End date
-   */
-  loadEntriesByEndDateTimeAscending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByEndDateAsc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  loadEntriesByEndDateTimeDescending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByEndDateDesc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  /**
-   * Sort by description
-   */
-  loadEntriesByDescriptionDescending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByDescriptionDesc(results);
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  loadEntriesByDescriptionAscending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByDescriptionAsc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  /**
-   * Sort by Start time
-   */
-  loadEntriesByStartTimeDescending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByStartTimeDesc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  loadEntriesByStartTimeAscending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByStartTimeAsc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  /**
-   * Sort by End Time
-   */
-  loadEntriesByEndTimeDescending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByEndTimeDesc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  loadEntriesByEndTimeAscending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByEndTimeAsc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  /**
-   * Sort by Time spent
-   */
-  loadEntriesByTimeSpentDescending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      //this.timespentService.entriesTimeSpent(results);
-      this.items = this.entriesService.sortEntriesByTimeSpentDesc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  loadEntriesByTimeSpentAscending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      //this.timespentService.entriesTimeSpent(results);
-      this.items = this.entriesService.sortEntriesByTimeSpentAsc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  /**
-   * Sort by Client name
-   */
-  loadEntriesByClientDescending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByClientDesc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  loadEntriesByClientAscending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByClientAsc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  /**
-   * Sort by Project name
-   */
-  loadEntriesByProjectDescending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByProjectDesc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  loadEntriesByProjectAscending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByProjectAsc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  /**
-  * Sort by Task description
-  */
-  loadEntriesByTaskDescending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByTaskDesc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  loadEntriesByTaskAscending() {
-    this.entriesService.loadFilteredEntries().then(results => {
-      this.items = this.entriesService.sortEntriesByTaskAsc(results);
-
-      this.clients = this.entriesService.clients.sort(this.entriesService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.entriesService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.entriesService.propComparator('taskDescription'));
-
-      this.timespentService.mapEntryValueToSetColor(this.items);
-    });
-  }
-
-  onPage(event) {
-    this.sortEntries(this.selectColumn, this.selectSort);
-    this.count = this.filteredEntries.length;
-    const start = event.offset * event.limit;
-    const end = start + Number(event.limit);
-    let rows = [];
-    for (let i = start; i < end; i++) {
-      rows[i] = this.filteredEntries[i];
-    }
-    this.items = rows;
-    this.items.length = this.count;
-    this.offset = event.offset;
   }
 }

@@ -3,7 +3,8 @@ import moment from 'moment/src/moment';
 
 @Injectable()
 export class TimespentService {
-  public itemTotalTimeSpent: any;
+  private sscanf = require('scanf').sscanf;
+  private sprintf = require("sprintf-js").sprintf;
   constructor() { }
 
   // Calculate time spent on inline editing
@@ -40,52 +41,20 @@ export class TimespentService {
 
   // Calculate total time spent
   public totalTimeSpent(entries) {
-    let endTimeH: number = 0;
-    let endTimeMin: number = 0;
-    let hour: number = 0;
-    let timeSpent: any;
-    entries.forEach(entry => {
-      endTimeH = endTimeH + parseInt(entry.timeSpent.substring(0, 2));
-      endTimeMin = endTimeMin + parseInt(entry.timeSpent.substring(3, 5));
+    let hours = 0;
+    let minutes = 0;
+    entries.forEach(element => {
+      let timeComponents = this.sscanf(element, "%d:%d");
+      hours += timeComponents[0];
+      minutes += timeComponents[1];
     });
 
-    //Handle conversion Minute over 60mn to 1h
-    if (endTimeMin > 60) {
-      hour = Math.floor(endTimeMin / 60);
-      endTimeH = endTimeH + hour;
-      endTimeMin = Math.abs(endTimeMin - (60 * hour));
-      if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
-        timeSpent = '0' + endTimeH + ':0' + endTimeMin;
-      }
-      else if ((endTimeH.toString()).length < 2) {
-        timeSpent = '0' + endTimeH + ':' + endTimeMin;
-      }
-      else if ((endTimeMin.toString()).length < 2) {
-        timeSpent = endTimeH + ':0' + endTimeMin;
-      } else {
-        timeSpent = endTimeH + ':' + endTimeMin;
-      }
-      return timeSpent;
-    }
-    // Handle Minute below 60mn
-    else {
-      if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
-        timeSpent = '0' + endTimeH + ':0' + endTimeMin;
-      }
-      else if ((endTimeH.toString()).length < 2) {
-        timeSpent = '0' + endTimeH + ':' + endTimeMin;
-      }
-      else if ((endTimeMin.toString()).length < 2) {
-        timeSpent = endTimeH + ':0' + endTimeMin;
-      } else {
-        timeSpent = endTimeH + ':' + endTimeMin;
-      }
-      return timeSpent;
-    }
+    let timeSpents = this.sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
+    return timeSpents;
   }
 
   // calculate timeSpent for each entry in items and format it correctly
-  entriesTimeSpent(items) {
+  calculateEntriesTimeSpent(items) {
     items.forEach(entry => {
       let ms = moment(entry.startDateTime, "YYYY-MM-DD HH:mm").diff(moment(entry.endDateTime, "YYYY-MM-DD HH:mm"));
       let d = moment.duration(Math.abs(ms));
@@ -95,95 +64,6 @@ export class TimespentService {
       }
       else {
         entry.timeSpent = s;
-      }
-    });
-  }
-
-  // calculate timeSpent for one entry and format it correctly
-  entryTimeSpent(entry) {
-    let ms = moment(entry.startDateTime, "YYYY-MM-DD HH:mm").diff(moment(entry.endDateTime, "YYYY-MM-DD HH:mm"));
-    let d = moment.duration(Math.abs(ms));
-    let s = Math.floor(d.asHours()) + moment.utc(Math.abs(ms)).format(":mm");
-    if (s.length < 5) {
-      entry.timeSpent = '0' + s;
-    }
-    else {
-      entry.timeSpent = s;
-    }
-    return entry.timeSpent;
-  }
-
-  // Map projectName, taskDescription, clientName and entryDate of each entry for Filter
-  public mapEntryValue(items) {
-    items.forEach(entry => {
-      entry.projectName = entry.project.projectName;
-      entry.taskDescription = entry.task.taskDescription;
-      entry.clientName = entry.client.clientName;
-      entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
-      entry.startTime = entry.startDateTime.substring(11, 16);
-      entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
-      entry.endTime = entry.endDateTime.substring(11, 16);
-    });
-    this.entriesTimeSpent(items);
-    this.itemTotalTimeSpent = this.totalTimeSpent(items);
-  }
-  // Map projectName, taskDescription, clientName and entryDate of each entry for Sort
-  public mapEntryValueSort(items) {
-    items.forEach(entry => {
-      entry.projectName = entry.project.projectName;
-      entry.taskDescription = entry.task.taskDescription;
-      entry.clientName = entry.client.clientName;
-      entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
-      entry.startTime = entry.startDateTime.substring(11, 16);
-      entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
-      entry.endTime = entry.endDateTime.substring(11, 16);
-    });
-    this.entriesTimeSpent(items);
-  }
-
-  // Map timeSpent of each entry for Sidebar
-  public mapCurrentWeekMonthEntryValue(items) {
-    items.forEach(entry => {
-      entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
-      entry.startTime = entry.startDateTime.substring(11, 16);
-      entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
-      entry.endTime = entry.endDateTime.substring(11, 16);
-    });
-    this.entriesTimeSpent(items);
-  }
-
-  // Map projectName, taskDescription, clientName and entryDate of each entry for loading entries
-  public mapEntryValueToSetColor(items) {
-    items.forEach(entry => {
-      entry.projectName = entry.project.projectName;
-      entry.taskDescription = entry.task.taskDescription;
-      entry.clientName = entry.client.clientName;
-      entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
-      entry.startTime = entry.startDateTime.substring(11, 16);
-      entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
-      entry.endTime = entry.endDateTime.substring(11, 16);
-    });
-    this.entriesTimeSpent(items);
-    this.itemTotalTimeSpent = this.totalTimeSpent(items);
-    this.setColor(items);
-  }
-
-  // Set orange color of an entry over 1 day
-  setColor(items) {
-    items.forEach(entry => {
-      let startDateTime = moment().format(entry.startDateTime, 'yyyy-MM-dd HH:mm:ss');
-      let endDateTime = moment().format(entry.endDateTime, 'yyyy-MM-dd HH:mm:ss');
-
-      // Split to catch the startDate and endDate
-      let start = startDateTime.split(" ");
-      let end = endDateTime.split(" ");
-
-      // Compare start and endDate are not the same
-      if (moment(start[0], 'YYYY-MM-DD').isBefore(moment(end[0], 'YYYY-MM-DD'))) {
-        entry.isColored = true;
-      }
-      else {
-        entry.isColored = false;
       }
     });
   }
