@@ -6,7 +6,7 @@
 export const environment = {
   production: false,
 
-  title: 'Timetracker - DEV v1.4',
+  title: 'Timetracker - DEV v1.6',
   // apiBaseUrl: 'https://timetracker.fluance.net/timetracker'
   // apiBaseUrl: 'https://mojito.dev.fluance.net:8443/timetracker'
   apiBaseUrl: 'http://localhost:8081'
