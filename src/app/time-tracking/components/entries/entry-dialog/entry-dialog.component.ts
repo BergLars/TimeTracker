@@ -143,14 +143,14 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public checkStartAndEndTime() {
-      let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
-      if (this.endTime < this.startTime) {
-        let entryEndDate = moment(endDate, 'YYYY-MM-DD').add(1, 'd');
-        this.entryEndDate = moment(entryEndDate).format('YYYY-MM-DD');
-      } else {
-        this.entryEndDate = moment(endDate).format('YYYY-MM-DD');
-      }
-      this.newEntry();
+    let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
+    if (this.endTime < this.startTime) {
+      let entryEndDate = moment(endDate, 'YYYY-MM-DD').add(1, 'd');
+      this.entryEndDate = moment(entryEndDate).format('YYYY-MM-DD');
+    } else {
+      this.entryEndDate = moment(endDate).format('YYYY-MM-DD');
+    }
+    this.newEntry();
   }
 
   public calculateTimeSpent() {
@@ -210,16 +210,17 @@ export class EntryDialogComponent implements OnInit {
     }
   }
 
-  public adjustEndDate(){
-    if (this.timeSpent > "23:59") {
+  public adjustEndDate() {
+    if (this.startTime > this.endTime) {
       let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
-      let hours = this.timeSpent.substring(0,2);
-      let numberofdays = Math.floor(hours / 24);
-      let entryEndDate = moment(endDate, 'YYYY-MM-DD').add(numberofdays, 'd');
+      let hours = Number(this.timeSpent.substring(0, 2)) + Number(this.startTime.substring(0, 2));
+      let minutes = Number(this.timeSpent.substring(3, 6)) + Number(this.startTime.substring(3, 6));
+      let hourFromMinutes = Math.floor(minutes / 60);
+      let numberOfDays = Math.floor((hours + hourFromMinutes) / 24);
+      let entryEndDate = moment(endDate, 'YYYY-MM-DD').add(numberOfDays, 'd');
       this.entryEndDate = moment(entryEndDate).format('YYYY-MM-DD');
     } else {
       let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
-
       this.entryEndDate = moment(endDate).format('YYYY-MM-DD');
     }
   }
@@ -249,11 +250,12 @@ export class EntryDialogComponent implements OnInit {
         alert('Wrong time format !');
       }
     } else if (t.toString().indexOf(':') !== -1) {
-        this.timeSpent = t;
-        let endT = moment() + moment.duration().add(this.timeSpent, 'HH:mm');
-        this.endTime = moment(endT).format('HH:mm');
-        this.adjustEndDate();
-        this.newEntry();
+      this.timeSpent = t;
+      let endT = moment() + moment.duration().add(this.timeSpent, 'HH:mm');
+      this.endTime = moment(endT).format('HH:mm');
+
+      this.adjustEndDate();
+      this.newEntry();
     } else {
       alert('Wrong time format !');
     }
