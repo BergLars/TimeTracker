@@ -127,6 +127,18 @@ export class ExportDialogComponent implements OnInit {
 		window.open(this.exportURL, '_blank');
 	}
 
+	refreshExportAllURL() {
+		this.inputFromDate.trim();
+		this.inputToDate.trim();
+		let fromDate = this.inputFromDate.substring(6, 10) + "-" + this.inputFromDate.substring(3, 5) + "-" + this.inputFromDate.substring(0, 2);
+		let toDate = this.inputToDate.substring(6, 10) + "-" + this.inputToDate.substring(3, 5) + "-" + this.inputToDate.substring(0, 2);
+		this.exportURL = this.baseUrl + "/export/all?fromDate=" +
+			fromDate +
+			"&toDate=" +
+			toDate;
+		window.open(this.exportURL, '_blank');
+	}
+
 	public keyDownFunction(event) {
 		if (event.key == 'Enter') {
 			this.readDatesOnInputField();
@@ -136,6 +148,8 @@ export class ExportDialogComponent implements OnInit {
 
 	public exportEntries() {
 		if (this.checkIfAdmin()) {
+			if (this.userID === 'all')
+				this.refreshExportAllURL();
 			this.refreshExportURL(this.userID);
 		}
 		else {

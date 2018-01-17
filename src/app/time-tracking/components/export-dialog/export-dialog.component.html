@@ -25,6 +25,7 @@
             <td>User: </td>
             <td>
                 <select #userprofile>
+                    <option value="all" selected>all</option>
                     <option *ngFor="let user of users" [value]='user.id'>{{ user.userName }}</option>
                 </select>
             </td>
