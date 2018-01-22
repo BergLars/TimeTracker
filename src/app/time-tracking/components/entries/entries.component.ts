@@ -202,7 +202,7 @@ export class EntriesComponent implements OnInit {
           this.updateEntry(row);
         }
       }
-      this.registryService.sidebarComponent.displaySidebarData();
+      this.entriesService.displaySidebarData();
     }
 
     if (cell == 'startTime') {
@@ -218,7 +218,7 @@ export class EntriesComponent implements OnInit {
       else {
         this.updateEntry(row);
       }
-      this.registryService.sidebarComponent.displaySidebarData();
+      this.entriesService.displaySidebarData();
     }
 
     if (cell == 'endTime') {
@@ -274,7 +274,7 @@ export class EntriesComponent implements OnInit {
         row.endDateTime = validFormatEndDate + ' ' + endTime;
         row.endTime = moment(row.endDateTime).format('HH:mm');
         row.endDate = validFormatEndDate.substring(8, 10) + '.' + validFormatEndDate.substring(5, 7) + '.' + validFormatEndDate.substring(0, 4);
-        this.registryService.sidebarComponent.displaySidebarData();
+        this.entriesService.displaySidebarData();
         this.updateEntry(row);
       }
     }
@@ -370,6 +370,7 @@ export class EntriesComponent implements OnInit {
     });
 
     self.items = this.entriesService.getEntries();
+
     setTimeout(() => {
       self.datatable.pageSize = self.limit;
     }, 10);

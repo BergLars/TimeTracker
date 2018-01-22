@@ -19,7 +19,7 @@ export class EntriesService {
   public tasksDictionary: any = {};
   public projectsDictionary: any = {};
   public clientsDictionary: any = {};
-  public totalTimeSpent: any;
+  @Input() totalTimeSpent: any;
 
   @Input() static clonedEntries: ITimeTrackingEntry[] = [];
   @Input() static filteredEntries: ITimeTrackingEntry[] = [];
@@ -33,6 +33,12 @@ export class EntriesService {
 
   private sscanf = require('scanf').sscanf;
   private sprintf = require("sprintf-js").sprintf;
+
+  public startOfWeek: any;
+  public endOfWeek: any;
+  public startOfMonth: any;
+  public endOfMonth: any;
+  @Input() totalAvailableVacationDays: any;
 
   // Allow to sort items with a String value Asc
   public propComparator = (propName) => (a, b) => a[propName] == b[propName] ? 0 : a[propName] < b[propName] ? -1 : 1;
@@ -180,6 +186,7 @@ export class EntriesService {
       let entryClientId = timeEntry.clientID.valueOf();
       return (self.clientsFilter.indexOf(entryClientId) != -1);
     });
+    this.registryService.sidebarComponent.totalTimeSpent = this.calculateTotalTimeSpent(entries);
     return entries;
   }
 
@@ -256,7 +263,6 @@ export class EntriesService {
                         items.push(entry);
                       });
                       this.timeSpentService.calculateEntriesTimeSpent(items);
-                      this.totalTimeSpent = this.calculateTotalTimeSpent(items);
                       this.setColor(items);
                       EntriesService.clonedEntries = items;
 
@@ -348,5 +354,75 @@ export class EntriesService {
         return -1
       return 0
     });
+  }
+
+
+  // Calcul total time spent of the current Week
+  public totalTimeSpentW(timeSpents) {
+    let hours = 0;
+    let minutes = 0;
+    timeSpents.forEach(element => {
+      let timeComponents = this.sscanf(element, "%d:%d");
+      hours += timeComponents[0];
+      minutes += timeComponents[1];
+    });
+    let result = this.sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
+    return result;
+  }
+
+  // Calcul total time spent of the current Month
+  public totalTimeSpentMonth(timeSpents) {
+    let hours = 0;
+    let minutes = 0;
+    timeSpents.forEach(element => {
+      let timeComponents = this.sscanf(element, "%d:%d");
+      hours += timeComponents[0];
+      minutes += timeComponents[1];
+    });
+    let result = this.sprintf("%02d:%02d", hours + Math.round(minutes / 60), minutes % 60);
+    return result;
+  }
+
+  displaySidebarData() {
+    this.entriesAreLoaded().then(results => {
+      this.registryService.sidebarComponent.totalHoursWorkedW = this.totalHoursWorkedWeek(results);
+      this.registryService.sidebarComponent.totalHoursWorkedM = this.totalHoursWorkedMonth(results);
+      this.registryService.sidebarComponent.totalTimeSpent = this.calculateTotalTimeSpent(results);
+    });
+  }
+
+  totalHoursWorkedWeek(entries) {
+    let timeSpents = [];
+    entries.forEach(element => {
+      // Check if entry date is between the start and the end of the current Week
+      // If yes, add it to an array
+      if (moment(element.entryDate, 'DD.MM.YYYY').isBetween(moment(this.startOfWeek, 'DD.MM.YYYY'), moment(this.endOfWeek, 'DD.MM.YYYY'))) {
+        timeSpents.push(element.timeSpent);
+      }
+    });
+    return this.totalTimeSpentW(timeSpents);
+  }
+
+  totalHoursWorkedMonth(entries) {
+    let timeSpents = [];
+    entries.forEach(element => {
+      // Check if entry date is between the start and the end of the current Month
+      // If yes, add it to an array
+      if (moment(element.entryDate, 'DD.MM.YYYY').isBetween(moment(this.startOfMonth, 'DD.MM.YYYY'), moment(this.endOfMonth, 'DD.MM.YYYY'))) {
+        timeSpents.push(element.timeSpent);
+      }
+    });
+    return this.totalTimeSpentMonth(timeSpents);
+  }
+
+  getCurrentDayWeekMonth() {
+    this.registryService.sidebarComponent.currentMonth = moment().startOf("month").format('MMMM');
+    this.startOfMonth = moment().startOf('month').subtract(1, 'days').format('DD.MM.YYYY');
+    this.endOfMonth = moment().endOf('month').subtract(1, 'days').format('DD.MM.YYYY');
+    this.startOfWeek = moment().startOf('week').format('DD.MM.YYYY');
+    this.endOfWeek = moment().endOf('week').format('DD.MM.YYYY');
+    const today = moment().format('DD.MM.YYYY');
+    this.registryService.sidebarComponent.weekNumber = moment(today, 'DD.MM.YYYY').isoWeek();
+    this.totalAvailableVacationDays = '*_*';
   }
 }
