@@ -117,6 +117,9 @@ export class EntriesComponent implements OnInit {
   }
 
   updateFilterSelection() {
+    this.projectsSelectedPerDefault();
+    this.tasksSelectedPerDefault();
+    this.clientsSelectedPerDefault(); 
     this.refreshDatatable();
   }
 
@@ -392,17 +395,67 @@ export class EntriesComponent implements OnInit {
       this.projects = this.entriesService.sortedProjects();
       this.tasks = this.entriesService.sortedTasks();
 
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
+      this.selectedProjects = [];      
+      this.selectedTasks = [];
+      this.selectedClients = [];
+      this.selectedProjects[0] = -1;
+      this.selectedTasks[0] = -1;
+      this.selectedClients[0] = -1;
+      this.projectsSelectedPerDefault();
+      this.tasksSelectedPerDefault();
+      this.clientsSelectedPerDefault();
       this.refreshDatatable();
     });
+  }
+
+  projectsSelectedPerDefault(){
+    if (this.selectedProjects.length > 0) {
+      let selectedProjects = []
+
+      if (this.selectedProjects[0] === -1) {
+        selectedProjects = this.projects.map(function(project){        
+          return project.id;
+        });
+        this.selectedProjects = [-1].concat(selectedProjects);
+      } else {
+        if (this.selectedProjects.length === this.projects.length) {
+          this.selectedProjects = [];
+        } 
+      }
+    }
+  }
+
+  tasksSelectedPerDefault(){
+    if (this.selectedTasks.length > 0) {
+      let selectedTasks = []
+
+      if (this.selectedTasks[0] === -1) {
+        selectedTasks = this.tasks.map(function(task){        
+          return task.id;
+        });
+        this.selectedTasks = [-1].concat(selectedTasks);
+      } else {
+        if (this.selectedTasks.length === this.tasks.length) {
+          this.selectedTasks = [];
+        } 
+      }
+    }
+  }
+
+  clientsSelectedPerDefault(){
+    if (this.selectedClients.length > 0) {
+      let selectedClients = []
+
+      if (this.selectedClients[0] === -1) {
+        selectedClients = this.clients.map(function(client){        
+          return client.id;
+        });
+        this.selectedClients = [-1].concat(selectedClients);
+      } else {
+        if (this.selectedClients.length === this.clients.length) {
+          this.selectedClients = [];
+        } 
+      }
+    }
   }
 }
