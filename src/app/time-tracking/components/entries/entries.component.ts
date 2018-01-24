@@ -493,4 +493,10 @@ export class EntriesComponent implements OnInit {
       }
     }
   }
+
+  keyDownFunction(event, cell, cellValue, row) {
+    if (event.key == 'Enter') {
+      this.updateValue(event, cell, cellValue, row);
+    }
+  }
 }
