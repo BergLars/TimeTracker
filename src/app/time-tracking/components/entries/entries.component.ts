@@ -109,6 +109,21 @@ export class EntriesComponent implements OnInit {
     }, 100);
   }
 
+  clickOnFirstChild(event, row, cell, value) {
+    this.editing[row.$$index + cell] = true;
+    setTimeout(() => {
+      this.setInputFocus(event, 'input')
+    }, 50);
+  }
+
+  setInputFocus(event, value) {
+    let parentElement = event.path[1];
+    setTimeout(() => {
+      let parentElementTag = parentElement.getElementsByTagName(value)[0];
+      parentElementTag.focus();
+    }, 50);
+  }
+
   removeSelectFocus(row, cell) {
     this.editing[row.$$index + cell] = false;
     setTimeout(() => {
@@ -119,7 +134,7 @@ export class EntriesComponent implements OnInit {
   updateFilterSelection() {
     this.projectsSelectedPerDefault();
     this.tasksSelectedPerDefault();
-    this.clientsSelectedPerDefault(); 
+    this.clientsSelectedPerDefault();
     this.refreshDatatable();
   }
 
@@ -148,8 +163,13 @@ export class EntriesComponent implements OnInit {
   updateValue(event, cell, cellValue, row) {
     this.editing[row.$$index + '-' + cell] = false;
     if (cell == 'description') {
-      row.description = (event.target.value).trim();
-      this.updateEntry(row);
+      if (event.target.value === cellValue) {
+        row.description = cellValue;
+      }
+      else {
+        row.description = (event.target.value).trim();
+        this.updateEntry(row);
+      }
     }
 
     if (cell == 'client') {
@@ -177,11 +197,13 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'date') {
-      let selectedDate = cellValue;
       let formatedStartDate = event.target.value.substring(6, 10) + "-" + event.target.value.substring(3, 5) + "-" + event.target.value.substring(0, 2);
       let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
       if (event.target.value === "") {
-        row.entryDate = selectedDate;
+        row.entryDate = cellValue;
+      }
+      if (event.target.value === cellValue) {
+        row.entryDate = cellValue;
       }
       else {
         if (!this.registryService.dateRequirement.test(event.target.value.trim())) {
@@ -193,6 +215,7 @@ export class EntriesComponent implements OnInit {
           row.startDateTime = formatedStartDate + ' ' + row.startTime;
           row.endDateTime = validateFormatEndDate + ' ' + row.endTime;
           this.updateEntry(row);
+          this.entriesService.displaySidebarData();
         }
         else {
           row.startDateTime = formatedStartDate + ' ' + row.startTime;
@@ -203,32 +226,39 @@ export class EntriesComponent implements OnInit {
           validateFormatEndDate = moment(validateFormatEndDate).format('YYYY-MM-DD');
           row.endDateTime = validateFormatEndDate + ' ' + row.endTime;
           this.updateEntry(row);
+          this.entriesService.displaySidebarData();
         }
       }
-      this.entriesService.displaySidebarData();
     }
 
     if (cell == 'startTime') {
       let formatedStartDate = row.entryDate.substring(6, 10) + "-" + row.entryDate.substring(3, 5) + "-" + row.entryDate.substring(0, 2);
       let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
       row.startTime = event.target.value.trim();
-      if (!this.registryService.timeRequirement.test(event.target.value.trim()) || moment(formatedStartDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
+      if (event.target.value === cellValue) {
+        row.startTime = cellValue;
+      }
+      else if (!this.registryService.timeRequirement.test(event.target.value.trim()) || moment(formatedStartDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
         row.startTime = cellValue.trim();
       }
       else if (moment(formatedStartDate, 'YYYY-MM-DD').isBefore(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
         this.updateEntry(row);
+        this.entriesService.displaySidebarData();
       }
       else {
         this.updateEntry(row);
+        this.entriesService.displaySidebarData();
       }
-      this.entriesService.displaySidebarData();
     }
 
     if (cell == 'endTime') {
       let formatedStartDate = row.entryDate.substring(6, 10) + "-" + row.entryDate.substring(3, 5) + "-" + row.entryDate.substring(0, 2);
       let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
       row.endTime = event.target.value.trim();
-      if (!this.registryService.timeRequirement.test(event.target.value.trim())) {
+      if (event.target.value === cellValue) {
+        row.endTime = cellValue;
+      }
+      else if (!this.registryService.timeRequirement.test(event.target.value.trim())) {
         row.endTime = cellValue;
       }
       else if (moment(formatedStartDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
@@ -236,13 +266,18 @@ export class EntriesComponent implements OnInit {
         let validateFormatDate = moment(longEndDate).format('YYYY-MM-DD');
         row.endDateTime = validateFormatDate + ' ' + row.endTime;
         this.updateEntry(row);
+        this.entriesService.displaySidebarData();
       }
       else {
         this.updateEntry(row);
+        this.entriesService.displaySidebarData();
       }
     }
 
     if (cell == 'timeSpent') {
+      if (event.target.value === cellValue) {
+        row.timeSpent = cellValue;
+      }
       if (!this.registryService.timeSpentRequirement.test(event.target.value) || row.timeSpent === event.target.value) {
         row.timeSpent = cellValue.trim();
       }
@@ -277,8 +312,8 @@ export class EntriesComponent implements OnInit {
         row.endDateTime = validFormatEndDate + ' ' + endTime;
         row.endTime = moment(row.endDateTime).format('HH:mm');
         row.endDate = validFormatEndDate.substring(8, 10) + '.' + validFormatEndDate.substring(5, 7) + '.' + validFormatEndDate.substring(0, 4);
-        this.entriesService.displaySidebarData();
         this.updateEntry(row);
+        this.entriesService.displaySidebarData();
       }
     }
   }
@@ -395,7 +430,7 @@ export class EntriesComponent implements OnInit {
       this.projects = this.entriesService.sortedProjects();
       this.tasks = this.entriesService.sortedTasks();
 
-      this.selectedProjects = [];      
+      this.selectedProjects = [];
       this.selectedTasks = [];
       this.selectedClients = [];
       this.selectedProjects[0] = -1;
@@ -408,53 +443,53 @@ export class EntriesComponent implements OnInit {
     });
   }
 
-  projectsSelectedPerDefault(){
+  projectsSelectedPerDefault() {
     if (this.selectedProjects.length > 0) {
       let selectedProjects = []
 
       if (this.selectedProjects[0] === -1) {
-        selectedProjects = this.projects.map(function(project){        
+        selectedProjects = this.projects.map(function (project) {
           return project.id;
         });
         this.selectedProjects = [-1].concat(selectedProjects);
       } else {
         if (this.selectedProjects.length === this.projects.length) {
           this.selectedProjects = [];
-        } 
+        }
       }
     }
   }
 
-  tasksSelectedPerDefault(){
+  tasksSelectedPerDefault() {
     if (this.selectedTasks.length > 0) {
       let selectedTasks = []
 
       if (this.selectedTasks[0] === -1) {
-        selectedTasks = this.tasks.map(function(task){        
+        selectedTasks = this.tasks.map(function (task) {
           return task.id;
         });
         this.selectedTasks = [-1].concat(selectedTasks);
       } else {
         if (this.selectedTasks.length === this.tasks.length) {
           this.selectedTasks = [];
-        } 
+        }
       }
     }
   }
 
-  clientsSelectedPerDefault(){
+  clientsSelectedPerDefault() {
     if (this.selectedClients.length > 0) {
       let selectedClients = []
 
       if (this.selectedClients[0] === -1) {
-        selectedClients = this.clients.map(function(client){        
+        selectedClients = this.clients.map(function (client) {
           return client.id;
         });
         this.selectedClients = [-1].concat(selectedClients);
       } else {
         if (this.selectedClients.length === this.clients.length) {
           this.selectedClients = [];
-        } 
+        }
       }
     }
   }
