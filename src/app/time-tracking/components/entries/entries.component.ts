@@ -93,6 +93,7 @@ export class EntriesComponent implements OnInit {
     private elementRef: ElementRef,
     private timespentService: TimespentService) {
     this.registryService.entriesComponent = this;
+    this.loadValuePerdefault();
     this.loadEntries();
   }
 
@@ -100,20 +101,21 @@ export class EntriesComponent implements OnInit {
     this.defaultItem = this.createItems[0].key;
   }
 
-  setSelectFocus(event, row, value) {
+  setSelectFocus(event, row, cell, value) {
+    this.editing[row.$$index + cell] = true;
     let element = event.target;
     let parentElement = element.parentElement;
     setTimeout(() => {
       let parentElementTag = parentElement.getElementsByTagName(value)[0];
       parentElementTag.focus();
-    }, 100);
+    }, 200);
   }
 
   clickOnFirstChild(event, row, cell, value) {
     this.editing[row.$$index + cell] = true;
     setTimeout(() => {
-      this.setInputFocus(event, 'input')
-    }, 50);
+      this.setInputFocus(event, value)
+    }, 100);
   }
 
   setInputFocus(event, value) {
@@ -121,14 +123,14 @@ export class EntriesComponent implements OnInit {
     setTimeout(() => {
       let parentElementTag = parentElement.getElementsByTagName(value)[0];
       parentElementTag.focus();
-    }, 50);
+    }, 100);
   }
 
   removeSelectFocus(row, cell) {
-    this.editing[row.$$index + cell] = false;
     setTimeout(() => {
-      // this.unselectEntry();
-    }, 50);
+      this.editing[row.$$index + cell] = false;
+      this.unselectEntry();
+    }, 200);
   }
 
   updateFilterSelection() {
@@ -414,17 +416,19 @@ export class EntriesComponent implements OnInit {
     }, 10);
   }
 
-  /**
-  * Load entries per default
-  */
-  loadEntries() {
+  loadValuePerdefault() {
     // Set column per default
     this.selectedColumn = this.columns[4].id;
     // Set direction per default
     this.selectedSort = this.sorts[0].id;
     // Set limit per default
     this.limit = this.limits[0].value;
+  }
 
+  /**
+  * Load entries per default
+  */
+  loadEntries() {
     this.entriesService.entriesAreLoaded().then(() => {
       this.clients = this.entriesService.sortedClients();
       this.projects = this.entriesService.sortedProjects();
