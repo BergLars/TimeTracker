@@ -131,6 +131,9 @@ export class EntryDialogComponent implements OnInit {
       } else {
         if (this.description === "" || this.selectedDate === undefined || this.startTime === " " || this.endTime === " " || this.isBillable === null) {
           alert("Please check if all the fields are filled in");
+        }
+        else if (!this.registryService.timeRequirement.test(this.startTime) || !this.registryService.timeRequirement.test(this.endTime)) {
+          alert('Wrong time format!');
         } else {
           this.checkStartAndEndTime();
           this.timeSpent = this.calculateTimeSpent();

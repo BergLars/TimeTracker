@@ -108,7 +108,7 @@ export class EntriesComponent implements OnInit {
     setTimeout(() => {
       let parentElementTag = parentElement.getElementsByTagName(value)[0];
       parentElementTag.focus();
-    }, 200);
+    }, 100);
   }
 
   clickOnFirstChild(event, row, cell, value) {
@@ -130,7 +130,7 @@ export class EntriesComponent implements OnInit {
     setTimeout(() => {
       this.editing[row.$$index + cell] = false;
       this.unselectEntry();
-    }, 200);
+    }, 100);
   }
 
   updateFilterSelection() {
