@@ -9,6 +9,7 @@ import moment from 'moment/src/moment';
 import { EntriesService } from './entries.service';
 import { elementAt } from 'rxjs/operator/elementAt';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { window } from 'rxjs/operator/window';
 
 @Component({
   selector: 'app-entries',
@@ -111,19 +112,12 @@ export class EntriesComponent implements OnInit {
     }, 100);
   }
 
-  clickOnFirstChild(event, row, cell, value) {
+  clickOnFirstChild(event, row, cell) {
     this.editing[row.$$index + cell] = true;
     setTimeout(() => {
-      this.setInputFocus(event, value)
-    }, 50);
-  }
-
-  setInputFocus(event, value) {
-    let parentElement = event.path[1];
-    setTimeout(() => {
-      let parentElementTag = parentElement.getElementsByTagName(value)[0];
+      let parentElementTag = document.getElementById(row.cellValue + row.$$index);
       parentElementTag.focus();
-    }, 50);
+    }, 100);
   }
 
   removeSelectFocus(row, cell) {

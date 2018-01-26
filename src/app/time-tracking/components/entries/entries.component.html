@@ -49,15 +49,16 @@
     (select)='selectEntry($event)'>
     <ngx-datatable-column name="Description" sortable>
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
-            <span class="clickable-icon inline-field-width" title="Double click to edit" (click)="clickOnFirstChild($event, row, '-description', 'input');"
+            <span hot-table class="clickable-icon inline-field-width" title="Click to edit" (click)="clickOnFirstChild($event, row, '-description');"
                 *ngIf="!editing[row.$$index + '-description']">{{ row.description }}</span>
-            <input class="input-field" (blur)="updateValue($event, 'description', value, row);" (keydown)="keyDownFunction($event, 'description', value, row)"
-                *ngIf="editing[row.$$index + '-description']" type="text" [value]="row.description" />
+            <input id="{{row.cellvalue + row.$$index}}" class="input-field" (blur)="updateValue($event, 'description', value, row);"
+                (keydown)="keyDownFunction($event, 'description', value, row)" *ngIf="editing[row.$$index + '-description']"
+                type="text" [value]="row.description" />
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Project Name" sortable>
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
-            <span class="clickable-icon inline-field-width" title="Double click to edit" (click)="setSelectFocus($event, row, '-project', 'select');"
+            <span class="clickable-icon inline-field-width" title="Double click to select" (click)="setSelectFocus($event, row, '-project', 'select');"
                 *ngIf="!editing[row.$$index + '-project']">
                 {{row.projectName}}
             </span>
@@ -68,7 +69,7 @@
     </ngx-datatable-column>
     <ngx-datatable-column name="Client Name" sortable>
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
-            <span class="clickable-icon inline-field-width" title="Double click to edit" (click)="setSelectFocus($event, row, '-client', 'select');"
+            <span class="clickable-icon inline-field-width" title="Double click to select" (click)="setSelectFocus($event, row, '-client', 'select');"
                 *ngIf="!editing[row.$$index + '-client']">
                 {{row.clientName}}
             </span>
@@ -79,7 +80,7 @@
     </ngx-datatable-column>
     <ngx-datatable-column name="Task Description" sortable>
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
-            <span class="clickable-icon inline-field-width" title="Double click to edit" (click)="setSelectFocus($event, row, '-task', 'select');"
+            <span class="clickable-icon inline-field-width" title="Double click to select" (click)="setSelectFocus($event, row, '-task', 'select');"
                 *ngIf="!editing[row.$$index + '-task']">
                 {{row.taskDescription}}
             </span>
@@ -90,21 +91,21 @@
     </ngx-datatable-column>
     <ngx-datatable-column name="Entry Date" sortable>
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
-            <span class="clickable-icon inline-field-width" title="Double click to edit" (click)="clickOnFirstChild($event, row, '-date', 'input');"
+            <span class="clickable-icon inline-field-width" title="Click to edit" (click)="clickOnFirstChild($event, row, '-date');"
                 *ngIf="!editing[row.$$index + '-date']">
                 {{ row.entryDate }}</span>
-            <input (blur)="updateValue($event, 'date', value, row);removeSelectFocus(row,'-date')" (keydown)="keyDownFunction($event, 'date', value, row)"
-                *ngIf=" editing[row.$$index +
+            <input id="{{row.cellvalue + row.$$index}}" (blur)="updateValue($event, 'date', value, row);removeSelectFocus(row,'-date')"
+                (keydown)="keyDownFunction($event, 'date', value, row)" *ngIf=" editing[row.$$index +
                 '-date']" type="text" [value]="value" />
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Start Time" sortable>
         <ng-template ngx-datatable-cell-template let-value="value " let-row="row" click="loadAscEntries()">
-            <span class="clickable-icon inline-field-width" title="Double click to edit " (click)="clickOnFirstChild($event, row, '-startTime', 'input');"
+            <span class="clickable-icon inline-field-width" title="Click to edit " (click)="clickOnFirstChild($event, row, '-startTime');"
                 *ngIf="!editing[row.$$index + '-startTime'] ">
                 {{ row.startTime }}</span>
-            <input class="input-field" (blur)="updateValue($event, 'startTime', value, row);removeSelectFocus(row,'-startTime');" (keydown)="keyDownFunction($event, 'startTime', value, row)"
-                *ngIf="editing[row.$$index + '-startTime']
+            <input id="{{row.cellvalue + row.$$index}}" class="input-field" (blur)="updateValue($event, 'startTime', value, row);removeSelectFocus(row,'-startTime');"
+                (keydown)="keyDownFunction($event, 'startTime', value, row)" *ngIf="editing[row.$$index + '-startTime']
                 " type="time " [value]="value " />
         </ng-template>
     </ngx-datatable-column>
@@ -117,22 +118,22 @@
     </ngx-datatable-column>
     <ngx-datatable-column name="End Time" sortable>
         <ng-template ngx-datatable-cell-template let-value="value " let-row="row ">
-            <span class="clickable-icon inline-field-width" title="Double click to edit " (click)="clickOnFirstChild($event, row, '-endTime', 'input');"
+            <span class="clickable-icon inline-field-width" title="Click to edit " (click)="clickOnFirstChild($event, row, '-endTime');"
                 *ngIf="!editing[row.$$index + '-endTime'] ">
                 {{ row.endTime }}</span>
-            <input class="input-field" (blur)="updateValue($event, 'endTime', value, row);removeSelectFocus(row,'-endTime')" (keydown)="keyDownFunction($event, 'endTime', value, row)"
-                *ngIf="editing[row.$$index + '-endTime']
+            <input id="{{row.cellvalue + row.$$index}}" class="input-field" (blur)="updateValue($event, 'endTime', value, row);removeSelectFocus(row,'-endTime')"
+                (keydown)="keyDownFunction($event, 'endTime', value, row)" *ngIf="editing[row.$$index + '-endTime']
                 " type="time " [value]="value " />
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Time Spent" sortable>
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
-            <span class="clickable-icon inline-field-width" title="Double click to edit " (click)="clickOnFirstChild($event, row, '-timeSpent', 'input');"
+            <span class="clickable-icon inline-field-width" title="Click to edit " (click)="clickOnFirstChild($event, row, '-timeSpent');"
                 *ngIf="!editing[row.$$index + '-timeSpent'] " [ngClass]="{'colored': row.isColored === true}">
                 {{ row.timeSpent }}
             </span>
-            <input class="input-field" (blur)="updateValue($event, 'timeSpent', value, row);removeSelectFocus(row,'-timeSpent')" (keydown)="keyDownFunction($event, 'timeSpent', value, row)"
-                *ngIf="editing[row.$$index + '-timeSpent']
+            <input id="{{row.cellvalue + row.$$index}}" class="input-field" (blur)="updateValue($event, 'timeSpent', value, row);removeSelectFocus(row,'-timeSpent')"
+                (keydown)="keyDownFunction($event, 'timeSpent', value, row)" *ngIf="editing[row.$$index + '-timeSpent']
             " type="text " [value]="value " />
         </ng-template>
     </ngx-datatable-column>
