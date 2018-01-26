@@ -57,7 +57,7 @@ export class EntriesService {
     */
 
   private static sortEntriesByStartDateAsc = (a, b) => {
-    return new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime();
+    return moment(a.startDateTime, 'YYYY-MM-DD HH:mm').toDate() - moment(b.startDateTime, 'YYYY-MM-DD HH:mm').toDate();
   }
 
   /**
@@ -67,7 +67,7 @@ export class EntriesService {
   */
 
   private static sortEntriesByEndDateAsc = (a, b) => {
-    return new Date(a.endDateTime).getTime() - new Date(b.endDateTime).getTime();
+    return moment(a.endDateTime, 'YYYY-MM-DD HH:mm').toDate() - moment(b.endDateTime, 'YYYY-MM-DD HH:mm').toDate();
   }
 
   /**

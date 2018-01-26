@@ -115,7 +115,7 @@ export class EntriesComponent implements OnInit {
     this.editing[row.$$index + cell] = true;
     setTimeout(() => {
       this.setInputFocus(event, value)
-    }, 100);
+    }, 50);
   }
 
   setInputFocus(event, value) {
@@ -123,7 +123,7 @@ export class EntriesComponent implements OnInit {
     setTimeout(() => {
       let parentElementTag = parentElement.getElementsByTagName(value)[0];
       parentElementTag.focus();
-    }, 100);
+    }, 50);
   }
 
   removeSelectFocus(row, cell) {
