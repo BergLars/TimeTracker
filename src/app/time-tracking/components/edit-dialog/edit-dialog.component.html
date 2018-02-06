@@ -14,8 +14,8 @@
             <td></td>
             <td>
                 <select #project (change)="projectDropdown(project.value)">
-        			<option *ngFor="let item of projects" [value]="item.id">{{item.projectName}}</option>
-        		</select>
+                    <option *ngFor="let item of projects" [value]="item.id">{{item.projectName}}</option>
+                </select>
             </td>
         </tr>
         <tr [hidden]="item != PROJECT">
@@ -30,15 +30,15 @@
             <td></td>
             <td>
                 <select #task (change)="taskDropdown(task.value)">
-	        		<option *ngFor="let item of tasks" [value]="item.id">{{item.taskDescription}}</option>
-	        	</select>
+                    <option *ngFor="let item of tasks" [value]="item.id">{{item.taskDescription}}</option>
+                </select>
             </td>
         </tr>
         <tr [hidden]="item != TASK">
             <td></td>
             <td>
                 <md-input-container>
-                    <input mdInput #newTaskDescription placeholder="Description">
+                    <input mdInput #newTaskDescription id="newTaskDescription" placeholder="Description">
                 </md-input-container>
             </td>
         </tr>
@@ -47,8 +47,8 @@
             <td></td>
             <td>
                 <select #client (change)="clientDropdown(client.value)">
-        			<option *ngFor="let item of clients" [value]="item.id">{{item.clientName}}</option>
-        		</select>
+                    <option *ngFor="let item of clients" [value]="item.id">{{item.clientName}}</option>
+                </select>
             </td>
         </tr>
 
@@ -65,5 +65,7 @@
 <div md-dialog-actions>
     <button type="button" md-button (click)="validateForm(newTaskDescription.value,newProjectName.value,newClientName.value);checkMandatoryFields();">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
-    <span (click)="deleteItem();"><md-icon class="clickable-icon">delete_forever</md-icon></span>
+    <span (click)="deleteItem();">
+        <md-icon class="clickable-icon">delete_forever</md-icon>
+    </span>
 </div>

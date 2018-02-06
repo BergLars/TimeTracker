@@ -2,31 +2,33 @@
 // https://github.com/angular/protractor/blob/master/docs/referenceConf.js
 
 /*global jasmine */
-var SpecReporter = require('jasmine-spec-reporter');
+var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
 
 exports.config = {
   allScriptsTimeout: 11000,
   specs: [
-    './e2e/**/*.e2e-spec.ts'
+    // './e2e/**/login.spec.js',
+    // './e2e/**/timetracker.spec.js',
+    './e2e/**/userprofile-toolbar.spec.js',
+    // './e2e/**/menu-toolbar.spec.js',
+    // './e2e/**/entries-toolbar.spec.js'
   ],
   capabilities: {
     'browserName': 'chrome'
   },
   directConnect: true,
-  baseUrl: 'http://mojito.dev.fluance.net:8080/timetracker/',
+  baseUrl: 'http://localhost:4200',
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,
-    defaultTimeoutInterval: 30000,
-    print: function() {}
+    defaultTimeoutInterval: 360000
   },
   useAllAngular2AppRoots: true,
-  beforeLaunch: function() {
-    require('ts-node').register({
-      project: 'e2e'
-    });
+  beforeLaunch: function () {
   },
-  onPrepare: function() {
+  onPrepare: function () {
+    global.TIMEOUT = 5000; // milliseconds
+    global.EC = protractor.ExpectedConditions;
     jasmine.getEnv().addReporter(new SpecReporter());
   }
 };
