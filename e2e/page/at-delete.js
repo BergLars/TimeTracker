@@ -1,4 +1,4 @@
-var EditComponent = function () {
+var DeleteComponent = function () {
     this.editButton = element(by.buttonText('EDIT'));
     this.cancelButton = element(by.buttonText('Cancel'));
     this.profileIcon = element(by.id('accountCircle'));
@@ -14,5 +14,7 @@ var EditComponent = function () {
     this.blackProjectOption = $('#projectOptions').element(by.cssContainingText('option', 'black'));
     this.blockTaskOption = $('#taskOptions').element(by.cssContainingText('option', 'block'));
     this.blackTaskOption = $('#taskOptions').element(by.cssContainingText('option', 'black'));
+    this.blablaTaskOption = $('#taskOptions').element(by.cssContainingText('option', 'blabla'));
+    this.deleteIcon = element(by.id('deleteIcon'));
 }
-module.exports = EditComponent;
+module.exports = DeleteComponent;

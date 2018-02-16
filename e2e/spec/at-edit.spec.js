@@ -22,6 +22,7 @@ describe('Menu', () => {
             editComponent.blockTaskOption.click();
             expect(element(by.cssContainingText('option', 'block')).isPresent()).toBe(true);
             editComponent.descriptionTaskField.sendKeys(editComponent.itemName);
+            browser.sleep(500);
             editComponent.okButton.click();
         });
         it('Verify edited task', () => {
@@ -39,6 +40,7 @@ describe('Menu', () => {
             editComponent.blockProjectOption.click();
             expect(element(by.cssContainingText('option', 'block')).isPresent()).toBe(true);
             editComponent.projectNameField.sendKeys(editComponent.itemName);
+            browser.sleep(500);
             editComponent.okButton.click();
         });
         it('Verify edited project', () => {
@@ -57,6 +59,7 @@ describe('Menu', () => {
             expect(element(by.cssContainingText('option', 'block')).isPresent()).toBe(true);
             editComponent.blockClientOption.click();
             editComponent.clientNameField.sendKeys(editComponent.itemName);
+            browser.sleep(500);
             editComponent.okButton.click();
         });
         it('Verify edited client', () => {

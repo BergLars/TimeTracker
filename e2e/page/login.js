@@ -12,7 +12,6 @@ var Login = function () {
     }
 
     this.loginUser = function (username, password) {
-        // browser.wait(EC.elementToBeClickable(this.usernameField), TIMEOUT, "Username" + " not clickable");
         element(by.id('username')).sendKeys(username);
         element(by.id('password')).sendKeys(password);
         element(by.buttonText('Login')).click();
@@ -27,7 +26,6 @@ var Login = function () {
     }
 
     this.logOutUser = function () {
-        // browser.wait(EC.elementToBeClickable(this.usernameField), TIMEOUT, "Username" + " not clickable");
         this.clickProfileIcon();
         this.clickSignOut();
     }

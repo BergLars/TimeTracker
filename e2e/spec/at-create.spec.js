@@ -67,9 +67,9 @@ describe('Menu', () => {
             browser.wait(EC.elementToBeClickable(createComponent.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.itemToBeCreated.click();
             element(by.cssContainingText('option', 'Client')).click();
+            expect(createComponent.clientNameField.isPresent()).toBe(true);
             browser.wait(EC.elementToBeClickable(createComponent.clientNameField), TIMEOUT, "Client name field is not ready" + " not present");
             createComponent.clientNameField.sendKeys(createComponent.itemName);
-            expect(createComponent.clientNameField.isPresent()).toBe(true);
             browser.sleep(500);
             createComponent.okButton.click();
         });
