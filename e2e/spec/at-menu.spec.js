@@ -68,7 +68,7 @@ describe('Userprofile', () => {
             userprofileMenu.profileIcon.click();
             browser.wait(EC.elementToBeClickable(userprofileMenu.deleteUserButton), TIMEOUT, "Delete button" + " not clickable");
             userprofileMenu.deleteUserButton.click();
-            element(by.cssContainingText('option', 'black')).click();
+            element(by.cssContainingText('option', userprofileMenu.itemName)).click();
             browser.wait(EC.elementToBeClickable(userprofileMenu.okButton), TIMEOUT, "Ok button" + " not clickable");
             userprofileMenu.okButton.click();
             browser.switchTo().alert().then(function (alert) {
@@ -76,7 +76,7 @@ describe('Userprofile', () => {
                 expect(alert.getText()).toEqual("Are you sure that you want to delete this user?");
                 return alert.accept();
             });
-            expect(element(by.cssContainingText('option', 'black')).isPresent()).toBe(true);
+            expect(element(by.cssContainingText('option', userprofileMenu.itemName)).isPresent()).toBe(true);
         });
     });
     describe('Test', () => {
@@ -85,7 +85,7 @@ describe('Userprofile', () => {
             userprofileMenu.profileIcon.click();
             browser.wait(EC.elementToBeClickable(userprofileMenu.deleteUserButton), TIMEOUT, "Delete button" + " not clickable");
             userprofileMenu.deleteUserButton.click();
-            expect(element(by.cssContainingText('option', 'black')).isPresent()).toBe(false);
+            expect(element(by.cssContainingText('option', userprofileMenu.itemName)).isPresent()).toBe(false);
             userprofileMenu.cancelButton.click();
         });
     });

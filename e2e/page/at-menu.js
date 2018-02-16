@@ -10,5 +10,6 @@ var UserprofileMenu = function () {
     this.okButton = element(by.buttonText('OK'));
     this.password = 'Fluance2025*';
     this.wrongPassword = 'fluance2025*';
+    this.itemName = 'black';
 }
 module.exports = UserprofileMenu;

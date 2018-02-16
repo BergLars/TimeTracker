@@ -9,7 +9,8 @@ exports.config = {
   specs: [
     // './e2e/**/login.spec.js',
     // './e2e/**/timetracker.spec.js',
-    './e2e/**/at-create.spec.js',
+    // './e2e/**/at-create.spec.js',
+    './e2e/**/at-edit.spec.js',
     // './e2e/**/at-menu.spec.js',
     // './e2e/**/at-export.spec.js',
     // './e2e/**/menu-toolbar.spec.js',

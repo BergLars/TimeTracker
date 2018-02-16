@@ -17,7 +17,7 @@ describe('Menu', () => {
         createComponent.logoutButton.click();
     });
     describe('Toolbar', () => {
-        it('Create a task as black', () => {
+        it('Create a task as block', () => {
             expect(createComponent.createButton.isPresent()).toBe(true);
             browser.wait(EC.elementToBeClickable(createComponent.createButton), TIMEOUT, "Create button is not ready" + " not present");
             createComponent.createButton.click();
@@ -31,12 +31,12 @@ describe('Menu', () => {
             browser.wait(EC.elementToBeClickable(createComponent.editButton), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.editButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.taskOptions), TIMEOUT, "Task opitons is not ready" + " not present");
-            expect(element(by.cssContainingText('option', 'black')).isPresent()).toBe(true);
+            expect(element(by.cssContainingText('option', createComponent.itemName)).isPresent()).toBe(true);
             createComponent.cancelButton.click();
         });
     });
     describe('Toolbar', () => {
-        it('Create a Project as black', () => {
+        it('Create a Project as block', () => {
             browser.wait(EC.elementToBeClickable(createComponent.createButton), TIMEOUT, "Create button is not ready" + " not present");
             createComponent.createButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
@@ -55,13 +55,13 @@ describe('Menu', () => {
             element(by.cssContainingText('option', 'Project')).click();
             browser.sleep(500);
             createComponent.projectOptions.click();
-            expect(element(by.cssContainingText('option', 'black')).isPresent()).toBe(true);
+            expect(element(by.cssContainingText('option', createComponent.itemName)).isPresent()).toBe(true);
             createComponent.cancelButton.click();
         });
     });
 
     describe('Toolbar', () => {
-        it('Create a Client as black', () => {
+        it('Create a Client as block', () => {
             browser.wait(EC.elementToBeClickable(createComponent.createButton), TIMEOUT, "Create button is not ready" + " not present");
             createComponent.createButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
@@ -80,13 +80,13 @@ describe('Menu', () => {
             element(by.cssContainingText('option', 'Client')).click();
             browser.sleep(500);
             createComponent.clientOptions.click();
-            expect(element(by.cssContainingText('option', 'black')).isPresent()).toBe(true);
+            expect(element(by.cssContainingText('option', createComponent.itemName)).isPresent()).toBe(true);
             createComponent.cancelButton.click();
         });
     });
 
     describe('Toolbar', () => {
-        it('Create a User as black', () => {
+        it('Create a User as block', () => {
             browser.wait(EC.elementToBeClickable(createComponent.createButton), TIMEOUT, "Create button is not ready" + " not present");
             createComponent.createButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
@@ -108,7 +108,7 @@ describe('Menu', () => {
             createComponent.profileIcon.click();
             browser.wait(EC.elementToBeClickable(createComponent.deleteUserButton), TIMEOUT, "Delete button" + " not clickable");
             createComponent.deleteUserButton.click();
-            expect(element(by.cssContainingText('option', 'black')).isPresent()).toBe(true);
+            expect(element(by.cssContainingText('option', createComponent.itemName)).isPresent()).toBe(true);
             createComponent.cancelButton.click();
         });
     });
