@@ -43,7 +43,7 @@ describe('Entries', function () {
             browser.sleep(500);
             newEntry.okButton.click();
         });
-        it('Total entries', () => {
+        it('Total entries are equal to 2', () => {
             browser.sleep(500);
             expect(newEntry.numberOfEntries.count()).toBe(2);
         });
