@@ -30,7 +30,7 @@ describe('Menu', () => {
         it('Verify created task', () => {
             browser.wait(EC.elementToBeClickable(createComponent.editButton), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.editButton.click();
-            browser.wait(EC.elementToBeClickable(createComponent.taskOptions), TIMEOUT, "Task opitons is not ready" + " not present");
+            browser.wait(EC.elementToBeClickable(createComponent.taskOptions), TIMEOUT, "Task options is not ready" + " not present");
             expect(element(by.cssContainingText('option', createComponent.itemName)).isPresent()).toBe(true);
             createComponent.cancelButton.click();
         });
