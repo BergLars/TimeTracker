@@ -43,6 +43,11 @@ export class EntriesComponent implements OnInit {
   @Input() date: string;
   public editing = {};
   public result: any;
+  clickedProject: any;
+
+  private previousAllProjectsFilterFlag = true;
+  private previousAllTasksFilterFlag = true;
+  private previousAllClientsFilterFlag = true;
 
   private columns = [
     { key: 'Description', id: 0 },
@@ -74,9 +79,9 @@ export class EntriesComponent implements OnInit {
   item: number = this.createItems[0].id;
 
   public defaultItem: any;
-  @Input() selectedClients: any;
-  @Input() selectedProjects: any;
-  @Input() selectedTasks: any;
+  @Input() selectedClients: any = [];
+  @Input() selectedProjects: any = [];
+  @Input() selectedTasks: any = [];
 
   @Input() selectedColumn: any;
   @Input() selectedSort: any;
@@ -98,6 +103,7 @@ export class EntriesComponent implements OnInit {
 
   ngOnInit() {
     this.defaultItem = this.createItems[0].key;
+    this.updateFilterSelection();
   }
 
   setSelectFocus(event, row, value) {
@@ -430,9 +436,6 @@ export class EntriesComponent implements OnInit {
       this.projects = this.entriesService.sortedProjects();
       this.tasks = this.entriesService.sortedTasks();
 
-      this.selectedProjects = [];
-      this.selectedTasks = [];
-      this.selectedClients = [];
       this.selectedProjects[0] = -1;
       this.selectedTasks[0] = -1;
       this.selectedClients[0] = -1;
@@ -444,54 +447,97 @@ export class EntriesComponent implements OnInit {
   }
 
   projectsSelectedPerDefault() {
-    if (this.selectedProjects.length > 0) {
-      let selectedProjects = []
 
-      if (this.selectedProjects[0] === -1) {
-        selectedProjects = this.projects.map(function (project) {
+    var allProjectsFilterFlag = this.selectedProjects[0] === -1;
+    let selectedProjects = [];
+
+       selectedProjects = this.projects.map(function (project) {
           return project.id;
-        });
-        this.selectedProjects = [-1].concat(selectedProjects);
-      } else {
-        if (this.selectedProjects.length === this.projects.length) {
-          this.selectedProjects = [];
-        }
-      }
+    });
+
+    if (this.previousAllProjectsFilterFlag < allProjectsFilterFlag) {
+      this.selectedProjects = [-1].concat(selectedProjects);
+      this.previousAllProjectsFilterFlag = allProjectsFilterFlag;
+      return;
     }
+
+    if (this.previousAllProjectsFilterFlag > allProjectsFilterFlag) {
+      this.previousAllProjectsFilterFlag = allProjectsFilterFlag;
+      this.selectedProjects = [];
+      return;
+    }
+
+    if (this.selectedProjects.length === (this.projects.length - (allProjectsFilterFlag ? 1 : 0) ) ) {
+      this.selectedProjects = [-1].concat(selectedProjects);
+      allProjectsFilterFlag = true;
+    } else {
+      if (allProjectsFilterFlag) this.selectedProjects = this.selectedProjects.slice(1); 
+      allProjectsFilterFlag = false;
+    }
+    this.previousAllProjectsFilterFlag = allProjectsFilterFlag ;
   }
 
   tasksSelectedPerDefault() {
-    if (this.selectedTasks.length > 0) {
-      let selectedTasks = []
 
-      if (this.selectedTasks[0] === -1) {
-        selectedTasks = this.tasks.map(function (task) {
+    var allTasksFilterFlag = this.selectedTasks[0] === -1;
+    let selectedTasks = [];
+
+    selectedTasks = this.tasks.map(function (task) {
           return task.id;
-        });
-        this.selectedTasks = [-1].concat(selectedTasks);
-      } else {
-        if (this.selectedTasks.length === this.tasks.length) {
-          this.selectedTasks = [];
-        }
-      }
+    });
+
+    if (this.previousAllTasksFilterFlag < allTasksFilterFlag) {
+      this.selectedTasks = [-1].concat(selectedTasks);
+      this.previousAllTasksFilterFlag = allTasksFilterFlag;
+      return;
     }
+
+    if (this.previousAllTasksFilterFlag > allTasksFilterFlag) {
+      this.previousAllTasksFilterFlag = allTasksFilterFlag;
+      this.selectedTasks = [];
+      return;
+    }
+
+    if (this.selectedTasks.length === (this.tasks.length - (allTasksFilterFlag ? 1 : 0) ) ) {
+      this.selectedTasks = [-1].concat(selectedTasks);
+      allTasksFilterFlag = true;
+    } else {
+      if (allTasksFilterFlag) this.selectedTasks = this.selectedTasks.slice(1); 
+      allTasksFilterFlag = false;
+    }
+    this.previousAllTasksFilterFlag = allTasksFilterFlag;
   }
 
   clientsSelectedPerDefault() {
-    if (this.selectedClients.length > 0) {
-      let selectedClients = []
+    var allClientsFilterFlag = this.selectedClients[0] === -1;
+    let selectedClients = [];
 
-      if (this.selectedClients[0] === -1) {
-        selectedClients = this.clients.map(function (client) {
+
+    selectedClients = this.clients.map(function (client) {
           return client.id;
-        });
-        this.selectedClients = [-1].concat(selectedClients);
-      } else {
-        if (this.selectedClients.length === this.clients.length) {
-          this.selectedClients = [];
-        }
-      }
+    });
+
+    if (this.previousAllClientsFilterFlag < allClientsFilterFlag) {
+      this.selectedClients = [-1].concat(selectedClients);
+      this.previousAllClientsFilterFlag = allClientsFilterFlag;
+      return;
     }
+
+    if (this.previousAllClientsFilterFlag > allClientsFilterFlag) {
+      this.previousAllClientsFilterFlag = allClientsFilterFlag;
+      this.selectedClients = [];
+      return;
+    }
+
+    if (this.selectedClients.length === (this.clients.length - (allClientsFilterFlag ? 1 : 0) ) ) {
+      this.selectedClients = [-1].concat(selectedClients);
+      allClientsFilterFlag = true;
+    } else {
+      if (allClientsFilterFlag) this.selectedClients = this.selectedClients.slice(1); 
+      allClientsFilterFlag = false;
+    }
+
+    this.previousAllClientsFilterFlag = allClientsFilterFlag;
   }
 
   keyDownFunction(event, cell, cellValue, row) {
