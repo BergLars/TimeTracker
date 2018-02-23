@@ -34,10 +34,10 @@
         </md-chip>
         &nbsp;
         <span color="primary" class="filter-position">
-            <md-select placeholder="Column" [(ngModel)]="selectedColumn" (change)="updateSortingSelection();">
+            <md-select placeholder="Column" [(ngModel)]="selectedColumn" (change)="updateSortingSelection();" id="sortingColumn">
                 <md-option class="data-filter-header" *ngFor="let item of columns" [value]='item.id'>{{ item.key }}</md-option>
             </md-select>
-            <md-select placeholder="Sort" [(ngModel)]="selectedSort" (change)="updateSortingSelection();">
+            <md-select placeholder="Sort" [(ngModel)]="selectedSort" (change)="updateSortingSelection();" id="sortingSort">
                 <md-option class="data-filter-header" *ngFor="let item of sorts" [value]='item.id'>{{ item.key }}</md-option>
             </md-select>
         </span>

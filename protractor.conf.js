@@ -16,6 +16,7 @@ exports.config = {
     './e2e/**/at-menu.spec.js',
     './e2e/**/at-delete.spec.js',
     './e2e/**/at-pagesize.spec.js',
+    './e2e/**/at-sorting.spec.js',
     // './e2e/**/at-export.spec.js',
     // './e2e/**/menu-toolbar.spec.js',
     // './e2e/**/entries-toolbar.spec.js'
