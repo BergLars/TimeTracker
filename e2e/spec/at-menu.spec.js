@@ -6,12 +6,12 @@ var UserprofileMenu = require('../page/at-menu.js');
 var userprofileMenu = new UserprofileMenu();
 
 describe('Userprofile', () => {
-    describe('Test', () => {
+    describe('Change password', () => {
         beforeEach(() => {
             timeTracker.navigateTo();
             login.loginUser(login.username, login.password);
         });
-        it('Change password', () => {
+        it('It should change user\'s password', () => {
             browser.wait(EC.elementToBeClickable(userprofileMenu.profileIcon), TIMEOUT, "Profile icon" + " not clickable");
             userprofileMenu.profileIcon.click();
             expect(userprofileMenu.changePasswordButton.isPresent()).toBe(true);
@@ -38,8 +38,8 @@ describe('Userprofile', () => {
         browser.wait(EC.elementToBeClickable(userprofileMenu.logoutButton), TIMEOUT, "Logout button" + " not clickable");
         userprofileMenu.logoutButton.click();
     });
-    describe('Test', () => {
-        it('Wrong password', () => {
+    describe('Change password', () => {
+        it('It should verify if user\'s password is wrong', () => {
             browser.wait(EC.elementToBeClickable(userprofileMenu.profileIcon), TIMEOUT, "Profile icon" + " not clickable");
             userprofileMenu.profileIcon.click();
             userprofileMenu.changePasswordButton.click();
@@ -62,8 +62,8 @@ describe('Userprofile', () => {
             expect(userprofileMenu.currentPassword.getAttribute('value')).not.toEqual(userprofileMenu.password);
         });
     });
-    describe('Test', () => {
-        it('Delete a user', () => {
+    describe('Delete user', () => {
+        it('It should delete a user', () => {
             browser.wait(EC.elementToBeClickable(userprofileMenu.profileIcon), TIMEOUT, "Profile icon" + " not clickable");
             userprofileMenu.profileIcon.click();
             browser.wait(EC.elementToBeClickable(userprofileMenu.deleteUserButton), TIMEOUT, "Delete button" + " not clickable");
@@ -79,8 +79,8 @@ describe('Userprofile', () => {
             expect(element(by.cssContainingText('option', userprofileMenu.itemName)).isPresent()).toBe(true);
         });
     });
-    describe('Test', () => {
-        it('Verify deleted user', () => {
+    describe('Delete user', () => {
+        it('It should verify the deleted user', () => {
             browser.wait(EC.elementToBeClickable(userprofileMenu.profileIcon), TIMEOUT, "Profile icon" + " not clickable");
             userprofileMenu.profileIcon.click();
             browser.wait(EC.elementToBeClickable(userprofileMenu.deleteUserButton), TIMEOUT, "Delete button" + " not clickable");

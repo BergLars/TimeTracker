@@ -14,7 +14,7 @@ var DeleteComponent = function () {
     this.blackProjectOption = $('#projectOptions').element(by.cssContainingText('option', 'black'));
     this.blockTaskOption = $('#taskOptions').element(by.cssContainingText('option', 'block'));
     this.blackTaskOption = $('#taskOptions').element(by.cssContainingText('option', 'black'));
-    this.blablaTaskOption = $('#taskOptions').element(by.cssContainingText('option', 'blabla'));
+    this.taskProtractor2Option = $('#taskOptions').element(by.cssContainingText('option', 'protractor task 1'));
     this.deleteIcon = element(by.id('deleteIcon'));
 }
 module.exports = DeleteComponent;

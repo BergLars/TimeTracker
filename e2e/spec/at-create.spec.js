@@ -5,7 +5,7 @@ var login = new Login();
 var CreateComponent = require('../page/at-create.js');
 var createComponent = new CreateComponent();
 
-describe('Menu', () => {
+describe('Create button', () => {
     beforeEach(() => {
         timeTracker.navigateTo();
         login.loginUser(login.username, login.password);
@@ -16,8 +16,8 @@ describe('Menu', () => {
         browser.wait(EC.elementToBeClickable(createComponent.logoutButton), TIMEOUT, "Logout button" + " not clickable");
         createComponent.logoutButton.click();
     });
-    describe('Toolbar', () => {
-        it('Create a task as block', () => {
+    describe('Create a task', () => {
+        it('It should create a task as block', () => {
             expect(createComponent.createButton.isPresent()).toBe(true);
             browser.wait(EC.elementToBeClickable(createComponent.createButton), TIMEOUT, "Create button is not ready" + " not present");
             createComponent.createButton.click();
@@ -27,7 +27,7 @@ describe('Menu', () => {
             browser.sleep(500);
             createComponent.okButton.click();
         });
-        it('Verify created task', () => {
+        it('It should verify the created task', () => {
             browser.wait(EC.elementToBeClickable(createComponent.editButton), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.editButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.taskOptions), TIMEOUT, "Task options is not ready" + " not present");
@@ -35,8 +35,8 @@ describe('Menu', () => {
             createComponent.cancelButton.click();
         });
     });
-    describe('Toolbar', () => {
-        it('Create a Project as block', () => {
+    describe('Create a project', () => {
+        it('It should create a Project as block', () => {
             browser.wait(EC.elementToBeClickable(createComponent.createButton), TIMEOUT, "Create button is not ready" + " not present");
             createComponent.createButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
@@ -48,9 +48,10 @@ describe('Menu', () => {
             browser.sleep(500);
             createComponent.okButton.click();
         });
-        it('Verify created project', () => {
+        it('It should verify the created project', () => {
             browser.wait(EC.elementToBeClickable(createComponent.editButton), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.editButton.click();
+            browser.wait(EC.elementToBeClickable(createComponent.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.itemToBeCreated.click();
             element(by.cssContainingText('option', 'Project')).click();
             browser.sleep(500);
@@ -60,8 +61,8 @@ describe('Menu', () => {
         });
     });
 
-    describe('Toolbar', () => {
-        it('Create a Client as block', () => {
+    describe('Create a client', () => {
+        it('It should create a Client as block', () => {
             browser.wait(EC.elementToBeClickable(createComponent.createButton), TIMEOUT, "Create button is not ready" + " not present");
             createComponent.createButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
@@ -73,9 +74,10 @@ describe('Menu', () => {
             browser.sleep(500);
             createComponent.okButton.click();
         });
-        it('Verify created client', () => {
+        it('it should verify the created client', () => {
             browser.wait(EC.elementToBeClickable(createComponent.editButton), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.editButton.click();
+            browser.wait(EC.elementToBeClickable(createComponent.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.itemToBeCreated.click();
             element(by.cssContainingText('option', 'Client')).click();
             browser.sleep(500);
@@ -85,8 +87,8 @@ describe('Menu', () => {
         });
     });
 
-    describe('Toolbar', () => {
-        it('Create a User as block', () => {
+    describe('Create a user', () => {
+        it('It should create a User as block', () => {
             browser.wait(EC.elementToBeClickable(createComponent.createButton), TIMEOUT, "Create button is not ready" + " not present");
             createComponent.createButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
@@ -103,7 +105,7 @@ describe('Menu', () => {
             browser.sleep(500);
             createComponent.okButton.click();
         });
-        it('Verify created user', () => {
+        it('It should verify the created user', () => {
             browser.wait(EC.elementToBeClickable(createComponent.profileIcon), TIMEOUT, "Profile icon" + " not clickable");
             createComponent.profileIcon.click();
             browser.wait(EC.elementToBeClickable(createComponent.deleteUserButton), TIMEOUT, "Delete button" + " not clickable");

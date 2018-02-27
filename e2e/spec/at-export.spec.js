@@ -5,7 +5,7 @@ var login = new Login();
 var ExportComponent = require('../page/at-export.js');
 var exportComponent = new ExportComponent();
 
-describe('Export', () => {
+describe('Export button ', () => {
     beforeEach(() => {
         timeTracker.navigateTo();
         login.loginUser(login.username, login.password);
@@ -17,8 +17,8 @@ describe('Export', () => {
         exportComponent.logoutButton.click();
     });
 
-    describe('Button', () => {
-        it('Invalid date format as dd/mm/yyyy', () => {
+    describe('Invalid date format', () => {
+        it('It should display an invalid date format alert dialog', () => {
             browser.wait(EC.elementToBeClickable(exportComponent.exportButton), TIMEOUT, "Export Button is not ready" + " not present");
             exportComponent.exportButton.click();
             browser.wait(EC.elementToBeClickable(exportComponent.fromDateField), TIMEOUT, "Export Button is not ready" + " not present");
@@ -39,14 +39,14 @@ describe('Export', () => {
     });
 });
 
-describe('Export', () => {
+describe('Export button', () => {
     beforeEach(() => {
         timeTracker.navigateTo();
         login.loginUser(login.username, login.password);
     });
 
-    describe('Button', () => {
-        it('Valid dates format dd.mm.yyyy', () => {
+    describe('Valid date format', () => {
+        it('It should export entries', () => {
             browser.wait(EC.elementToBeClickable(exportComponent.exportButton), TIMEOUT, "Export Button is not ready" + " not present");
             exportComponent.exportButton.click();
             browser.wait(EC.elementToBeClickable(exportComponent.fromDateField), TIMEOUT, "Export Button is not ready" + " not present");

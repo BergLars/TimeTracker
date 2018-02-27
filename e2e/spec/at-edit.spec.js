@@ -5,7 +5,7 @@ var login = new Login();
 var EditComponent = require('../page/at-edit.js');
 var editComponent = new EditComponent();
 
-describe('Menu', () => {
+describe('Edit button', () => {
     beforeEach(() => {
         timeTracker.navigateTo();
         login.loginUser(login.username, login.password);
@@ -16,8 +16,8 @@ describe('Menu', () => {
         browser.wait(EC.elementToBeClickable(editComponent.logoutButton), TIMEOUT, "Logout button" + " not clickable");
         editComponent.logoutButton.click();
     });
-    describe('Toolbar', () => {
-        it('Edit a task as black', () => {
+    describe('Edit a task', () => {
+        it('It should edit the task "block " to black', () => {
             editComponent.editButton.click();
             editComponent.blockTaskOption.click();
             expect(element(by.cssContainingText('option', 'block')).isPresent()).toBe(true);
@@ -25,7 +25,7 @@ describe('Menu', () => {
             browser.sleep(500);
             editComponent.okButton.click();
         });
-        it('Verify edited task', () => {
+        it('It should verify the edited task', () => {
             editComponent.editButton.click();
             editComponent.blackTaskOption.click();
             expect(element(by.cssContainingText('option', 'black')).isPresent()).toBe(true);
@@ -33,8 +33,8 @@ describe('Menu', () => {
         });
     });
 
-    describe('Toolbar', () => {
-        it('Edit a Project as black', () => {
+    describe('Edit a project', () => {
+        it('It should edit the project "block " to black', () => {
             editComponent.editButton.click();
             element(by.cssContainingText('option', 'Project')).click();
             editComponent.blockProjectOption.click();
@@ -43,7 +43,7 @@ describe('Menu', () => {
             browser.sleep(500);
             editComponent.okButton.click();
         });
-        it('Verify edited project', () => {
+        it('It should verify the edited project', () => {
             editComponent.editButton.click();
             element(by.cssContainingText('option', 'Project')).click();
             editComponent.blackProjectOption.click();
@@ -52,8 +52,8 @@ describe('Menu', () => {
         });
     });
 
-    describe('Toolbar', () => {
-        it('Edit a Client as black', () => {
+    describe('Edit a client', () => {
+        it('It should edit the client "block " to black', () => {
             editComponent.editButton.click();
             element(by.cssContainingText('option', 'Client')).click();
             expect(element(by.cssContainingText('option', 'block')).isPresent()).toBe(true);
@@ -62,7 +62,7 @@ describe('Menu', () => {
             browser.sleep(500);
             editComponent.okButton.click();
         });
-        it('Verify edited client', () => {
+        it('It should verify the edited client', () => {
             editComponent.editButton.click();
             element(by.cssContainingText('option', 'Client')).click();
             editComponent.blackClientOption.click();

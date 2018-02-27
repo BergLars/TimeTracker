@@ -7,7 +7,7 @@ var login = new Login();
 var UserprofileMenu = require('../page/at-menu.js');
 var userprofileMenu = new UserprofileMenu();
 
-describe('Entries', function () {
+describe('New entry button', function () {
     beforeEach(() => {
         timeTracker.navigateTo();
         login.loginUser(login.username, login.password);
@@ -18,10 +18,12 @@ describe('Entries', function () {
         browser.wait(EC.elementToBeClickable(userprofileMenu.logoutButton), TIMEOUT, "Logout button" + " not clickable");
         userprofileMenu.logoutButton.click();
     });
-    describe('Toolbar', () => {
-        it('New entry with time spent', () => {
+    describe('Create a new entry', () => {
+        it('It should create a new entry with time spent', () => {
             newEntry.newEntryButton.click();
             newEntry.descriptionField.sendKeys('Protractor test');
+            browser.sleep(500);
+            newEntry.blockClientOption.click();
             browser.sleep(500);
             newEntry.dateField.sendKeys('02.02.2018');
             browser.sleep(500);
@@ -30,11 +32,11 @@ describe('Entries', function () {
             newEntry.billableCheckbox.click();
             newEntry.okButton.click();
         });
-        it('New entry with start and end time', () => {
+        it('It should create a new entry with start and end time', () => {
             newEntry.newEntryButton.click();
             newEntry.descriptionField.sendKeys('Protractor test 2');
             browser.sleep(500);
-            newEntry.dateField.sendKeys('02.02.2018');
+            newEntry.dateField.sendKeys('02.01.2018');
             browser.sleep(500);
             newEntry.enableTypingTimesCheckBox.click();
             newEntry.startTimeField.sendKeys('12:00');

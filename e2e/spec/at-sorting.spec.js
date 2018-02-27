@@ -7,7 +7,7 @@ var login = new Login();
 var UserprofileMenu = require('../page/at-menu.js');
 var userprofileMenu = new UserprofileMenu();
 
-describe('Sort', function () {
+describe('Sort entries', function () {
     beforeEach(() => {
         timeTracker.navigateTo();
         login.loginUser(sorting.username, sorting.password);

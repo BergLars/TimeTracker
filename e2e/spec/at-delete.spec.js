@@ -5,7 +5,7 @@ var login = new Login();
 var DeleteComponent = require('../page/at-delete.js');
 var deleteComponent = new DeleteComponent();
 
-describe('Menu', () => {
+describe('Delete items', () => {
     beforeEach(() => {
         timeTracker.navigateTo();
         login.loginUser(login.username, login.password);
@@ -16,42 +16,22 @@ describe('Menu', () => {
         browser.wait(EC.elementToBeClickable(deleteComponent.logoutButton), TIMEOUT, "Logout button" + " not clickable");
         deleteComponent.logoutButton.click();
     });
-    describe('Toolbar', () => {
-        it('Delete a task as black', () => {
+    describe('Delete a task', () => {
+        it('It should delete black task description', () => {
             deleteComponent.editButton.click();
             expect(deleteComponent.deleteIcon.isPresent()).toBe(true);
             deleteComponent.blackTaskOption.click();
             expect(element(by.cssContainingText('option', 'black')).isPresent()).toBe(true);
             deleteComponent.deleteIcon.click();
         });
-        it('Verify deleted task', () => {
+        it('It should verify the deleted task', () => {
             deleteComponent.editButton.click();
             expect(deleteComponent.blackTaskOption.isPresent()).toBe(false);
             deleteComponent.cancelButton.click();
         });
     });
-    describe('Toolbar', () => {
-        it('Delete a used task', () => {
-            deleteComponent.editButton.click();
-            expect(deleteComponent.deleteIcon.isPresent()).toBe(true);
-            expect(element(by.cssContainingText('option', 'blabla')).isPresent()).toBe(true);
-            deleteComponent.blablaTaskOption.click();
-            deleteComponent.deleteIcon.click();
-            browser.wait(EC.alertIsPresent(), TIMEOUT);
-            browser.switchTo().alert().then(function (alert) {
-                expect(alert.getText()).toEqual("This task is used on entries. Cannot be deleted");
-                return alert.accept();
-            });
-            deleteComponent.cancelButton.click();
-        });
-        it('Verify undeleted task', () => {
-            deleteComponent.editButton.click();
-            expect(element(by.cssContainingText('option', 'blabla')).isPresent()).toBe(true);
-            deleteComponent.cancelButton.click();
-        });
-    });
-    describe('Toolbar', () => {
-        it('Delete a Project as black', () => {
+    describe('Delete a project', () => {
+        it('It should delete black project name', () => {
             deleteComponent.editButton.click();
             expect(deleteComponent.deleteIcon.isPresent()).toBe(true);
             element(by.cssContainingText('option', 'Project')).click();
@@ -60,16 +40,15 @@ describe('Menu', () => {
             deleteComponent.projectNameField.sendKeys(deleteComponent.itemName);
             deleteComponent.deleteIcon.click();
         });
-        it('Verify deleted project', () => {
+        it('It should Verify deleted project', () => {
             deleteComponent.editButton.click();
             element(by.cssContainingText('option', 'Project')).click();
             expect(deleteComponent.blackProjectOption.isPresent()).toBe(false);
             deleteComponent.cancelButton.click();
         });
     });
-
-    describe('Toolbar', () => {
-        it('Delete a Client as black', () => {
+    describe('Delete a client', () => {
+        it('It should delete black client name', () => {
             deleteComponent.editButton.click();
             expect(deleteComponent.deleteIcon.isPresent()).toBe(true);
             element(by.cssContainingText('option', 'Client')).click();
@@ -78,10 +57,32 @@ describe('Menu', () => {
             deleteComponent.clientNameField.sendKeys(deleteComponent.itemName);
             deleteComponent.deleteIcon.click();
         });
-        it('Verify deleted client', () => {
+        it('It should verify deleted client', () => {
             deleteComponent.editButton.click();
             element(by.cssContainingText('option', 'Client')).click();
             expect(deleteComponent.blackClientOption.isPresent()).toBe(false);
+            deleteComponent.cancelButton.click();
+        });
+    });
+    describe('Delete a used Task', () => {
+        it('It should not be allowed to delete a used task', () => {
+            deleteComponent.editButton.click();
+            expect(deleteComponent.deleteIcon.isPresent()).toBe(true);
+            // browser.wait(EC.elementToBeClickable(deleteComponent.protractorTask1TaskOption), TIMEOUT, "Protractor task 1" + " not clickable");
+            expect(element(by.cssContainingText('option', 'protractor task 1')).isPresent()).toBe(true);
+            deleteComponent.taskProtractor2Option.click();
+            browser.wait(EC.elementToBeClickable(deleteComponent.deleteIcon), TIMEOUT, "Delete icon" + " not clickable");
+            deleteComponent.deleteIcon.click();
+            browser.wait(EC.alertIsPresent(), TIMEOUT);
+            browser.switchTo().alert().then(function (alert) {
+                expect(alert.getText()).toEqual("This task is used on entries. Cannot be deleted");
+                return alert.accept();
+            });
+            deleteComponent.cancelButton.click();
+        });
+        it('It should verify undeleted task', () => {
+            deleteComponent.editButton.click();
+            expect(element(by.cssContainingText('option', 'protractor task 1')).isPresent()).toBe(true);
             deleteComponent.cancelButton.click();
         });
     });

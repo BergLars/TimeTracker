@@ -7,7 +7,7 @@ var login = new Login();
 var UserprofileMenu = require('../page/at-menu.js');
 var userprofileMenu = new UserprofileMenu();
 
-describe('Entries', function () {
+describe('Delete an entry', function () {
     beforeEach(() => {
         timeTracker.navigateTo();
         login.loginUser(login.username, login.password);
@@ -18,14 +18,14 @@ describe('Entries', function () {
         browser.wait(EC.elementToBeClickable(userprofileMenu.logoutButton), TIMEOUT, "Logout button" + " not clickable");
         userprofileMenu.logoutButton.click();
     });
-    describe('Toolbar', () => {
-        it('Delete first entry', () => {
+    describe('Delete all entries', () => {
+        it('It should delete the first entry', () => {
             browser.sleep(500);
             deleteEntry.selectFirstEntry.click();
             deleteEntry.deleteIcon.click();
             deleteEntry.okButton.click();
         });
-        it('Delete second entry', () => {
+        it('It should delete the second entry', () => {
             browser.sleep(500);
             deleteEntry.selectFirstEntry.click();
             deleteEntry.deleteIcon.click();
