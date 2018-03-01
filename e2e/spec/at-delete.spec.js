@@ -25,6 +25,7 @@ describe('Delete items', () => {
             deleteComponent.deleteIcon.click();
         });
         it('It should verify the deleted task', () => {
+            browser.wait(EC.elementToBeClickable(deleteComponent.editButton), TIMEOUT, "Edit button" + " not clickable");
             deleteComponent.editButton.click();
             expect(deleteComponent.blackTaskOption.isPresent()).toBe(false);
             deleteComponent.cancelButton.click();
@@ -41,6 +42,7 @@ describe('Delete items', () => {
             deleteComponent.deleteIcon.click();
         });
         it('It should Verify deleted project', () => {
+            browser.wait(EC.elementToBeClickable(deleteComponent.editButton), TIMEOUT, "Edit button" + " not clickable");
             deleteComponent.editButton.click();
             element(by.cssContainingText('option', 'Project')).click();
             expect(deleteComponent.blackProjectOption.isPresent()).toBe(false);
@@ -58,6 +60,7 @@ describe('Delete items', () => {
             deleteComponent.deleteIcon.click();
         });
         it('It should verify deleted client', () => {
+            browser.wait(EC.elementToBeClickable(deleteComponent.editButton), TIMEOUT, "Edit button" + " not clickable");
             deleteComponent.editButton.click();
             element(by.cssContainingText('option', 'Client')).click();
             expect(deleteComponent.blackClientOption.isPresent()).toBe(false);
@@ -68,7 +71,6 @@ describe('Delete items', () => {
         it('It should not be allowed to delete a used task', () => {
             deleteComponent.editButton.click();
             expect(deleteComponent.deleteIcon.isPresent()).toBe(true);
-            // browser.wait(EC.elementToBeClickable(deleteComponent.protractorTask1TaskOption), TIMEOUT, "Protractor task 1" + " not clickable");
             expect(element(by.cssContainingText('option', 'protractor task 1')).isPresent()).toBe(true);
             deleteComponent.taskProtractor2Option.click();
             browser.wait(EC.elementToBeClickable(deleteComponent.deleteIcon), TIMEOUT, "Delete icon" + " not clickable");
@@ -81,6 +83,7 @@ describe('Delete items', () => {
             deleteComponent.cancelButton.click();
         });
         it('It should verify undeleted task', () => {
+            browser.wait(EC.elementToBeClickable(deleteComponent.editButton), TIMEOUT, "Edit button" + " not clickable");
             deleteComponent.editButton.click();
             expect(element(by.cssContainingText('option', 'protractor task 1')).isPresent()).toBe(true);
             deleteComponent.cancelButton.click();

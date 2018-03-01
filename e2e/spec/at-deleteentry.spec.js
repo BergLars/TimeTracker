@@ -20,13 +20,13 @@ describe('Delete an entry', function () {
     });
     describe('Delete all entries', () => {
         it('It should delete the first entry', () => {
-            browser.sleep(500);
+            browser.wait(EC.elementToBeClickable(deleteEntry.selectFirstEntry), TIMEOUT, "First entry" + " not clickable");
             deleteEntry.selectFirstEntry.click();
             deleteEntry.deleteIcon.click();
             deleteEntry.okButton.click();
         });
         it('It should delete the second entry', () => {
-            browser.sleep(500);
+            browser.wait(EC.elementToBeClickable(deleteEntry.selectFirstEntry), TIMEOUT, "First entry" + " not clickable");
             deleteEntry.selectFirstEntry.click();
             deleteEntry.deleteIcon.click();
             deleteEntry.okButton.click();
