@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.5
 -- Dumped by pg_dump version 9.5.5
 
--- Started on 2018-03-02 14:40:32 CET
+-- Started on 2018-03-02 14:46:06 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -205,7 +205,7 @@ ALTER SEQUENCE userprofile_id_seq OWNED BY userprofile.id;
 
 
 --
--- TOC entry 2282 (class 2604 OID 147197)
+-- TOC entry 2282 (class 2604 OID 147239)
 -- Name: id; Type: DEFAULT; Schema: timetracker; Owner: -
 --
 
@@ -213,7 +213,7 @@ ALTER TABLE ONLY client ALTER COLUMN id SET DEFAULT nextval('client_id_seq'::reg
 
 
 --
--- TOC entry 2283 (class 2604 OID 147198)
+-- TOC entry 2283 (class 2604 OID 147240)
 -- Name: id; Type: DEFAULT; Schema: timetracker; Owner: -
 --
 
@@ -221,7 +221,7 @@ ALTER TABLE ONLY project ALTER COLUMN id SET DEFAULT nextval('project_id_seq'::r
 
 
 --
--- TOC entry 2284 (class 2604 OID 147199)
+-- TOC entry 2284 (class 2604 OID 147241)
 -- Name: id; Type: DEFAULT; Schema: timetracker; Owner: -
 --
 
@@ -229,7 +229,7 @@ ALTER TABLE ONLY task ALTER COLUMN id SET DEFAULT nextval('task_id_seq'::regclas
 
 
 --
--- TOC entry 2285 (class 2604 OID 147200)
+-- TOC entry 2285 (class 2604 OID 147242)
 -- Name: id; Type: DEFAULT; Schema: timetracker; Owner: -
 --
 
@@ -237,7 +237,7 @@ ALTER TABLE ONLY timeentry ALTER COLUMN id SET DEFAULT nextval('timeentry_id_seq
 
 
 --
--- TOC entry 2286 (class 2604 OID 147201)
+-- TOC entry 2286 (class 2604 OID 147243)
 -- Name: id; Type: DEFAULT; Schema: timetracker; Owner: -
 --
 
@@ -259,6 +259,7 @@ COPY client (id, name) FROM stdin;
 49	client protractor 2
 50	protractor client 1
 51	block
+52	block
 \.
 
 
@@ -268,7 +269,7 @@ COPY client (id, name) FROM stdin;
 -- Name: client_id_seq; Type: SEQUENCE SET; Schema: timetracker; Owner: -
 --
 
-SELECT pg_catalog.setval('client_id_seq', 51, true);
+SELECT pg_catalog.setval('client_id_seq', 52, true);
 
 
 --
@@ -292,6 +293,7 @@ COPY project (id, name) FROM stdin;
 90	project protractor 2
 91	protractor project 1
 92	block
+93	block
 \.
 
 
@@ -301,7 +303,7 @@ COPY project (id, name) FROM stdin;
 -- Name: project_id_seq; Type: SEQUENCE SET; Schema: timetracker; Owner: -
 --
 
-SELECT pg_catalog.setval('project_id_seq', 92, true);
+SELECT pg_catalog.setval('project_id_seq', 93, true);
 
 
 --
@@ -347,6 +349,7 @@ COPY task (id, description) FROM stdin;
 163	task protractor 2
 164	b
 165	bl
+166	block
 \.
 
 
@@ -356,7 +359,7 @@ COPY task (id, description) FROM stdin;
 -- Name: task_id_seq; Type: SEQUENCE SET; Schema: timetracker; Owner: -
 --
 
-SELECT pg_catalog.setval('task_id_seq', 165, true);
+SELECT pg_catalog.setval('task_id_seq', 166, true);
 
 
 --
@@ -472,7 +475,7 @@ COPY timeentry (id, description, userprofile_id, client_id, project_id, task_id,
 -- Name: timeentry_id_seq; Type: SEQUENCE SET; Schema: timetracker; Owner: -
 --
 
-SELECT pg_catalog.setval('timeentry_id_seq', 491, true);
+SELECT pg_catalog.setval('timeentry_id_seq', 493, true);
 
 
 --
@@ -492,7 +495,6 @@ COPY userprofile (id, username, password, employmentdegree, isadmin) FROM stdin;
 60	admintestuser	5feba926f9eacbe69d195f7c434ccc7320a91e5eccab365cf86bea4ec878d5b8b02a2173b275b4f0d9c4b3a84f33757dfbc39596559fbe5825b0e1e5eceb8d99	1.00	t
 42	ramah6	3321d11ab2b52e99d45b253c4c1ea81bbee760a331544eca0570adccdb459d68ae44f04c8a811b9fd6fa0c5ec164cd1968dde35b8ecc627357cbfea4644c68ea	1.00	t
 56	testuser	5feba926f9eacbe69d195f7c434ccc7320a91e5eccab365cf86bea4ec878d5b8b02a2173b275b4f0d9c4b3a84f33757dfbc39596559fbe5825b0e1e5eceb8d99	1.00	f
-89	block	5feba926f9eacbe69d195f7c434ccc7320a91e5eccab365cf86bea4ec878d5b8b02a2173b275b4f0d9c4b3a84f33757dfbc39596559fbe5825b0e1e5eceb8d99	1.00	f
 \.
 
 
@@ -502,7 +504,7 @@ COPY userprofile (id, username, password, employmentdegree, isadmin) FROM stdin;
 -- Name: userprofile_id_seq; Type: SEQUENCE SET; Schema: timetracker; Owner: -
 --
 
-SELECT pg_catalog.setval('userprofile_id_seq', 89, true);
+SELECT pg_catalog.setval('userprofile_id_seq', 90, true);
 
 
 --
@@ -627,7 +629,7 @@ ALTER TABLE ONLY timeentry
     ADD CONSTRAINT fk_te_task FOREIGN KEY (task_id) REFERENCES task(id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
--- Completed on 2018-03-02 14:40:32 CET
+-- Completed on 2018-03-02 14:46:06 CET
 
 --
 -- PostgreSQL database dump complete
