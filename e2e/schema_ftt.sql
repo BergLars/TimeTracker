@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.5
 -- Dumped by pg_dump version 9.5.5
 
--- Started on 2018-03-02 13:53:27 CET
+-- Started on 2018-03-02 14:40:32 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -16,11 +16,9 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 8 (class 2615 OID 146828)
+-- TOC entry 7 (class 2615 OID 147162)
 -- Name: timetracker; Type: SCHEMA; Schema: -; Owner: -
 --
-
-DROP SCHEMA timetracker CASCADE;
 
 CREATE SCHEMA timetracker;
 
@@ -32,7 +30,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 184 (class 1259 OID 146829)
+-- TOC entry 184 (class 1259 OID 147163)
 -- Name: client; Type: TABLE; Schema: timetracker; Owner: -
 --
 
@@ -43,7 +41,7 @@ CREATE TABLE client (
 
 
 --
--- TOC entry 185 (class 1259 OID 146832)
+-- TOC entry 185 (class 1259 OID 147166)
 -- Name: client_id_seq; Type: SEQUENCE; Schema: timetracker; Owner: -
 --
 
@@ -56,7 +54,7 @@ CREATE SEQUENCE client_id_seq
 
 
 --
--- TOC entry 2439 (class 0 OID 0)
+-- TOC entry 2435 (class 0 OID 0)
 -- Dependencies: 185
 -- Name: client_id_seq; Type: SEQUENCE OWNED BY; Schema: timetracker; Owner: -
 --
@@ -65,7 +63,7 @@ ALTER SEQUENCE client_id_seq OWNED BY client.id;
 
 
 --
--- TOC entry 186 (class 1259 OID 146834)
+-- TOC entry 186 (class 1259 OID 147168)
 -- Name: project; Type: TABLE; Schema: timetracker; Owner: -
 --
 
@@ -76,7 +74,7 @@ CREATE TABLE project (
 
 
 --
--- TOC entry 187 (class 1259 OID 146837)
+-- TOC entry 187 (class 1259 OID 147171)
 -- Name: project_id_seq; Type: SEQUENCE; Schema: timetracker; Owner: -
 --
 
@@ -89,7 +87,7 @@ CREATE SEQUENCE project_id_seq
 
 
 --
--- TOC entry 2442 (class 0 OID 0)
+-- TOC entry 2436 (class 0 OID 0)
 -- Dependencies: 187
 -- Name: project_id_seq; Type: SEQUENCE OWNED BY; Schema: timetracker; Owner: -
 --
@@ -98,7 +96,7 @@ ALTER SEQUENCE project_id_seq OWNED BY project.id;
 
 
 --
--- TOC entry 188 (class 1259 OID 146839)
+-- TOC entry 188 (class 1259 OID 147173)
 -- Name: task; Type: TABLE; Schema: timetracker; Owner: -
 --
 
@@ -109,7 +107,7 @@ CREATE TABLE task (
 
 
 --
--- TOC entry 189 (class 1259 OID 146845)
+-- TOC entry 189 (class 1259 OID 147179)
 -- Name: task_id_seq; Type: SEQUENCE; Schema: timetracker; Owner: -
 --
 
@@ -122,7 +120,7 @@ CREATE SEQUENCE task_id_seq
 
 
 --
--- TOC entry 2445 (class 0 OID 0)
+-- TOC entry 2437 (class 0 OID 0)
 -- Dependencies: 189
 -- Name: task_id_seq; Type: SEQUENCE OWNED BY; Schema: timetracker; Owner: -
 --
@@ -131,7 +129,7 @@ ALTER SEQUENCE task_id_seq OWNED BY task.id;
 
 
 --
--- TOC entry 190 (class 1259 OID 146847)
+-- TOC entry 190 (class 1259 OID 147181)
 -- Name: timeentry; Type: TABLE; Schema: timetracker; Owner: -
 --
 
@@ -149,7 +147,7 @@ CREATE TABLE timeentry (
 
 
 --
--- TOC entry 191 (class 1259 OID 146853)
+-- TOC entry 191 (class 1259 OID 147187)
 -- Name: timeentry_id_seq; Type: SEQUENCE; Schema: timetracker; Owner: -
 --
 
@@ -162,7 +160,7 @@ CREATE SEQUENCE timeentry_id_seq
 
 
 --
--- TOC entry 2448 (class 0 OID 0)
+-- TOC entry 2438 (class 0 OID 0)
 -- Dependencies: 191
 -- Name: timeentry_id_seq; Type: SEQUENCE OWNED BY; Schema: timetracker; Owner: -
 --
@@ -171,7 +169,7 @@ ALTER SEQUENCE timeentry_id_seq OWNED BY timeentry.id;
 
 
 --
--- TOC entry 192 (class 1259 OID 146855)
+-- TOC entry 192 (class 1259 OID 147189)
 -- Name: userprofile; Type: TABLE; Schema: timetracker; Owner: -
 --
 
@@ -185,7 +183,7 @@ CREATE TABLE userprofile (
 
 
 --
--- TOC entry 193 (class 1259 OID 146861)
+-- TOC entry 193 (class 1259 OID 147195)
 -- Name: userprofile_id_seq; Type: SEQUENCE; Schema: timetracker; Owner: -
 --
 
@@ -198,7 +196,7 @@ CREATE SEQUENCE userprofile_id_seq
 
 
 --
--- TOC entry 2451 (class 0 OID 0)
+-- TOC entry 2439 (class 0 OID 0)
 -- Dependencies: 193
 -- Name: userprofile_id_seq; Type: SEQUENCE OWNED BY; Schema: timetracker; Owner: -
 --
@@ -207,7 +205,7 @@ ALTER SEQUENCE userprofile_id_seq OWNED BY userprofile.id;
 
 
 --
--- TOC entry 2284 (class 2604 OID 146907)
+-- TOC entry 2282 (class 2604 OID 147197)
 -- Name: id; Type: DEFAULT; Schema: timetracker; Owner: -
 --
 
@@ -215,7 +213,7 @@ ALTER TABLE ONLY client ALTER COLUMN id SET DEFAULT nextval('client_id_seq'::reg
 
 
 --
--- TOC entry 2285 (class 2604 OID 146908)
+-- TOC entry 2283 (class 2604 OID 147198)
 -- Name: id; Type: DEFAULT; Schema: timetracker; Owner: -
 --
 
@@ -223,7 +221,7 @@ ALTER TABLE ONLY project ALTER COLUMN id SET DEFAULT nextval('project_id_seq'::r
 
 
 --
--- TOC entry 2286 (class 2604 OID 146909)
+-- TOC entry 2284 (class 2604 OID 147199)
 -- Name: id; Type: DEFAULT; Schema: timetracker; Owner: -
 --
 
@@ -231,7 +229,7 @@ ALTER TABLE ONLY task ALTER COLUMN id SET DEFAULT nextval('task_id_seq'::regclas
 
 
 --
--- TOC entry 2287 (class 2604 OID 146910)
+-- TOC entry 2285 (class 2604 OID 147200)
 -- Name: id; Type: DEFAULT; Schema: timetracker; Owner: -
 --
 
@@ -239,7 +237,7 @@ ALTER TABLE ONLY timeentry ALTER COLUMN id SET DEFAULT nextval('timeentry_id_seq
 
 
 --
--- TOC entry 2288 (class 2604 OID 146911)
+-- TOC entry 2286 (class 2604 OID 147201)
 -- Name: id; Type: DEFAULT; Schema: timetracker; Owner: -
 --
 
@@ -247,7 +245,7 @@ ALTER TABLE ONLY userprofile ALTER COLUMN id SET DEFAULT nextval('userprofile_id
 
 
 --
--- TOC entry 2423 (class 0 OID 146829)
+-- TOC entry 2421 (class 0 OID 147163)
 -- Dependencies: 184
 -- Data for Name: client; Type: TABLE DATA; Schema: timetracker; Owner: -
 --
@@ -265,7 +263,7 @@ COPY client (id, name) FROM stdin;
 
 
 --
--- TOC entry 2453 (class 0 OID 0)
+-- TOC entry 2440 (class 0 OID 0)
 -- Dependencies: 185
 -- Name: client_id_seq; Type: SEQUENCE SET; Schema: timetracker; Owner: -
 --
@@ -274,7 +272,7 @@ SELECT pg_catalog.setval('client_id_seq', 51, true);
 
 
 --
--- TOC entry 2425 (class 0 OID 146834)
+-- TOC entry 2423 (class 0 OID 147168)
 -- Dependencies: 186
 -- Data for Name: project; Type: TABLE DATA; Schema: timetracker; Owner: -
 --
@@ -298,7 +296,7 @@ COPY project (id, name) FROM stdin;
 
 
 --
--- TOC entry 2454 (class 0 OID 0)
+-- TOC entry 2441 (class 0 OID 0)
 -- Dependencies: 187
 -- Name: project_id_seq; Type: SEQUENCE SET; Schema: timetracker; Owner: -
 --
@@ -307,7 +305,7 @@ SELECT pg_catalog.setval('project_id_seq', 92, true);
 
 
 --
--- TOC entry 2427 (class 0 OID 146839)
+-- TOC entry 2425 (class 0 OID 147173)
 -- Dependencies: 188
 -- Data for Name: task; Type: TABLE DATA; Schema: timetracker; Owner: -
 --
@@ -353,7 +351,7 @@ COPY task (id, description) FROM stdin;
 
 
 --
--- TOC entry 2455 (class 0 OID 0)
+-- TOC entry 2442 (class 0 OID 0)
 -- Dependencies: 189
 -- Name: task_id_seq; Type: SEQUENCE SET; Schema: timetracker; Owner: -
 --
@@ -362,7 +360,7 @@ SELECT pg_catalog.setval('task_id_seq', 165, true);
 
 
 --
--- TOC entry 2429 (class 0 OID 146847)
+-- TOC entry 2427 (class 0 OID 147181)
 -- Dependencies: 190
 -- Data for Name: timeentry; Type: TABLE DATA; Schema: timetracker; Owner: -
 --
@@ -465,22 +463,20 @@ COPY timeentry (id, description, userprofile_id, client_id, project_id, task_id,
 278	bf	8	3	18	53	f	2017-11-22 10:45:00	2017-11-22 13:15:00
 47	test 9	2	2	2	4	f	2018-06-06 05:27:00	2018-06-06 09:32:00
 361	55	42	4	1	3	f	2017-12-28 10:06:00	2017-12-28 04:06:00
-489	Protractor test	60	50	18	162	t	2018-02-02 13:16:00	2018-02-02 15:16:00
-490	Protractor test	60	50	18	162	t	2018-02-02 13:26:00	2018-02-02 15:26:00
 \.
 
 
 --
--- TOC entry 2456 (class 0 OID 0)
+-- TOC entry 2443 (class 0 OID 0)
 -- Dependencies: 191
 -- Name: timeentry_id_seq; Type: SEQUENCE SET; Schema: timetracker; Owner: -
 --
 
-SELECT pg_catalog.setval('timeentry_id_seq', 490, true);
+SELECT pg_catalog.setval('timeentry_id_seq', 491, true);
 
 
 --
--- TOC entry 2431 (class 0 OID 146855)
+-- TOC entry 2429 (class 0 OID 147189)
 -- Dependencies: 192
 -- Data for Name: userprofile; Type: TABLE DATA; Schema: timetracker; Owner: -
 --
@@ -501,7 +497,7 @@ COPY userprofile (id, username, password, employmentdegree, isadmin) FROM stdin;
 
 
 --
--- TOC entry 2457 (class 0 OID 0)
+-- TOC entry 2444 (class 0 OID 0)
 -- Dependencies: 193
 -- Name: userprofile_id_seq; Type: SEQUENCE SET; Schema: timetracker; Owner: -
 --
@@ -510,7 +506,7 @@ SELECT pg_catalog.setval('userprofile_id_seq', 89, true);
 
 
 --
--- TOC entry 2290 (class 2606 OID 146869)
+-- TOC entry 2288 (class 2606 OID 147203)
 -- Name: client_pkey; Type: CONSTRAINT; Schema: timetracker; Owner: -
 --
 
@@ -519,7 +515,7 @@ ALTER TABLE ONLY client
 
 
 --
--- TOC entry 2294 (class 2606 OID 146871)
+-- TOC entry 2292 (class 2606 OID 147205)
 -- Name: project_pkey; Type: CONSTRAINT; Schema: timetracker; Owner: -
 --
 
@@ -528,7 +524,7 @@ ALTER TABLE ONLY project
 
 
 --
--- TOC entry 2297 (class 2606 OID 146873)
+-- TOC entry 2295 (class 2606 OID 147207)
 -- Name: task_pkey; Type: CONSTRAINT; Schema: timetracker; Owner: -
 --
 
@@ -537,7 +533,7 @@ ALTER TABLE ONLY task
 
 
 --
--- TOC entry 2299 (class 2606 OID 146875)
+-- TOC entry 2297 (class 2606 OID 147209)
 -- Name: timeentry_pkey; Type: CONSTRAINT; Schema: timetracker; Owner: -
 --
 
@@ -546,7 +542,7 @@ ALTER TABLE ONLY timeentry
 
 
 --
--- TOC entry 2302 (class 2606 OID 146877)
+-- TOC entry 2300 (class 2606 OID 147211)
 -- Name: userprofile_pkey; Type: CONSTRAINT; Schema: timetracker; Owner: -
 --
 
@@ -555,7 +551,7 @@ ALTER TABLE ONLY userprofile
 
 
 --
--- TOC entry 2304 (class 2606 OID 146879)
+-- TOC entry 2302 (class 2606 OID 147213)
 -- Name: userprofile_username_key; Type: CONSTRAINT; Schema: timetracker; Owner: -
 --
 
@@ -564,7 +560,7 @@ ALTER TABLE ONLY userprofile
 
 
 --
--- TOC entry 2291 (class 1259 OID 146880)
+-- TOC entry 2289 (class 1259 OID 147214)
 -- Name: fki_te_cli; Type: INDEX; Schema: timetracker; Owner: -
 --
 
@@ -572,7 +568,7 @@ CREATE INDEX fki_te_cli ON client USING btree (id);
 
 
 --
--- TOC entry 2300 (class 1259 OID 146881)
+-- TOC entry 2298 (class 1259 OID 147215)
 -- Name: fki_te_pers; Type: INDEX; Schema: timetracker; Owner: -
 --
 
@@ -580,7 +576,7 @@ CREATE INDEX fki_te_pers ON userprofile USING btree (id);
 
 
 --
--- TOC entry 2292 (class 1259 OID 146882)
+-- TOC entry 2290 (class 1259 OID 147216)
 -- Name: fki_te_proj; Type: INDEX; Schema: timetracker; Owner: -
 --
 
@@ -588,7 +584,7 @@ CREATE INDEX fki_te_proj ON project USING btree (id);
 
 
 --
--- TOC entry 2295 (class 1259 OID 146883)
+-- TOC entry 2293 (class 1259 OID 147217)
 -- Name: fki_te_task; Type: INDEX; Schema: timetracker; Owner: -
 --
 
@@ -596,7 +592,7 @@ CREATE INDEX fki_te_task ON task USING btree (id);
 
 
 --
--- TOC entry 2305 (class 2606 OID 146884)
+-- TOC entry 2303 (class 2606 OID 147218)
 -- Name: fk_te_clie; Type: FK CONSTRAINT; Schema: timetracker; Owner: -
 --
 
@@ -605,7 +601,7 @@ ALTER TABLE ONLY timeentry
 
 
 --
--- TOC entry 2306 (class 2606 OID 146889)
+-- TOC entry 2304 (class 2606 OID 147223)
 -- Name: fk_te_pers; Type: FK CONSTRAINT; Schema: timetracker; Owner: -
 --
 
@@ -614,7 +610,7 @@ ALTER TABLE ONLY timeentry
 
 
 --
--- TOC entry 2307 (class 2606 OID 146894)
+-- TOC entry 2305 (class 2606 OID 147228)
 -- Name: fk_te_proj; Type: FK CONSTRAINT; Schema: timetracker; Owner: -
 --
 
@@ -623,7 +619,7 @@ ALTER TABLE ONLY timeentry
 
 
 --
--- TOC entry 2308 (class 2606 OID 146899)
+-- TOC entry 2306 (class 2606 OID 147233)
 -- Name: fk_te_task; Type: FK CONSTRAINT; Schema: timetracker; Owner: -
 --
 
@@ -631,159 +627,7 @@ ALTER TABLE ONLY timeentry
     ADD CONSTRAINT fk_te_task FOREIGN KEY (task_id) REFERENCES task(id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
---
--- TOC entry 2437 (class 0 OID 0)
--- Dependencies: 8
--- Name: timetracker; Type: ACL; Schema: -; Owner: -
---
-
-REVOKE ALL ON SCHEMA timetracker FROM PUBLIC;
-REVOKE ALL ON SCHEMA timetracker FROM fluance;
-GRANT ALL ON SCHEMA timetracker TO fluance;
-GRANT USAGE ON SCHEMA timetracker TO dbtimetracker;
-
-
---
--- TOC entry 2438 (class 0 OID 0)
--- Dependencies: 184
--- Name: client; Type: ACL; Schema: timetracker; Owner: -
---
-
-REVOKE ALL ON TABLE client FROM PUBLIC;
-REVOKE ALL ON TABLE client FROM fluance;
-GRANT ALL ON TABLE client TO fluance;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE client TO dbtimetracker;
-
-
---
--- TOC entry 2440 (class 0 OID 0)
--- Dependencies: 185
--- Name: client_id_seq; Type: ACL; Schema: timetracker; Owner: -
---
-
-REVOKE ALL ON SEQUENCE client_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE client_id_seq FROM fluance;
-GRANT ALL ON SEQUENCE client_id_seq TO fluance;
-GRANT SELECT,USAGE ON SEQUENCE client_id_seq TO dbtimetracker;
-
-
---
--- TOC entry 2441 (class 0 OID 0)
--- Dependencies: 186
--- Name: project; Type: ACL; Schema: timetracker; Owner: -
---
-
-REVOKE ALL ON TABLE project FROM PUBLIC;
-REVOKE ALL ON TABLE project FROM fluance;
-GRANT ALL ON TABLE project TO fluance;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE project TO dbtimetracker;
-
-
---
--- TOC entry 2443 (class 0 OID 0)
--- Dependencies: 187
--- Name: project_id_seq; Type: ACL; Schema: timetracker; Owner: -
---
-
-REVOKE ALL ON SEQUENCE project_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE project_id_seq FROM fluance;
-GRANT ALL ON SEQUENCE project_id_seq TO fluance;
-GRANT SELECT,USAGE ON SEQUENCE project_id_seq TO dbtimetracker;
-
-
---
--- TOC entry 2444 (class 0 OID 0)
--- Dependencies: 188
--- Name: task; Type: ACL; Schema: timetracker; Owner: -
---
-
-REVOKE ALL ON TABLE task FROM PUBLIC;
-REVOKE ALL ON TABLE task FROM fluance;
-GRANT ALL ON TABLE task TO fluance;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE task TO dbtimetracker;
-
-
---
--- TOC entry 2446 (class 0 OID 0)
--- Dependencies: 189
--- Name: task_id_seq; Type: ACL; Schema: timetracker; Owner: -
---
-
-REVOKE ALL ON SEQUENCE task_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE task_id_seq FROM fluance;
-GRANT ALL ON SEQUENCE task_id_seq TO fluance;
-GRANT SELECT,USAGE ON SEQUENCE task_id_seq TO dbtimetracker;
-
-
---
--- TOC entry 2447 (class 0 OID 0)
--- Dependencies: 190
--- Name: timeentry; Type: ACL; Schema: timetracker; Owner: -
---
-
-REVOKE ALL ON TABLE timeentry FROM PUBLIC;
-REVOKE ALL ON TABLE timeentry FROM fluance;
-GRANT ALL ON TABLE timeentry TO fluance;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE timeentry TO dbtimetracker;
-
-
---
--- TOC entry 2449 (class 0 OID 0)
--- Dependencies: 191
--- Name: timeentry_id_seq; Type: ACL; Schema: timetracker; Owner: -
---
-
-REVOKE ALL ON SEQUENCE timeentry_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE timeentry_id_seq FROM fluance;
-GRANT ALL ON SEQUENCE timeentry_id_seq TO fluance;
-GRANT SELECT,USAGE ON SEQUENCE timeentry_id_seq TO dbtimetracker;
-
-
---
--- TOC entry 2450 (class 0 OID 0)
--- Dependencies: 192
--- Name: userprofile; Type: ACL; Schema: timetracker; Owner: -
---
-
-REVOKE ALL ON TABLE userprofile FROM PUBLIC;
-REVOKE ALL ON TABLE userprofile FROM fluance;
-GRANT ALL ON TABLE userprofile TO fluance;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE userprofile TO dbtimetracker;
-
-
---
--- TOC entry 2452 (class 0 OID 0)
--- Dependencies: 193
--- Name: userprofile_id_seq; Type: ACL; Schema: timetracker; Owner: -
---
-
-REVOKE ALL ON SEQUENCE userprofile_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE userprofile_id_seq FROM fluance;
-GRANT ALL ON SEQUENCE userprofile_id_seq TO fluance;
-GRANT SELECT,USAGE ON SEQUENCE userprofile_id_seq TO dbtimetracker;
-
-
---
--- TOC entry 1668 (class 826 OID 146904)
--- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: timetracker; Owner: -
---
-
--- ALTER DEFAULT PRIVILEGES FOR ROLE "Michael" IN SCHEMA timetracker REVOKE ALL ON SEQUENCES  FROM PUBLIC;
--- ALTER DEFAULT PRIVILEGES FOR ROLE "Michael" IN SCHEMA timetracker REVOKE ALL ON SEQUENCES  FROM "Michael";
--- ALTER DEFAULT PRIVILEGES FOR ROLE "Michael" IN SCHEMA timetracker GRANT SELECT,USAGE ON SEQUENCES  TO dbtimetracker;
-
-
---
--- TOC entry 1669 (class 826 OID 146905)
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: timetracker; Owner: -
---
-
--- ALTER DEFAULT PRIVILEGES FOR ROLE "Michael" IN SCHEMA timetracker REVOKE ALL ON TABLES  FROM PUBLIC;
--- ALTER DEFAULT PRIVILEGES FOR ROLE "Michael" IN SCHEMA timetracker REVOKE ALL ON TABLES  FROM "Michael";
--- ALTER DEFAULT PRIVILEGES FOR ROLE "Michael" IN SCHEMA timetracker GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO dbtimetracker;
-
-
--- Completed on 2018-03-02 13:53:27 CET
+-- Completed on 2018-03-02 14:40:32 CET
 
 --
 -- PostgreSQL database dump complete
