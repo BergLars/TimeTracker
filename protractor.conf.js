@@ -18,7 +18,7 @@ exports.config = {
     './e2e/**/at-menu.spec.js',
     './e2e/**/at-delete.spec.js',
     './e2e/**/at-deleteentry.spec.js',
-    // './e2e/**/at-pagesize.spec.js',
+    './e2e/**/at-pagesize.spec.js',
     //
     // './e2e/**/at-export.spec.js',
     // './e2e/**/menu-toolbar.spec.js',
@@ -36,7 +36,6 @@ exports.config = {
   },
   useAllAngular2AppRoots: true,
   beforeLaunch: function () {
-    // exec('pg_restore -c -d timetracker ~/Documents/Projects/hedwig/e2e/localhost_ftt.backup', (err, stdout, stderr) => {
     exec('pg_restore -c -d timetracker ~/Documents/Projects/hedwig/e2e/protractor_ftt.backup', (err, stdout, stderr) => {
       if (err) {
         console.log(err);
@@ -50,14 +49,5 @@ exports.config = {
     global.EC = protractor.ExpectedConditions;
     global.SENDKEYS_TIMEOUT = 500;
     jasmine.getEnv().addReporter(new SpecReporter());
-  },
-  // afterLaunch: () => {
-  //   exec('pg_restore -c -d timetracker ~/Documents/Projects/hedwig/e2e/localhost_ftt.backup', (err, stdout, stderr) => {
-  //     if (err) {
-  //       console.log(err);
-  //       return;
-  //     }
-  //     console.log("afterLaunch: Frozen dataset deleted!");
-  //   });
-  // }
+  }
 };

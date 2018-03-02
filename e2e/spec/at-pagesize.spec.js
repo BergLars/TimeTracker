@@ -18,32 +18,32 @@ describe('Pagesize', function () {
         browser.wait(EC.elementToBeClickable(userprofileMenu.logoutButton), TIMEOUT, "Logout button" + " not clickable");
         userprofileMenu.logoutButton.click();
     });
-    describe('Per default', () => {
-        it('Total entries are equal to 48', () => {
-            browser.sleep(500);
+    describe('Modify limit and page size', () => {
+        it('Total entries should be equal to 48', () => {
+            browser.sleep(SENDKEYS_TIMEOUT);
             expect(pagesize.numberOfEntries.count()).toBe(48);
         });
-        it('Total entries are equal to 10', () => {
+        it('Total entries should be equal to 10', () => {
             element(by.cssContainingText('option', '10 Entries')).click();
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
             expect(pagesize.numberOfEntries.count()).toBe(10);
         });
-        it('Total entries on the 4th page are equal to 10 too', () => {
+        it('Total entries on the 4th page should be equal to 10 too', () => {
             element(by.cssContainingText('option', '10 Entries')).click();
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
             expect(pagesize.numberOfEntries.count()).toBe(10);
             pagesize.fourthPage.click();
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
             expect(pagesize.numberOfEntries.count()).toBe(10);
         });
-        it('Total entries are equal to 5', () => {
+        it('Total entries should be equal to 5', () => {
             element(by.cssContainingText('option', '5 Entries')).click();
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
             expect(pagesize.numberOfEntries.count()).toBe(5);
         });
-        it('Total entries are equal to 48', () => {
+        it('Total entries should be equal to 48', () => {
             element(by.cssContainingText('option', 'All Entries')).click();
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
             expect(pagesize.numberOfEntries.count()).toBe(48);
         });
     });

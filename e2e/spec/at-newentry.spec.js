@@ -22,31 +22,33 @@ describe('New entry button', function () {
         it('It should create a new entry with time spent', () => {
             newEntry.newEntryButton.click();
             newEntry.descriptionField.sendKeys('Protractor test');
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
             newEntry.blockClientOption.click();
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
+            newEntry.blockTaskOption.click();
+            browser.sleep(SENDKEYS_TIMEOUT);
             newEntry.dateField.sendKeys('02.02.2018');
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
             newEntry.timespentField.sendKeys('02:00');
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
             newEntry.billableCheckbox.click();
             newEntry.okButton.click();
         });
         it('It should create a new entry with start and end time', () => {
             newEntry.newEntryButton.click();
             newEntry.descriptionField.sendKeys('Protractor test 2');
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
             newEntry.dateField.sendKeys('02.01.2018');
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
             newEntry.enableTypingTimesCheckBox.click();
             newEntry.startTimeField.sendKeys('12:00');
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
             newEntry.endTimeField.sendKeys('13:00');
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
             newEntry.okButton.click();
         });
         it('Total entries are equal to 2', () => {
-            browser.sleep(500);
+            browser.sleep(SENDKEYS_TIMEOUT);
             expect(newEntry.numberOfEntries.count()).toBe(2);
         });
     });

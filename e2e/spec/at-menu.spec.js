@@ -76,7 +76,6 @@ describe('Userprofile', () => {
                 expect(alert.getText()).toEqual("Are you sure that you want to delete this user?");
                 return alert.accept();
             });
-            expect(element(by.cssContainingText('option', userprofileMenu.itemName)).isPresent()).toBe(true);
         });
     });
     describe('Delete user', () => {

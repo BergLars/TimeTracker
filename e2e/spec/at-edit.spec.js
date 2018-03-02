@@ -17,7 +17,7 @@ describe('Edit button', () => {
         editComponent.logoutButton.click();
     });
     describe('Edit a task', () => {
-        fit('It should edit the task "block" to black', () => {
+        it('It should edit the task "block" to black', () => {
             browser.wait(EC.elementToBeClickable(editComponent.editButton), TIMEOUT, "Edit button" + " not clickable");
             editComponent.editButton.click();
             browser.wait(EC.elementToBeClickable($('#taskOptions').element(by.cssContainingText('option', 'block'))), TIMEOUT, "Block option" + " not clickable");
@@ -25,10 +25,12 @@ describe('Edit button', () => {
             $('#taskOptions').element(by.cssContainingText('option', 'block')).click();
             browser.sleep(SENDKEYS_TIMEOUT);
             editComponent.descriptionTaskField.sendKeys(editComponent.itemName);
+            // browser.driver.executeScript("document.getElementById('newTaskDescription').setAttribute('value','" + createComponent.itemName + "')");
             browser.sleep(SENDKEYS_TIMEOUT);
             editComponent.okButton.click();
+
         });
-        fit('It should verify the edited task', () => {
+        it('It should verify the edited task', () => {
             browser.wait(EC.elementToBeClickable(editComponent.editButton), TIMEOUT, "Edit button" + " not clickable");
             editComponent.editButton.click();
             browser.wait(EC.elementToBeClickable($('#taskOptions').element(by.cssContainingText('option', 'black'))), TIMEOUT, "Black option" + " not clickable");
@@ -38,7 +40,7 @@ describe('Edit button', () => {
     });
 
     describe('Edit a project', () => {
-        fit('It should edit the project "block" to black', () => {
+        it('It should edit the project "block" to black', () => {
             browser.wait(EC.elementToBeClickable(editComponent.editButton), TIMEOUT, "Edit button" + " not clickable");
             editComponent.editButton.click();
             browser.wait(EC.elementToBeClickable(element(by.cssContainingText('option', 'Project'))), TIMEOUT, "Project option" + " not clickable");
@@ -51,7 +53,7 @@ describe('Edit button', () => {
             browser.sleep(SENDKEYS_TIMEOUT);
             editComponent.okButton.click();
         });
-        fit('It should verify the edited project', () => {
+        it('It should verify the edited project', () => {
             browser.wait(EC.elementToBeClickable(editComponent.editButton), TIMEOUT, "Edit button" + " not clickable");
             editComponent.editButton.click();
             browser.wait(EC.elementToBeClickable(element(by.cssContainingText('option', 'Project'))), TIMEOUT, "Project option" + " not clickable");
@@ -63,7 +65,7 @@ describe('Edit button', () => {
     });
 
     describe('Edit a client', () => {
-        fit('It should edit the client "block " to black', () => {
+        it('It should edit the client "block " to black', () => {
             browser.wait(EC.elementToBeClickable(editComponent.editButton), TIMEOUT, "Edit button" + " not clickable");
             editComponent.editButton.click();
             browser.wait(EC.elementToBeClickable(element(by.cssContainingText('option', 'Client'))), TIMEOUT, "Client option" + " not clickable");
@@ -76,7 +78,7 @@ describe('Edit button', () => {
             browser.sleep(SENDKEYS_TIMEOUT);
             editComponent.okButton.click();
         });
-        fit('It should verify the edited client', () => {
+        it('It should verify the edited client', () => {
             browser.wait(EC.elementToBeClickable(editComponent.editButton), TIMEOUT, "Edit button" + " not clickable");
             editComponent.editButton.click();
             browser.wait(EC.elementToBeClickable(element(by.cssContainingText('option', 'Client'))), TIMEOUT, "Client option" + " not clickable");

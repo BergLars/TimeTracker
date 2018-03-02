@@ -17,7 +17,7 @@ describe('Create button', () => {
         createComponent.logoutButton.click();
     });
     describe('Create a task', () => {
-        fit('It should create a task as block', () => {
+        it('It should create a task as block', () => {
             expect(createComponent.createButton.isPresent()).toBe(true);
             browser.wait(EC.elementToBeClickable(createComponent.createButton), TIMEOUT, "Create button is not ready" + " not present");
             createComponent.createButton.click();
@@ -27,7 +27,7 @@ describe('Create button', () => {
             browser.sleep(SENDKEYS_TIMEOUT);
             createComponent.okButton.click();
         });
-        fit('It should verify the created task', () => {
+        it('It should verify the created task', () => {
             browser.wait(EC.elementToBeClickable(createComponent.editButton), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.editButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.taskOptions), TIMEOUT, "Task options is not ready" + " not present");
@@ -36,22 +36,25 @@ describe('Create button', () => {
         });
     });
     describe('Create a project', () => {
-        fit('It should create a Project as block', () => {
+        it('It should create a Project as block', () => {
             browser.wait(EC.elementToBeClickable(createComponent.createButton), TIMEOUT, "Create button is not ready" + " not present");
             createComponent.createButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.itemToBeCreated.click();
+            browser.sleep(SENDKEYS_TIMEOUT);
             element(by.cssContainingText('option', 'Project')).click();
             expect(createComponent.projectNameField.isPresent()).toBe(true);
+            browser.sleep(SENDKEYS_TIMEOUT);
             createComponent.projectNameField.sendKeys(createComponent.itemName);
             browser.sleep(SENDKEYS_TIMEOUT);
             createComponent.okButton.click();
         });
-        fit('It should verify the created project', () => {
+        it('It should verify the created project', () => {
             browser.wait(EC.elementToBeClickable(createComponent.editButton), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.editButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.itemToBeCreated.click();
+            browser.sleep(SENDKEYS_TIMEOUT);
             element(by.cssContainingText('option', 'Project')).click();
             browser.sleep(SENDKEYS_TIMEOUT);
             createComponent.projectOptions.click();
@@ -61,23 +64,24 @@ describe('Create button', () => {
     });
 
     describe('Create a client', () => {
-        fit('It should create a Client as block', () => {
+        it('It should create a Client as block', () => {
             browser.wait(EC.elementToBeClickable(createComponent.createButton), TIMEOUT, "Create button is not ready" + " not present");
             createComponent.createButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.itemToBeCreated.click();
             element(by.cssContainingText('option', 'Client')).click();
             expect(createComponent.clientNameField.isPresent()).toBe(true);
-            browser.wait(EC.elementToBeClickable(createComponent.clientNameField), TIMEOUT, "Client name field is not ready" + " not present");
+            browser.sleep(SENDKEYS_TIMEOUT);
             createComponent.clientNameField.sendKeys(createComponent.itemName);
             browser.sleep(SENDKEYS_TIMEOUT);
             createComponent.okButton.click();
         });
-        fit('it should verify the created client', () => {
+        it('it should verify the created client', () => {
             browser.wait(EC.elementToBeClickable(createComponent.editButton), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.editButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.itemToBeCreated.click();
+            browser.sleep(SENDKEYS_TIMEOUT);
             element(by.cssContainingText('option', 'Client')).click();
             browser.sleep(SENDKEYS_TIMEOUT);
             createComponent.clientOptions.click();

@@ -30,7 +30,7 @@
     <tr>
       <td>Task:</td>
       <td>
-        <select class="clickable-icon" #task (change)="taskDropdown(task.value)">
+        <select class="clickable-icon" #task (change)="taskDropdown(task.value)" id="taskOption">
           <option *ngFor="let item of tasks" [value]="item.id">{{ item.taskDescription }}</option>
         </select>
       </td>

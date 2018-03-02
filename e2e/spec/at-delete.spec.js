@@ -69,10 +69,13 @@ describe('Delete items', () => {
     });
     describe('Delete a used Task', () => {
         it('It should not be allowed to delete a used task', () => {
+            browser.wait(EC.elementToBeClickable(deleteComponent.editButton), TIMEOUT, "Edit button" + " not clickable");
             deleteComponent.editButton.click();
-            expect(deleteComponent.deleteIcon.isPresent()).toBe(true);
-            expect(element(by.cssContainingText('option', 'protractor task 1')).isPresent()).toBe(true);
+            browser.sleep(SENDKEYS_TIMEOUT);
+            $('#taskOptions').click();
+            browser.wait(EC.elementToBeClickable(deleteComponent.taskProtractor2Option), TIMEOUT, "Protractor task 1 option" + " not clickable");
             deleteComponent.taskProtractor2Option.click();
+            browser.sleep(SENDKEYS_TIMEOUT);
             browser.wait(EC.elementToBeClickable(deleteComponent.deleteIcon), TIMEOUT, "Delete icon" + " not clickable");
             deleteComponent.deleteIcon.click();
             browser.wait(EC.alertIsPresent(), TIMEOUT);
@@ -85,6 +88,10 @@ describe('Delete items', () => {
         it('It should verify undeleted task', () => {
             browser.wait(EC.elementToBeClickable(deleteComponent.editButton), TIMEOUT, "Edit button" + " not clickable");
             deleteComponent.editButton.click();
+            browser.sleep(SENDKEYS_TIMEOUT);
+            $('#taskOptions').click();
+            browser.sleep(SENDKEYS_TIMEOUT);
+            $('#taskOptions').element(by.cssContainingText('option', 'protractor task 1')).click();
             expect(element(by.cssContainingText('option', 'protractor task 1')).isPresent()).toBe(true);
             deleteComponent.cancelButton.click();
         });
