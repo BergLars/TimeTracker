@@ -36,7 +36,7 @@ exports.config = {
   },
   useAllAngular2AppRoots: true,
   beforeLaunch: function () {
-    exec('pg_restore -c -d timetracker ~/Documents/Projects/hedwig/e2e/protractor_ftt.backup', (err, stdout, stderr) => {
+    exec('pg_restore -c -d timetracker ~/Documents/Projects/hedwig/e2e/schema_ftt.backup', (err, stdout, stderr) => {
       if (err) {
         console.log(err);
         return;
