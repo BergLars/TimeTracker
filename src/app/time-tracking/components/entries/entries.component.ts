@@ -451,19 +451,21 @@ export class EntriesComponent implements OnInit {
     var allProjectsFilterFlag = this.selectedProjects[0] === -1;
     let selectedProjects = [];
 
-       selectedProjects = this.projects.map(function (project) {
-          return project.id;
+    selectedProjects = this.projects.map(function (project) {
+      return project.id;
     });
 
     if (this.previousAllProjectsFilterFlag < allProjectsFilterFlag) {
       this.selectedProjects = [-1].concat(selectedProjects);
       this.previousAllProjectsFilterFlag = allProjectsFilterFlag;
+      this.refreshDatatable();
       return;
     }
 
     if (this.previousAllProjectsFilterFlag > allProjectsFilterFlag) {
       this.previousAllProjectsFilterFlag = allProjectsFilterFlag;
       this.selectedProjects = [];
+      this.refreshDatatable();
       return;
     }
 
@@ -474,7 +476,8 @@ export class EntriesComponent implements OnInit {
       if (allProjectsFilterFlag) this.selectedProjects = this.selectedProjects.slice(1); 
       allProjectsFilterFlag = false;
     }
-    this.previousAllProjectsFilterFlag = allProjectsFilterFlag ;
+    this.previousAllProjectsFilterFlag = allProjectsFilterFlag;
+    this.refreshDatatable();
   }
 
   tasksSelectedPerDefault() {
@@ -483,18 +486,20 @@ export class EntriesComponent implements OnInit {
     let selectedTasks = [];
 
     selectedTasks = this.tasks.map(function (task) {
-          return task.id;
+      return task.id;
     });
 
     if (this.previousAllTasksFilterFlag < allTasksFilterFlag) {
       this.selectedTasks = [-1].concat(selectedTasks);
       this.previousAllTasksFilterFlag = allTasksFilterFlag;
+      this.refreshDatatable();
       return;
     }
 
     if (this.previousAllTasksFilterFlag > allTasksFilterFlag) {
       this.previousAllTasksFilterFlag = allTasksFilterFlag;
       this.selectedTasks = [];
+      this.refreshDatatable();
       return;
     }
 
@@ -506,6 +511,7 @@ export class EntriesComponent implements OnInit {
       allTasksFilterFlag = false;
     }
     this.previousAllTasksFilterFlag = allTasksFilterFlag;
+    this.refreshDatatable();
   }
 
   clientsSelectedPerDefault() {
@@ -514,18 +520,20 @@ export class EntriesComponent implements OnInit {
 
 
     selectedClients = this.clients.map(function (client) {
-          return client.id;
+      return client.id;
     });
 
     if (this.previousAllClientsFilterFlag < allClientsFilterFlag) {
       this.selectedClients = [-1].concat(selectedClients);
       this.previousAllClientsFilterFlag = allClientsFilterFlag;
+      this.refreshDatatable();
       return;
     }
 
     if (this.previousAllClientsFilterFlag > allClientsFilterFlag) {
       this.previousAllClientsFilterFlag = allClientsFilterFlag;
       this.selectedClients = [];
+      this.refreshDatatable();
       return;
     }
 
@@ -538,6 +546,7 @@ export class EntriesComponent implements OnInit {
     }
 
     this.previousAllClientsFilterFlag = allClientsFilterFlag;
+    this.refreshDatatable();
   }
 
   keyDownFunction(event, cell, cellValue, row) {
