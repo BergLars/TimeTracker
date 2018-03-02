@@ -21,6 +21,7 @@ describe('Create button', () => {
             expect(createComponent.createButton.isPresent()).toBe(true);
             browser.wait(EC.elementToBeClickable(createComponent.createButton), TIMEOUT, "Create button is not ready" + " not present");
             createComponent.createButton.click();
+            browser.sleep(SENDKEYS_TIMEOUT);
             expect(createComponent.descriptionTaskField.isPresent()).toBe(true);
             browser.wait(EC.elementToBeClickable(createComponent.descriptionTaskField), TIMEOUT, "Description task field is not ready" + " not present");
             createComponent.descriptionTaskField.sendKeys(createComponent.itemName);
@@ -28,6 +29,7 @@ describe('Create button', () => {
             createComponent.okButton.click();
         });
         it('It should verify the created task', () => {
+            browser.sleep(500);
             browser.wait(EC.elementToBeClickable(createComponent.editButton), TIMEOUT, "Edit button is not ready" + " not present");
             createComponent.editButton.click();
             browser.wait(EC.elementToBeClickable(createComponent.taskOptions), TIMEOUT, "Task options is not ready" + " not present");
