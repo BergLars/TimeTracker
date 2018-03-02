@@ -20,7 +20,7 @@ SET row_security = off;
 -- Name: timetracker; Type: SCHEMA; Schema: -; Owner: fluance
 --
 
-DROP SCHEMA IF EXISTS timetracker;
+DROP SCHEMA IF EXISTS timetracker CASCADE;
 CREATE SCHEMA timetracker;
 
 
