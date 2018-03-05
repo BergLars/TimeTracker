@@ -9,6 +9,7 @@ import moment from 'moment/src/moment';
 import { EntriesService } from './entries.service';
 import { elementAt } from 'rxjs/operator/elementAt';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { window } from 'rxjs/operator/window';
 
 @Component({
   selector: 'app-entries',
@@ -98,6 +99,7 @@ export class EntriesComponent implements OnInit {
     private elementRef: ElementRef,
     private timespentService: TimespentService) {
     this.registryService.entriesComponent = this;
+    this.loadValuePerdefault();
     this.loadEntries();
   }
 
@@ -106,7 +108,8 @@ export class EntriesComponent implements OnInit {
     this.updateFilterSelection();
   }
 
-  setSelectFocus(event, row, value) {
+  setSelectFocus(event, row, cell, value) {
+    this.editing[row.$$index + cell] = true;
     let element = event.target;
     let parentElement = element.parentElement;
     setTimeout(() => {
@@ -115,26 +118,19 @@ export class EntriesComponent implements OnInit {
     }, 100);
   }
 
-  clickOnFirstChild(event, row, cell, value) {
+  clickOnFirstChild(event, row, cell) {
     this.editing[row.$$index + cell] = true;
     setTimeout(() => {
-      this.setInputFocus(event, 'input')
-    }, 50);
-  }
-
-  setInputFocus(event, value) {
-    let parentElement = event.path[1];
-    setTimeout(() => {
-      let parentElementTag = parentElement.getElementsByTagName(value)[0];
+      let parentElementTag = document.getElementById(row.cellValue + row.$$index);
       parentElementTag.focus();
-    }, 50);
+    }, 100);
   }
 
   removeSelectFocus(row, cell) {
-    this.editing[row.$$index + cell] = false;
     setTimeout(() => {
-      // this.unselectEntry();
-    }, 50);
+      this.editing[row.$$index + cell] = false;
+      this.unselectEntry();
+    }, 100);
   }
 
   updateFilterSelection() {
@@ -420,17 +416,19 @@ export class EntriesComponent implements OnInit {
     }, 10);
   }
 
-  /**
-  * Load entries per default
-  */
-  loadEntries() {
+  loadValuePerdefault() {
     // Set column per default
     this.selectedColumn = this.columns[4].id;
     // Set direction per default
     this.selectedSort = this.sorts[0].id;
     // Set limit per default
     this.limit = this.limits[0].value;
+  }
 
+  /**
+  * Load entries per default
+  */
+  loadEntries() {
     this.entriesService.entriesAreLoaded().then(() => {
       this.clients = this.entriesService.sortedClients();
       this.projects = this.entriesService.sortedProjects();
