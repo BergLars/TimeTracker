@@ -2,31 +2,51 @@
 // https://github.com/angular/protractor/blob/master/docs/referenceConf.js
 
 /*global jasmine */
-var SpecReporter = require('jasmine-spec-reporter');
+var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
+const { exec } = require('child_process');
 
 exports.config = {
   allScriptsTimeout: 11000,
   specs: [
-    './e2e/**/*.e2e-spec.ts'
+    // './e2e/**/login.spec.js',
+    // './e2e/**/timetracker.spec.js',
+    //
+    './e2e/**/at-newentry.spec.js',
+    './e2e/**/at-sorting.spec.js',
+    './e2e/**/at-create.spec.js',
+    './e2e/**/at-edit.spec.js',
+    './e2e/**/at-menu.spec.js',
+    './e2e/**/at-delete.spec.js',
+    './e2e/**/at-deleteentry.spec.js',
+    './e2e/**/at-pagesize.spec.js',
+    './e2e/**/at-export.spec.js',
+    // './e2e/**/menu-toolbar.spec.js',
+    // './e2e/**/entries-toolbar.spec.js'
   ],
   capabilities: {
     'browserName': 'chrome'
   },
   directConnect: true,
-  baseUrl: 'http://mojito.dev.fluance.net:8080/timetracker/',
+  baseUrl: 'http://localhost:4200',
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,
-    defaultTimeoutInterval: 30000,
-    print: function() {}
+    defaultTimeoutInterval: 360000
   },
   useAllAngular2AppRoots: true,
-  beforeLaunch: function() {
-    require('ts-node').register({
-      project: 'e2e'
+  beforeLaunch: function () {
+    exec('psql timetracker < e2e/schema_ftt.sql', (err, stdout, stderr) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      console.log("beforeLaunch: Frozen dataset created!");
     });
   },
-  onPrepare: function() {
+  onPrepare: function () {
+    global.TIMEOUT = 2000; // milliseconds
+    global.EC = protractor.ExpectedConditions;
+    global.SENDKEYS_TIMEOUT = 500;
     jasmine.getEnv().addReporter(new SpecReporter());
   }
 };

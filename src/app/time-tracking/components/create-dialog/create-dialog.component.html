@@ -4,7 +4,7 @@
         <tr>
             <td>Create new:</td>
             <td>
-                <select (change)="changeItemToBeCreated($event)">
+                <select (change)="changeItemToBeCreated($event)" id="itemToBeCreated">
                     <option *ngFor="let item of createItems" [value]="item.id">{{item.key}}</option>
                 </select>
             </td>
@@ -12,21 +12,21 @@
         <tr [hidden]="item != PROJECT">
             <td>
                 <md-input-container>
-                    <input mdInput placeholder="Project Name" #newProjectName>
+                    <input id="newProjectName" mdInput placeholder="Project Name" #newProjectName>
                 </md-input-container>
             </td>
         </tr>
         <tr [hidden]="item != TASK">
             <td>
                 <md-input-container>
-                    <input mdInput #newTaskDescription placeholder="Description">
+                    <input id="newTaskDescription" mdInput #newTaskDescription placeholder="Description">
                 </md-input-container>
             </td>
         </tr>
         <tr [hidden]="item != CLIENT">
             <td>
                 <md-input-container>
-                    <input mdInput #newClientName placeholder="Client Name">
+                    <input id="newClientName" mdInput #newClientName placeholder="Client Name">
                 </md-input-container>
             </td>
         </tr>
@@ -38,28 +38,28 @@
                 </label>
                 <br>
                 <md-input-container>
-                    <input mdInput placeholder="Username" #username>
+                    <input id="username" mdInput placeholder="Username" #username>
                 </md-input-container>
             </td>
         </tr>
         <tr [hidden]="item != USER">
             <td>
                 <md-input-container>
-                    <input mdInput type="password" placeholder="Password" #password>
+                    <input id="password" mdInput type="password" placeholder="Password" #password>
                 </md-input-container>
             </td>
         </tr>
         <tr [hidden]="item != USER">
             <td>
                 <md-input-container>
-                    <input mdInput type="password" placeholder="Confirm password" #confirmPassword>
+                    <input id="confirmPassword" mdInput type="password" placeholder="Confirm password" #confirmPassword>
                 </md-input-container>
             </td>
         </tr>
         <tr [hidden]="item != USER">
             <td>
                 <md-input-container>
-                    <input mdInput placeholder="Employment degree" #employmentDegree>
+                    <input id="employmentDegree" mdInput placeholder="Employment degree" #employmentDegree>
                 </md-input-container>
             </td>
         </tr>

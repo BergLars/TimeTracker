@@ -12,7 +12,7 @@
     <tr>
       <td>Client:</td>
       <td>
-        <select class="clickable-icon" #client (change)="clientDropdown(client.value)">
+        <select class="clickable-icon" #client (change)="clientDropdown(client.value)" id="clientOption">
           <option *ngFor="let item of clients" [value]='item.id'>{{ item.clientName }}</option>
         </select>
       </td>
@@ -30,7 +30,7 @@
     <tr>
       <td>Task:</td>
       <td>
-        <select class="clickable-icon" #task (change)="taskDropdown(task.value)">
+        <select class="clickable-icon" #task (change)="taskDropdown(task.value)" id="taskOption">
           <option *ngFor="let item of tasks" [value]="item.id">{{ item.taskDescription }}</option>
         </select>
       </td>
