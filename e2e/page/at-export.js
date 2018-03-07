@@ -8,7 +8,6 @@ var ExportComponent = function () {
     this.toDateField = element(by.id('inputToDate'));
     this.fromDate = '12.02.2017';
     this.invalidFromDateFormat = '12/02/2017';
-    this.validRegex = (/^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](2)\d{3}$/);
     this.toDate = '12.02.2018';
     this.cancelButton = element(by.buttonText('Cancel'));
 }

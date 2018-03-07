@@ -51,7 +51,7 @@
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
             <span hot-table class="clickable-icon inline-field-width" title="Click to edit" (click)="clickOnFirstChild($event, row, '-description');"
                 *ngIf="!editing[row.$$index + '-description']">{{ row.description }}</span>
-            <input id="{{row.cellvalue + row.$$index}}" class="input-field" (blur)="updateValue($event, 'description', value, row);"
+            <input id="{{row.cellvalue + row.$$index}}" class="input-field description" (blur)="updateValue($event, 'description', value, row);"
                 (keydown)="keyDownFunction($event, 'description', value, row)" *ngIf="editing[row.$$index + '-description']"
                 type="text" [value]="row.description" />
         </ng-template>
@@ -94,7 +94,7 @@
             <span class="clickable-icon inline-field-width" title="Click to edit" (click)="clickOnFirstChild($event, row, '-date');"
                 *ngIf="!editing[row.$$index + '-date']">
                 {{ row.entryDate }}</span>
-            <input id="{{row.cellvalue + row.$$index}}" (blur)="updateValue($event, 'date', value, row);removeSelectFocus(row,'-date')"
+            <input id="{{row.cellvalue + row.$$index}}" class="entryDate" (blur)="updateValue($event, 'date', value, row);removeSelectFocus(row,'-date')"
                 (keydown)="keyDownFunction($event, 'date', value, row)" *ngIf=" editing[row.$$index +
                 '-date']" type="text" [value]="value" />
         </ng-template>
@@ -104,14 +104,14 @@
             <span class="clickable-icon inline-field-width" title="Click to edit " (click)="clickOnFirstChild($event, row, '-startTime');"
                 *ngIf="!editing[row.$$index + '-startTime'] ">
                 {{ row.startTime }}</span>
-            <input id="{{row.cellvalue + row.$$index}}" class="input-field" (blur)="updateValue($event, 'startTime', value, row);removeSelectFocus(row,'-startTime');"
+            <input id="{{row.cellvalue + row.$$index}}" class="input-field startTime" (blur)="updateValue($event, 'startTime', value, row);removeSelectFocus(row,'-startTime');"
                 (keydown)="keyDownFunction($event, 'startTime', value, row)" *ngIf="editing[row.$$index + '-startTime']
                 " type="time " [value]="value " />
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="End Date" sortable>
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
-            <span>
+            <span class="endDate">
                 {{ row.endDate }}
             </span>
         </ng-template>
@@ -121,7 +121,7 @@
             <span class="clickable-icon inline-field-width" title="Click to edit " (click)="clickOnFirstChild($event, row, '-endTime');"
                 *ngIf="!editing[row.$$index + '-endTime'] ">
                 {{ row.endTime }}</span>
-            <input id="{{row.cellvalue + row.$$index}}" class="input-field" (blur)="updateValue($event, 'endTime', value, row);removeSelectFocus(row,'-endTime')"
+            <input id="{{row.cellvalue + row.$$index}}" class="input-field endTime" (blur)="updateValue($event, 'endTime', value, row);removeSelectFocus(row,'-endTime')"
                 (keydown)="keyDownFunction($event, 'endTime', value, row)" *ngIf="editing[row.$$index + '-endTime']
                 " type="time " [value]="value " />
         </ng-template>
@@ -132,7 +132,7 @@
                 *ngIf="!editing[row.$$index + '-timeSpent'] " [ngClass]="{'colored': row.isColored === true}">
                 {{ row.timeSpent }}
             </span>
-            <input id="{{row.cellvalue + row.$$index}}" class="input-field" (blur)="updateValue($event, 'timeSpent', value, row);removeSelectFocus(row,'-timeSpent')"
+            <input id="{{row.cellvalue + row.$$index}}" class="input-field timeSpent" (blur)="updateValue($event, 'timeSpent', value, row);removeSelectFocus(row,'-timeSpent')"
                 (keydown)="keyDownFunction($event, 'timeSpent', value, row)" *ngIf="editing[row.$$index + '-timeSpent']
             " type="text " [value]="value " />
         </ng-template>

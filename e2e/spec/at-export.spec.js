@@ -34,7 +34,7 @@ describe('Export button ', () => {
                 return alert.accept();
             });
             exportComponent.cancelButton.click();
-            expect(exportComponent.validRegex.test(exportComponent.fromDateField.getAttribute('value'))).toBe(false);
+            expect(validDateRegex.test(exportComponent.fromDateField.getAttribute('value'))).toBe(false);
         });
     });
 });

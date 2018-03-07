@@ -19,6 +19,7 @@ exports.config = {
     './e2e/**/at-delete.spec.js',
     './e2e/**/at-deleteentry.spec.js',
     './e2e/**/at-pagesize.spec.js',
+    './e2e/**/at-inlineediting.spec.js',
     './e2e/**/at-export.spec.js',
     // './e2e/**/menu-toolbar.spec.js',
     // './e2e/**/entries-toolbar.spec.js'
@@ -47,6 +48,7 @@ exports.config = {
     global.TIMEOUT = 2000; // milliseconds
     global.EC = protractor.ExpectedConditions;
     global.SENDKEYS_TIMEOUT = 500;
+    global.validDateRegex = (/^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](2)\d{3}$/);
     jasmine.getEnv().addReporter(new SpecReporter());
   }
 };

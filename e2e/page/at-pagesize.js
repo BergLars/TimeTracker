@@ -8,6 +8,6 @@ var Pagesize = function () {
     this.numberOfEntries = element.all(by.css('body > app-root > div > app-time-tracking > div.layout-column > div.ftt-content > md-card > app-entries > ngx-datatable > div > datatable-body > datatable-selection > datatable-scroller > datatable-row-wrapper:nth-child(1n) > datatable-body-row'));
     this.fourthPage = element(by.css('body > app-root > div > app-time-tracking > div.layout-column > div.ftt-content > md-card > app-entries > ngx-datatable > div > datatable-footer > div > datatable-pager > ul > li:nth-child(6) > a'));
     this.username = 'wayne';
-    this.password = 'fluance2018*'
+    this.password = 'fluance2018*';
 }
 module.exports = Pagesize;
