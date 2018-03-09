@@ -1,4 +1,4 @@
-var UserprofileMenu = function () {
+var User = function () {
     this.profileIcon = element(by.id('accountCircle'));
     this.deleteUserButton = element(by.buttonText('Delete user'));
     this.changePasswordButton = element(by.buttonText('Change password'));
@@ -12,4 +12,4 @@ var UserprofileMenu = function () {
     this.wrongPassword = 'fluance2025*';
     this.itemName = 'block';
 }
-module.exports = UserprofileMenu;
+module.exports = User;

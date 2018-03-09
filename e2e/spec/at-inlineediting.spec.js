@@ -1,10 +1,10 @@
 var Sorting = require('../page/at-inlineEditing.js');
 var inlineEditing = new Sorting();
-var Timetracker = require('../page/timetracker.js');
+var Timetracker = require('../page/at-timetracker.js');
 var timeTracker = new Timetracker();
-var Login = require('../page/login.js');
+var Login = require('../page/at-login.js');
 var login = new Login();
-var UserprofileMenu = require('../page/at-menu.js');
+var UserprofileMenu = require('../page/at-user.js');
 var userprofileMenu = new UserprofileMenu();
 var InlineEditing = require('../page/at-inlineediting.js');
 var inlineEditing = new InlineEditing();

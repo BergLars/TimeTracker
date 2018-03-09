@@ -8,21 +8,16 @@ const { exec } = require('child_process');
 exports.config = {
   allScriptsTimeout: 11000,
   specs: [
-    // './e2e/**/login.spec.js',
-    // './e2e/**/timetracker.spec.js',
-    //
-    './e2e/**/at-newentry.spec.js',
-    './e2e/**/at-sorting.spec.js',
-    './e2e/**/at-create.spec.js',
-    './e2e/**/at-edit.spec.js',
-    './e2e/**/at-menu.spec.js',
-    './e2e/**/at-delete.spec.js',
-    './e2e/**/at-deleteentry.spec.js',
-    './e2e/**/at-pagesize.spec.js',
+    // './e2e/**/*.spec.js',
+    './e2e/**/at-entry.spec.js',
+    './e2e/**/at-cruditem.spec.js',
     './e2e/**/at-inlineediting.spec.js',
     './e2e/**/at-export.spec.js',
-    // './e2e/**/menu-toolbar.spec.js',
-    // './e2e/**/entries-toolbar.spec.js'
+    './e2e/**/at-sorting.spec.js',
+    './e2e/**/at-pagesize.spec.js',
+    './e2e/**/at-user.spec.js',
+    // 
+    // './e2e/**/at-filters.spec.js',
   ],
   capabilities: {
     'browserName': 'chrome'

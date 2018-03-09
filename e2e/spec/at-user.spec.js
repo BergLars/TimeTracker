@@ -1,9 +1,11 @@
-var Timetracker = require('../page/timetracker.js');
+var Timetracker = require('../page/at-timetracker.js');
 var timeTracker = new Timetracker();
-var Login = require('../page/login.js');
+var Login = require('../page/at-login.js');
 var login = new Login();
-var UserprofileMenu = require('../page/at-menu.js');
+var UserprofileMenu = require('../page/at-user.js');
 var userprofileMenu = new UserprofileMenu();
+var CRUDItem = require('../page/at-cruditem.js');
+var crudItem = new CRUDItem();
 
 describe('Userprofile', () => {
     describe('Change password', () => {
@@ -26,7 +28,6 @@ describe('Userprofile', () => {
         });
     });
 });
-
 describe('Userprofile', () => {
     beforeEach(() => {
         timeTracker.navigateTo();
@@ -60,6 +61,33 @@ describe('Userprofile', () => {
             });
             userprofileMenu.cancelButton.click();
             expect(userprofileMenu.currentPassword.getAttribute('value')).not.toEqual(userprofileMenu.password);
+        });
+    });
+    describe('Create a user', () => {
+        it('It should create a User as block', () => {
+            browser.wait(EC.elementToBeClickable(crudItem.createButton), TIMEOUT, "Create button is not ready" + " not present");
+            crudItem.createButton.click();
+            browser.wait(EC.elementToBeClickable(crudItem.itemToBeCreated), TIMEOUT, "Edit button is not ready" + " not present");
+            crudItem.itemToBeCreated.click();
+            element(by.cssContainingText('option', 'User')).click();
+            expect(crudItem.usernameField.isPresent()).toBe(true);
+            crudItem.usernameField.sendKeys(crudItem.itemName);
+            browser.sleep(SENDKEYS_TIMEOUT);
+            crudItem.passwordField.sendKeys(crudItem.password);
+            browser.sleep(SENDKEYS_TIMEOUT);
+            crudItem.confirmPasswordField.sendKeys(crudItem.password);
+            browser.sleep(SENDKEYS_TIMEOUT);
+            crudItem.employmentDegreeField.sendKeys(crudItem.employmentDegree);
+            browser.sleep(SENDKEYS_TIMEOUT);
+            crudItem.okButton.click();
+        });
+        it('It should verify the created user', () => {
+            browser.wait(EC.elementToBeClickable(crudItem.profileIcon), TIMEOUT, "Profile icon" + " not clickable");
+            crudItem.profileIcon.click();
+            browser.wait(EC.elementToBeClickable(crudItem.deleteUserButton), TIMEOUT, "Delete button" + " not clickable");
+            crudItem.deleteUserButton.click();
+            expect(element(by.cssContainingText('option', crudItem.itemName)).isPresent()).toBe(true);
+            crudItem.cancelButton.click();
         });
     });
     describe('Delete user', () => {
