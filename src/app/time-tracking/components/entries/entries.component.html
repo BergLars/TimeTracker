@@ -14,16 +14,16 @@
         </md-chip>
         &nbsp;
         <span color="primary" class="filter-position">
-            <md-select multiple placeholder="Project" [(ngModel)]="selectedProjects" (change)="projectsSelectedPerDefault();">
-                <md-option class="data-filter-header" [value]="-1">All</md-option>
+            <md-select multiple placeholder="Project" [(ngModel)]="selectedProjects" (change)="projectsSelectedPerDefault();" id="projectsFilter">
+                <md-option class="data-filter-header clickOnAllProject" [value]="-1">All</md-option>
                 <md-option class="data-filter-header" *ngFor="let item of projects" [value]='item.id'>{{ item.projectName }}</md-option>
             </md-select>
-            <md-select multiple placeholder="Client" [(ngModel)]="selectedClients" (change)="clientsSelectedPerDefault();">
-                <md-option class="data-filter-header" [value]="-1">All </md-option>
+            <md-select multiple placeholder="Client" [(ngModel)]="selectedClients" (change)="clientsSelectedPerDefault();" id="clientsFilter">
+                <md-option class="data-filter-header clickOnAllClient" [value]="-1">All </md-option>
                 <md-option class="data-filter-header" *ngFor="let item of clients" [value]='item.id'>{{ item.clientName }}</md-option>
             </md-select>
-            <md-select multiple placeholder="Task" [(ngModel)]="selectedTasks" (change)="tasksSelectedPerDefault();">
-                <md-option class="data-filter-header" [value]="-1">All</md-option>
+            <md-select multiple placeholder="Task" [(ngModel)]="selectedTasks" (change)="tasksSelectedPerDefault();" id="tasksFilter">
+                <md-option class="data-filter-header clickOnAllTask" [value]="-1">All</md-option>
                 <md-option class="data-filter-header" *ngFor="let item of tasks" [value]='item.id'> {{ item.taskDescription }}</md-option>
             </md-select>
         </span>
