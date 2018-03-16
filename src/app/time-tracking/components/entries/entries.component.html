@@ -30,14 +30,11 @@
     </md-chip-list>
     <span class="flex"></span>
     <md-chip-list>
-        <md-chip class="set-margin">Sort by
-        </md-chip>
-        &nbsp;
         <span color="primary" class="filter-position">
-            <md-select placeholder="Column" [(ngModel)]="selectedColumn" (change)="updateSortingSelection();" id="sortBy">
+            <md-select placeholder="Sort by Column" [(ngModel)]="selectedColumn" (change)="updateSortingSelection();" id="sortingColumn">
                 <md-option class="data-filter-header" *ngFor="let item of columns" [value]='item.id'>{{ item.key }}</md-option>
             </md-select>
-            <md-select placeholder="Sort" [(ngModel)]="selectedSort" (change)="updateSortingSelection();" id="orderBy">
+            <md-select placeholder="Order By" [(ngModel)]="selectedSort" (change)="updateSortingSelection();" id="sortingSort">
                 <md-option class="data-filter-header" *ngFor="let item of sorts" [value]='item.id'>{{ item.key }}</md-option>
             </md-select>
         </span>
