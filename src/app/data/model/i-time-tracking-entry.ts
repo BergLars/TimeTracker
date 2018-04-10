@@ -11,6 +11,9 @@ export interface ITimeTrackingEntry {
     startTime: string;
     endTime: string;
     timeSpent: string;
+    worktime: string;
+    traveltime: string;
+    place: string;
     description: string;
     userprofileID: number;
     clientID: number;

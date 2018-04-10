@@ -22,7 +22,9 @@ import {
     ExportDialogService,
     EntriesService,
     EditDialogComponent,
-    EditDialogService
+    EditDialogService,
+    DetailDialogComponent,
+    DetailDialogService
 } from './time-tracking';
 import { routes } from './routes';
 import { LoginComponent, LoginService } from './login';
@@ -52,7 +54,8 @@ import { DeleteUserService } from './menu/components/delete-user/delete-user.ser
         PasswordDialogComponent,
         CreateDialogComponent,
         EditDialogComponent,
-        DeleteUserComponent
+        DeleteUserComponent,
+        DetailDialogComponent
     ],
     entryComponents: [
         EntryDialogComponent,
@@ -61,7 +64,8 @@ import { DeleteUserService } from './menu/components/delete-user/delete-user.ser
         CreateDialogComponent,
         ExportDialogComponent,
         EditDialogComponent,
-        DeleteUserComponent
+        DeleteUserComponent,
+        DetailDialogComponent
     ],
     imports: [
         NgxDatatableModule,
@@ -91,6 +95,7 @@ import { DeleteUserService } from './menu/components/delete-user/delete-user.ser
         EditDialogService,
         TimespentService,
         DeleteUserService,
+        DetailDialogService,
         {
             provide: Http,
             useFactory: httpFactory,

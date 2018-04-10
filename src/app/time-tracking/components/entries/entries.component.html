@@ -138,6 +138,9 @@
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
             <div [hidden]="!isSelected(row)">
                 <div [hidden]="editMode">
+                    <span (click)="openDetailDialog(row)">
+                        <md-icon class="clickable-icon">description</md-icon>
+                    </span>
                     <span (click)="openDeleteDialog(row)">
                         <md-icon class="clickable-icon">delete_forever</md-icon>
                     </span>

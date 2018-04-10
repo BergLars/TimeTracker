@@ -1,0 +1,82 @@
+<h1 md-dialog-title>Entry Detail</h1>
+<div md-dialog-content>
+    <table>
+        <tr>
+            <td> 
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="Description" [(ngModel)]="description" readonly>
+                </md-input-container> 
+            </td>
+            <td>
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="Place" [(ngModel)]="place" readonly>
+                </md-input-container> 
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td>
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="Project" [(ngModel)]="project" readonly>
+                </md-input-container>  
+            </td>
+            <td>
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="Client" [(ngModel)]="client" readonly>
+                </md-input-container>  
+            </td>
+            <td>
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="Task" [(ngModel)]="task" readonly>
+                </md-input-container>  
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td>
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="Start date" [(ngModel)]="entryDate" readonly>
+                </md-input-container>  
+            </td>
+            <td>
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="Start time" [(ngModel)]="startTime" readonly>
+                </md-input-container>
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td>
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="End date" [(ngModel)]="endDate" readonly>
+                </md-input-container>
+            </td>
+            <td>
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="End time" [(ngModel)]="endTime" readonly>
+                </md-input-container>
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td>
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="Travel time" [(ngModel)]="travelTime" readonly>
+                </md-input-container>
+            </td>
+            <td>
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="Work time" [(ngModel)]="workTime" readonly>
+                </md-input-container>
+            </td>
+        </tr>
+        <tr>
+            <td> <md-checkbox [(ngModel)]="isBillable" readonly> is Billable</md-checkbox></td>
+        </tr>
+    </table>
+    <br>
+</div>
+<div md-dialog-actions>
+    <button type="button" md-raised-button (click)="ok();">Edit</button>
+    <button type="button" md-button (click)="dialogRef.close()">Close</button>
+</div>
