@@ -8,11 +8,8 @@
     </span>
 </md-toolbar>
 <md-toolbar>
-    <span class="flex"></span>
     <md-chip-list>
-        <md-chip class="set-margin">Filter by
-        </md-chip>
-        &nbsp;
+        <span class="flex"></span>
         <span color="primary" class="filter-position">
             <md-select multiple placeholder="Project" [(ngModel)]="selectedProjects" (change)="projectsSelectedPerDefault();" id="projectsFilter">
                 <md-option class="data-filter-header clickOnAllProject" [value]="-1">All</md-option>
@@ -40,6 +37,10 @@
         </span>
     </md-chip-list>
 </md-toolbar>
+<md-input-container>
+    <input mdInput id="search" #search placeholder="Search">
+</md-input-container>
+<md-icon class="material-icons app-input-icon">search</md-icon>
 <br>
 <ngx-datatable #mydatatable class="material striped" [scrollbarH]="true" [rows]="items" [columnMode]="'force'" [headerHeight]="50"
     [footerHeight]="50" [sortType]="'multi'" [selected]="selected" [selectionType]="'single'" [limit]="limit" [count]="count"

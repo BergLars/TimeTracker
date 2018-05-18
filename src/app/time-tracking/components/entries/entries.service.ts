@@ -5,6 +5,9 @@ import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
 import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
+import * as _ from 'lodash';
+import { sscanf } from 'scanf';
+import { sprintf } from 'sprintf-js';
 
 @Injectable()
 export class EntriesService {
@@ -22,17 +25,15 @@ export class EntriesService {
   @Input() totalTimeSpent: any;
 
   @Input() static clonedEntries: ITimeTrackingEntry[] = [];
-  @Input() static filteredEntries: ITimeTrackingEntry[] = [];
+  @Input() filteredEntries: ITimeTrackingEntry[] = [];
 
   private projectsFilter = [];
   private clientsFilter = [];
   private tasksFilter = [];
+  private descriptionsFilter = [];
 
   private sortingColumn: string;
   private sortingDirection: string;
-
-  private sscanf = require('scanf').sscanf;
-  private sprintf = require("sprintf-js").sprintf;
 
   public startOfWeek: any;
   public endOfWeek: any;
@@ -42,6 +43,7 @@ export class EntriesService {
 
   // Allow to sort items with a String value Asc
   public propComparator = (propName) => (a, b) => a[propName] == b[propName] ? 0 : a[propName] < b[propName] ? -1 : 1;
+
 
   constructor(
     private loginService: LoginService,
@@ -186,6 +188,7 @@ export class EntriesService {
       let entryClientId = timeEntry.clientID.valueOf();
       return (self.clientsFilter.indexOf(entryClientId) != -1);
     });
+
     this.registryService.sidebarComponent.totalTimeSpent = this.calculateTotalTimeSpent(entries);
     return entries;
   }
@@ -248,6 +251,8 @@ export class EntriesService {
                   this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
                     loadedEntries => {
                       var items = [];
+                      var count = 0;
+                      var descriptionsDictionary = [];
 
                       loadedEntries.forEach(function (entry) {
                         entry.task = that.tasksDictionary[entry.taskID];
@@ -267,6 +272,7 @@ export class EntriesService {
                       EntriesService.clonedEntries = items;
 
                       resolve(items);
+                      this.searchBy('2018-01');
                     });
                 });
             });
@@ -299,15 +305,49 @@ export class EntriesService {
     });
   }
 
+  searchBy(term): Promise<any> {
+    let that = this;
+    let url = this.baseUrl + "/timeentries/search?term=";
+
+    return new Promise<any>((resolve, reject) => {
+      this.http.get(url + term).map(res => res.json()).subscribe(
+        loadedEntries => {
+          var items = [];
+          var descriptionsDictionary = [];
+
+          loadedEntries.forEach(function (entry) {
+            entry.task = that.tasksDictionary[entry.taskID];
+            entry.client = that.clientsDictionary[entry.clientID];
+            entry.project = that.projectsDictionary[entry.projectID];
+            entry.projectName = entry.project.projectName;
+            entry.taskDescription = entry.task.taskDescription;
+            entry.clientName = entry.client.clientName;
+            entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
+            entry.startTime = entry.startDateTime.substring(11, 16);
+            entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
+            entry.endTime = entry.endDateTime.substring(11, 16);
+            items.push(entry);
+          });
+          console.log(items);
+          resolve(items);
+        },
+        (err) => {
+          if (err.status === 500) {
+            this.loginService.logout();
+          }
+        });
+    });
+  }
+
   public calculateTotalTimeSpent(entries) {
     let hours = 0;
     let minutes = 0;
     entries.forEach(element => {
-      let timeComponents = this.sscanf(element.timeSpent, "%d:%d");
-      hours += timeComponents[0];
-      minutes += timeComponents[1];
+      let timeComponents = sscanf(element.timeSpent, "%d:%d");
+      hours += +timeComponents[0];
+      minutes += +timeComponents[1];
     });
-    let timeSpents = this.sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
+    let timeSpents = sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
     return timeSpents;
   }
 
@@ -362,11 +402,11 @@ export class EntriesService {
     let hours = 0;
     let minutes = 0;
     timeSpents.forEach(element => {
-      let timeComponents = this.sscanf(element, "%d:%d");
-      hours += timeComponents[0];
-      minutes += timeComponents[1];
+      let timeComponents = sscanf(element, "%d:%d");
+      hours += +timeComponents[0];
+      minutes += +timeComponents[1];
     });
-    let result = this.sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
+    let result = sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
     return result;
   }
 
@@ -375,11 +415,11 @@ export class EntriesService {
     let hours = 0;
     let minutes = 0;
     timeSpents.forEach(element => {
-      let timeComponents = this.sscanf(element, "%d:%d");
-      hours += timeComponents[0];
-      minutes += timeComponents[1];
+      let timeComponents = sscanf(element, "%d:%d");
+      hours += +timeComponents[0];
+      minutes += +timeComponents[1];
     });
-    let result = this.sprintf("%02d:%02d", hours + Math.round(minutes / 60), minutes % 60);
+    let result = sprintf("%02d:%02d", hours + Math.round(minutes / 60), minutes % 60);
     return result;
   }
 

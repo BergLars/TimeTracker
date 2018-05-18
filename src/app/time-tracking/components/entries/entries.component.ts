@@ -22,6 +22,7 @@ export class EntriesComponent implements OnInit {
   @Input() projects: IProject[] = [];
   @Input() project: IProject;
   @Input() tasks: ITask[] = [];
+  // @Input() descriptions = [];
   @Input() task: ITask;
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
@@ -49,6 +50,7 @@ export class EntriesComponent implements OnInit {
   private previousAllProjectsFilterFlag = true;
   private previousAllTasksFilterFlag = true;
   private previousAllClientsFilterFlag = true;
+  private previousAllDescriptionsFilterFlag = true;
 
   private columns = [
     { key: 'Description', id: 0 },
@@ -83,9 +85,11 @@ export class EntriesComponent implements OnInit {
   @Input() selectedClients: any = [];
   @Input() selectedProjects: any = [];
   @Input() selectedTasks: any = [];
+  @Input() selectedDescriptions: any = [];
 
   @Input() selectedColumn: any;
   @Input() selectedSort: any;
+  @Input() term: any;
   isValid: boolean = false;
 
   constructor(
@@ -106,6 +110,10 @@ export class EntriesComponent implements OnInit {
   ngOnInit() {
     this.defaultItem = this.createItems[0].key;
     this.updateFilterSelection();
+  }
+
+  getSearchValue(term: string) {
+    this.term = term;
   }
 
   setSelectFocus(event, row, cell, value) {
@@ -137,6 +145,7 @@ export class EntriesComponent implements OnInit {
     this.projectsSelectedPerDefault();
     this.tasksSelectedPerDefault();
     this.clientsSelectedPerDefault();
+    // this.descriptionsSelectedPerDefault();
     this.refreshDatatable();
   }
 
@@ -400,9 +409,9 @@ export class EntriesComponent implements OnInit {
     this.entriesService.setFilteringBy({
       clients: this.selectedClients,
       projects: this.selectedProjects,
-      tasks: this.selectedTasks
+      tasks: this.selectedTasks,
+      // descriptions: this.selectedDescriptions
     });
-
     // Take in acount the sorting
     this.entriesService.setSortingBy({
       column: this.columns[this.selectedColumn].key,
@@ -426,20 +435,23 @@ export class EntriesComponent implements OnInit {
   }
 
   /**
-  * Load entries per default
-  */
+   * Load entries per default
+   */
   loadEntries() {
     this.entriesService.entriesAreLoaded().then(() => {
       this.clients = this.entriesService.sortedClients();
       this.projects = this.entriesService.sortedProjects();
       this.tasks = this.entriesService.sortedTasks();
+      // this.descriptions = this.entriesService.sortedDescriptions();
 
       this.selectedProjects[0] = -1;
       this.selectedTasks[0] = -1;
       this.selectedClients[0] = -1;
+      this.selectedDescriptions[0] = -1;
       this.projectsSelectedPerDefault();
       this.tasksSelectedPerDefault();
       this.clientsSelectedPerDefault();
+      // this.descriptionsSelectedPerDefault();
       this.refreshDatatable();
     });
   }
@@ -467,11 +479,11 @@ export class EntriesComponent implements OnInit {
       return;
     }
 
-    if (this.selectedProjects.length === (this.projects.length - (allProjectsFilterFlag ? 1 : 0) ) ) {
+    if (this.selectedProjects.length === (this.projects.length - (allProjectsFilterFlag ? 1 : 0))) {
       this.selectedProjects = [-1].concat(selectedProjects);
       allProjectsFilterFlag = true;
     } else {
-      if (allProjectsFilterFlag) this.selectedProjects = this.selectedProjects.slice(1); 
+      if (allProjectsFilterFlag) this.selectedProjects = this.selectedProjects.slice(1);
       allProjectsFilterFlag = false;
     }
     this.previousAllProjectsFilterFlag = allProjectsFilterFlag;
@@ -501,11 +513,11 @@ export class EntriesComponent implements OnInit {
       return;
     }
 
-    if (this.selectedTasks.length === (this.tasks.length - (allTasksFilterFlag ? 1 : 0) ) ) {
+    if (this.selectedTasks.length === (this.tasks.length - (allTasksFilterFlag ? 1 : 0))) {
       this.selectedTasks = [-1].concat(selectedTasks);
       allTasksFilterFlag = true;
     } else {
-      if (allTasksFilterFlag) this.selectedTasks = this.selectedTasks.slice(1); 
+      if (allTasksFilterFlag) this.selectedTasks = this.selectedTasks.slice(1);
       allTasksFilterFlag = false;
     }
     this.previousAllTasksFilterFlag = allTasksFilterFlag;
@@ -535,17 +547,53 @@ export class EntriesComponent implements OnInit {
       return;
     }
 
-    if (this.selectedClients.length === (this.clients.length - (allClientsFilterFlag ? 1 : 0) ) ) {
+    if (this.selectedClients.length === (this.clients.length - (allClientsFilterFlag ? 1 : 0))) {
       this.selectedClients = [-1].concat(selectedClients);
       allClientsFilterFlag = true;
     } else {
-      if (allClientsFilterFlag) this.selectedClients = this.selectedClients.slice(1); 
+      if (allClientsFilterFlag) this.selectedClients = this.selectedClients.slice(1);
       allClientsFilterFlag = false;
     }
 
     this.previousAllClientsFilterFlag = allClientsFilterFlag;
     this.refreshDatatable();
   }
+
+  // descriptionsSelectedPerDefault() {
+  //   var allDescriptionsFilterFlag = this.selectedDescriptions[0] === -1;
+  //   let selectedDescriptions = [];
+
+
+  //   selectedDescriptions = this.descriptions.map(function (description) {
+  //     return description.id;
+  //   });
+
+  //   if (this.previousAllDescriptionsFilterFlag < allDescriptionsFilterFlag) {
+  //     this.selectedDescriptions = [-1].concat(selectedDescriptions);
+  //     this.previousAllDescriptionsFilterFlag = allDescriptionsFilterFlag;
+  //     this.refreshDatatable();
+  //     return;
+  //   }
+
+  //   if (this.previousAllDescriptionsFilterFlag > allDescriptionsFilterFlag) {
+  //     this.previousAllDescriptionsFilterFlag = allDescriptionsFilterFlag;
+  //     this.selectedDescriptions = [];
+  //     this.refreshDatatable();
+  //     return;
+  //   }
+
+  //   if (this.selectedDescriptions.length === (this.descriptions.length - (allDescriptionsFilterFlag ? 1 : 0))) {
+  //     this.selectedDescriptions = [-1].concat(selectedDescriptions);
+  //     allDescriptionsFilterFlag = true;
+  //   } else {
+  //     if (allDescriptionsFilterFlag) this.selectedDescriptions = this.selectedDescriptions.slice(1);
+  //     allDescriptionsFilterFlag = false;
+  //   }
+
+  //   this.previousAllDescriptionsFilterFlag = allDescriptionsFilterFlag;
+  //   console.log(this.selectedDescriptions);
+  //   // this.refreshDatatable();
+  // }
 
   keyDownFunction(event, cell, cellValue, row) {
     if (event.key == 'Enter') {

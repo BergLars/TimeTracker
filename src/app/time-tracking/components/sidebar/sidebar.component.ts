@@ -20,9 +20,6 @@ export class SidebarComponent implements OnInit {
   @Input() currentMonth: any;
   @Input() weekNumber: any;
 
-  private sscanf = require('scanf').sscanf;
-  private sprintf = require("sprintf-js").sprintf;
-
   constructor(private entriesService: EntriesService, public registryService: RegistryService, public timespentService: TimespentService) {
     this.registryService.sidebarComponent = this;
   }
