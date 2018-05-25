@@ -26,6 +26,7 @@ export class EntriesService {
 
   @Input() static clonedEntries: ITimeTrackingEntry[] = [];
   @Input() filteredEntries: ITimeTrackingEntry[] = [];
+  @Input() searchedEntries: ITimeTrackingEntry[] = [];
 
   private projectsFilter = [];
   private clientsFilter = [];
@@ -272,7 +273,6 @@ export class EntriesService {
                       EntriesService.clonedEntries = items;
 
                       resolve(items);
-                      this.searchBy('2018-01');
                     });
                 });
             });
@@ -313,7 +313,6 @@ export class EntriesService {
       this.http.get(url + term).map(res => res.json()).subscribe(
         loadedEntries => {
           var items = [];
-          var descriptionsDictionary = [];
 
           loadedEntries.forEach(function (entry) {
             entry.task = that.tasksDictionary[entry.taskID];
@@ -328,7 +327,9 @@ export class EntriesService {
             entry.endTime = entry.endDateTime.substring(11, 16);
             items.push(entry);
           });
-          console.log(items);
+          this.timeSpentService.calculateEntriesTimeSpent(items);
+          this.setColor(items);
+          EntriesService.clonedEntries = items;
           resolve(items);
         },
         (err) => {

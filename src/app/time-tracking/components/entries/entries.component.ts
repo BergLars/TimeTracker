@@ -10,6 +10,9 @@ import { EntriesService } from './entries.service';
 import { elementAt } from 'rxjs/operator/elementAt';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { window } from 'rxjs/operator/window';
+import * as _ from 'lodash';
+import { sscanf } from 'scanf';
+import { sprintf } from 'sprintf-js';
 
 @Component({
   selector: 'app-entries',
@@ -85,7 +88,6 @@ export class EntriesComponent implements OnInit {
   @Input() selectedClients: any = [];
   @Input() selectedProjects: any = [];
   @Input() selectedTasks: any = [];
-  @Input() selectedDescriptions: any = [];
 
   @Input() selectedColumn: any;
   @Input() selectedSort: any;
@@ -114,6 +116,32 @@ export class EntriesComponent implements OnInit {
 
   getSearchValue(term: string) {
     this.term = term;
+    let exp = '.';
+
+    if (this.term === '') {
+      return;
+    }
+    if (term === '*') {
+      this.loadEntries();
+    }
+    else {
+      if (_.includes(this.term, exp)) {
+        let day, month, year;
+        let date = sscanf(this.term, "%d.%d.%d");
+        day = date[0];
+        month = date[1];
+        year = date[2];
+        this.term = sprintf('%d-%02d-%02d', year, month, day);
+        this.loadSearched(this.term);
+      }
+      this.loadSearched(this.term);
+    }
+  }
+
+  loadSearched(term) {
+    this.entriesService.searchBy(term).then(() => {
+      this.refreshDatatable();
+    });
   }
 
   setSelectFocus(event, row, cell, value) {
@@ -145,7 +173,6 @@ export class EntriesComponent implements OnInit {
     this.projectsSelectedPerDefault();
     this.tasksSelectedPerDefault();
     this.clientsSelectedPerDefault();
-    // this.descriptionsSelectedPerDefault();
     this.refreshDatatable();
   }
 
@@ -329,7 +356,7 @@ export class EntriesComponent implements OnInit {
     }
   }
 
-  public updateEntry(row) {
+  updateEntry(row) {
     this.http.put(this.baseUrl + "/timeentries/" + row.id, {
       startDateTime: row.startDateTime.substring(0, 4) + "-" + row.startDateTime.substring(5, 7) + "-" + row.startDateTime.substring(8, 10) + " " + row.startTime,
       endDateTime: row.endDateTime.substring(0, 4) + "-" + row.endDateTime.substring(5, 7) + "-" + row.endDateTime.substring(8, 10) + " " + row.endTime,
@@ -409,8 +436,7 @@ export class EntriesComponent implements OnInit {
     this.entriesService.setFilteringBy({
       clients: this.selectedClients,
       projects: this.selectedProjects,
-      tasks: this.selectedTasks,
-      // descriptions: this.selectedDescriptions
+      tasks: this.selectedTasks
     });
     // Take in acount the sorting
     this.entriesService.setSortingBy({
@@ -442,16 +468,13 @@ export class EntriesComponent implements OnInit {
       this.clients = this.entriesService.sortedClients();
       this.projects = this.entriesService.sortedProjects();
       this.tasks = this.entriesService.sortedTasks();
-      // this.descriptions = this.entriesService.sortedDescriptions();
 
       this.selectedProjects[0] = -1;
       this.selectedTasks[0] = -1;
       this.selectedClients[0] = -1;
-      this.selectedDescriptions[0] = -1;
       this.projectsSelectedPerDefault();
       this.tasksSelectedPerDefault();
       this.clientsSelectedPerDefault();
-      // this.descriptionsSelectedPerDefault();
       this.refreshDatatable();
     });
   }
@@ -559,45 +582,14 @@ export class EntriesComponent implements OnInit {
     this.refreshDatatable();
   }
 
-  // descriptionsSelectedPerDefault() {
-  //   var allDescriptionsFilterFlag = this.selectedDescriptions[0] === -1;
-  //   let selectedDescriptions = [];
-
-
-  //   selectedDescriptions = this.descriptions.map(function (description) {
-  //     return description.id;
-  //   });
-
-  //   if (this.previousAllDescriptionsFilterFlag < allDescriptionsFilterFlag) {
-  //     this.selectedDescriptions = [-1].concat(selectedDescriptions);
-  //     this.previousAllDescriptionsFilterFlag = allDescriptionsFilterFlag;
-  //     this.refreshDatatable();
-  //     return;
-  //   }
-
-  //   if (this.previousAllDescriptionsFilterFlag > allDescriptionsFilterFlag) {
-  //     this.previousAllDescriptionsFilterFlag = allDescriptionsFilterFlag;
-  //     this.selectedDescriptions = [];
-  //     this.refreshDatatable();
-  //     return;
-  //   }
-
-  //   if (this.selectedDescriptions.length === (this.descriptions.length - (allDescriptionsFilterFlag ? 1 : 0))) {
-  //     this.selectedDescriptions = [-1].concat(selectedDescriptions);
-  //     allDescriptionsFilterFlag = true;
-  //   } else {
-  //     if (allDescriptionsFilterFlag) this.selectedDescriptions = this.selectedDescriptions.slice(1);
-  //     allDescriptionsFilterFlag = false;
-  //   }
-
-  //   this.previousAllDescriptionsFilterFlag = allDescriptionsFilterFlag;
-  //   console.log(this.selectedDescriptions);
-  //   // this.refreshDatatable();
-  // }
-
-  keyDownFunction(event, cell, cellValue, row) {
+  datatableKeyDown(event, cell, cellValue, row) {
     if (event.key == 'Enter') {
       this.updateValue(event, cell, cellValue, row);
+    }
+  }
+  searchKeyDown(event) {
+    if (event.key == 'Enter') {
+      this.getSearchValue(event.target.value);
     }
   }
 }
