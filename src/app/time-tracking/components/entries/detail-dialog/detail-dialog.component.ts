@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewContainerRef } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
-import { ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService } from '../../../../data';
+import { ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService, RegistryService } from '../../../../data';
 import { environment } from '../../../../../environments/environment';
 import { LoginService } from '../../../../login';
 import { UpdateDialogService } from '../update-dialog/update-dialog.service';
@@ -42,6 +42,7 @@ export class DetailDialogComponent implements OnInit {
     public taskService: TaskService,
     public timeTrackingEntryService: TimeTrackingEntryService,
     private loginService: LoginService,
+    private registryService: RegistryService,
     public updateService: UpdateDialogService,
     private viewContainerRef: ViewContainerRef) {
   }
@@ -56,7 +57,7 @@ export class DetailDialogComponent implements OnInit {
     .subscribe(res => {
       this.result = res;
       if (this.result) {
-       
+        this.registryService.entriesComponent.loadEntries();
       }
     });
   }
