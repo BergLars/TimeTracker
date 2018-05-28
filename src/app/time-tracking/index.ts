@@ -4,8 +4,6 @@ export * from './components/export-dialog/export-dialog.service';
 export * from './components/sidebar/sidebar.component';
 export * from './components/entries/entry-dialog/entry-dialog.component';
 export * from './components/entries/entries.service';
-export * from './components/entries/detail-dialog/detail-dialog.service';
-export * from './components/entries/detail-dialog/detail-dialog.component';
 export * from './components/entries/update-dialog/update-dialog.service';
 export * from './components/entries/update-dialog/update-dialog.component';
 // export * from './components/search/search-dialog.component';
