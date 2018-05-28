@@ -58,6 +58,8 @@ export class DetailDialogComponent implements OnInit {
       this.result = res;
       if (this.result) {
         this.registryService.entriesComponent.loadEntries();
+        this.http.get(this.baseUrl + "/timeentry/" + this.id)
+        console.log(this.rowID);
       }
     });
   }

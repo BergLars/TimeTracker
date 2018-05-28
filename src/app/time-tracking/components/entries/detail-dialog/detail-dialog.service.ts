@@ -3,11 +3,14 @@ import { Injectable, ViewContainerRef } from '@angular/core';
 import { DetailDialogComponent } from './detail-dialog.component';
 import { MdDialogRef, MdDialog, MdDialogConfig } from '@angular/material';
 import { ITimeTrackingEntry, IProject, ITask, IClient } from '../../../../data';
+import { environment } from '../../../../../environments/environment';
+import { Http } from '@angular/http';
 
 @Injectable()
 export class DetailDialogService {
+      public baseUrl: string = environment.apiBaseUrl;
 
-    constructor(private dialog: MdDialog) { }
+    constructor(private dialog: MdDialog, http: Http) { }
 
     public confirm(viewContainerRef: ViewContainerRef, 
         row: any, 

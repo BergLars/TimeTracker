@@ -138,7 +138,7 @@
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
             <div [hidden]="!isSelected(row)">
                 <div [hidden]="editMode">
-                    <span (click)="openDetailDialog(row)">
+                    <span (click)="openEditDialog(row)">
                         <md-icon class="clickable-icon">description</md-icon>
                     </span>
                     <span (click)="openDeleteDialog(row)">

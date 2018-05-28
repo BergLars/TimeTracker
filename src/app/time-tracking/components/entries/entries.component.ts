@@ -3,7 +3,7 @@ import { Http } from '@angular/http';
 import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, RegistryService, TimespentService } from '../../../data';
 import { MdDialog } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
-import { DetailDialogService } from './detail-dialog/detail-dialog.service';
+import { UpdateDialogService } from './update-dialog/update-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
 import { environment } from '../../../../environments/environment';
 import moment from 'moment/src/moment';
@@ -96,7 +96,7 @@ export class EntriesComponent implements OnInit {
     private dialog: MdDialog,
     private http: Http,
     public registryService: RegistryService,
-    public detailService: DetailDialogService,
+    public updateService: UpdateDialogService,
     public entriesService: EntriesService,
     private elementRef: ElementRef,
     private timespentService: TimespentService) {
@@ -387,8 +387,8 @@ export class EntriesComponent implements OnInit {
       });
   }
 
-  openDetailDialog(row) {
-    this.detailService
+  openEditDialog(row) {
+    this.updateService
     .confirm(this.viewContainerRef, row, this.projects, this.tasks, this.clients)
     .subscribe(res => {
       this.result = res;
