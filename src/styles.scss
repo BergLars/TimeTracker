@@ -217,7 +217,13 @@ div.mat-input-underline {
       line-height: 20px;
   }
   .mat-select-value{
-      font-size: 80%;
+    font-size: 80%;
+}
+    
+    #projectsFilter, #tasksFilter, #clientsFilter{
+        span.mat-select-value{
+            width: 40px;
+        }
   }
 
   .clickable-icon{
