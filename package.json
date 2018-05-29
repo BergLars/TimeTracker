@@ -4,7 +4,7 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
-    "start": "ng serve --prod",
+    "start": "ng serve",
     "build": "ng build -d timetracker/ --prod",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
