@@ -127,8 +127,15 @@ export class EntriesComponent implements OnInit {
     else {
       if (_.includes(this.term, exp)) {
         let day, month, year;
-        let date = sscanf(this.term, "%d.%d.%d");
-        day = date[0];
+        day = this.term.substring(0, 2);
+        let date = sscanf(this.term, '%d.%d.%d');
+        if (day === '09') {
+          day = '9';
+          date[0] = day;
+        }
+        else {
+          day = date[0];
+        }
         month = date[1];
         year = date[2];
         this.term = sprintf('%d-%02d-%02d', year, month, day);
