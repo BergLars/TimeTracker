@@ -36,7 +36,6 @@ export class UpdateDialogComponent implements OnInit {
   @Input() 
   set selectedClient(id: number) {
     this._mySelectedClient = id;
-    console.log(this.endTime);
   }
 
   get selectedTask(): number {
