@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import * as CryptoJS from 'crypto-js';
+import { tokenNotExpired } from 'angular2-jwt';
+
 
 const RESOURCE_NAME: string = 'user';
 const ENDPOINT_NAME: string = '/login';
@@ -67,6 +69,10 @@ export class LoginService implements IDataservice {
 
 	public getUser() {
 		return JSON.parse(localStorage.getItem('user'));
+	}
+
+	loggedIn() {
+		return tokenNotExpired('Authorization');
 	}
 
 	public isLoggedIn() {

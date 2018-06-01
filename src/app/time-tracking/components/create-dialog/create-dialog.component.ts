@@ -1,13 +1,11 @@
 import { Component, OnInit, Input, Renderer } from '@angular/core';
-import { MdDialogRef } from '@angular/material';
-import { IProject, ITask, IUser, ProjectService, TaskService, UserService, IClient, ClientService, RegistryService } from '../../../data';
+import { MdDialogRef, MdSnackBar } from '@angular/material';
+import { IProject, ITask, IUser, IClient, RegistryService } from '../../../data';
 import { LoginService } from '../../../login';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs/Rx';
-import { EntriesService } from '../../components/entries/entries.service';
-import { EntriesComponent } from '../../components/entries/entries.component';
 import { CreateDialogService } from './create-dialog.service';
 
 @Component({
@@ -26,21 +24,17 @@ export class CreateDialogComponent implements OnInit {
 	public newProjectName: string;
 	public newClientName: string;
 	public user;
-	public projectID: any;
-	public clientID: any;
 	public username: string;
 	public password: string;
 	public confirmPassword: string;
 	public employmentDegree: number;
 	public adminRole: boolean;
-
 	editMode: boolean = false;
 	public TASK: number = 1;
 	public PROJECT: number = 2;
 	public CLIENT: number = 3;
 	public USER: number = 4;
-	public result: any;
-	private isAdmin: boolean;
+	public isAdmin: boolean = false;
 
 	public createItems = [
 		{ key: 'Task', id: 1 },
@@ -53,19 +47,16 @@ export class CreateDialogComponent implements OnInit {
 
 	constructor(
 		public dialogRef: MdDialogRef<CreateDialogComponent>,
-		public projectService: ProjectService,
-		public taskService: TaskService,
-		public userService: UserService,
 		public loginService: LoginService,
-		public clientService: ClientService,
 		private http: Http,
 		private router: Router,
-		public entriesService: EntriesService,
-		public registryService: RegistryService
+		public registryService: RegistryService,
+		public snackBar: MdSnackBar
 	) { }
 
 	ngOnInit() {
-
+		this.isAdmin = this.loginService.isAdmin();
+		this.displayItems();
 	}
 
 	changeItemToBeCreated(event) {
@@ -88,62 +79,56 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	public checkMandatoryFields() {
-		if (this.item == this.PROJECT) {
-			if (this.newProjectName === "" || this.newProjectName === undefined) {
-				alert("Please check if all the fields are filled in");
-			} else {
-				this.createItem();
+		if (this.loginService.loggedIn()) {
+			if (this.item == this.PROJECT) {
+				if (this.newProjectName === "" || this.newProjectName === undefined) {
+					alert("Please check if all the fields are filled in");
+				} else {
+					this.createItem();
+				}
+			} else if (this.item == this.TASK) {
+				if (this.newTaskDescription === "" || this.newTaskDescription === undefined) {
+					alert("Please check if all the fields are filled in");
+				} else {
+					this.createItem();
+				}
+			} else if (this.item == this.CLIENT) {
+				if (this.newClientName === "" || this.newClientName === undefined) {
+					alert("Please check if all the fields are filled in");
+				} else {
+					this.createItem();
+				}
+			} else if (this.item == this.USER) {
+				if (this.username === "" || this.password === "" || this.confirmPassword === "" || this.employmentDegree === undefined || this.adminRole === undefined) {
+					alert("Please check if all the fields are filled in");
+				}
+				else if (this.password.length < 8) {
+					alert("See password requirement !");
+				}
+				else if (this.password !== this.confirmPassword) {
+					alert("Passwords are not the same !")
+				}
+				else if (!(this.employmentDegree <= 1 && this.employmentDegree >= 0.10)) {
+					alert("See employment degree requirement !");
+				}
+				else {
+					this.createItem();
+				}
 			}
+		} else {
+			alert("Your token has expired. Please log in again!");
+			this.dialogRef.close(true);
 		}
-		if (this.item == this.TASK) {
-			if (this.newTaskDescription === "" || this.newTaskDescription === undefined) {
-				alert("Please check if all the fields are filled in");
-			} else {
-				this.createItem();
-			}
-		}
-		if (this.item == this.CLIENT) {
-			if (this.newClientName === "" || this.newClientName === undefined) {
-				alert("Please check if all the fields are filled in");
-			} else {
-				this.createItem();
-			}
-		}
-		if (this.item == this.USER) {
-			if (this.username === "" || this.password === "" || this.confirmPassword === "" || this.employmentDegree === undefined || this.adminRole === undefined) {
-				alert("Please check if all the fields are filled in");
-			}
-			else if (this.password.length < 8) {
-				alert("Password length should be at least 9 !");
-			}
-			else if (this.password !== this.confirmPassword) {
-				alert("Passwords are not the same !")
-			}
-			else if (!(this.employmentDegree <= 1 && this.employmentDegree > 0)) {
-				alert("Employment degree should be between 0.10 and 1.0 !");
-			}
-			else {
-				this.createItem();
-			}
-		}
-	}
-
-	public checkIfAdmin() {
-		this.showData();
-		return this.isAdmin = this.loginService.isAdmin();
-	}
-
-	public showData() {
-		this.user = this.loginService.getUser();
 	}
 
 	public createItem() {
 		if (this.item == this.PROJECT) {
 			return this.http.post(this.baseUrl + "/projects", {
-				projectName: this.newProjectName
+				projectName: this.newProjectName.trim()
 			}).subscribe(() => {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
+				this.openSnackBar('Project ' + this.newProjectName.toUpperCase(), 'created !');
 			},
 				error => {
 					if (error.response.status === 400 || error.response.status === 404) {
@@ -154,14 +139,13 @@ export class CreateDialogComponent implements OnInit {
 						alert('Internal server error !')
 					}
 				});
-		}
-
-		if (this.item == this.TASK) {
+		} else if (this.item == this.TASK) {
 			return this.http.post(this.baseUrl + "/tasks", {
-				taskDescription: this.newTaskDescription
+				taskDescription: this.newTaskDescription.trim()
 			}).subscribe(() => {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
+				this.openSnackBar('Task ' + this.newTaskDescription.toUpperCase(), 'created !');
 			},
 				error => {
 					if (error.response.status === 400 || error.response.status === 404) {
@@ -172,14 +156,13 @@ export class CreateDialogComponent implements OnInit {
 						alert('Internal server error !')
 					}
 				});
-		}
-
-		if (this.item == this.CLIENT) {
+		} else if (this.item == this.CLIENT) {
 			return this.http.post(this.baseUrl + "/clients", {
-				clientName: this.newClientName
+				clientName: this.newClientName.trim()
 			}).subscribe(() => {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
+				this.openSnackBar('Client ' + this.newClientName.toUpperCase(), 'created !');
 			},
 				error => {
 					if (error.response.status === 400 || error.response.status === 404) {
@@ -195,8 +178,8 @@ export class CreateDialogComponent implements OnInit {
 		if (this.item == this.USER) {
 			return this.http.post(this.baseUrl + "/userprofile",
 				{
-					userName: this.username,
-					password: this.password,
+					userName: this.username.trim(),
+					password: encodeURIComponent(this.password.trim()),
 					employmentDegree: this.employmentDegree,
 					admin: this.adminRole
 				}).map(res => res.json())
@@ -204,10 +187,11 @@ export class CreateDialogComponent implements OnInit {
 				(data) => {
 					this.dialogRef.close(true);
 					this.registryService.entriesComponent.loadEntries();
+					this.openSnackBar('User ' + this.username.toUpperCase(), 'created !');
 				},
 				(error) => {
 					if (error.status === 400 || error.status === 404) {
-						alert('Please check that fields are the correct input !');
+						alert('Please check that all fields have the correct input !');
 					}
 					if (error.status === 409) {
 						alert('User already exists !');
@@ -219,6 +203,10 @@ export class CreateDialogComponent implements OnInit {
 		}
 	}
 
+	public openSnackBar(message: string, action: string) {
+		this.snackBar.open(message + ' ' + action, '', { duration: 2500 });
+	}
+
 	public keyDownFunction(event) {
 		if (event.key == 'Enter') {
 			this.checkMandatoryFields();
@@ -226,9 +214,7 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	private displayItems() {
-		if (!this.checkIfAdmin()) {
-			this.createItems.splice(1);
-			this.createItems.splice(2);
+		if (!this.isAdmin) {
 			this.createItems.splice(3);
 		}
 	}

@@ -3,26 +3,26 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-// import { ExportComponent } from './export.component';
+import { ExportDialogComponent } from './export-dialog.component';
 
-// describe('ExportComponent', () => {
-//   let component: ExportComponent;
-//   let fixture: ComponentFixture<ExportComponent>;
+describe('ExportDialogComponent', () => {
+    let component: ExportDialogComponent;
+    let fixture: ComponentFixture<ExportDialogComponent>;
 
-//   beforeEach(async(() => {
-//     TestBed.configureTestingModule({
-//       declarations: [ ExportComponent ]
-//     })
-//     .compileComponents();
-//   }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [ExportDialogComponent]
+        })
+            .compileComponents();
+    }));
 
-//   beforeEach(() => {
-//     fixture = TestBed.createComponent(ExportComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ExportDialogComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+});

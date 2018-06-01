@@ -1,15 +1,29 @@
-<div>
-    <div class="layout-row">
-        <span class="flex">Hours worked this week</span>
-        <!-- <span class="ftt-value ftt-right">{{statistics.totalHousWorkedWeek}}</span> -->
-    </div>
-    <div class="layout-row">
-        <span class="flex">Hours worked this month</span>
-        <!-- <span class="ftt-value ftt-right">{{statistics.totalHousWorkedMonth}}</span> -->
-    </div>
-    <hr/>
-    <div class="layout-row">
-        <span class="flex">Remaining vacation days</span>
-        <!-- <span class="ftt-value ftt-right">{{statistics.totalAvailableVacationDays}}</span> -->
-    </div>
+<div class="layout-row">
+    <md-chip-list>
+        <md-chip>Worked hours</md-chip>
+    </md-chip-list>
+</div>
+<br />
+<div class="layout-row">
+    <span class="ftt-value flex">Week {{weekNumber}}</span>
+    <span class="ftt-value ftt-right">{{totalHoursWorkedW}}</span>
+</div>
+<div class="layout-row">
+    <span class="ftt-value flex">{{currentMonth}}</span>
+    <span class="ftt-value ftt-right">{{totalHoursWorkedM}}</span>
+</div>
+<div class="layout-row">
+    <span class="ftt-value flex">{{total}}</span>
+    <span class="ftt-value ftt-right">{{totalTimeSpent}}</span>
+</div>
+<hr/>
+<div class="layout-row">
+    <md-chip-list>
+        <md-chip>Vacations days</md-chip>
+    </md-chip-list>
+</div>
+<br />
+<div class="layout-row">
+    <span class="ftt-value flex">Remaining</span>
+    <span class="ftt-value ftt-right">{{totalAvailableVacationDays}}</span>
 </div>

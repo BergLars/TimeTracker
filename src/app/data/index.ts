@@ -14,3 +14,4 @@ export * from './time-tracking-entry.service';
 export * from './user.service';
 export * from './client.service';
 export * from './registry.service';
+export * from './timespent.service';

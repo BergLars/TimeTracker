@@ -11,10 +11,8 @@ export class DeleteEntryService {
     public confirm(title: string, message: string, viewContainerRef: ViewContainerRef, id: number): Observable<boolean> {
 
         let dialogRef: MdDialogRef<DeleteEntryComponent>;
-        let config = new MdDialogConfig();
-        config.viewContainerRef = viewContainerRef;
 
-        dialogRef = this.dialog.open(DeleteEntryComponent, config);
+        dialogRef = this.dialog.open(DeleteEntryComponent, {disableClose:true});
 
         dialogRef.componentInstance.title = title;
         dialogRef.componentInstance.message = message;

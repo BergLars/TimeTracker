@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
-import { TimeTrackingEntryService } from '../../../../data';
+import { TimeTrackingEntryService, RegistryService } from '../../../../data';
 import { Http } from '@angular/http';
 import { environment } from '../../../../../environments/environment';
+import { LoginService } from '../../../../login';
 
 @Component({
   selector: 'app-delete-entry',
@@ -18,14 +19,22 @@ export class DeleteEntryComponent implements OnInit {
 
   constructor(public dialogRef: MdDialogRef<DeleteEntryComponent>,
     public timeTrackingEntryService: TimeTrackingEntryService,
+    public loginService: LoginService,
+    public registryService: RegistryService,
     private http: Http) {
   }
 
   public deleteEntry() {
-    this.http.delete(this.baseUrl + "/timeentries/" + this.rowid).map(res => res.json()).subscribe(
-      () => {
-        this.dialogRef.close(true);
-      });
+    if (this.loginService.loggedIn()) {
+      this.http.delete(this.baseUrl + "/timeentries/" + this.rowid).map(res => res.json()).subscribe(
+        () => {
+          this.registryService.entriesComponent.offset = 0;
+          this.dialogRef.close(true);
+        });
+    } else {
+      alert("Your token has expired. Please log in again!");
+      this.dialogRef.close(true);
+    }
   }
 
   ngOnInit() {

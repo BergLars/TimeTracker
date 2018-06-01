@@ -3,6 +3,7 @@ import { MdDialogRef } from '@angular/material';
 import { LoginService } from '../../../login';
 import { UserService } from '../../../data';
 import { Router } from '@angular/router';
+import { EntriesService } from '../../../time-tracking/components/entries/entries.service';
 
 @Component({
 	selector: 'app-password-dialog',
@@ -20,6 +21,7 @@ export class PasswordDialogComponent implements OnInit {
 		public dialogRef: MdDialogRef<PasswordDialogComponent>,
 		public loginService: LoginService,
 		public userService: UserService,
+		public entriesService: EntriesService,
 		private router: Router) { }
 
 	ngOnInit() {
@@ -33,14 +35,17 @@ export class PasswordDialogComponent implements OnInit {
 	}
 
 	checkMandatoryFields() {
-		if (this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
-			alert("Please check if all the fields are filled in !");
-		}
-		else if (this.newPassword.length < 8) {
-			alert("Password length should be at least 9 !");
-		}
-		else {
-			this.updatePassword();
+		if (this.loginService.loggedIn()) {
+			if (this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
+				alert("Please check if all the fields are filled in !");
+			}
+			else {
+				this.updatePassword();
+			}
+		} else {
+			alert("Your token has expired. Please log in again!");
+			this.dialogRef.close(true);
+			this.entriesService.entriesAreLoaded();
 		}
 	}
 
@@ -51,17 +56,21 @@ export class PasswordDialogComponent implements OnInit {
 	}
 
 	private updatePassword() {
-		this.userService.updatePassword(this.currentPassword, this.newPassword, this.confirmPassword).map(res => res.json()).subscribe(
+		this.userService.updatePassword(encodeURIComponent(this.currentPassword), encodeURIComponent(this.newPassword), encodeURIComponent(this.confirmPassword)).map(res => res.json()).subscribe(
 			user => {
 				this.dialogRef.close(true);
 				this.loginService.logout();
 			},
 			error => {
 				if (error.status === 400 || error.status === 404) {
-					alert("Wrong password or passwords are not the same !");
+					alert("Passwords are not the same !");
 					this.router.navigate(['timeentries']);
 				}
-				if (error.status === 500) {
+				else if (error.status === 412) {
+					alert("Wrong current password or See password requirement !");
+					this.router.navigate(['timeentries']);
+				}
+				else if (error.status === 500) {
 					alert('Internal server error !')
 				}
 			}

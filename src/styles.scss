@@ -62,6 +62,10 @@ daypicker table {
     margin: 175px auto !important;
 }
 
+.hide-dialog-scrollbar {
+  overflow: hidden !important;
+}
+
 .app-input-section.mat-card {
     position: fixed;
     top: 40%;
@@ -94,14 +98,9 @@ div.mat-input-underline {
     }
 }
 
-.single-selection,
-.multi-selection,
-.multi-click-selection {
-    .active,
-    .active .datatable-row-group {
-        background-color: rgba(69, 79, 179, 0.12);
-        color: black;
-    }
+.active{
+    background-color: rgba(69, 79, 179, 0.12) !important;
+    color: black;
 }
 
 .datatable-header {
@@ -128,10 +127,15 @@ div.mat-input-underline {
         }
     }
 }
+.inline-field-width{
+    display: inherit;
+    width: 100%;
+}
 
 .totalTimeSpent{
     font-family: Roboto,"Helvetica Neue",sans-serif;
     font-size: 75%;
+    padding-top: 10px;
 }
 
 [data-icon]:before {
@@ -213,5 +217,60 @@ div.mat-input-underline {
       line-height: 20px;
   }
   .mat-select-value{
-      font-size: 80%;
+    font-size: 80%;
+}
+    
+    #projectsFilter, #tasksFilter, #clientsFilter{
+        span.mat-select-value{
+            width: 40px;
+        }
   }
+
+  .clickable-icon{
+      cursor: pointer;
+      cursor: hand;
+    }
+.not-clickable-icon{
+    cursor: null !important;
+}
+
+  .select-field{
+      width: 100%; 
+  }
+
+  .filter-position{
+      padding-top: 15px;
+  }
+  .input-field{
+      width:100%;
+  }
+  .description-field{
+      width: 100%;
+  }
+  .colored{
+      color: rgba(255, 166, 0, 0.959);
+  }
+
+  .datatable-header-cell-label{
+      color: white;
+  }
+
+  .datatable-header{
+    background-color: rgba(66, 80, 175, 0.975);
+    padding-top: 10px;
+    padding-left: 2px;
+  }
+  .sort-btn{
+    color: white !important;
+  }
+
+  .set-margin{
+      margin-top: 17.5px;
+  }
+  
+  .datatable-header-cell-label{
+      cursor: default;
+  }
+//   .mat-toolbar.mat-primary{
+//     background-color: rgba(51, 106, 185, 0.975) !important;
+//   }

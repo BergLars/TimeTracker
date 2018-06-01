@@ -4,8 +4,6 @@ import { CreateDialogComponent } from './create-dialog.component';
 import { MdDialogRef, MdDialog, MdDialogConfig } from '@angular/material';
 import { IProject, ProjectService, ITask, TaskService, TimeTrackingEntryService, RegistryService } from '../../../data';
 
-//import { EntriesComponent } from '../entries/entries.component';
-
 @Injectable()
 export class CreateDialogService {
 
@@ -20,10 +18,8 @@ export class CreateDialogService {
 
 	public confirm(title: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 		let dialogRef: MdDialogRef<CreateDialogComponent>;
-		let config = new MdDialogConfig();
-		config.viewContainerRef = viewContainerRef;
 
-		dialogRef = this.dialog.open(CreateDialogComponent, config);
+		dialogRef = this.dialog.open(CreateDialogComponent, {disableClose:true});
 
 		dialogRef.componentInstance.title = title;
 

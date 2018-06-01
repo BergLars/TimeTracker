@@ -1,18 +1,15 @@
-import { Component, Input, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, Input, OnInit, ViewContainerRef, ElementRef, ViewChild } from '@angular/core';
 import { Http } from '@angular/http';
-import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, TaskService, ProjectService, TimeTrackingEntryService, ClientService, RegistryService } from '../../../data';
-import { MdDialog, MdDialogRef, MdDialogConfig } from '@angular/material';
+import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, RegistryService, TimespentService } from '../../../data';
+import { MdDialog } from '@angular/material';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
-//import { UpdateDialogService } from './update-dialog/update-dialog.service';
-import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
-import { LoginService } from '../../../login';
 import { environment } from '../../../../environments/environment';
-import { Router } from '@angular/router';
 import moment from 'moment/src/moment';
 import { EntriesService } from './entries.service';
-import { CreateDialogService } from '../create-dialog/create-dialog.service';
-// import { SearchDialogComponent } from './components/search-dialog/search-dialog.component';
+import { elementAt } from 'rxjs/operator/elementAt';
+import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { window } from 'rxjs/operator/window';
 
 @Component({
   selector: 'app-entries',
@@ -28,14 +25,13 @@ export class EntriesComponent implements OnInit {
   @Input() task: ITask;
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
-  @Input() users: IUser[] = [];
-  public isLoading: Boolean = false;
-  public items: ITimeTrackingEntry[] = [];
+
+  @ViewChild('mydatatable') datatable: DatatableComponent;
+
+  @Input() items: ITimeTrackingEntry[] = [];
   rows = [];
   selected = [];
   selectedRow: any;
-  cloneSelectedRow: any;
-  timeTrackingEntry: ITimeTrackingEntry;
   editMode: boolean = false;
   rowID: number;
   userID: number;
@@ -43,172 +39,115 @@ export class EntriesComponent implements OnInit {
   projectID: any;
   taskID: any;
   isBillable: boolean;
-  selectedDescription: string;
   count: number = 0;
   @Input() offset: number = 0;
   @Input() date: string;
-
-  public tasksDictionary: any = {};
-  public projectsDictionary: any = {};
-  public clientsDictionary: any = {};
-
   public editing = {};
   public result: any;
+  clickedProject: any;
+
+  private previousAllProjectsFilterFlag = true;
+  private previousAllTasksFilterFlag = true;
+  private previousAllClientsFilterFlag = true;
+
+  private columns = [
+    { key: 'Description', id: 0 },
+    { key: 'Project Name', id: 1 },
+    { key: 'Client Name', id: 2 },
+    { key: 'Task Description', id: 3 },
+    { key: 'Entry Date', id: 4 },
+    { key: 'Start Time', id: 5 },
+    { key: 'End Date', id: 6 },
+    { key: 'End Time', id: 7 },
+    { key: 'Time Spent', id: 8 }
+  ];
   private limits = [
     { key: 'All Entries', value: 50 },
     { key: '10 Entries', value: 10 },
     { key: '5 Entries', value: 5 }
   ];
-
-  limit: number = this.limits[0].value;
-  rowLimits: Array<any> = this.limits;
-
+  private sorts = [
+    { key: 'Desc', id: 0 },
+    { key: 'Asc', id: 1 }
+  ];
   public createItems = [
     { key: 'None', id: 1 },
     { key: 'Client', id: 2 },
     { key: 'Project', id: 3 },
     { key: 'Task', id: 4 }
   ];
+  @Input() limit: number;
   item: number = this.createItems[0].id;
+
   public defaultItem: any;
+  @Input() selectedClients: any = [];
+  @Input() selectedProjects: any = [];
+  @Input() selectedTasks: any = [];
 
-  public NONE: number = 0;
-  public CLIENT: number = 2;
-  public PROJECT: number = 3;
-  public TASK: number = 4;
-
-  @Input() selectedClients: any;
-  @Input() selectedProjects: any;
-  @Input() selectedTasks: any;
-  @Input() itemTotalTimeSpent: any;
+  @Input() selectedColumn: any;
+  @Input() selectedSort: any;
+  isValid: boolean = false;
 
   constructor(
-    public projectService: ProjectService,
-    public timeTrackingEntryService: TimeTrackingEntryService,
-    public taskService: TaskService,
-    public clientService: ClientService,
     private entryDialogService: EntryDialogService,
     private deleteEntryService: DeleteEntryService,
-    //private updateDialogService: UpdateDialogService,
     private viewContainerRef: ViewContainerRef,
-    private loginService: LoginService,
-    public userService: UserService,
     private dialog: MdDialog,
     private http: Http,
-    private router: Router,
     public registryService: RegistryService,
-    public entriesService: EntriesService) {
+    public entriesService: EntriesService,
+    private elementRef: ElementRef,
+    private timespentService: TimespentService) {
     this.registryService.entriesComponent = this;
+    this.loadValuePerdefault();
+    this.loadEntries();
   }
 
   ngOnInit() {
     this.defaultItem = this.createItems[0].key;
-    this.loadEntries();
+    this.updateFilterSelection();
   }
 
-  // Filter all entries with one or more parameter
-  filterEntries() {
-    var userSelectedProjects = [];
-    var userSelectedTasks = [];
-    var userSelectedClients = [];
-
-    let filteredEntries: ITimeTrackingEntry[];
-
-    // Handle if no project is selected
-    if (this.selectedProjects) {
-      this.selectedProjects.forEach(selectionIndex => {
-        userSelectedProjects.push(selectionIndex);
-      });
-    }
-    // Handle if no task is selected
-    if (this.selectedTasks) {
-      this.selectedTasks.forEach(selectionIndex => {
-        userSelectedTasks.push(selectionIndex);
-      });
-    }
-    // Handle if no client is selected
-    if (this.selectedClients) {
-      this.selectedClients.forEach(selectionIndex => {
-        userSelectedClients.push(selectionIndex);
-      });
-    }
-    // We get all the entries
-    filteredEntries = this.entriesService.clonedItems;
-
-    // We filter by project
-    filteredEntries = filteredEntries.filter(function (timeEntry) {
-      let entryProjectId = timeEntry.projectID.valueOf();
-      // Does the current entryProjectId belong to user selected projects in the filter 
-      return (userSelectedProjects.indexOf(entryProjectId) != -1);
-    });
-
-    // We filter by task
-    filteredEntries = filteredEntries.filter(function (timeEntry) {
-      let entryTaskId = timeEntry.taskID.valueOf();
-      return (userSelectedTasks.indexOf(entryTaskId) != -1);
-    });
-
-    // We filter by client
-    filteredEntries = filteredEntries.filter(function (timeEntry) {
-      let entryClientId = timeEntry.clientID.valueOf();
-      return (userSelectedClients.indexOf(entryClientId) != -1);
-    });
-
-    // We assign the result to the table datasource
-    this.items = filteredEntries;
-    this.itemTotalTimeSpent = this.totalTimeSpent(this.items);
+  setSelectFocus(event, row, cell, value) {
+    this.editing[row.$$index + cell] = true;
+    let element = event.target;
+    let parentElement = element.parentElement;
+    setTimeout(() => {
+      let parentElementTag = parentElement.getElementsByTagName(value)[0];
+      parentElementTag.focus();
+    }, 100);
   }
 
-  // Calcul total time spent
-  public totalTimeSpent(entries) {
-    let endTimeH: number = 0;
-    let endTimeMin: number = 0;
-    let hour: number = 0;
-    let timeSpent: any;
-    for (let entry of entries) {
-      endTimeH = endTimeH + parseInt(entry.timeSpent.substring(0, 2));
-      endTimeMin = endTimeMin + parseInt(entry.timeSpent.substring(3, 5));
-    }
+  clickOnFirstChild(event, row, cell) {
+    this.editing[row.$$index + cell] = true;
+    setTimeout(() => {
+      let parentElementTag = document.getElementById(row.cellValue + row.$$index);
+      parentElementTag.focus();
+    }, 100);
+  }
 
-    // Handle conversion Minute over 60mn to 1h
-    if (endTimeMin > 60) {
-      hour = Math.round(endTimeMin / 60);
-      endTimeH = endTimeH + hour;
-      endTimeMin = Math.abs(endTimeMin - (60 * hour));
-      if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
-        timeSpent = '0' + endTimeH + ':0' + endTimeMin;
-      }
-      else if ((endTimeH.toString()).length < 2) {
-        timeSpent = '0' + endTimeH + ':' + endTimeMin;
-      }
-      else if ((endTimeMin.toString()).length < 2) {
-        timeSpent = endTimeH + ':0' + endTimeMin;
-      } else {
-        timeSpent = endTimeH + ':' + endTimeMin;
-      }
-      return timeSpent;
-    }
-    // Handle Minute below 60mn
-    else {
-      if ((endTimeH.toString()).length < 2 && (endTimeMin.toString()).length < 2) {
-        timeSpent = '0' + endTimeH + ':0' + endTimeMin;
-      }
-      else if ((endTimeH.toString()).length < 2) {
-        timeSpent = '0' + endTimeH + ':' + endTimeMin;
-      }
-      else if ((endTimeMin.toString()).length < 2) {
-        timeSpent = endTimeH + ':0' + endTimeMin;
-      } else {
-        timeSpent = endTimeH + ':' + endTimeMin;
-      }
-      return timeSpent;
-    }
+  removeSelectFocus(row, cell) {
+    setTimeout(() => {
+      this.editing[row.$$index + cell] = false;
+      this.unselectEntry();
+    }, 100);
+  }
+
+  updateFilterSelection() {
+    this.projectsSelectedPerDefault();
+    this.tasksSelectedPerDefault();
+    this.clientsSelectedPerDefault();
+    this.refreshDatatable();
+  }
+
+  updateSortingSelection() {
+    this.refreshDatatable();
   }
 
   changeRowLimits(event) {
-    this.limit = event.target.value;
-    this.offset = 0;
-    this.loadEntries();
+    this.datatable.offset = 0;
+    this.limit = Number(event.target.value);
+    this.refreshDatatable();
   }
 
   public clientDropdown(value: string): void {
@@ -225,10 +164,14 @@ export class EntriesComponent implements OnInit {
 
   updateValue(event, cell, cellValue, row) {
     this.editing[row.$$index + '-' + cell] = false;
-
     if (cell == 'description') {
-      row.description = event.target.value;
-      this.updateEntry(row);
+      if (event.target.value === cellValue) {
+        row.description = cellValue;
+      }
+      else {
+        row.description = (event.target.value).trim();
+        this.updateEntry(row);
+      }
     }
 
     if (cell == 'client') {
@@ -256,42 +199,131 @@ export class EntriesComponent implements OnInit {
     }
 
     if (cell == 'date') {
-      let selectedDate = event.target.value.substring(8, 10) + "." + event.target.value.substring(5, 7) + "." + event.target.value.substring(0, 4);
-      row.entryDate = selectedDate;
-      this.updateEntry(row);
+      let formatedStartDate = event.target.value.substring(6, 10) + "-" + event.target.value.substring(3, 5) + "-" + event.target.value.substring(0, 2);
+      let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
+      if (event.target.value === "") {
+        row.entryDate = cellValue;
+      }
+      if (event.target.value === cellValue) {
+        row.entryDate = cellValue;
+      }
+      else {
+        if (!this.registryService.dateRequirement.test(event.target.value.trim())) {
+          alert('Wrong date format !');
+        }
+        else if (moment(formatedStartDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
+          let longEndDate = moment(formatedEndDate, 'YYYY-MM-DD').add(1, 'd');
+          let validateFormatEndDate = moment(longEndDate).format('YYYY-MM-DD');
+          row.startDateTime = formatedStartDate + ' ' + row.startTime;
+          row.endDateTime = validateFormatEndDate + ' ' + row.endTime;
+          this.updateEntry(row);
+          this.entriesService.displaySidebarData();
+        }
+        else {
+          row.startDateTime = formatedStartDate + ' ' + row.startTime;
+          let numberOfDate = Number(event.target.value.substring(0, 2)) - Math.abs(Number(row.entryDate.substring(0, 2)));
+          let endT = moment(row.startTime, 'HH:mm') + moment.duration().add(row.timeSpent, 'HH:mm');
+          row.endTime = moment(endT).format('HH:mm');
+          let validateFormatEndDate = moment(row.endDateTime).add(numberOfDate, 'days');
+          validateFormatEndDate = moment(validateFormatEndDate).format('YYYY-MM-DD');
+          row.endDateTime = validateFormatEndDate + ' ' + row.endTime;
+          this.updateEntry(row);
+          this.entriesService.displaySidebarData();
+        }
+      }
     }
 
     if (cell == 'startTime') {
-      row.startTime = event.target.value;
-      if (row.startTime > row.endTime || row.startTime == row.endTime) {
+      let formatedStartDate = row.entryDate.substring(6, 10) + "-" + row.entryDate.substring(3, 5) + "-" + row.entryDate.substring(0, 2);
+      let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
+      row.startTime = event.target.value.trim();
+      if (event.target.value === cellValue) {
         row.startTime = cellValue;
-        alert("Start time should be less than end time.");
+      }
+      else if (!this.registryService.timeRequirement.test(event.target.value.trim()) || moment(formatedStartDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
+        row.startTime = cellValue.trim();
+      }
+      else if (moment(formatedStartDate, 'YYYY-MM-DD').isBefore(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
+        this.updateEntry(row);
+        this.entriesService.displaySidebarData();
       }
       else {
-        row.timeSpent = this.calculateSpentTime(row);
         this.updateEntry(row);
+        this.entriesService.displaySidebarData();
       }
     }
 
     if (cell == 'endTime') {
-      row.endTime = event.target.value;
-      if (row.startTime > row.endTime || row.startTime == row.endTime) {
+      let formatedStartDate = row.entryDate.substring(6, 10) + "-" + row.entryDate.substring(3, 5) + "-" + row.entryDate.substring(0, 2);
+      let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
+      row.endTime = event.target.value.trim();
+      if (event.target.value === cellValue) {
         row.endTime = cellValue;
-        alert("Start time should be less than end time.");
+      }
+      else if (!this.registryService.timeRequirement.test(event.target.value.trim())) {
+        row.endTime = cellValue;
+      }
+      else if (moment(formatedStartDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
+        let longEndDate = moment(formatedEndDate, 'YYYY-MM-DD').add(1, 'd');
+        let validateFormatDate = moment(longEndDate).format('YYYY-MM-DD');
+        row.endDateTime = validateFormatDate + ' ' + row.endTime;
+        this.updateEntry(row);
+        this.entriesService.displaySidebarData();
       }
       else {
-        row.timeSpent = this.calculateSpentTime(row);
         this.updateEntry(row);
+        this.entriesService.displaySidebarData();
+      }
+    }
+
+    if (cell == 'timeSpent') {
+      if (event.target.value === cellValue) {
+        row.timeSpent = cellValue;
+      }
+      if (!this.registryService.timeSpentRequirement.test(event.target.value) || row.timeSpent === event.target.value) {
+        row.timeSpent = cellValue.trim();
+      }
+      else {
+        let decimalTime = parseFloat(moment.duration(event.target.value).asHours());
+        let decimalStartTime = parseFloat(moment.duration(row.startTime).asHours());
+        let totalDecimalEndTime = Number(decimalTime + decimalStartTime);
+        totalDecimalEndTime = totalDecimalEndTime * 60 * 60;
+        let hours: any = Math.floor((totalDecimalEndTime / (60 * 60)));
+        totalDecimalEndTime = totalDecimalEndTime - (hours * 60 * 60);
+        let minutes: any = Math.floor((totalDecimalEndTime / 60));
+
+        if (hours < 10) {
+          hours = "0" + hours;
+        }
+        if (minutes < 10) {
+          minutes = "0" + minutes;
+        }
+        let numberOfDays = Math.floor(hours / 24);
+        let hoursEndTime = hours % 24;
+        let longEndDate = moment(row.startDateTime, 'YYYY-MM-DD HH:mm').add(numberOfDays, 'd');
+        let validFormatEndDate = moment(longEndDate).format('YYYY-MM-DD');
+        if (hoursEndTime < 10) {
+          hours = "0" + hoursEndTime;
+        }
+        else {
+          hours = hoursEndTime;
+        }
+        let endTime = hours + ':' + minutes;
+        row.timeSpent = event.target.value;
+        row.startDateTime = row.startDateTime;
+        row.endDateTime = validFormatEndDate + ' ' + endTime;
+        row.endTime = moment(row.endDateTime).format('HH:mm');
+        row.endDate = validFormatEndDate.substring(8, 10) + '.' + validFormatEndDate.substring(5, 7) + '.' + validFormatEndDate.substring(0, 4);
+        this.updateEntry(row);
+        this.entriesService.displaySidebarData();
       }
     }
   }
 
   public updateEntry(row) {
     this.http.put(this.baseUrl + "/timeentries/" + row.id, {
-      entryDate: row.entryDate,
-      startTime: row.startTime,
-      endTime: row.endTime,
-      timeSpent: row.timeSpent,
+      startDateTime: row.startDateTime.substring(0, 4) + "-" + row.startDateTime.substring(5, 7) + "-" + row.startDateTime.substring(8, 10) + " " + row.startTime,
+      endDateTime: row.endDateTime.substring(0, 4) + "-" + row.endDateTime.substring(5, 7) + "-" + row.endDateTime.substring(8, 10) + " " + row.endTime,
       description: row.description,
       userprofileID: row.userprofileID,
       clientID: row.clientID,
@@ -304,41 +336,15 @@ export class EntriesComponent implements OnInit {
       });
   }
 
-  onSelect({ selected }) {
+  selectEntry({ selected }) {
     if (selected) {
       this.selectedRow = selected[0];
     }
   }
 
-  public calculateSpentTime(row) {
-    let timeSpent: string;
-    let timeSpentH: number;
-    let timeSpentMin: number;
-    let startTimeH: number = parseInt(row.startTime.substring(0, 2));
-    let startTimeMin: number = parseInt(row.startTime.substring(3, 5));
-
-    let endTimeH: number = parseInt(row.endTime.substring(0, 2));
-    let endTimeMin: number = parseInt(row.endTime.substring(3, 5));
-    if (endTimeMin >= startTimeMin) {
-      timeSpentMin = endTimeMin - startTimeMin;
-      timeSpentH = endTimeH - startTimeH;
-    } else {
-      timeSpentMin = endTimeMin - startTimeMin + 60;
-      timeSpentH = endTimeH - startTimeH - 1;
-    }
-
-    if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
-      timeSpent = '0' + timeSpentH + ':0' + timeSpentMin;
-    }
-    else if ((timeSpentH.toString()).length < 2) {
-      timeSpent = '0' + timeSpentH + ':' + timeSpentMin;
-    }
-    else if ((timeSpentMin.toString()).length < 2) {
-      timeSpent = timeSpentH + ':0' + timeSpentMin;
-    } else {
-      timeSpent = timeSpentH + ':' + timeSpentMin;
-    }
-    return timeSpent;
+  // Set the value of a selected entry to empty
+  unselectEntry() {
+    this.selected = [];
   }
 
   isSelected(row) {
@@ -350,11 +356,6 @@ export class EntriesComponent implements OnInit {
 
   toggleEditMode() {
     this.editMode = !this.editMode;
-  }
-
-  discardChange() {
-    this.selectedRow.description = this.cloneSelectedRow.description;
-    this.toggleEditMode();
   }
 
   updateRowPosition() {
@@ -369,7 +370,8 @@ export class EntriesComponent implements OnInit {
     return this.selected[0]['$$index'];
   }
 
-  public openDialog() {
+  openDialog() {
+    this.unselectEntry();
     this.entryDialogService
       .confirm('New Entry', this.viewContainerRef)
       .subscribe(res => {
@@ -380,9 +382,9 @@ export class EntriesComponent implements OnInit {
       });
   }
 
-  public openDeleteDialog(row) {
+  openDeleteDialog(row) {
     this.deleteEntryService
-      .confirm('Delete', 'Are you sure you want to delete this entry?', this.viewContainerRef, row.id)
+      .confirm('Delete', 'Are you sure that you want to delete this entry?', this.viewContainerRef, row.id)
       .subscribe(res => {
         this.result = res;
         if (this.result) {
@@ -391,75 +393,163 @@ export class EntriesComponent implements OnInit {
       });
   }
 
+  private refreshDatatable() {
+    let self = this;
+
+    // Take in acount the filtering
+    this.entriesService.setFilteringBy({
+      clients: this.selectedClients,
+      projects: this.selectedProjects,
+      tasks: this.selectedTasks
+    });
+
+    // Take in acount the sorting
+    this.entriesService.setSortingBy({
+      column: this.columns[this.selectedColumn].key,
+      direction: this.sorts[this.selectedSort].key
+    });
+
+    self.items = this.entriesService.getEntries();
+
+    setTimeout(() => {
+      self.datatable.pageSize = self.limit;
+    }, 10);
+  }
+
+  loadValuePerdefault() {
+    // Set column per default
+    this.selectedColumn = this.columns[4].id;
+    // Set direction per default
+    this.selectedSort = this.sorts[0].id;
+    // Set limit per default
+    this.limit = this.limits[0].value;
+  }
+
+  /**
+  * Load entries per default
+  */
   loadEntries() {
-    this.entriesService.entriesAreLoaded().then(results => {
-      this.items = results;
+    this.entriesService.entriesAreLoaded().then(() => {
+      this.clients = this.entriesService.sortedClients();
+      this.projects = this.entriesService.sortedProjects();
+      this.tasks = this.entriesService.sortedTasks();
 
-      this.clients = this.entriesService.clients.sort(this.registryService.propComparator('clientName'));
-      this.projects = this.entriesService.projects.sort(this.registryService.propComparator('projectName'));
-      this.tasks = this.entriesService.tasks.sort(this.registryService.propComparator('taskDescription'));
-
-      // Set itemTotalTimeSpent per default
-      this.itemTotalTimeSpent = this.totalTimeSpent(this.items);
-
-      // Set md-select true per default
-      this.selectedProjects = this.projects.map(function (project) {
-        return project.id;
-      });
-      this.selectedTasks = this.tasks.map(function (task) {
-        return task.id;
-      });
-      this.selectedClients = this.clients.map(function (client) {
-        return client.id;
-      });
-
-      // Map projectName, taskDescription, clientName and entryDate to row in rows
-      this.items.forEach(function (entry) {
-        entry.projectName = entry.project.projectName;
-        entry.taskDescription = entry.task.taskDescription;
-        entry.clientName = entry.client.clientName;
-      });
+      this.selectedProjects[0] = -1;
+      this.selectedTasks[0] = -1;
+      this.selectedClients[0] = -1;
+      this.projectsSelectedPerDefault();
+      this.tasksSelectedPerDefault();
+      this.clientsSelectedPerDefault();
+      this.refreshDatatable();
     });
   }
 
-  onPage(event) {
-    console.log('Page Event', event);
-    this.count = this.items.length;
-    this.items = this.entriesService.clonedItems;
-    const start = event.offset * event.limit;
-    const end = start + Number(event.limit);
-    let rows = [];
-    for (let i = start; i < end; i++) {
-      rows[i] = this.items[i];
+  projectsSelectedPerDefault() {
+
+    var allProjectsFilterFlag = this.selectedProjects[0] === -1;
+    let selectedProjects = [];
+
+    selectedProjects = this.projects.map(function (project) {
+      return project.id;
+    });
+
+    if (this.previousAllProjectsFilterFlag < allProjectsFilterFlag) {
+      this.selectedProjects = [-1].concat(selectedProjects);
+      this.previousAllProjectsFilterFlag = allProjectsFilterFlag;
+      this.refreshDatatable();
+      return;
     }
-    this.items = rows;
-    this.items.length = this.count;
-    console.log('Page Results', start, end, rows);
-    this.offset = event.offset;
+
+    if (this.previousAllProjectsFilterFlag > allProjectsFilterFlag) {
+      this.previousAllProjectsFilterFlag = allProjectsFilterFlag;
+      this.selectedProjects = [];
+      this.refreshDatatable();
+      return;
+    }
+
+    if (this.selectedProjects.length === (this.projects.length - (allProjectsFilterFlag ? 1 : 0) ) ) {
+      this.selectedProjects = [-1].concat(selectedProjects);
+      allProjectsFilterFlag = true;
+    } else {
+      if (allProjectsFilterFlag) this.selectedProjects = this.selectedProjects.slice(1); 
+      allProjectsFilterFlag = false;
+    }
+    this.previousAllProjectsFilterFlag = allProjectsFilterFlag;
+    this.refreshDatatable();
   }
 
-  private getStatistics() {
-    // TODO
-    // this.statistics.totalAvailableVacationDays = 18;
-    // this.statistics.totalHousWorkedMonth = 69;
-    // this.statistics.totalHousWorkedWeek = 21;
+  tasksSelectedPerDefault() {
+
+    var allTasksFilterFlag = this.selectedTasks[0] === -1;
+    let selectedTasks = [];
+
+    selectedTasks = this.tasks.map(function (task) {
+      return task.id;
+    });
+
+    if (this.previousAllTasksFilterFlag < allTasksFilterFlag) {
+      this.selectedTasks = [-1].concat(selectedTasks);
+      this.previousAllTasksFilterFlag = allTasksFilterFlag;
+      this.refreshDatatable();
+      return;
+    }
+
+    if (this.previousAllTasksFilterFlag > allTasksFilterFlag) {
+      this.previousAllTasksFilterFlag = allTasksFilterFlag;
+      this.selectedTasks = [];
+      this.refreshDatatable();
+      return;
+    }
+
+    if (this.selectedTasks.length === (this.tasks.length - (allTasksFilterFlag ? 1 : 0) ) ) {
+      this.selectedTasks = [-1].concat(selectedTasks);
+      allTasksFilterFlag = true;
+    } else {
+      if (allTasksFilterFlag) this.selectedTasks = this.selectedTasks.slice(1); 
+      allTasksFilterFlag = false;
+    }
+    this.previousAllTasksFilterFlag = allTasksFilterFlag;
+    this.refreshDatatable();
   }
 
-  public showSearchDialog() {
-    // this.dialogRefSearch = this.dialog.open(SearchDialogComponent);
+  clientsSelectedPerDefault() {
+    var allClientsFilterFlag = this.selectedClients[0] === -1;
+    let selectedClients = [];
 
-    // this.dialogRefSearch
-    //   .afterClosed()
-    //   .subscribe(result => {
-    //     this.dialogRefSearch = null;
-    //   });
+
+    selectedClients = this.clients.map(function (client) {
+      return client.id;
+    });
+
+    if (this.previousAllClientsFilterFlag < allClientsFilterFlag) {
+      this.selectedClients = [-1].concat(selectedClients);
+      this.previousAllClientsFilterFlag = allClientsFilterFlag;
+      this.refreshDatatable();
+      return;
+    }
+
+    if (this.previousAllClientsFilterFlag > allClientsFilterFlag) {
+      this.previousAllClientsFilterFlag = allClientsFilterFlag;
+      this.selectedClients = [];
+      this.refreshDatatable();
+      return;
+    }
+
+    if (this.selectedClients.length === (this.clients.length - (allClientsFilterFlag ? 1 : 0) ) ) {
+      this.selectedClients = [-1].concat(selectedClients);
+      allClientsFilterFlag = true;
+    } else {
+      if (allClientsFilterFlag) this.selectedClients = this.selectedClients.slice(1); 
+      allClientsFilterFlag = false;
+    }
+
+    this.previousAllClientsFilterFlag = allClientsFilterFlag;
+    this.refreshDatatable();
   }
 
-  public showExportDialog() {
-    // TODO
-  }
-
-  public showVacationWorkedHoursDialog() {
-    // TODO
+  keyDownFunction(event, cell, cellValue, row) {
+    if (event.key == 'Enter') {
+      this.updateValue(event, cell, cellValue, row);
+    }
   }
 }
