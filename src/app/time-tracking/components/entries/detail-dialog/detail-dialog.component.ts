@@ -1,8 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewContainerRef } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
-import { ITimeTrackingEntry, IProject, ITask, ProjectService, TaskService, TimeTrackingEntryService } from '../../../../data';
+import { ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService } from '../../../../data';
 import { environment } from '../../../../../environments/environment';
 import { LoginService } from '../../../../login';
+import { UpdateDialogService } from '../update-dialog/update-dialog.service';
 
 @Component({
   selector: 'app-detail-dialog',
@@ -11,7 +12,6 @@ import { LoginService } from '../../../../login';
 export class DetailDialogComponent implements OnInit {
   public baseUrl: string = environment.apiBaseUrl;
   public rowID: number;
-  public selectedDescription: string;
   public project: any;
   public client: any;
   public task: any;
@@ -26,7 +26,14 @@ export class DetailDialogComponent implements OnInit {
   public workTime: any;
   public travelTime: any;
   public isBillable: boolean;
-  public result: any;
+  public result: any;  
+  @Input() selectedProjectID: any;
+  @Input() selectedTaskID: any;
+  @Input() selectedClientID: any;
+  @Input() projects: IProject[] = [];
+  @Input() tasks: ITask[] = [];
+  @Input() clients: IClient[] = [];
+
 
 
   constructor(
@@ -34,12 +41,24 @@ export class DetailDialogComponent implements OnInit {
     public projectService: ProjectService,
     public taskService: TaskService,
     public timeTrackingEntryService: TimeTrackingEntryService,
-    private loginService: LoginService) {
+    private loginService: LoginService,
+    public updateService: UpdateDialogService,
+    private viewContainerRef: ViewContainerRef) {
   }
 
   ngOnInit() {
 
   }
 
+   openUpdateDialog(this) {
+    this.updateService
+    .confirm(this.viewContainerRef, this, this.projects, this.tasks, this.clients)
+    .subscribe(res => {
+      this.result = res;
+      if (this.result) {
+       
+      }
+    });
+  }
 
 }

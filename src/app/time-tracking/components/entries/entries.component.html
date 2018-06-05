@@ -98,7 +98,7 @@
                 '-date']" type="text" [value]="value" />
         </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column name="Start Time" sortable>
+    <!-- <ngx-datatable-column name="Start Time" sortable>
         <ng-template ngx-datatable-cell-template let-value="value " let-row="row" click="loadAscEntries()">
             <span class="clickable-icon inline-field-width" title="Click to edit " (click)="clickOnFirstChild($event, row, '-startTime');"
                 *ngIf="!editing[row.$$index + '-startTime'] ">
@@ -124,12 +124,12 @@
                 (keydown)="datatableKeyDown($event, 'endTime', value, row)" *ngIf="editing[row.$$index + '-endTime']
                 " type="time " [value]="value " />
         </ng-template>
-    </ngx-datatable-column>
+    </ngx-datatable-column> -->
     <ngx-datatable-column name="Time Spent" sortable>
         <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
             <span class="clickable-icon inline-field-width" title="Click to edit " (click)="clickOnFirstChild($event, row, '-timeSpent');"
                 *ngIf="!editing[row.$$index + '-timeSpent'] " [ngClass]="{'colored': row.isColored === true}">
-                {{ row.timeSpent }}
+                <!-- {{ row.timeSpent }} -->
             </span>
             <input id="{{row.cellvalue + row.$$index}}" class="input-field timeSpent" (blur)="updateValue($event, 'timeSpent', value, row);removeSelectFocus(row,'-timeSpent')"
                 (keydown)="datatableKeyDown($event, 'timeSpent', value, row)" *ngIf="editing[row.$$index + '-timeSpent']

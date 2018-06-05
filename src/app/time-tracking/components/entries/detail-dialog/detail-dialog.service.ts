@@ -2,14 +2,19 @@ import { Observable } from 'rxjs/Rx';
 import { Injectable, ViewContainerRef } from '@angular/core';
 import { DetailDialogComponent } from './detail-dialog.component';
 import { MdDialogRef, MdDialog, MdDialogConfig } from '@angular/material';
-import { ITimeTrackingEntry } from '../../../../data';
+import { ITimeTrackingEntry, IProject, ITask, IClient } from '../../../../data';
 
 @Injectable()
 export class DetailDialogService {
 
     constructor(private dialog: MdDialog) { }
 
-    public confirm(viewContainerRef: ViewContainerRef, row: any): Observable<boolean> {
+    public confirm(viewContainerRef: ViewContainerRef, 
+        row: any, 
+        projects: IProject[],
+        tasks: ITask[],
+        clients: IClient[]
+        ): Observable<boolean> {
 
         let dialogRef: MdDialogRef<DetailDialogComponent>;
         let config = new MdDialogConfig();
@@ -28,9 +33,17 @@ export class DetailDialogService {
         dialogRef.componentInstance.endDate = row.endDate;
         dialogRef.componentInstance.endTime = row.endTime;
         dialogRef.componentInstance.workTime = row.timeSpent;
-        dialogRef.componentInstance.travelTime = row.travelTime;    
+        dialogRef.componentInstance.travelTime = row.traveltime;    
         dialogRef.componentInstance.isBillable = row.billable;
         dialogRef.componentInstance.place = row.place;
+        dialogRef.componentInstance.projects = projects;
+        dialogRef.componentInstance.clients = clients;
+        dialogRef.componentInstance.tasks = tasks;
+        dialogRef.componentInstance.selectedProjectID = row.projectID;
+        dialogRef.componentInstance.selectedTaskID = row.taskID;
+        dialogRef.componentInstance.selectedClientID = row.clientID;
+
+
 
         return dialogRef.afterClosed();
     }

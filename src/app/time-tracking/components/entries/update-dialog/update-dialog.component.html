@@ -1,0 +1,87 @@
+<h1 md-dialog-title>Edit Entry</h1>
+<div md-dialog-content>
+    <table>
+        <tr>
+            <td> 
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="Description" [(ngModel)]="description">
+                </md-input-container> 
+            </td>
+            <td>
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="Place" [(ngModel)]="place">
+                </md-input-container> 
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td>
+                <md-select #project [(ngModel)]='selectedProject' placeholder="Project">
+                    <md-option *ngFor="let project of projects" [value]='project.id' >{{ project.projectName }}</md-option>
+                </md-select>
+            </td>
+            <td>
+                 <md-select #client [(ngModel)]='selectedClient' placeholder="Client">
+                    <md-option *ngFor="let client of clients" [value]='client.id' >{{ client.clientName }}</md-option>
+                </md-select>
+            </td>
+            <td>
+                 <md-select #task [(ngModel)]='selectedTask' placeholder="Task">
+                    <md-option *ngFor="let task of tasks" [value]='task.id' >{{ task.taskDescription }}</md-option>
+                </md-select>
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td>
+                <md-input-container>
+                    <input mdInput placeholder="Start Date" #startdate [(ngModel)]="startDate">
+                </md-input-container>
+            </td>
+            <td>
+                <md-input-container>
+                    <input mdInput placeholder="Start Time" #starttime [(ngModel)]="startTime">
+                </md-input-container>
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td>
+                <md-input-container>
+                    <input mdInput placeholder="End Date" #enddate [(ngModel)]="endDate">
+                </md-input-container>
+            </td>
+            <td>
+                <md-input-container>
+                    <input mdInput placeholder="End Time" #endtime [(ngModel)]="endTime">
+                </md-input-container>
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td>
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="Travel time" [(ngModel)]="travelTime">
+                </md-input-container>
+            </td>
+            <td>
+                <md-input-container> 
+                <input class="clickable-icon" mdInput placeholder="Work time" [(ngModel)]="workTime">
+                </md-input-container>
+            </td>
+        </tr>
+        <tr>
+            <td> <md-checkbox [(ngModel)]="isBillable" readonly> is Billable</md-checkbox></td>
+        </tr>
+    </table>
+    <br>
+</div>
+<div md-dialog-actions>
+    <!-- <button type="button" md-button (click)="getNewDescription(selectedDescription);getNewStartDateTime(date.value,startTime.value);getNewEndDateTime(date.value,endTime.value);checkMandatoryFields();">OK</button>
+    <!--<button type="button" md-button (click)="getNewValues(selectedDescription, date.value, startTime.value, endTime.value, timeSpent.value);checkMandatoryFields();dialogRef.close([selectedDescription, project.value, task.value, date.value, startTime.value, endTime.value])">OK</button>
+    <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
+</div> -->
+    <p>{{ title }}</p>
+    <p>{{ message }}</p>
+    <button type="button" md-raised-button (click)="ok();">OK</button>
+    <button type="button" md-button (click)="dialogRef.close()">Cancel</button>

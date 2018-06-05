@@ -6,6 +6,8 @@ export * from './components/entries/entry-dialog/entry-dialog.component';
 export * from './components/entries/entries.service';
 export * from './components/entries/detail-dialog/detail-dialog.service';
 export * from './components/entries/detail-dialog/detail-dialog.component';
+export * from './components/entries/update-dialog/update-dialog.service';
+export * from './components/entries/update-dialog/update-dialog.component';
 // export * from './components/search/search-dialog.component';
 export * from './time-tracking.component';
 export * from './components/entries/delete-entry/delete-entry.component';
