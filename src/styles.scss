@@ -217,33 +217,51 @@ div.mat-input-underline {
       line-height: 20px;
   }
   .mat-select-value{
-      font-size: 80%;
+    font-size: 80%;
+}
+    
+    #projectsFilter, #tasksFilter, #clientsFilter{
+        span.mat-select-value{
+            width: 40px;
+        }
   }
 
-  .clickable-icon{
-      cursor: pointer;
-      cursor: hand;
-    }
+.mat-select-value, .mat-input-container{
+    font-size: 80%;
+}
+
+.mat-input-placeholder, .mat-input-element{
+    font-size: 16px !important;
+    font-weight: normal !important
+}
+.mat-input-infix{
+    padding: 0px 0px 0px 0px !important;
+}
+
+.clickable-icon{
+    cursor: pointer;
+    cursor: hand;
+}
 .not-clickable-icon{
     cursor: null !important;
 }
 
-  .select-field{
-      width: 100%; 
-  }
+.select-field{
+    width: 100%; 
+}
 
-  .filter-position{
-      padding-top: 15px;
-  }
-  .input-field{
-      width:100%;
-  }
-  .description-field{
-      width: 100%;
-  }
-  .colored{
-      color: rgba(255, 166, 0, 0.959);
-  }
+.filter-position{
+    padding-top: 15px;
+}
+.input-field{
+    width:100%;
+}
+.description-field{
+    width: 100%;
+}
+.colored{
+    color: rgba(255, 166, 0, 0.959);
+}
 
   .datatable-header-cell-label{
       color: white;
@@ -265,6 +283,3 @@ div.mat-input-underline {
   .datatable-header-cell-label{
       cursor: default;
   }
-//   .mat-toolbar.mat-primary{
-//     background-color: rgba(51, 106, 185, 0.975) !important;
-//   }

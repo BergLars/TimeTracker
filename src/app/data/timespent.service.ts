@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import moment from 'moment/src/moment';
+import { sscanf } from 'scanf';
+import { sprintf } from 'sprintf-js';
 
 @Injectable()
 export class TimespentService {
-  private sscanf = require('scanf').sscanf;
-  private sprintf = require("sprintf-js").sprintf;
   constructor() { }
 
   // Calculate time spent on inline editing
@@ -44,12 +44,12 @@ export class TimespentService {
     let hours = 0;
     let minutes = 0;
     entries.forEach(element => {
-      let timeComponents = this.sscanf(element, "%d:%d");
-      hours += timeComponents[0];
-      minutes += timeComponents[1];
+      let timeComponents = sscanf(element, "%d:%d");
+      hours += +timeComponents[0];
+      minutes += +timeComponents[1];
     });
 
-    let timeSpents = this.sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
+    let timeSpents = sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
     return timeSpents;
   }
 
