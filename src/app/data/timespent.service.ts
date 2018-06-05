@@ -7,38 +7,6 @@ import { sprintf } from 'sprintf-js';
 export class TimespentService {
   constructor() { }
 
-  // Calculate time spent on inline editing
-  public calculateInlineFieldTimeSpent(row) {
-    let timeSpent: string;
-    let timeSpentH: number;
-    let timeSpentMin: number;
-    let startTimeH: number = parseInt(row.startTime.substring(0, 2));
-    let startTimeMin: number = parseInt(row.startTime.substring(3, 5));
-
-    let endTimeH: number = parseInt(row.endTime.substring(0, 2));
-    let endTimeMin: number = parseInt(row.endTime.substring(3, 5));
-    if (endTimeMin >= startTimeMin) {
-      timeSpentMin = endTimeMin - startTimeMin;
-      timeSpentH = endTimeH - startTimeH;
-    } else {
-      timeSpentMin = endTimeMin - startTimeMin + 60;
-      timeSpentH = endTimeH - startTimeH - 1;
-    }
-
-    if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
-      timeSpent = '0' + Math.abs(timeSpentH) + ':0' + timeSpentMin;
-    }
-    else if ((timeSpentH.toString()).length < 2) {
-      timeSpent = '0' + Math.abs(timeSpentH) + ':' + timeSpentMin;
-    }
-    else if ((timeSpentMin.toString()).length < 2) {
-      timeSpent = Math.abs(timeSpentH) + ':0' + timeSpentMin;
-    } else {
-      timeSpent = Math.abs(timeSpentH) + ':' + timeSpentMin;
-    }
-    return timeSpent;
-  }
-
   // Calculate total time spent
   public totalTimeSpent(entries) {
     let hours = 0;
@@ -56,14 +24,34 @@ export class TimespentService {
   // calculate timeSpent for each entry in items and format it correctly
   calculateEntriesTimeSpent(items) {
     items.forEach(entry => {
-      let ms = moment(entry.startDateTime, "YYYY-MM-DD HH:mm").diff(moment(entry.endDateTime, "YYYY-MM-DD HH:mm"));
-      let d = moment.duration(Math.abs(ms));
-      let s = Math.floor(d.asHours()) + moment.utc(Math.abs(ms)).format(":mm");
-      if (s.length < 5) {
-        entry.timeSpent = '0' + s;
+      let hourWorktime = 0;
+      let minuteWorktime = 0;
+      let hourTraveltime = 0;
+      let minuteTraveltime = 0;
+      let worktime = entry.worktime.value;
+      let traveltime = entry.traveltime.value;
+      if (worktime.length < 5) {
+        worktime = '0' + worktime;
       }
-      else {
-        entry.timeSpent = s;
+      if (traveltime.length < 5) {
+        traveltime = '0' + traveltime;
+      }
+      if (traveltime === '00:00') {
+        entry.timeSpent = worktime;
+      } else {
+        let workTime = sscanf(worktime, '%d:%d');
+        hourWorktime += +workTime[0];
+        minuteWorktime += +workTime[1];
+        let travelTime = sscanf(traveltime, '%d:%d');
+        hourTraveltime += +travelTime[0];
+        minuteTraveltime += +travelTime[1];
+        if (minuteWorktime < minuteTraveltime) {
+          let realTime = sprintf('%02d:%02d', hourWorktime - hourTraveltime - 1, Math.abs(minuteWorktime - minuteTraveltime));
+          entry.timeSpent = realTime;
+        } else {
+          let realTime = sprintf('%02d:%02d', hourWorktime - hourTraveltime, minuteWorktime - minuteTraveltime);
+          entry.timeSpent = realTime;
+        }
       }
     });
   }

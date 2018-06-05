@@ -9,12 +9,12 @@ export class DetailDialogService {
 
     constructor(private dialog: MdDialog) { }
 
-    public confirm(viewContainerRef: ViewContainerRef, 
-        row: any, 
+    public confirm(viewContainerRef: ViewContainerRef,
+        row: any,
         projects: IProject[],
         tasks: ITask[],
         clients: IClient[]
-        ): Observable<boolean> {
+    ): Observable<boolean> {
 
         let dialogRef: MdDialogRef<DetailDialogComponent>;
         let config = new MdDialogConfig();
@@ -32,8 +32,8 @@ export class DetailDialogService {
         dialogRef.componentInstance.startTime = row.startTime;
         dialogRef.componentInstance.endDate = row.endDate;
         dialogRef.componentInstance.endTime = row.endTime;
-        dialogRef.componentInstance.workTime = row.timeSpent;
-        dialogRef.componentInstance.travelTime = row.traveltime;    
+        dialogRef.componentInstance.workTime = row.worktime.value;
+        dialogRef.componentInstance.travelTime = row.traveltime.value;
         dialogRef.componentInstance.isBillable = row.billable;
         dialogRef.componentInstance.place = row.place;
         dialogRef.componentInstance.projects = projects;
