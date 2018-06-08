@@ -91,15 +91,19 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   checkStartAndEndTime() {
-    if ((this.startTime === "" && this.endTime === "") || (this.startTime === "00:00" && this.endTime === "00:00") ) {
-      this.startTime = "00:00";
-      this.endTime = "00:00";
-      this.updateEntry();
-    } else {
-      this.workTime = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.startDate, this.endDate);
+    if (this.loginService.loggedIn()) {
+      if ((this.startTime === "" && this.endTime === "") || (this.startTime === "00:00" && this.endTime === "00:00") ) {
+        this.startTime = "00:00";
+        this.endTime = "00:00";
         this.updateEntry();
+      } else {
+        this.workTime = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.startDate, this.endDate);
+          this.updateEntry();
+      }
+    } else {
+      alert("Your token has expired. Please log in again!");
+      this.dialogRef.close(true);
     }
-    
   }
 
   public updateEntry() {
@@ -129,7 +133,6 @@ export class UpdateDialogComponent implements OnInit {
         }
     });
   }
-
   public ok() {
     this.checkMandatoryFields();
   }
