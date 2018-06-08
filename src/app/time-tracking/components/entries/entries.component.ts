@@ -11,6 +11,9 @@ import { EntriesService } from './entries.service';
 import { elementAt } from 'rxjs/operator/elementAt';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { window } from 'rxjs/operator/window';
+import * as _ from 'lodash';
+import { sscanf } from 'scanf';
+import { sprintf } from 'sprintf-js';
 
 @Component({
   selector: 'app-entries',
@@ -23,6 +26,7 @@ export class EntriesComponent implements OnInit {
   @Input() projects: IProject[] = [];
   @Input() project: IProject;
   @Input() tasks: ITask[] = [];
+  // @Input() descriptions = [];
   @Input() task: ITask;
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
@@ -48,8 +52,9 @@ export class EntriesComponent implements OnInit {
 
   private previousAllProjectsFilterFlag = true;
   private previousAllTasksFilterFlag = true;
-  
+
   private previousAllClientsFilterFlag = true;
+  private previousAllDescriptionsFilterFlag = true;
 
   private columns = [
     { key: 'Description', id: 0 },
@@ -87,6 +92,7 @@ export class EntriesComponent implements OnInit {
 
   @Input() selectedColumn: any;
   @Input() selectedSort: any;
+  @Input() term: any;
   isValid: boolean = false;
 
   constructor(
@@ -108,6 +114,43 @@ export class EntriesComponent implements OnInit {
   ngOnInit() {
     this.defaultItem = this.createItems[0].key;
     this.updateFilterSelection();
+  }
+
+  getSearchValue(term: string) {
+    this.term = term;
+    let exp = '.';
+
+    if (this.term === '') {
+      return;
+    }
+    if (term === '*') {
+      this.loadEntries();
+    }
+    else {
+      if (_.includes(this.term, exp)) {
+        let day, month, year;
+        day = this.term.substring(0, 2);
+        let date = sscanf(this.term, '%d.%d.%d');
+        if (day === '09') {
+          day = '9';
+          date[0] = day;
+        }
+        else {
+          day = date[0];
+        }
+        month = date[1];
+        year = date[2];
+        this.term = sprintf('%d-%02d-%02d', year, month, day);
+        this.loadSearched(this.term);
+      }
+      this.loadSearched(this.term);
+    }
+  }
+
+  loadSearched(term) {
+    this.entriesService.searchBy(term).then(() => {
+      this.refreshDatatable();
+    });
   }
 
   setSelectFocus(event, row, cell, value) {
@@ -235,94 +278,70 @@ export class EntriesComponent implements OnInit {
       }
     }
 
-    // if (cell == 'startTime') {
-    //   let formatedStartDate = row.entryDate.substring(6, 10) + "-" + row.entryDate.substring(3, 5) + "-" + row.entryDate.substring(0, 2);
-    //   let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
-    //   row.startTime = event.target.value.trim();
-    //   if (event.target.value === cellValue) {
-    //     row.startTime = cellValue;
-    //   }
-    //   else if (!this.registryService.timeRequirement.test(event.target.value.trim()) || moment(formatedStartDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
-    //     row.startTime = cellValue.trim();
-    //   }
-    //   else if (moment(formatedStartDate, 'YYYY-MM-DD').isBefore(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
-    //     this.updateEntry(row);
-    //     this.entriesService.displaySidebarData();
-    //   }
-    //   else {
-    //     this.updateEntry(row);
-    //     this.entriesService.displaySidebarData();
-    //   }
-    // }
+    if (cell == 'timeSpent') {
+      if (event.target.value === cellValue) {
+        row.timeSpent = cellValue;
+      }
+      if (!this.registryService.timeSpentRequirement.test(event.target.value) || row.timeSpent === event.target.value) {
+        row.timeSpent = cellValue.trim();
+      }
+      else {
+        let decimalTime = parseFloat(moment.duration(event.target.value).asHours());
+        let decimalStartTime = parseFloat(moment.duration(row.startTime).asHours());
+        let totalDecimalEndTime = Number(decimalTime + decimalStartTime);
+        totalDecimalEndTime = totalDecimalEndTime * 60 * 60;
+        let hours: any = Math.floor((totalDecimalEndTime / (60 * 60)));
+        totalDecimalEndTime = totalDecimalEndTime - (hours * 60 * 60);
+        let minutes: any = Math.floor((totalDecimalEndTime / 60));
 
-    // if (cell == 'endTime') {
-    //   let formatedStartDate = row.entryDate.substring(6, 10) + "-" + row.entryDate.substring(3, 5) + "-" + row.entryDate.substring(0, 2);
-    //   let formatedEndDate = row.endDate.substring(6, 10) + "-" + row.endDate.substring(3, 5) + "-" + row.endDate.substring(0, 2);
-    //   row.endTime = event.target.value.trim();
-    //   if (event.target.value === cellValue) {
-    //     row.endTime = cellValue;
-    //   }
-    //   else if (!this.registryService.timeRequirement.test(event.target.value.trim())) {
-    //     row.endTime = cellValue;
-    //   }
-    //   else if (moment(formatedStartDate, 'YYYY-MM-DD').isSame(moment(formatedEndDate, 'YYYY-MM-DD')) && moment(row.endTime, 'HH:mm').isBefore(moment(row.startTime, 'HH:mm'))) {
-    //     let longEndDate = moment(formatedEndDate, 'YYYY-MM-DD').add(1, 'd');
-    //     let validateFormatDate = moment(longEndDate).format('YYYY-MM-DD');
-    //     row.endDateTime = validateFormatDate + ' ' + row.endTime;
-    //     this.updateEntry(row);
-    //     this.entriesService.displaySidebarData();
-    //   }
-    //   else {
-    //     this.updateEntry(row);
-    //     this.entriesService.displaySidebarData();
-    //   }
-    // }
-
-    // if (cell == 'timeSpent') {
-    //   if (event.target.value === cellValue) {
-    //     row.timeSpent = cellValue;
-    //   }
-    //   if (!this.registryService.timeSpentRequirement.test(event.target.value) || row.timeSpent === event.target.value) {
-    //     row.timeSpent = cellValue.trim();
-    //   }
-    //   else {
-    //     let decimalTime = parseFloat(moment.duration(event.target.value).asHours());
-    //     let decimalStartTime = parseFloat(moment.duration(row.startTime).asHours());
-    //     let totalDecimalEndTime = Number(decimalTime + decimalStartTime);
-    //     totalDecimalEndTime = totalDecimalEndTime * 60 * 60;
-    //     let hours: any = Math.floor((totalDecimalEndTime / (60 * 60)));
-    //     totalDecimalEndTime = totalDecimalEndTime - (hours * 60 * 60);
-    //     let minutes: any = Math.floor((totalDecimalEndTime / 60));
-
-    //     if (hours < 10) {
-    //       hours = "0" + hours;
-    //     }
-    //     if (minutes < 10) {
-    //       minutes = "0" + minutes;
-    //     }
-    //     let numberOfDays = Math.floor(hours / 24);
-    //     let hoursEndTime = hours % 24;
-    //     let longEndDate = moment(row.startDateTime, 'YYYY-MM-DD HH:mm').add(numberOfDays, 'd');
-    //     let validFormatEndDate = moment(longEndDate).format('YYYY-MM-DD');
-    //     if (hoursEndTime < 10) {
-    //       hours = "0" + hoursEndTime;
-    //     }
-    //     else {
-    //       hours = hoursEndTime;
-    //     }
-    //     let endTime = hours + ':' + minutes;
-    //     row.timeSpent = event.target.value;
-    //     row.startDateTime = row.startDateTime;
-    //     row.endDateTime = validFormatEndDate + ' ' + endTime;
-    //     row.endTime = moment(row.endDateTime).format('HH:mm');
-    //     row.endDate = validFormatEndDate.substring(8, 10) + '.' + validFormatEndDate.substring(5, 7) + '.' + validFormatEndDate.substring(0, 4);
-    //     this.updateEntry(row);
-    //     this.entriesService.displaySidebarData();
-    //   }
-    // }
+        if (hours < 10) {
+          hours = "0" + hours;
+        }
+        if (minutes < 10) {
+          minutes = "0" + minutes;
+        }
+        let numberOfDays = Math.floor(hours / 24);
+        let hoursEndTime = hours % 24;
+        let longEndDate = moment(row.startDateTime, 'YYYY-MM-DD HH:mm').add(numberOfDays, 'd');
+        let validFormatEndDate = moment(longEndDate).format('YYYY-MM-DD');
+        if (hoursEndTime < 10) {
+          hours = "0" + hoursEndTime;
+        }
+        else {
+          hours = hoursEndTime;
+        }
+        let hourWorktime = 0;
+        let minuteWorktime = 0;
+        let hourTraveltime = 0;
+        let minuteTraveltime = 0;
+        let timespent = sscanf(event.target.value, '%d:%d');
+        hourWorktime += +timespent[0];
+        minuteWorktime += +timespent[1];
+        let travelTime = sscanf(row.traveltime.value, '%d:%d');
+        hourTraveltime += +travelTime[0];
+        minuteTraveltime += +travelTime[1];
+        let hoursWorktime = hourWorktime + hourTraveltime;
+        let minutesWorktime = minuteWorktime + minuteTraveltime;
+        if (minuteWorktime + minuteTraveltime < 60) {
+          let realTime = sprintf('%02d:%02d', hoursWorktime, minutesWorktime);
+          row.worktime.value = realTime;
+        } else {
+          let realTime = sprintf('%02d:%02d', hoursWorktime + Math.abs(minutesWorktime / 60), minutesWorktime % 60);
+          row.worktime.value = realTime;
+        }
+        let endTime = hours + ':' + minutes;
+        row.timeSpent = event.target.value;
+        row.startDateTime = row.startDateTime;
+        row.endDateTime = validFormatEndDate + ' ' + endTime;
+        row.endTime = moment(row.endDateTime).format('HH:mm');
+        row.endDate = validFormatEndDate.substring(8, 10) + '.' + validFormatEndDate.substring(5, 7) + '.' + validFormatEndDate.substring(0, 4);
+        this.updateEntry(row);
+        this.entriesService.displaySidebarData();
+      }
+    }
   }
 
-  public updateEntry(row) {
+  updateEntry(row) {
     this.http.put(this.baseUrl + "/timeentries/" + row.id, {
       startDateTime: row.startDateTime.substring(0, 4) + "-" + row.startDateTime.substring(5, 7) + "-" + row.startDateTime.substring(8, 10) + " " + row.startTime,
       endDateTime: row.endDateTime.substring(0, 4) + "-" + row.endDateTime.substring(5, 7) + "-" + row.endDateTime.substring(8, 10) + " " + row.endTime,
@@ -331,6 +350,8 @@ export class EntriesComponent implements OnInit {
       clientID: row.clientID,
       projectID: row.projectID,
       taskID: row.taskID,
+      traveltime: row.traveltime.value,
+      worktime: row.worktime.value,
       billable: row.isBillable
     }).subscribe(
       () => {
@@ -407,7 +428,6 @@ export class EntriesComponent implements OnInit {
       projects: this.selectedProjects,
       tasks: this.selectedTasks
     });
-
     // Take in acount the sorting
     this.entriesService.setSortingBy({
       column: this.columns[this.selectedColumn].key,
@@ -431,8 +451,8 @@ export class EntriesComponent implements OnInit {
   }
 
   /**
-  * Load entries per default
-  */
+   * Load entries per default
+   */
   loadEntries() {
     this.entriesService.entriesAreLoaded().then(() => {
       this.clients = this.entriesService.sortedClients();
@@ -472,11 +492,11 @@ export class EntriesComponent implements OnInit {
       return;
     }
 
-    if (this.selectedProjects.length === (this.projects.length - (allProjectsFilterFlag ? 1 : 0) ) ) {
+    if (this.selectedProjects.length === (this.projects.length - (allProjectsFilterFlag ? 1 : 0))) {
       this.selectedProjects = [-1].concat(selectedProjects);
       allProjectsFilterFlag = true;
     } else {
-      if (allProjectsFilterFlag) this.selectedProjects = this.selectedProjects.slice(1); 
+      if (allProjectsFilterFlag) this.selectedProjects = this.selectedProjects.slice(1);
       allProjectsFilterFlag = false;
     }
     this.previousAllProjectsFilterFlag = allProjectsFilterFlag;
@@ -506,11 +526,11 @@ export class EntriesComponent implements OnInit {
       return;
     }
 
-    if (this.selectedTasks.length === (this.tasks.length - (allTasksFilterFlag ? 1 : 0) ) ) {
+    if (this.selectedTasks.length === (this.tasks.length - (allTasksFilterFlag ? 1 : 0))) {
       this.selectedTasks = [-1].concat(selectedTasks);
       allTasksFilterFlag = true;
     } else {
-      if (allTasksFilterFlag) this.selectedTasks = this.selectedTasks.slice(1); 
+      if (allTasksFilterFlag) this.selectedTasks = this.selectedTasks.slice(1);
       allTasksFilterFlag = false;
     }
     this.previousAllTasksFilterFlag = allTasksFilterFlag;
@@ -540,11 +560,11 @@ export class EntriesComponent implements OnInit {
       return;
     }
 
-    if (this.selectedClients.length === (this.clients.length - (allClientsFilterFlag ? 1 : 0) ) ) {
+    if (this.selectedClients.length === (this.clients.length - (allClientsFilterFlag ? 1 : 0))) {
       this.selectedClients = [-1].concat(selectedClients);
       allClientsFilterFlag = true;
     } else {
-      if (allClientsFilterFlag) this.selectedClients = this.selectedClients.slice(1); 
+      if (allClientsFilterFlag) this.selectedClients = this.selectedClients.slice(1);
       allClientsFilterFlag = false;
     }
 
@@ -552,9 +572,14 @@ export class EntriesComponent implements OnInit {
     this.refreshDatatable();
   }
 
-  keyDownFunction(event, cell, cellValue, row) {
+  datatableKeyDown(event, cell, cellValue, row) {
     if (event.key == 'Enter') {
       this.updateValue(event, cell, cellValue, row);
+    }
+  }
+  searchKeyDown(event) {
+    if (event.key == 'Enter') {
+      this.getSearchValue(event.target.value);
     }
   }
 }

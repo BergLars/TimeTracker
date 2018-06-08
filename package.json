@@ -4,7 +4,7 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
-    "start": "ng serve --prod",
+    "start": "ng serve -o",
     "build": "ng build -d timetracker/ --prod",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
@@ -14,11 +14,11 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "4.2.6",
+    "@angular/cdk": "2.0.0-beta.8",
     "@angular/common": "4.2.6",
     "@angular/compiler": "4.2.6",
     "@angular/compiler-cli": "4.2.6",
     "@angular/core": "4.2.6",
-    "@angular/cdk": "2.0.0-beta.8",
     "@angular/flex-layout": "2.0.0-beta.8",
     "@angular/forms": "4.2.6",
     "@angular/http": "4.2.6",
@@ -27,12 +27,16 @@
     "@angular/platform-browser-dynamic": "4.2.6",
     "@angular/router": "4.2.6",
     "@swimlane/ngx-datatable": "9.3.1",
+    "@types/lodash": "^4.14.108",
+    "@types/sprintf-js": "^1.1.0",
     "core-js": "2.4.1",
     "crypto-js": "3.1.8",
     "js-data": "^3.0.0-rc.9",
     "js-data-http": "^3.0.0-rc.9",
     "moment": "2.18.1",
     "rxjs": "5.4.2",
+    "angular2-jwt": "*",
+    "scanf": "^1.0.0",
     "zone.js": "0.8.12"
   },
   "devDependencies": {
