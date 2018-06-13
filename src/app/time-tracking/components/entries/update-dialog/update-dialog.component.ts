@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
-import { ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService } from '../../../../data';
+import { ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService, TimespentService } from '../../../../data';
 import { environment } from '../../../../../environments/environment';
 import { LoginService } from '../../../../login';
 import { Http } from '@angular/http';
@@ -36,7 +36,6 @@ export class UpdateDialogComponent implements OnInit {
   @Input() 
   set selectedClient(id: number) {
     this._mySelectedClient = id;
-    console.log(this.endTime);
   }
 
   get selectedTask(): number {
@@ -73,6 +72,7 @@ export class UpdateDialogComponent implements OnInit {
     public taskService: TaskService,
     private http: Http,
     public timeTrackingEntryService: TimeTrackingEntryService,
+    public timeSpentService: TimespentService,
     private loginService: LoginService) {
   }
 
@@ -91,18 +91,19 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   checkStartAndEndTime() {
-    if ((this.startTime === "" && this.endTime === "") || (this.startTime === "00:00" && this.endTime === "00:00") ) {
-      this.startTime = "00:00";
-      this.endTime = "00:00";
-      this.updateEntry();
-    } else {
-      if (this.startTime > this.endTime || this.startTime == this.endTime) {
-        alert("Please enter a valid endtime.")
-      } else {
+    if (this.loginService.loggedIn()) {
+      if ((this.startTime === "" && this.endTime === "") || (this.startTime === "00:00" && this.endTime === "00:00") ) {
+        this.startTime = "00:00";
+        this.endTime = "00:00";
         this.updateEntry();
-      }  
+      } else {
+        this.workTime = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.startDate, this.endDate);
+          this.updateEntry();
+      }
+    } else {
+      alert("Your token has expired. Please log in again!");
+      this.dialogRef.close(true);
     }
-    
   }
 
   public updateEntry() {
@@ -132,7 +133,6 @@ export class UpdateDialogComponent implements OnInit {
         }
     });
   }
-
   public ok() {
     this.checkMandatoryFields();
   }

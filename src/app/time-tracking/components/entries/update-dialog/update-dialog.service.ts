@@ -26,24 +26,22 @@ export class UpdateDialogService {
         let updateDialogComponent = dialogRef.componentInstance; 
 
         updateDialogComponent.description = row.description;
-        updateDialogComponent.rowID = row.rowID;
+        updateDialogComponent.rowID = row.id;
         updateDialogComponent.userprofileID = row.userprofileID;
-        updateDialogComponent.selectedProjectID = row.selectedProjectID;
-        updateDialogComponent.selectedTaskID = row.selectedTaskID;
-        updateDialogComponent.selectedClientID = row.selectedClientID;
+        updateDialogComponent.selectedProjectID = row.projectID;
+        updateDialogComponent.selectedTaskID = row.taskID;
+        updateDialogComponent.selectedClientID = row.clientID;
         updateDialogComponent.startDate = row.entryDate;
         updateDialogComponent.startTime = row.startTime;
         updateDialogComponent.endDate = row.endDate;
         updateDialogComponent.endTime = row.endTime;   
-        updateDialogComponent.workTime = row.workTime;
-        updateDialogComponent.travelTime = row.travelTime;    
+        updateDialogComponent.workTime = row.worktime.value;
+        updateDialogComponent.travelTime = row.traveltime.value;    
         updateDialogComponent.isBillable = row.isBillable;
         updateDialogComponent.place = row.place;
         updateDialogComponent.projects = projects;
         updateDialogComponent.tasks = tasks;
         updateDialogComponent.clients = clients;
-        updateDialogComponent.selectedProject = row.selectedProjectID;
-        // dialogRef.componentInstance.selectedTimeSpent = row.timeSpent;
  
         return dialogRef.afterClosed();
     }

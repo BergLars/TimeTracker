@@ -55,4 +55,57 @@ export class TimespentService {
       }
     });
   }
+
+    public calculateTimeSpent(startTime: String, endTime: String, startDate: String, endDate: String) {
+    let workTime: string;
+    let timeSpentH: number;
+    let timeSpentMin: number;
+    let startTimeH: number = parseInt(startTime.substring(0, 2));
+    let startTimeMin: number = parseInt(startTime.substring(3, 5));
+
+    let endTimeH: number = parseInt(endTime.substring(0, 2));
+    let endTimeMin: number = parseInt(endTime.substring(3, 5));
+    // if (this.validTimePeriod) {
+      if (endTimeMin >= startTimeMin) {
+        timeSpentMin = endTimeMin - startTimeMin;
+        timeSpentH = endTimeH - startTimeH;
+      } else {
+        timeSpentMin = endTimeMin - startTimeMin + 60;
+        timeSpentH = endTimeH - startTimeH - 1;
+      }
+
+      if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
+        workTime = '0' + timeSpentH + ':0' + timeSpentMin;
+      } else if ((timeSpentH.toString()).length < 2) {
+        workTime = '0' + timeSpentH + ':' + timeSpentMin;
+      } else if ((timeSpentMin.toString()).length < 2) {
+        workTime = timeSpentH + ':0' + timeSpentMin;
+      } else {
+        workTime = timeSpentH + ':' + timeSpentMin;
+      }
+    // // } else {
+      if (startDate !==  endDate) {
+      if (endTimeMin < startTimeMin) {
+        timeSpentMin = (endTimeMin + 60) - startTimeMin;
+        timeSpentH = (endTimeH + 23) - startTimeH;
+      
+      } else if (endTimeMin === startTimeMin) {
+        timeSpentMin = endTimeMin - startTimeMin;
+        timeSpentH = (endTimeH + 24) - startTimeH;
+      } else {
+        timeSpentH = ((endTimeH + 24) - startTimeH);
+        timeSpentMin = endTimeMin - startTimeMin;
+      } 
+      if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
+        workTime = '0' + timeSpentH + ':0' + timeSpentMin;
+      } else if ((timeSpentH.toString()).length < 2) {
+        workTime = '0' + timeSpentH + ':' + timeSpentMin;
+      } else if ((timeSpentMin.toString()).length < 2) {
+        workTime = timeSpentH + ':0' + timeSpentMin;
+      } else {
+        workTime = timeSpentH + ':' + timeSpentMin;
+      }
+    }
+    return workTime;
+  }
 }

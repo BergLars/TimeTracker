@@ -23,8 +23,6 @@ import {
     EntriesService,
     EditDialogComponent,
     EditDialogService,
-    DetailDialogComponent,
-    DetailDialogService,
     UpdateDialogComponent,
     UpdateDialogService
 } from './time-tracking';
@@ -57,7 +55,6 @@ import { DeleteUserService } from './menu/components/delete-user/delete-user.ser
         CreateDialogComponent,
         EditDialogComponent,
         DeleteUserComponent,
-        DetailDialogComponent,
         UpdateDialogComponent
     ],
     entryComponents: [
@@ -68,7 +65,6 @@ import { DeleteUserService } from './menu/components/delete-user/delete-user.ser
         ExportDialogComponent,
         EditDialogComponent,
         DeleteUserComponent,
-        DetailDialogComponent,
         UpdateDialogComponent
     ],
     imports: [
@@ -99,7 +95,6 @@ import { DeleteUserService } from './menu/components/delete-user/delete-user.ser
         EditDialogService,
         TimespentService,
         DeleteUserService,
-        DetailDialogService,
         UpdateDialogService,
         {
             provide: Http,
