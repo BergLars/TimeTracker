@@ -94,6 +94,7 @@ export class EntriesComponent implements OnInit {
   @Input() selectedSort: any;
   @Input() term: any;
   isValid: boolean = false;
+  isChecked = false;
 
   constructor(
     private entryDialogService: EntryDialogService,
@@ -121,9 +122,7 @@ export class EntriesComponent implements OnInit {
     let exp = '.';
 
     if (this.term === '') {
-      return;
-    }
-    if (term === '*') {
+      this.isChecked = true;
       this.loadEntries();
     }
     else {
@@ -410,13 +409,13 @@ export class EntriesComponent implements OnInit {
 
   openEditDialog(row) {
     this.updateService
-    .confirm(this.viewContainerRef, row, this.projects, this.tasks, this.clients)
-    .subscribe(res => {
-      this.result = res;
-      if (this.result) {
-        this.loadEntries();
-      }
-    });
+      .confirm(this.viewContainerRef, row, this.projects, this.tasks, this.clients)
+      .subscribe(res => {
+        this.result = res;
+        if (this.result) {
+          this.loadEntries();
+        }
+      });
   }
 
   private refreshDatatable() {
@@ -458,13 +457,15 @@ export class EntriesComponent implements OnInit {
       this.clients = this.entriesService.sortedClients();
       this.projects = this.entriesService.sortedProjects();
       this.tasks = this.entriesService.sortedTasks();
-
       this.selectedProjects[0] = -1;
       this.selectedTasks[0] = -1;
       this.selectedClients[0] = -1;
-      this.projectsSelectedPerDefault();
-      this.tasksSelectedPerDefault();
-      this.clientsSelectedPerDefault();
+
+      if (!this.isChecked) {
+        this.projectsSelectedPerDefault();
+        this.tasksSelectedPerDefault();
+        this.clientsSelectedPerDefault();
+      }
       this.refreshDatatable();
     });
   }

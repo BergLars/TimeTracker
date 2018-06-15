@@ -39,7 +39,7 @@
 </md-toolbar>
 <md-toolbar>
     <md-input-container>
-        <input mdInput id="search" value="*" (keydown)="searchKeyDown($event)" #search placeholder="Search">
+        <input mdInput id="search" value="" (keydown)="searchKeyDown($event)" #search placeholder="Search">
     </md-input-container>
     <md-icon class="material-icons app-input-icon clickable-icon search" (click)="getSearchValue(search.value);">search</md-icon>
 </md-toolbar>
