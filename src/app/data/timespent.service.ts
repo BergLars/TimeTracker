@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import moment from 'moment/src/moment';
-import { sscanf } from 'scanf';
 import { sprintf } from 'sprintf-js';
 
 @Injectable()
