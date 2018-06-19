@@ -128,11 +128,11 @@ export class TimespentService {
       hours += +element.substring(0, 2);
       minutes += +element.substring(3, 6);
     });
-    let result = sprintf("%02d:%02d", hours + Math.round(minutes / 60), minutes % 60);
+    let result = sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
     return result;
   }
 
-    public calculateTimeSpent(startTime: String, endTime: String, startDate: String, endDate: String) {
+  public calculateTimeSpent(startTime: String, endTime: String, startDate: String, endDate: String) {
     let workTime: string;
     let timeSpentH: number;
     let timeSpentMin: number;
@@ -142,36 +142,36 @@ export class TimespentService {
     let endTimeH: number = parseInt(endTime.substring(0, 2));
     let endTimeMin: number = parseInt(endTime.substring(3, 5));
     // if (this.validTimePeriod) {
-      if (endTimeMin >= startTimeMin) {
-        timeSpentMin = endTimeMin - startTimeMin;
-        timeSpentH = endTimeH - startTimeH;
-      } else {
-        timeSpentMin = endTimeMin - startTimeMin + 60;
-        timeSpentH = endTimeH - startTimeH - 1;
-      }
+    if (endTimeMin >= startTimeMin) {
+      timeSpentMin = endTimeMin - startTimeMin;
+      timeSpentH = endTimeH - startTimeH;
+    } else {
+      timeSpentMin = endTimeMin - startTimeMin + 60;
+      timeSpentH = endTimeH - startTimeH - 1;
+    }
 
-      if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
-        workTime = '0' + timeSpentH + ':0' + timeSpentMin;
-      } else if ((timeSpentH.toString()).length < 2) {
-        workTime = '0' + timeSpentH + ':' + timeSpentMin;
-      } else if ((timeSpentMin.toString()).length < 2) {
-        workTime = timeSpentH + ':0' + timeSpentMin;
-      } else {
-        workTime = timeSpentH + ':' + timeSpentMin;
-      }
+    if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
+      workTime = '0' + timeSpentH + ':0' + timeSpentMin;
+    } else if ((timeSpentH.toString()).length < 2) {
+      workTime = '0' + timeSpentH + ':' + timeSpentMin;
+    } else if ((timeSpentMin.toString()).length < 2) {
+      workTime = timeSpentH + ':0' + timeSpentMin;
+    } else {
+      workTime = timeSpentH + ':' + timeSpentMin;
+    }
     // // } else {
-      if (startDate !==  endDate) {
+    if (startDate !== endDate) {
       if (endTimeMin < startTimeMin) {
         timeSpentMin = (endTimeMin + 60) - startTimeMin;
         timeSpentH = (endTimeH + 23) - startTimeH;
-      
+
       } else if (endTimeMin === startTimeMin) {
         timeSpentMin = endTimeMin - startTimeMin;
         timeSpentH = (endTimeH + 24) - startTimeH;
       } else {
         timeSpentH = ((endTimeH + 24) - startTimeH);
         timeSpentMin = endTimeMin - startTimeMin;
-      } 
+      }
       if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
         workTime = '0' + timeSpentH + ':0' + timeSpentMin;
       } else if ((timeSpentH.toString()).length < 2) {
