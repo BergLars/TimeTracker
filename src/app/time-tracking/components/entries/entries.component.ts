@@ -62,10 +62,7 @@ export class EntriesComponent implements OnInit {
     { key: 'Client Name', id: 2 },
     { key: 'Task Description', id: 3 },
     { key: 'Entry Date', id: 4 },
-    { key: 'Start Time', id: 5 },
-    { key: 'End Date', id: 6 },
-    { key: 'End Time', id: 7 },
-    { key: 'Time Spent', id: 8 }
+    { key: 'Time Spent', id: 5 }
   ];
   private limits = [
     { key: 'All Entries', value: 50 },
@@ -303,6 +300,7 @@ export class EntriesComponent implements OnInit {
       billable: row.isBillable
     }).subscribe(
       () => {
+        this.isChecked = true;
         this.loadEntries();
       });
   }
