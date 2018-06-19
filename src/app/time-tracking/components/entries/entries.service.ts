@@ -6,7 +6,6 @@ import { environment } from '../../../../environments/environment';
 import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
 import * as _ from 'lodash';
-import { sscanf } from 'scanf';
 import { sprintf } from 'sprintf-js';
 
 @Injectable()
@@ -190,7 +189,7 @@ export class EntriesService {
       return (self.clientsFilter.indexOf(entryClientId) != -1);
     });
 
-    this.registryService.sidebarComponent.totalTimeSpent = this.calculateTotalTimeSpent(entries);
+    this.registryService.sidebarComponent.totalTimeSpent = this.timeSpentService.calculateTotalTimeSpent(entries);
     return entries;
   }
 
@@ -340,18 +339,6 @@ export class EntriesService {
     });
   }
 
-  public calculateTotalTimeSpent(entries) {
-    let hours = 0;
-    let minutes = 0;
-    entries.forEach(element => {
-      let timeComponents = sscanf(element.timeSpent, "%d:%d");
-      hours += +timeComponents[0];
-      minutes += +timeComponents[1];
-    });
-    let timeSpents = sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
-    return timeSpents;
-  }
-
   sortedProjects() {
     return this.projects.sort(this.propComparator('projectName'));
   }
@@ -397,38 +384,11 @@ export class EntriesService {
     });
   }
 
-
-  // Calcul total time spent of the current Week
-  public totalTimeSpentW(timeSpents) {
-    let hours = 0;
-    let minutes = 0;
-    timeSpents.forEach(element => {
-      let timeComponents = sscanf(element, "%d:%d");
-      hours += +timeComponents[0];
-      minutes += +timeComponents[1];
-    });
-    let result = sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
-    return result;
-  }
-
-  // Calcul total time spent of the current Month
-  public totalTimeSpentMonth(timeSpents) {
-    let hours = 0;
-    let minutes = 0;
-    timeSpents.forEach(element => {
-      let timeComponents = sscanf(element, "%d:%d");
-      hours += +timeComponents[0];
-      minutes += +timeComponents[1];
-    });
-    let result = sprintf("%02d:%02d", hours + Math.round(minutes / 60), minutes % 60);
-    return result;
-  }
-
   displaySidebarData() {
     this.entriesAreLoaded().then(results => {
       this.registryService.sidebarComponent.totalHoursWorkedW = this.totalHoursWorkedWeek(results);
       this.registryService.sidebarComponent.totalHoursWorkedM = this.totalHoursWorkedMonth(results);
-      this.registryService.sidebarComponent.totalTimeSpent = this.calculateTotalTimeSpent(results);
+      this.registryService.sidebarComponent.totalTimeSpent = this.timeSpentService.calculateTotalTimeSpent(results);
     });
   }
 
@@ -441,7 +401,7 @@ export class EntriesService {
         timeSpents.push(element.timeSpent);
       }
     });
-    return this.totalTimeSpentW(timeSpents);
+    return this.timeSpentService.totalTimeSpentW(timeSpents);
   }
 
   totalHoursWorkedMonth(entries) {
@@ -453,7 +413,7 @@ export class EntriesService {
         timeSpents.push(element.timeSpent);
       }
     });
-    return this.totalTimeSpentMonth(timeSpents);
+    return this.timeSpentService.totalTimeSpentMonth(timeSpents);
   }
 
   getCurrentDayWeekMonth() {
