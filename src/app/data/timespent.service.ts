@@ -66,34 +66,26 @@ export class TimespentService {
     let hourTraveltime = 0;
     let minuteTraveltime = 0;
     let realTime = null;
+
+    // Get time spent value
     hourTimespent += +event.target.value.substring(0, 2);
     minuteTimespent += +event.target.value.substring(3, 6);
+
+    // Get travel time value
     if (row.traveltime.value.length < 5) {
       row.traveltime.value = '0' + row.traveltime.value;
     }
     hourTraveltime += +row.traveltime.value.substring(0, 2)
     minuteTraveltime += +row.traveltime.value.substring(3, 6);
-    if (minuteTimespent > minuteTraveltime) {
-      realTime = sprintf("%02d:%02d", hourTimespent - hourTraveltime, minuteTimespent - minuteTraveltime);
-      row.worktime.value = realTime;
+
+    // Compare time spent and travel time minute values
+    if (minuteTimespent < minuteTraveltime && hourTimespent < hourTraveltime) {
+      return;
     }
-    else {
-      if (minuteTimespent > minuteTraveltime) {
-        realTime = sprintf("%02d:%02d", Math.floor((hourTimespent - hourTraveltime) + Math.abs((minuteTimespent + minuteTraveltime) / 60)), minuteTraveltime - (Math.abs((minuteTimespent - minuteTraveltime) % 60)));
-        row.worktime.value = realTime;
-      }
-      else {
-        let minutes = (60 + minuteTimespent) - minuteTraveltime;
-        if (minutes > 59) {
-          realTime = sprintf("%02d:%02d", Math.floor((hourTimespent - hourTraveltime) + Math.abs((minuteTimespent + minuteTraveltime) / 60)), ((60 + minuteTimespent) - minuteTraveltime) % 60);
-          row.worktime.value = realTime;
-        }
-        else {
-          realTime = sprintf("%02d:%02d", Math.floor((hourTimespent - hourTraveltime) - 1), (60 + minuteTimespent) - minuteTraveltime);
-          row.worktime.value = realTime;
-        }
-      }
-    }
+    realTime = (minuteTimespent < minuteTraveltime) ?
+      sprintf("%02d:%02d", hourTimespent - hourTraveltime - 1, 60 + minuteTimespent - minuteTraveltime) :
+      sprintf("%02d:%02d", hourTimespent - hourTraveltime, minuteTimespent - minuteTraveltime);
+    row.worktime.value = realTime;
   }
 
   public calculateTotalTimeSpent(entries) {

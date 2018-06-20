@@ -280,8 +280,15 @@ export class EntriesComponent implements OnInit {
       }
       else {
         this.timespentService.calculateEntryTimeSpent(event, cell, cellValue, row);
-        this.updateEntry(row);
-        this.entriesService.displaySidebarData();
+        var hourWorkTime = 0;
+        hourWorkTime += +row.worktime.value.substring(0, 2)
+        if (hourWorkTime < 0) {
+          row.timeSpent = cellValue;
+        }
+        else {
+          this.updateEntry(row);
+          this.entriesService.displaySidebarData();
+        }
       }
     }
   }
