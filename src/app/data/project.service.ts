@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Input } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { store } from './datastore';
 import { IDataservice, IProject } from '.';
+import { Http } from '@angular/http';
+import { LoginService } from '../login/login.service'
 
 const RESOURCE_NAME: string = 'project';
 const ENDPOINT_NAME: string = 'projects';
@@ -11,7 +13,13 @@ export class ProjectService implements IDataservice {
 
   public baseUrl: string = environment.apiBaseUrl;
 
-  constructor() {
+  public projectsDictionary: any = {}
+  @Input() projects: IProject[] = [];
+
+  constructor(
+    private http: Http,
+    // private loginService: LoginService
+    ) {
     // Define a Mapper for a "Project" resource
     store.defineMapper(RESOURCE_NAME, {
       basePath: this.baseUrl,
@@ -29,14 +37,27 @@ export class ProjectService implements IDataservice {
 
   // ------------------------------------------------------------------------------ CRUD operations
 
-  public getProjects(): Promise<IProject[]> {
-    return store.findAll(RESOURCE_NAME, {}, {
-      force: true, orderBy: [
-        ['id', 'ASC']
-      ]
-    });
-  }
+  public getProjects() {
+    let that = this;
 
+    return new Promise<any>((resolve, reject) => {
+      this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+          results => {
+            this.projects = results;
+
+            results.forEach(function (result) {
+              that.projectsDictionary[result.id] = result;
+            });
+      }, 
+      (err) => {
+          if (err.status === 500) {
+            // this.loginService.logout();
+          }
+        });
+    });
+
+  }
+  
   public getProject(id: number): Promise<IProject> {
     return store.find(RESOURCE_NAME, id);
   }

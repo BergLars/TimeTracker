@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ITimeTrackingEntry, IClient, IProject, ITask, IUser, RegistryService } from '../../../../data';
+import { ITimeTrackingEntry, IClient, IProject, ITask, IUser, RegistryService, TimespentService } from '../../../../data';
 import { LoginService } from '../../../../login';
 import { Http } from '@angular/http';
 import { environment } from '../../../../../environments/environment';
@@ -15,34 +15,64 @@ import { EntriesService } from '../entries.service';
 })
 export class EntryDialogComponent implements OnInit {
   public baseUrl: string = environment.apiBaseUrl;
+  private _mySelectedProject: any;
+  private _mySelectedClient: any;
+  private _mySelectedTask: any;
+  public title: string;
+
   @Input() projects: IProject[] = [];
   @Input() clients: IClient[] = [];
   @Input() tasks: ITask[] = [];
-  public title: string;
-  public description: string;
-  public selectedTaskID: string;
-  @Input() selectedDate: string;
+
+  get selectedProject(): number {
+    return this._mySelectedProject;
+  }
+
+  @Input() 
+  set selectedProject(id: number) {
+    this._mySelectedProject = id;
+  }
+
+  get selectedClient(): number {
+    return this._mySelectedClient;
+  }
+
+  @Input() 
+  set selectedClient(id: number) {
+    this._mySelectedClient = id;
+  }
+
+  get selectedTask(): number {
+    return this._mySelectedTask;
+  }
+
+  @Input() 
+  set selectedTask(id: number) {
+    this._mySelectedTask = id;
+  }
+
+  public rowID: number;
+  @Input() selectedProjectID: any;
+  @Input() selectedTaskID: any;
+  @Input() selectedClientID: any;
+  @Input() startDate: any;
+  @Input() startTime: any;
+  public userprofileID: any;
+  @Input() description: string;
+  @Input() entryDate: any;
+  @Input() endDate: any;
+  @Input() endTime: any;
+  @Input() isBillable: boolean;
+  @Input() workTime: any;
+  @Input() place: any;
+  @Input() travelTime: any;
   @Input() inputSelectedDate: string;
   @Input() selectedStartTime: string;
   public user: IUser;
-  public userprofileID: any;
-  public clientID: any;
-  public projectID: any;
-  public taskID: any;
-  public entryDate: any;
-  public entryEndDate: any;
-  @Input() startTime: any;
-  @Input() endTime: any;
-  public timeSpent: any;
-  public isBillable: boolean = false;
-  public enableTimes: boolean = false;
-  @Input() checkBoxTimes: boolean;
-  @Input() myFilter: any;
+  
   public validTimePeriod: boolean;
   @Input() validDate: boolean = false;
   public validTimeSpentPeriod: boolean;
-  @Input() today = new FormControl(new Date());
-
 
   constructor(
     public dialogRef: MdDialogRef<EntryDialogComponent>,
@@ -50,7 +80,8 @@ export class EntryDialogComponent implements OnInit {
     public loginService: LoginService,
     private dateAdapter: DateAdapter<Date>,
     public registryService: RegistryService,
-    public entriesService: EntriesService
+    public entriesService: EntriesService,
+    public timeSpentService: TimespentService
   ) {
   }
 
@@ -62,83 +93,27 @@ export class EntryDialogComponent implements OnInit {
     this.isBillable = !this.isBillable;
   }
 
-  public checkEnableTimes() {
-    this.enableTimes = !this.enableTimes;
-  }
-
-  public readDate(valueDate: any) {
-    if (valueDate._selected) {
+  public readDate(valueDate: any, valueEndDate: any) {
       let validDate = moment(valueDate._selected).format('L');
+      let validEndDate= moment(valueEndDate._selected).format('L');
       let currentDate = validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
-      this.selectedDate = currentDate;
-    }
-  }
-
-  public getValues(valueDesc: string, valueDate: any, valueInputDate: any, valueStartTime: string, valueEndTime: string, valueTimeSpent: string, valueClientID: string, valueProjectID: number, valueTaskID: number, valueEnableTimes: any, valueIsBillable: any) {
-    this.description = valueDesc;
-    this.selectedDate = valueDate;
-    this.inputSelectedDate = valueInputDate;
-    this.startTime = valueStartTime;
-    this.endTime = valueEndTime;
-    this.timeSpent = valueTimeSpent;
-    this.clientID = valueClientID;
-    this.projectID = valueProjectID;
-    this.taskID = valueTaskID;
-    this.checkBoxTimes = valueEnableTimes.checked;
-    this.isBillable = valueIsBillable.checked;
-    this.validTimePeriod = moment(this.startTime, 'HH:mm').isBefore(moment(this.endTime, 'HH:mm'));
-    this.validTimeSpentPeriod = moment(this.timeSpent, 'HH:mm').isBefore(moment("23:59", 'HH:mm'));
-
-  }
-
-  public readDateOnInputField() {
-    if (this.registryService.dateRequirement.test(this.inputSelectedDate)) {
-      this.validDate = true;
-      this.selectedDate = this.inputSelectedDate;
-    } else {
-      this.validDate = false;
-    }
-  }
-
-  public clientDropdown(value: string): void {
-    this.clientID = value;
-  }
-
-  public projectDropdown(value: string): void {
-    this.projectID = value;
-  }
-
-  public taskDropdown(value: string): void {
-    this.taskID = value;
+      let currentEndDate = validEndDate.substring(3, 5) + "." + validEndDate.substring(0, 2) + "." + validEndDate.substring(6, 10);
+      this.startDate = currentDate;
+      this.endDate = currentEndDate;
   }
 
   public checkMandatoryFields() {
-    if (this.selectedDate === undefined) {
-      this.selectedDate = this.inputSelectedDate;
-    } else {
-      this.inputSelectedDate = this.selectedDate;
-    }
     if (this.loginService.loggedIn()) {
-      if (!this.enableTimes) {
-        if (this.description === "" || this.clientID === null || this.selectedDate === undefined || this.inputSelectedDate === undefined || this.timeSpent === null || this.isBillable === null) {
-          alert("Please check if all the fields are filled in");
-        } else if (this.validDate === false) {
-          alert('Wrong date format!');
-        } else {
-          this.startTime = moment().format('HH:mm');
-          this.decimalToTime(this.timeSpent);
-        }
+      if ((this.startTime === "" && this.endTime === "") || (this.startTime === "00:00" && this.endTime === "00:00") || (this.startTime === undefined && this.endTime === undefined) ) {
+        this.startTime = "00:00";
+        this.endTime = "00:00";
       } else {
-        if (this.description === "" || this.selectedDate === undefined || this.startTime === " " || this.endTime === " " || this.isBillable === null) {
-          alert("Please check if all the fields are filled in");
-        }
-        else if (!this.registryService.timeRequirement.test(this.startTime) || !this.registryService.timeRequirement.test(this.endTime)) {
-          alert('Wrong time format!');
-        } else {
-          this.checkStartAndEndTime();
-          this.timeSpent = this.calculateTimeSpent();
-        }
+        this.workTime = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.startDate, this.endDate);
       }
+      if (this.travelTime === "" || this.travelTime === undefined) {
+        this.travelTime = "00:00";
+      }
+      this.newEntry();
     } else {
       alert("Your token has expired. Please log in again!");
       this.dialogRef.close(true);
@@ -146,90 +121,43 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public checkStartAndEndTime() {
-    let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
+    let endDate = this.startDate.substring(6, 10) + "-" + this.startDate.substring(3, 5) + "-" + this.startDate.substring(0, 2);
     if (this.endTime < this.startTime) {
       let entryEndDate = moment(endDate, 'YYYY-MM-DD').add(1, 'd');
-      this.entryEndDate = moment(entryEndDate).format('YYYY-MM-DD');
+      this.endDate = moment(entryEndDate).format('YYYY-MM-DD');
     } else {
-      this.entryEndDate = moment(endDate).format('YYYY-MM-DD');
+      this.endDate = moment(endDate).format('YYYY-MM-DD');
     }
     this.newEntry();
   }
 
-  public calculateTimeSpent() {
-    let timeSpent: string;
-    let timeSpentH: number;
-    let timeSpentMin: number;
-    let startTimeH: number = parseInt(this.startTime.substring(0, 2));
-    let startTimeMin: number = parseInt(this.startTime.substring(3, 5));
 
-    let endTimeH: number = parseInt(this.endTime.substring(0, 2));
-    let endTimeMin: number = parseInt(this.endTime.substring(3, 5));
-    if (this.validTimePeriod) {
-      if (endTimeMin >= startTimeMin) {
-        timeSpentMin = endTimeMin - startTimeMin;
-        timeSpentH = endTimeH - startTimeH;
-      } else {
-        timeSpentMin = endTimeMin - startTimeMin + 60;
-        timeSpentH = endTimeH - startTimeH - 1;
-      }
-
-      if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
-        timeSpent = '0' + timeSpentH + ':0' + timeSpentMin;
-      } else if ((timeSpentH.toString()).length < 2) {
-        timeSpent = '0' + timeSpentH + ':' + timeSpentMin;
-      } else if ((timeSpentMin.toString()).length < 2) {
-        timeSpent = timeSpentH + ':0' + timeSpentMin;
-      } else {
-        timeSpent = timeSpentH + ':' + timeSpentMin;
-      }
-    } else {
-      if (endTimeMin < startTimeMin) {
-        timeSpentMin = (endTimeMin + 60) - startTimeMin;
-        timeSpentH = (endTimeH + 23) - startTimeH;
-      } else if (endTimeMin === startTimeMin) {
-        timeSpentMin = endTimeMin - startTimeMin;
-        timeSpentH = (endTimeH + 24) - startTimeH;
-      } else {
-        timeSpentH = ((endTimeH + 24) - startTimeH);
-        timeSpentMin = endTimeMin - startTimeMin;
-      } if ((timeSpentH.toString()).length < 2 && (timeSpentMin.toString()).length < 2) {
-        timeSpent = '0' + timeSpentH + ':0' + timeSpentMin;
-      } else if ((timeSpentH.toString()).length < 2) {
-        timeSpent = '0' + timeSpentH + ':' + timeSpentMin;
-      } else if ((timeSpentMin.toString()).length < 2) {
-        timeSpent = timeSpentH + ':0' + timeSpentMin;
-      } else {
-        timeSpent = timeSpentH + ':' + timeSpentMin;
-      }
-    }
-    return timeSpent;
-  }
 
   public keyDownFunction(event) {
     if (event.key == 'Enter') {
-      this.readDateOnInputField();
+      this.readDate(this.startTime, this.endDate);
       this.checkMandatoryFields();
+
     }
   }
 
   public adjustEndDate() {
     if (this.startTime > this.endTime) {
-      let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
-      let hours = Number(this.timeSpent.substring(0, 2)) + Number(this.startTime.substring(0, 2));
-      let minutes = Number(this.timeSpent.substring(3, 6)) + Number(this.startTime.substring(3, 6));
+      let endDate = this.startDate.substring(6, 10) + "-" + this.startDate.substring(3, 5) + "-" + this.startDate.substring(0, 2);
+      let hours = Number(this.workTime.substring(0, 2)) + Number(this.startTime.substring(0, 2));
+      let minutes = Number(this.workTime.substring(3, 6)) + Number(this.startTime.substring(3, 6));
       let hourFromMinutes = Math.floor(minutes / 60);
       let numberOfDays = Math.floor((hours + hourFromMinutes) / 24);
       let entryEndDate = moment(endDate, 'YYYY-MM-DD').add(numberOfDays, 'd');
-      this.entryEndDate = moment(entryEndDate).format('YYYY-MM-DD');
+      this.endDate = moment(entryEndDate).format('YYYY-MM-DD');
     } else {
-      let endDate = this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2);
-      this.entryEndDate = moment(endDate).format('YYYY-MM-DD');
+      let endDate = this.startDate.substring(6, 10) + "-" + this.startDate.substring(3, 5) + "-" + this.startDate.substring(0, 2);
+      this.endDate = moment(endDate).format('YYYY-MM-DD');
     }
   }
 
   public decimalToTime(t: any) {
-    // t is a decimal value
+    // t is a decimal validTimePeriodue
     if (this.isNumeric(t.toString()) === true) {
       if (t >= 0.1) {
         let decimalTime = parseFloat(t);
@@ -243,20 +171,17 @@ export class EntryDialogComponent implements OnInit {
         if (minutes < 10) {
           minutes = "0" + minutes;
         }
-        this.timeSpent = hours + ":" + minutes;
-        let endT = moment() + moment.duration().add(this.timeSpent, 'HH:mm');
+        this.workTime = hours + ":" + minutes;
+        let endT = moment() + moment.duration().add(this.workTime, 'HH:mm');
         this.endTime = moment(endT).format('HH:mm');
-
-        this.adjustEndDate();
         this.newEntry();
       } else {
         alert('Wrong time format !');
       }
     } else if (t.toString().indexOf(':') !== -1) {
-      this.timeSpent = t;
-      let endT = moment() + moment.duration().add(this.timeSpent, 'HH:mm');
+      this.workTime = t;
+      let endT = moment() + moment.duration().add(this.workTime, 'HH:mm');
       this.endTime = moment(endT).format('HH:mm');
-      this.adjustEndDate();
       this.newEntry();
     } else {
       alert('Wrong time format !');
@@ -270,14 +195,17 @@ export class EntryDialogComponent implements OnInit {
 
   public newEntry() {
     return this.http.post(this.baseUrl + "/timeentries", {
-      startDateTime: this.selectedDate.substring(6, 10) + "-" + this.selectedDate.substring(3, 5) + "-" + this.selectedDate.substring(0, 2) + " " + this.startTime,
-      endDateTime: this.entryEndDate + " " + this.endTime,
+      startDateTime: this.startDate.substring(6, 10) + "-" + this.startDate.substring(3, 5) + "-" + this.startDate.substring(0, 2) + " " + this.startTime,
+      endDateTime: this.endDate.substring(6, 10) + "-" + this.endDate.substring(3, 5) + "-" + this.endDate.substring(0, 2) + " " + this.endTime,
       description: this.description.trim(),
       userprofileID: this.loginService.getLoggedUserID(),
-      taskID: this.taskID,
-      clientID: this.clientID,
-      projectID: this.projectID,
-      billable: this.isBillable
+      taskID: this.selectedTask,
+      clientID: this.selectedClient,
+      projectID: this.selectedProject,
+      billable: this.isBillable,
+      traveltime: this.travelTime,
+      place: this.place,
+      worktime: this.workTime
     }).subscribe(
       () => {
         this.dialogRef.close(true);
