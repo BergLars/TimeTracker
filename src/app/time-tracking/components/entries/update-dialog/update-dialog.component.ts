@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
-import { ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService, TimespentService } from '../../../../data';
+import { ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService, TimespentService, RegistryService } from '../../../../data';
 import { environment } from '../../../../../environments/environment';
 import { LoginService } from '../../../../login';
 import { Http } from '@angular/http';
@@ -19,12 +19,12 @@ export class UpdateDialogComponent implements OnInit {
   @Input() projects: IProject[] = [];
   @Input() tasks: ITask[] = [];
   @Input() clients: IClient[] = [];
-  
+
   get selectedProject(): number {
     return this._mySelectedProject;
   }
 
-  @Input() 
+  @Input()
   set selectedProject(id: number) {
     this._mySelectedProject = id;
   }
@@ -33,7 +33,7 @@ export class UpdateDialogComponent implements OnInit {
     return this._mySelectedClient;
   }
 
-  @Input() 
+  @Input()
   set selectedClient(id: number) {
     this._mySelectedClient = id;
   }
@@ -42,7 +42,7 @@ export class UpdateDialogComponent implements OnInit {
     return this._mySelectedTask;
   }
 
-  @Input() 
+  @Input()
   set selectedTask(id: number) {
     this._mySelectedTask = id;
   }
@@ -73,6 +73,7 @@ export class UpdateDialogComponent implements OnInit {
     private http: Http,
     public timeTrackingEntryService: TimeTrackingEntryService,
     public timeSpentService: TimespentService,
+    public registryService: RegistryService,
     private loginService: LoginService) {
   }
 
@@ -92,13 +93,18 @@ export class UpdateDialogComponent implements OnInit {
 
   checkStartAndEndTime() {
     if (this.loginService.loggedIn()) {
-      if ((this.startTime === "" && this.endTime === "") || (this.startTime === "00:00" && this.endTime === "00:00") ) {
+      if ((this.startTime === "" && this.endTime === "") || (this.startTime === "00:00" && this.endTime === "00:00")) {
         this.startTime = "00:00";
         this.endTime = "00:00";
         this.updateEntry();
-      } else {
+      }
+      else if (!(this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime) && this.registryService.timeSpentRequirement.test(this.workTime) && this.registryService.timeRequirement.test(this.travelTime))) {
+        alert("Please check time format");
+      }
+      else {
+        this.workTime = null;
         this.workTime = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.startDate, this.endDate);
-          this.updateEntry();
+        this.updateEntry();
       }
     } else {
       alert("Your token has expired. Please log in again!");
@@ -116,24 +122,30 @@ export class UpdateDialogComponent implements OnInit {
       projectID: this._mySelectedProject,
       taskID: this._mySelectedTask,
       billable: this.isBillable,
-      traveltime: this.travelTime,
+      traveltime: this.timeSpentService.addCorrectTimeFormat(this.travelTime),
       place: this.place,
-      worktime: this.workTime
+      worktime: this.timeSpentService.addCorrectTimeFormat(this.workTime)
     }).subscribe(
-    () => {
-      this.dialogRef.close(true);
-    }, 
-    (err) => {
-      if (err.status === 400 || err.status === 404) {
+      () => {
+        this.dialogRef.close(true);
+      },
+      (err) => {
+        if (err.status === 400 || err.status === 404) {
           alert('Wrong date format or fill all field !');
           return Observable.of(undefined);
         }
         if (err.status === 500) {
           alert('Internal server error !')
         }
-    });
+      });
   }
   public ok() {
     this.checkMandatoryFields();
+  }
+
+  keyDownFunction(event) {
+    if (event.key == 'Enter') {
+      this.ok();
+    }
   }
 }

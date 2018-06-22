@@ -1,33 +1,33 @@
 <h1 md-dialog-title>Edit Entry</h1>
-<div md-dialog-content>
+<div md-dialog-content (keydown)="keyDownFunction($event)">
     <table>
         <tr>
-            <td> 
-                <md-input-container> 
-                <input class="clickable-icon" mdInput placeholder="Description" [(ngModel)]="description">
-                </md-input-container> 
+            <td>
+                <md-input-container>
+                    <input class="clickable-icon" mdInput placeholder="Description" [(ngModel)]="description">
+                </md-input-container>
             </td>
             <td>
-                <md-input-container> 
-                <input class="clickable-icon" mdInput placeholder="Place" [(ngModel)]="place">
-                </md-input-container> 
+                <md-input-container>
+                    <input class="clickable-icon" mdInput placeholder="Place" [(ngModel)]="place">
+                </md-input-container>
             </td>
         </tr>
         <br>
         <tr>
             <td>
                 <md-select #project [(ngModel)]='selectedProject' placeholder="Project">
-                    <md-option *ngFor="let project of projects" [value]='project.id' >{{ project.projectName }}</md-option>
+                    <md-option *ngFor="let project of projects" [value]='project.id'>{{ project.projectName }}</md-option>
                 </md-select>
             </td>
             <td>
-                 <md-select #client [(ngModel)]='selectedClient' placeholder="Client">
-                    <md-option *ngFor="let client of clients" [value]='client.id' >{{ client.clientName }}</md-option>
+                <md-select #client [(ngModel)]='selectedClient' placeholder="Client">
+                    <md-option *ngFor="let client of clients" [value]='client.id'>{{ client.clientName }}</md-option>
                 </md-select>
             </td>
             <td>
-                 <md-select #task [(ngModel)]='selectedTask' placeholder="Task">
-                    <md-option *ngFor="let task of tasks" [value]='task.id' >{{ task.taskDescription }}</md-option>
+                <md-select #task [(ngModel)]='selectedTask' placeholder="Task">
+                    <md-option *ngFor="let task of tasks" [value]='task.id'>{{ task.taskDescription }}</md-option>
                 </md-select>
             </td>
         </tr>
@@ -60,18 +60,20 @@
         <br>
         <tr>
             <td>
-                <md-input-container> 
-                <input class="clickable-icon" mdInput placeholder="Travel time" [(ngModel)]="travelTime">
+                <md-input-container>
+                    <input class="clickable-icon" mdInput placeholder="Travel time" [(ngModel)]="travelTime">
                 </md-input-container>
             </td>
             <td>
-                <md-input-container> 
-                <input class="clickable-icon" mdInput placeholder="Work time" [(ngModel)]="workTime">
+                <md-input-container>
+                    <input class="clickable-icon" mdInput placeholder="Work time" [(ngModel)]="workTime">
                 </md-input-container>
             </td>
         </tr>
         <tr>
-            <td> <md-checkbox [(ngModel)]="isBillable" readonly> is Billable</md-checkbox></td>
+            <td>
+                <md-checkbox [(ngModel)]="isBillable" readonly> is Billable</md-checkbox>
+            </td>
         </tr>
     </table>
     <br>
