@@ -113,7 +113,11 @@ export class EntryDialogComponent implements OnInit {
       if (this.travelTime === "" || this.travelTime === undefined) {
         this.travelTime = "00:00";
       }
-      this.newEntry();
+      if (this.description === "" || this.description === undefined || this.endDate === undefined || this.startDate === undefined || this.selectedProject === undefined || this.selectedClient === undefined || this.selectedTask === undefined)  {
+        alert("Please check if all fields are filled in");
+      } else { 
+        this.newEntry();
+      }
     } else {
       alert("Your token has expired. Please log in again!");
       this.dialogRef.close(true);
@@ -197,7 +201,7 @@ export class EntryDialogComponent implements OnInit {
     return this.http.post(this.baseUrl + "/timeentries", {
       startDateTime: this.startDate.substring(6, 10) + "-" + this.startDate.substring(3, 5) + "-" + this.startDate.substring(0, 2) + " " + this.startTime,
       endDateTime: this.endDate.substring(6, 10) + "-" + this.endDate.substring(3, 5) + "-" + this.endDate.substring(0, 2) + " " + this.endTime,
-      description: this.description.trim(),
+      description: this.description,
       userprofileID: this.loginService.getLoggedUserID(),
       taskID: this.selectedTask,
       clientID: this.selectedClient,
