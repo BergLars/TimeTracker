@@ -107,6 +107,7 @@ export class EntryDialogComponent implements OnInit {
       if ((this.startTime === "" && this.endTime === "") || (this.startTime === "00:00" && this.endTime === "00:00") || (this.startTime === undefined && this.endTime === undefined) ) {
         this.startTime = "00:00";
         this.endTime = "00:00";
+
       } else {
         this.workTime = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.startDate, this.endDate);
       }
@@ -116,7 +117,11 @@ export class EntryDialogComponent implements OnInit {
       if (this.description === "" || this.description === undefined || this.endDate === undefined || this.startDate === undefined || this.selectedProject === undefined || this.selectedClient === undefined || this.selectedTask === undefined)  {
         alert("Please check if all fields are filled in");
       } else { 
+        if (this.workTime === undefined || this.workTime === "") {
+          alert("Check if worktime has a value!");
+        } else {
         this.newEntry();
+        }
       }
     } else {
       alert("Your token has expired. Please log in again!");
@@ -218,7 +223,7 @@ export class EntryDialogComponent implements OnInit {
       },
       (err) => {
         if (err.status === 400 || err.status === 404) {
-          alert('Wrong date format or fill all field !');
+          alert('Check if all fields are filled in!');
           return Observable.of(undefined);
         }
         if (err.status === 500) {
