@@ -367,7 +367,9 @@ export class EntriesComponent implements OnInit {
       .subscribe(res => {
         this.result = res;
         if (this.result) {
+          this.isChecked = true;
           this.loadEntries();
+          this.entriesService.displaySidebarData();
         }
       });
   }

@@ -28,7 +28,7 @@ export class EntryDialogComponent implements OnInit {
     return this._mySelectedProject;
   }
 
-  @Input() 
+  @Input()
   set selectedProject(id: number) {
     this._mySelectedProject = id;
   }
@@ -37,7 +37,7 @@ export class EntryDialogComponent implements OnInit {
     return this._mySelectedClient;
   }
 
-  @Input() 
+  @Input()
   set selectedClient(id: number) {
     this._mySelectedClient = id;
   }
@@ -46,7 +46,7 @@ export class EntryDialogComponent implements OnInit {
     return this._mySelectedTask;
   }
 
-  @Input() 
+  @Input()
   set selectedTask(id: number) {
     this._mySelectedTask = id;
   }
@@ -69,7 +69,7 @@ export class EntryDialogComponent implements OnInit {
   @Input() inputSelectedDate: string;
   @Input() selectedStartTime: string;
   public user: IUser;
-  
+
   public validTimePeriod: boolean;
   @Input() validDate: boolean = false;
   public validTimeSpentPeriod: boolean;
@@ -94,17 +94,17 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public readDate(valueDate: any, valueEndDate: any) {
-      let validDate = moment(valueDate._selected).format('L');
-      let validEndDate= moment(valueEndDate._selected).format('L');
-      let currentDate = validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
-      let currentEndDate = validEndDate.substring(3, 5) + "." + validEndDate.substring(0, 2) + "." + validEndDate.substring(6, 10);
-      this.startDate = currentDate;
-      this.endDate = currentEndDate;
+    let validDate = moment(valueDate._selected).format('L');
+    let validEndDate = moment(valueEndDate._selected).format('L');
+    let currentDate = validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
+    let currentEndDate = validEndDate.substring(3, 5) + "." + validEndDate.substring(0, 2) + "." + validEndDate.substring(6, 10);
+    this.startDate = currentDate;
+    this.endDate = currentEndDate;
   }
 
   public checkMandatoryFields() {
     if (this.loginService.loggedIn()) {
-      if ((this.startTime === "" && this.endTime === "") || (this.startTime === "00:00" && this.endTime === "00:00") || (this.startTime === undefined && this.endTime === undefined) ) {
+      if ((this.startTime === "" && this.endTime === "") || (this.startTime === "00:00" && this.endTime === "00:00") || (this.startTime === undefined && this.endTime === undefined)) {
         this.startTime = "00:00";
         this.endTime = "00:00";
       } else {
