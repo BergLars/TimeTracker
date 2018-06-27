@@ -8,6 +8,7 @@ import moment from 'moment/src/moment';
 import { Observable } from 'rxjs/Rx';
 import { MdDialogRef, MdDatepickerModule, DateAdapter } from '@angular/material';
 import { EntriesService } from '../entries.service';
+import { format } from 'path';
 
 @Component({
   selector: 'app-entry-dialog',
@@ -59,14 +60,14 @@ export class EntryDialogComponent implements OnInit {
   @Input() startTime: any;
   public userprofileID: any;
   @Input() description: string;
-  @Input() entryDate: any;
   @Input() endDate: any;
   @Input() endTime: any;
   @Input() isBillable: boolean;
   @Input() workTime: any;
   @Input() place: any;
   @Input() travelTime: any;
-  @Input() inputSelectedDate: string;
+  @Input() selectedDate: string;
+  @Input() selectedEndDate: string;
   @Input() selectedStartTime: string;
   public user: IUser;
 
@@ -94,39 +95,59 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public readDate(valueDate: any, valueEndDate: any) {
-    let validDate = moment(valueDate._selected).format('L');
-    let validEndDate = moment(valueEndDate._selected).format('L');
-    let currentDate = validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
-    let currentEndDate = validEndDate.substring(3, 5) + "." + validEndDate.substring(0, 2) + "." + validEndDate.substring(6, 10);
-    this.startDate = currentDate;
-    this.endDate = currentEndDate;
+    let validDate = moment(valueDate).format('DD.MM.YYYY');
+    let validEndDate = moment(valueEndDate).format('DD.MM.YYYY');
+    this.startDate = validDate;
+    this.endDate = validEndDate;
+    this.selectedDate = validDate;
+    this.selectedEndDate = validEndDate;
   }
 
   public checkMandatoryFields() {
     if (this.loginService.loggedIn()) {
-      if ((this.startTime === "" && this.endTime === "") || (this.startTime === "00:00" && this.endTime === "00:00") || (this.startTime === undefined && this.endTime === undefined)) {
-        this.startTime = "00:00";
-        this.endTime = "00:00";
-
-      } else {
-        this.workTime = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.startDate, this.endDate);
-      }
-      if (this.travelTime === "" || this.travelTime === undefined) {
-        this.travelTime = "00:00";
-      }
-      if (this.description === "" || this.description === undefined || this.endDate === undefined || this.startDate === undefined || this.selectedProject === undefined || this.selectedClient === undefined || this.selectedTask === undefined)  {
+      if (this.description === "" || this.description === undefined || this.endDate === undefined || this.startDate === undefined || this.selectedProject === undefined || this.selectedClient === undefined || this.selectedTask === undefined) {
         alert("Please check if all fields are filled in");
-      } else { 
-        if (this.workTime === undefined || this.workTime === "") {
-          alert("Check if worktime has a value!");
-        } else {
-        this.newEntry();
+        this.startDate = '';
+        this.endDate = '';
+      }
+      else if ((this.registryService.dateRequirement.test(this.selectedDate) && this.registryService.dateRequirement.test(this.selectedEndDate)) !== true) {
+        alert("Please check date format");
+      }
+      else if (((this.workTime === undefined && (this.startTime === undefined || this.endTime === undefined))) === true) {
+        alert("Check if woktime or start and end time are filled!");
+      }
+      else {
+        if (this.travelTime === "" || this.travelTime === undefined) {
+          this.travelTime = "00:00";
+        }
+        if (this.registryService.timeSpentRequirement.test(this.travelTime) === false) {
+          alert('Wrong travel time format');
+        }
+        if (this.startTime === undefined || this.endTime === undefined) {
+          this.startTime = "00:00";
+          this.endTime = "00:00";
+          return this.registryService.timeSpentRequirement.test(this.workTime) === false ? alert('Wrong work time format') : this.createEntryWithWorkTime();
+        }
+        if (this.workTime === undefined) {
+          return (this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime)) === false ? alert('Wrong start or end time format') : this.createEntryWithStartAndEndTime();
         }
       }
     } else {
       alert("Your token has expired. Please log in again!");
       this.dialogRef.close(true);
     }
+  }
+
+  createEntryWithStartAndEndTime() {
+    var timespent = null;
+    timespent = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.travelTime);
+    this.workTime = this.timeSpentService.calculateWorktime(timespent, this.travelTime);
+    return this.newEntry();
+  }
+
+  createEntryWithWorkTime() {
+    this.workTime = this.workTime;
+    return this.newEntry();
   }
 
   public checkStartAndEndTime() {
@@ -140,13 +161,10 @@ export class EntryDialogComponent implements OnInit {
     this.newEntry();
   }
 
-
-
   public keyDownFunction(event) {
     if (event.key == 'Enter') {
-      this.readDate(this.startTime, this.endDate);
+      this.readDate(this.startDate, this.endDate);
       this.checkMandatoryFields();
-
     }
   }
 

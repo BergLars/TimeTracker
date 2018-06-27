@@ -93,7 +93,7 @@ export class UpdateDialogComponent implements OnInit {
 
   checkStartAndEndTime() {
     if (this.loginService.loggedIn()) {
-      if ((this.startTime === "" && this.endTime === "") || (this.startTime === "00:00" && this.endTime === "00:00")) {
+      if (this.startTime === "" && this.endTime === "") {
         this.startTime = "00:00";
         this.endTime = "00:00";
         this.updateEntry();
@@ -103,7 +103,8 @@ export class UpdateDialogComponent implements OnInit {
       }
       else {
         this.workTime = null;
-        this.workTime = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.startDate, this.endDate);
+        var timespent = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.travelTime);
+        this.workTime = this.timeSpentService.calculateWorktime(timespent, this.travelTime);
         this.updateEntry();
       }
     } else {
