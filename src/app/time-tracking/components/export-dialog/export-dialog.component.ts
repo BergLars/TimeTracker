@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MdDialogRef, MdDatepickerModule, DateAdapter, MdDateFormats } from '@angular/material';
-import { IUser, RegistryService } from '../../../data';
+import { IUser, RegistryService, DatesService } from '../../../data';
 import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
 import { environment } from '../../../../environments/environment';
@@ -38,31 +38,28 @@ export class ExportDialogComponent implements OnInit {
 		public http: Http,
 		public entriesService: EntriesService,
 		public dateAdapter: DateAdapter<Date>,
-		public registryService: RegistryService) {
+		public registryService: RegistryService,
+		public datesService: DatesService) {
 	}
 
 	ngOnInit() {
 		this.loadUsers();
 	}
 
-	public checkIfAdmin() {
-		return this.loginService.isAdmin();
-	}
-
 	public currentUserID(value: number): void {
 		this.userID = value;
 	}
 
+	public checkIfAdmin() {
+		return this.loginService.isAdmin();
+	}
+
 	public readDates(valueFrom: any, valueTo: any) {
 		if (valueFrom._selected) {
-			let validDate = moment(valueFrom._selected).format('L');
-			let currentDate = validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
-			this.fromDate = currentDate;
+			this.fromDate = this.datesService.currentDateValue(valueFrom);
 		}
 		if (valueTo._selected) {
-			let validDate = moment(valueTo._selected).format('L');
-			let currentDate = validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
-			this.toDate = currentDate;
+			this.fromDate = this.datesService.currentDateValue(valueTo);
 		}
 	}
 
@@ -73,26 +70,21 @@ export class ExportDialogComponent implements OnInit {
 		this.inputToDate = valueInputToDate.trim();
 		let fromDate = this.inputFromDate.substring(6, 10) + "-" + this.inputFromDate.substring(3, 5) + "-" + this.inputFromDate.substring(0, 2);
 		let toDate = this.inputToDate.substring(6, 10) + "-" + this.inputToDate.substring(3, 5) + "-" + this.inputToDate.substring(0, 2);
-		this.validDatePeriod = moment(toDate, 'YYYY-MM-DD').isBefore(moment(fromDate, 'YYYY-MM-DD'));
+		this.validDatePeriod = this.datesService.isValidDatePeriod(toDate, fromDate);
 	}
 
 	public readDatesOnInputField() {
-		if (this.registryService.dateRequirement.test(this.inputFromDate) && this.registryService.dateRequirement.test(this.inputToDate)) {
-			this.validDate = true;
-		}
-		else {
-			this.validDate = false;
-		}
+		this.validDate = this.datesService.isValidDate(this.inputFromDate, this.inputToDate);
 	}
 
 	public checkMandatoryFields() {
-		if (this.inputFromDate === undefined || this.inputToDate === undefined) {
+		if (this.inputFromDate === undefined || this.inputToDate === undefined || this.inputFromDate === '' || this.inputToDate === '') {
 			alert("Please check if all the fields are filled in");
 		}
-		else if (this.validDate === false) {
+		else if (!this.validDate) {
 			alert("Wrong date format !");
 		}
-		else if (this.validDatePeriod) {
+		else if (!this.validDatePeriod) {
 			alert("Please a valid Period");
 		}
 		else {
@@ -147,7 +139,7 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	public exportEntries() {
-		if (this.checkIfAdmin()) {
+		if (this.loginService.isAdmin()) {
 			if (this.userID === 'all')
 				this.refreshExportAllURL();
 			this.refreshExportURL(this.userID);

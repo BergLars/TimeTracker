@@ -7,7 +7,7 @@ import { MaterialModule, MdNativeDateModule, DateAdapter } from '@angular/materi
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
-import { ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService, RegistryService, TimespentService } from './data';
+import { ProjectService, TaskService, TimeTrackingEntryService, UserService, ClientService, RegistryService, TimespentService, DatesService } from './data';
 import {
     SidebarComponent,
     EntriesComponent,
@@ -96,6 +96,7 @@ import { DeleteUserService } from './menu/components/delete-user/delete-user.ser
         TimespentService,
         DeleteUserService,
         UpdateDialogService,
+        DatesService,
         {
             provide: Http,
             useFactory: httpFactory,
