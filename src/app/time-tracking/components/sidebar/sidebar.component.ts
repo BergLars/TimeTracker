@@ -12,7 +12,6 @@ import { elementAt } from 'rxjs/operator/elementAt';
 export class SidebarComponent implements OnInit {
   @Input() items: ITimeTrackingEntry[] = [];
 
-  @Input() totalAvailableVacationDays: any;
   @Input() totalTimeSpent: any;
   public total: string;
   @Input() totalHoursWorkedW: any;
