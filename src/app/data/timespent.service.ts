@@ -151,4 +151,8 @@ export class TimespentService {
       sprintf("%02d:%02d", totalHours + Math.abs(totalMinutes / 60), totalMinutes % 60) :
       sprintf("%02d:%02d", totalHours, totalMinutes);
   }
+
+  isValidTimePeriod(starttime, endtime) {
+    return moment(starttime, 'HH:mm').isSameOrBefore(moment(endtime, 'HH:mm'));;
+  }
 }

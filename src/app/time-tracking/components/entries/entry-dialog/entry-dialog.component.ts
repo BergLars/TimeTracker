@@ -68,7 +68,7 @@ export class EntryDialogComponent implements OnInit {
   @Input() isBillable: boolean = false;
   public user: IUser;
 
-  public validTimePeriod: boolean;
+  public validTimePeriod: boolean = false;
   @Input() validDate: boolean = false;
   public validDatePeriod: boolean;
 
@@ -80,8 +80,7 @@ export class EntryDialogComponent implements OnInit {
     public registryService: RegistryService,
     public entriesService: EntriesService,
     public timeSpentService: TimespentService,
-    public datesService: DatesService
-  ) {
+    public datesService: DatesService) {
   }
 
   ngOnInit() {
@@ -104,9 +103,8 @@ export class EntryDialogComponent implements OnInit {
     this.travelTime = valueTravelTime;
     this.workTime = valueWorkTime;
     this.isBillable = valueIsBillable.checked;
-    let fromDate = this.inputFromDate.substring(6, 10) + "-" + this.inputFromDate.substring(3, 5) + "-" + this.inputFromDate.substring(0, 2);
-    let toDate = this.inputToDate.substring(6, 10) + "-" + this.inputToDate.substring(3, 5) + "-" + this.inputToDate.substring(0, 2);
-    this.validDatePeriod = this.datesService.isValidDatePeriod(toDate, fromDate);
+    this.validDatePeriod = this.datesService.isValidDatePeriod(this.inputFromDate, this.inputToDate);
+    this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime);
   }
 
   public readDates(valueFrom: any, valueTo: any) {
@@ -152,14 +150,19 @@ export class EntryDialogComponent implements OnInit {
           return (this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime)) === false ? alert('Wrong start or end time format') : this.createEntryWithStartAndEndTime();
         }
         else {
-          var r = confirm('Clicking on "OK" you will take the worktime value');
-          if (r === true) {
-            this.startTime = "00:00";
-            this.endTime = "00:00";
-            return this.createEntryWithWorkTime();
+          if ((this.validDatePeriod && !this.validTimePeriod) === true) {
+            alert("Invalid times Period!");
           }
           else {
-            return this.createEntryWithStartAndEndTime();
+            var r = confirm('Clicking on OK you will take the worktime value');
+            if (r === true) {
+              this.startTime = "00:00";
+              this.endTime = "00:00";
+              return this.createEntryWithWorkTime();
+            }
+            else {
+              return this.createEntryWithStartAndEndTime();
+            }
           }
         }
       }
@@ -179,17 +182,6 @@ export class EntryDialogComponent implements OnInit {
   createEntryWithWorkTime() {
     this.workTime = this.workTime;
     return this.newEntry();
-  }
-
-  public checkStartAndEndTime() {
-    let toDate = this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2);
-    if (this.endTime < this.startTime) {
-      let entryEndDate = moment(toDate, 'YYYY-MM-DD').add(1, 'd');
-      this.toDate = moment(entryEndDate).format('YYYY-MM-DD');
-    } else {
-      this.toDate = moment(toDate).format('YYYY-MM-DD');
-    }
-    this.newEntry();
   }
 
   keyDownFunction(event) {
