@@ -37,7 +37,7 @@ export class UpdateDialogService {
         updateDialogComponent.endTime = row.endTime;
         updateDialogComponent.workTime = this.timeSpentService.addCorrectTimeFormat(row.worktime.value);
         updateDialogComponent.travelTime = this.timeSpentService.addCorrectTimeFormat(row.traveltime.value);
-        updateDialogComponent.isBillable = row.isBillable;
+        updateDialogComponent.isBillable = row.billable;
         updateDialogComponent.place = row.place;
         updateDialogComponent.projects = projects;
         updateDialogComponent.tasks = tasks;
