@@ -22,4 +22,12 @@ export class DatesService {
     toDate = toDate.substring(6, 10) + "-" + toDate.substring(3, 5) + "-" + toDate.substring(0, 2);
     return moment(fromDate, 'YYYY-MM-DD').isSameOrBefore(moment(toDate, 'YYYY-MM-DD'));;
   }
+
+  public convertDaysToHours(fromDate, toDate) {
+    var fromDateDay = +fromDate.substring(0, 2);
+    var toDateDay = +toDate.substring(0, 2);
+    var numberOfdays = toDateDay - fromDateDay;
+    var numberOfHours = numberOfdays * 24;
+    return numberOfHours;
+  }
 }

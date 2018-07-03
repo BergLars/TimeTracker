@@ -129,7 +129,10 @@ export class EntryDialogComponent implements OnInit {
         alert("Please check date format");
       }
       else if (this.validDatePeriod === false) {
-        alert("Invalid dates Period!");
+        alert("Invalid date Period!");
+      }
+      else if (this.fromDate === this.toDate && this.validTimePeriod === false) {
+        alert("Invalid time Period!");
       }
       else if (((this.workTime === '' && (this.startTime === '' || this.endTime === ''))) === true) {
         alert("Check if woktime or start and end time are filled!");
@@ -150,19 +153,14 @@ export class EntryDialogComponent implements OnInit {
           return (this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime)) === false ? alert('Wrong start or end time format') : this.createEntryWithStartAndEndTime();
         }
         else {
-          if ((this.validDatePeriod && !this.validTimePeriod) === true) {
-            alert("Invalid times Period!");
+          var r = confirm('Clicking on OK you will take the worktime value');
+          if (r === true) {
+            this.startTime = "00:00";
+            this.endTime = "00:00";
+            this.createEntryWithWorkTime();
           }
           else {
-            var r = confirm('Clicking on OK you will take the worktime value');
-            if (r === true) {
-              this.startTime = "00:00";
-              this.endTime = "00:00";
-              return this.createEntryWithWorkTime();
-            }
-            else {
-              return this.createEntryWithStartAndEndTime();
-            }
+            this.createEntryWithStartAndEndTime();
           }
         }
       }
@@ -173,9 +171,8 @@ export class EntryDialogComponent implements OnInit {
   }
 
   createEntryWithStartAndEndTime() {
-    var timespent = null;
-    timespent = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.travelTime);
-    this.workTime = this.timeSpentService.calculateWorktime(timespent, this.travelTime);
+    var timespent = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.travelTime);
+    this.workTime = this.timeSpentService.calculateWorktimeBetweenDates(this.datesService.convertDaysToHours(this.fromDate, this.toDate), this.startTime, this.endTime);
     return this.newEntry();
   }
 
