@@ -155,8 +155,6 @@ export class EntryDialogComponent implements OnInit {
         else {
           var r = confirm('Clicking on OK you will take the worktime value');
           if (r === true) {
-            this.startTime = "00:00";
-            this.endTime = "00:00";
             this.createEntryWithWorkTime();
           }
           else {
@@ -171,7 +169,7 @@ export class EntryDialogComponent implements OnInit {
   }
 
   createEntryWithStartAndEndTime() {
-    var timespent = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.travelTime);
+    // var timespent = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.travelTime);
     this.workTime = this.timeSpentService.calculateWorktimeBetweenDates(this.datesService.convertDaysToHours(this.fromDate, this.toDate), this.startTime, this.endTime);
     return this.newEntry();
   }

@@ -95,9 +95,8 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   createEntryWithStartAndEndTime() {
-    var timespent = null;
-    timespent = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.travelTime);
-    this.workTime = this.timeSpentService.calculateWorktime(timespent, this.travelTime);
+    // var timespent = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.travelTime);
+    this.workTime = this.timeSpentService.calculateWorktimeBetweenDates(this.datesService.convertDaysToHours(this.fromDate, this.toDate), this.startTime, this.endTime);
     return this.updateEntry();
   }
 
@@ -110,32 +109,24 @@ export class UpdateDialogComponent implements OnInit {
     if (this.loginService.loggedIn()) {
       this.validDatePeriod = this.datesService.isValidDatePeriod(this.fromDate, this.toDate);
       this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime);
-      if (this.startTime === "" && this.endTime === "") {
-        this.startTime = "00:00";
-        this.endTime = "00:00";
-        this.updateEntry();
-      }
-      else if (this.validDatePeriod === false) {
+      if (this.validDatePeriod === false) {
         alert("Invalid dates Period!");
+      }
+      else if (this.fromDate === this.toDate && this.validTimePeriod === false) {
+        alert("Invalid time Period!");
       }
       else if ((this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime) && this.registryService.timeSpentRequirement.test(this.workTime) && this.registryService.timeRequirement.test(this.travelTime)) === false) {
         alert("Please check time format");
       }
       else {
-        if ((this.validDatePeriod && !this.validTimePeriod) === true) {
-          alert("Invalid times Period!");
+        var r = confirm('Clicking on OK you will take the worktime value');
+        if (r === true) {
+          this.startTime = "00:00";
+          this.endTime = "00:00";
+          this.createEntryWithWorkTime();
         }
         else {
-          var r = confirm('Clicking on OK you will take the worktime value');
-          if (r === true) {
-            this.startTime = '00:00';
-            this.endTime = '00:00';
-            this.workTime = this.workTime;
-            this.updateEntry();
-          }
-          else {
-            return this.createEntryWithStartAndEndTime();
-          }
+          this.createEntryWithStartAndEndTime();
         }
       }
     } else {
