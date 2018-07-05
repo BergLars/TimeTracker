@@ -27,7 +27,6 @@ export class CreateDialogComponent implements OnInit {
 	public username: string;
 	public password: string;
 	public confirmPassword: string;
-	public employmentDegree: number;
 	public adminRole: boolean;
 	editMode: boolean = false;
 	public TASK: number = 1;
