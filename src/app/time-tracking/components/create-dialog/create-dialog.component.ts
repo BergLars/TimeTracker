@@ -184,22 +184,22 @@ export class CreateDialogComponent implements OnInit {
 					admin: this.adminRole
 				}).map(res => res.json())
 				.subscribe(
-				(data) => {
-					this.dialogRef.close(true);
-					this.registryService.entriesComponent.loadEntries();
-					this.openSnackBar('User ' + this.username.toUpperCase(), 'created !');
-				},
-				(error) => {
-					if (error.status === 400 || error.status === 404) {
-						alert('Please check that all fields have the correct input !');
-					}
-					if (error.status === 409) {
-						alert('User already exists !');
-					}
-					if (error.status === 500) {
-						alert('Internal server error !')
-					}
-				});
+					(data) => {
+						this.dialogRef.close(true);
+						this.registryService.entriesComponent.loadEntries();
+						this.openSnackBar('User ' + this.username.toUpperCase(), 'created !');
+					},
+					(error) => {
+						if (error.status === 400 || error.status === 404) {
+							alert('Please check that all fields have the correct input !');
+						}
+						if (error.status === 409) {
+							alert('User already exists !');
+						}
+						if (error.status === 500) {
+							alert('Internal server error !')
+						}
+					});
 		}
 	}
 

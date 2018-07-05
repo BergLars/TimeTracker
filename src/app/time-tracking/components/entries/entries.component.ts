@@ -14,6 +14,7 @@ import { window } from 'rxjs/operator/window';
 import * as _ from 'lodash';
 import { sscanf } from 'scanf';
 import { sprintf } from 'sprintf-js';
+import { LoginService } from '../../../login';
 
 @Component({
   selector: 'app-entries',
@@ -92,6 +93,7 @@ export class EntriesComponent implements OnInit {
   @Input() term: any;
   isValid: boolean = false;
   isChecked = false;
+  public isAdmin: boolean = false;
 
   constructor(
     private entryDialogService: EntryDialogService,
@@ -103,14 +105,17 @@ export class EntriesComponent implements OnInit {
     public updateService: UpdateDialogService,
     public entriesService: EntriesService,
     private elementRef: ElementRef,
+    public loginService: LoginService,
     private timespentService: TimespentService) {
     this.registryService.entriesComponent = this;
     this.loadValuePerdefault();
-    this.loadEntries();
+    this.entriesService.allEntriesAreLoaded();
   }
 
   ngOnInit() {
     this.defaultItem = this.createItems[0].key;
+    this.isAdmin = this.loginService.isAdmin();
+    this.loadEntries();
     this.updateFilterSelection();
   }
 
@@ -411,6 +416,28 @@ export class EntriesComponent implements OnInit {
    * Load entries per default
    */
   loadEntries() {
+    return this.isAdmin ? this.loadAllEntries() : this.loadMyEntries();
+  }
+
+  loadAllEntries() {
+    this.entriesService.allEntriesAreLoaded().then(() => {
+      this.clients = this.entriesService.sortedClients();
+      this.projects = this.entriesService.sortedProjects();
+      this.tasks = this.entriesService.sortedTasks();
+      this.selectedProjects[0] = -1;
+      this.selectedTasks[0] = -1;
+      this.selectedClients[0] = -1;
+
+      if (!this.isChecked) {
+        this.projectsSelectedPerDefault();
+        this.tasksSelectedPerDefault();
+        this.clientsSelectedPerDefault();
+      }
+      this.refreshDatatable();
+    });
+  }
+
+  loadMyEntries() {
     this.entriesService.entriesAreLoaded().then(() => {
       this.clients = this.entriesService.sortedClients();
       this.projects = this.entriesService.sortedProjects();

@@ -252,7 +252,70 @@ export class EntriesService {
                     loadedEntries => {
                       var items = [];
                       var count = 0;
-                      var descriptionsDictionary = [];
+
+                      loadedEntries.forEach(function (entry) {
+                        entry.task = that.tasksDictionary[entry.taskID];
+                        entry.client = that.clientsDictionary[entry.clientID];
+                        entry.project = that.projectsDictionary[entry.projectID];
+                        entry.projectName = entry.project.projectName;
+                        entry.taskDescription = entry.task.taskDescription;
+                        entry.clientName = entry.client.clientName;
+                        entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
+                        entry.startTime = entry.startDateTime.substring(11, 16);
+                        entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
+                        entry.endTime = entry.endDateTime.substring(11, 16);
+                        items.push(entry);
+                      });
+                      this.timeSpentService.calculateEntriesTimeSpent(items);
+                      this.setColor(items);
+                      EntriesService.clonedEntries = items;
+
+                      resolve(items);
+                    });
+                });
+            });
+        },
+        (err) => {
+          if (err.status === 500) {
+            this.loginService.logout();
+          }
+        });
+    });
+  }
+
+  allEntriesAreLoaded(): Promise<any> {
+    let that = this;
+
+    return new Promise<any>((resolve, reject) => {
+      this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
+        results => {
+          this.clients = results;
+
+          results.forEach(function (result) {
+            that.clientsDictionary[result.id] = result;
+          });
+
+          this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
+            results => {
+              this.projects = results;
+
+              results.forEach(function (result) {
+                that.projectsDictionary[result.id] = result;
+              });
+
+              // We build the dictionary of tasks
+              this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
+                results => {
+                  this.tasks = results;
+
+                  results.forEach(function (result) {
+                    that.tasksDictionary[result.id] = result;
+                  });
+
+                  this.http.get(this.baseUrl + "/timeentries/all").map(res => res.json()).subscribe(
+                    loadedEntries => {
+                      var items = [];
+                      var count = 0;
 
                       loadedEntries.forEach(function (entry) {
                         entry.task = that.tasksDictionary[entry.taskID];
