@@ -27,7 +27,6 @@ export class CreateDialogComponent implements OnInit {
 	public username: string;
 	public password: string;
 	public confirmPassword: string;
-	public employmentDegree: number;
 	public adminRole: boolean;
 	editMode: boolean = false;
 	public TASK: number = 1;
@@ -67,14 +66,13 @@ export class CreateDialogComponent implements OnInit {
 		this.editMode = !this.editMode;
 	}
 
-	public validateForm(valueDesc: string, valueProjName: string, valueClient: string, valueUsername: string, valuePassw: string, valueConfirmPass: string, valueEmploy: number, valueIsAdmin: any) {
+	public validateForm(valueDesc: string, valueProjName: string, valueClient: string, valueUsername: string, valuePassw: string, valueConfirmPass: string, valueIsAdmin: any) {
 		this.newTaskDescription = valueDesc;
 		this.newProjectName = valueProjName;
 		this.newClientName = valueClient;
 		this.username = valueUsername;
 		this.password = valuePassw;
 		this.confirmPassword = valueConfirmPass;
-		this.employmentDegree = valueEmploy;
 		this.adminRole = valueIsAdmin.checked;
 	}
 
@@ -99,7 +97,7 @@ export class CreateDialogComponent implements OnInit {
 					this.createItem();
 				}
 			} else if (this.item == this.USER) {
-				if (this.username === "" || this.password === "" || this.confirmPassword === "" || this.employmentDegree === undefined || this.adminRole === undefined) {
+				if (this.username === "" || this.password === "" || this.confirmPassword === "" || this.adminRole === undefined) {
 					alert("Please check if all the fields are filled in");
 				}
 				else if (this.password.length < 8) {
@@ -107,9 +105,6 @@ export class CreateDialogComponent implements OnInit {
 				}
 				else if (this.password !== this.confirmPassword) {
 					alert("Passwords are not the same !")
-				}
-				else if (!(this.employmentDegree <= 1 && this.employmentDegree >= 0.10)) {
-					alert("See employment degree requirement !");
 				}
 				else {
 					this.createItem();
@@ -180,7 +175,6 @@ export class CreateDialogComponent implements OnInit {
 				{
 					userName: this.username.trim(),
 					password: encodeURIComponent(this.password.trim()),
-					employmentDegree: this.employmentDegree,
 					admin: this.adminRole
 				}).map(res => res.json())
 				.subscribe(
