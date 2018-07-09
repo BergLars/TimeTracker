@@ -12,7 +12,6 @@ import { elementAt } from 'rxjs/operator/elementAt';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { window } from 'rxjs/operator/window';
 import * as _ from 'lodash';
-import { sscanf } from 'scanf';
 import { sprintf } from 'sprintf-js';
 
 @Component({
@@ -92,6 +91,7 @@ export class EntriesComponent implements OnInit {
   @Input() term: any;
   isValid: boolean = false;
   isChecked = false;
+  public sscanf = require('scanf');
 
   constructor(
     private entryDialogService: EntryDialogService,
@@ -126,7 +126,7 @@ export class EntriesComponent implements OnInit {
       if (_.includes(this.term, exp)) {
         let day, month, year;
         day = this.term.substring(0, 2);
-        let date = sscanf(this.term, '%d.%d.%d');
+        let date = this.sscanf(this.term, '%d.%d.%d');
         if (day === '09') {
           day = '9';
           date[0] = day;
