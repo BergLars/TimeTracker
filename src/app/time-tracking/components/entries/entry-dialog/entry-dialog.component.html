@@ -1,15 +1,23 @@
 <h1 md-dialog-title>{{ title }}</h1>
-<div md-dialog-content class="hide-dialog-scrollbar" (keydown)="keyDownFunction($event);">
+<label>
+  <em>Put start time and End time OR work time</em>
+  <br>
+  <em>Date format: dd.mm.2yyy</em>
+  <br>
+  <em>Hour format: hh:mm</em>
+</label>
+<div md-dialog-content class="hide-dialog-scrollbar" (keydown)="readData(inputDescription.value, inputPlace.value, fromDate.value, inputFromDate.value, toDate.value, inputToDate.value, inputStartTime.value, inputEndTime.value, inputTravelTime.value, inputWorkTime.value, billable);readDatesOnInputField();readDates(fromDate,toDate);keyDownFunction($event);">
+  <br>
   <table>
     <tr>
       <td>
         <md-input-container>
-          <input class="clickable-icon" mdInput placeholder="Description" [(ngModel)]="description">
+          <input class="clickable-icon" #inputDescription mdInput placeholder="Description" [(ngModel)]="description">
         </md-input-container>
       </td>
       <td>
         <md-input-container>
-          <input class="clickable-icon" mdInput placeholder="Place" [(ngModel)]="place">
+          <input class="clickable-icon" #inputPlace mdInput placeholder="Place" [(ngModel)]="place">
         </md-input-container>
       </td>
     </tr>
@@ -18,33 +26,32 @@
       <td>
         <md-select #project [(ngModel)]='selectedProject' placeholder="Project">
           <md-option *ngFor="let project of projects" [value]='project.id'> {{ project.projectName }} </md-option>
-        </md-select>
+        </md-select>*
       </td>
       <td>
         <md-select #client [(ngModel)]='selectedClient' placeholder="Client">
           <md-option *ngFor="let client of clients" [value]='client.id'> {{ client.clientName }} </md-option>
-        </md-select>
+        </md-select>*
       </td>
       <td>
         <md-select #task [(ngModel)]='selectedTask' placeholder="Task">
           <md-option *ngFor="let task of tasks" [value]='task.id'> {{ task.taskDescription }}</md-option>
-        </md-select>
+        </md-select>*
       </td>
     </tr>
-    <br>
     <br>
     <tr>
       <td>
         <md-input-container>
-          <input mdInput placeholder="Start Date" #startdate [mdDatepicker]="selectedDate" [(ngModel)]="startDate">
-          <button mdSuffix [mdDatepickerToggle]="selectedDate"></button>
-          <md-datepicker #selectedDate></md-datepicker>
+          <input mdInput placeholder="Start Date" #inputFromDate [mdDatepicker]="fromDate" id="inputFromDate">
+          <button mdSuffix [mdDatepickerToggle]="fromDate"></button>
         </md-input-container>
+        <md-datepicker #fromDate></md-datepicker>*
       </td>
       <td>
         &nbsp;
         <md-input-container>
-          <input mdInput placeholder="Start Time" #starttime [(ngModel)]="startTime">
+          <input mdInput #inputStartTime placeholder="Start Time" [(ngModel)]="startTime">
         </md-input-container>
       </td>
     </tr>
@@ -52,15 +59,15 @@
     <tr>
       <td>
         <md-input-container>
-          <input mdInput placeholder="End Date" #enddate [mdDatepicker]="selectedEndDate" [(ngModel)]="endDate">
-          <button mdSuffix [mdDatepickerToggle]="selectedEndDate"></button>
-          <md-datepicker #selectedEndDate></md-datepicker>
+          <input mdInput placeholder="End Date" #inputToDate [mdDatepicker]="toDate" id="inputToDate">
+          <button mdSuffix [mdDatepickerToggle]="toDate"></button>
         </md-input-container>
+        <md-datepicker #toDate></md-datepicker>*
       </td>
       <td>
         &nbsp;
         <md-input-container>
-          <input mdInput placeholder="End Time" #endtime [(ngModel)]="endTime">
+          <input mdInput #inputEndTime placeholder="End Time" [(ngModel)]="endTime">
         </md-input-container>
       </td>
     </tr>
@@ -68,25 +75,25 @@
     <tr>
       <td>
         <md-input-container>
-          <input class="clickable-icon" mdInput placeholder="Travel time" [(ngModel)]="travelTime">
+          <input class="clickable-icon" #inputTravelTime mdInput placeholder="Travel time" [(ngModel)]="travelTime">
         </md-input-container>
       </td>
       <td>
         <md-input-container>
-          <input class="clickable-icon" mdInput placeholder="Work time" [(ngModel)]="workTime">
+          <input class="clickable-icon" #inputWorkTime mdInput placeholder="Work time" [(ngModel)]="workTime">
         </md-input-container>
       </td>
     </tr>
     <br>
     <tr>
       <td>
-        <md-checkbox [(ngModel)]="isBillable" readonly> is Billable</md-checkbox>
+        <md-checkbox #billable [(ngModel)]="isBillable" readonly> is Billable</md-checkbox>
       </td>
     </tr>
   </table>
 </div>
 <div md-dialog-actions>
-  <button type="button" md-button (click)="readDate(startDate, endDate);checkMandatoryFields();
+  <button type="button" md-button (click)="readData(inputDescription.value, inputPlace.value, fromDate.value, inputFromDate.value, toDate.value, inputToDate.value, inputStartTime.value, inputEndTime.value, inputTravelTime.value, inputWorkTime.value, billable);readDatesOnInputField();readDates(fromDate,toDate);checkMandatoryFields();
     ">OK</button>
   <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>

@@ -15,3 +15,4 @@ export * from './user.service';
 export * from './client.service';
 export * from './registry.service';
 export * from './timespent.service';
+export * from './dates.service';

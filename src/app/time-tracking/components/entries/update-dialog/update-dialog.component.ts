@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
-import { ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService, TimespentService, RegistryService } from '../../../../data';
+import { ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService, TimespentService, RegistryService, DatesService } from '../../../../data';
 import { environment } from '../../../../../environments/environment';
 import { LoginService } from '../../../../login';
 import { Http } from '@angular/http';
@@ -51,7 +51,7 @@ export class UpdateDialogComponent implements OnInit {
   @Input() selectedProjectID: any;
   @Input() selectedTaskID: any;
   @Input() selectedClientID: any;
-  @Input() startDate: any;
+  @Input() fromDate: any;
   @Input() startTime: any;
   public userprofileID: any;
   @Input() clientID: any;
@@ -59,12 +59,14 @@ export class UpdateDialogComponent implements OnInit {
   @Input() taskID: any;
   @Input() description: string;
   @Input() entryDate: any;
-  @Input() endDate: any;
+  @Input() toDate: any;
   @Input() endTime: any;
   @Input() isBillable: boolean;
   @Input() workTime: any;
   @Input() place: any;
   @Input() travelTime: any;
+  public validDatePeriod: boolean = false;
+  public validTimePeriod: boolean = false;
 
   constructor(
     public dialogRef: MdDialogRef<UpdateDialogComponent>,
@@ -74,7 +76,8 @@ export class UpdateDialogComponent implements OnInit {
     public timeTrackingEntryService: TimeTrackingEntryService,
     public timeSpentService: TimespentService,
     public registryService: RegistryService,
-    private loginService: LoginService) {
+    private loginService: LoginService,
+    public datesService: DatesService) {
   }
 
   ngOnInit() {
@@ -84,28 +87,47 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   checkMandatoryFields() {
-    if (this.description === "" || this.projectID === null || this.taskID === null || this.entryDate === " " || this.endDate === " " || this.workTime === " ") {
+    if (this.description === "" || this.projectID === null || this.taskID === null || this.entryDate === " " || this.toDate === " " || this.workTime === " ") {
       alert("Please check if all the fields are filled in");
     } else {
       this.checkStartAndEndTime();
     }
   }
 
+  createEntryWithStartAndEndTime() {
+    // var timespent = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.travelTime);
+    this.workTime = this.timeSpentService.calculateWorktimeBetweenDates(this.datesService.convertDaysToHours(this.fromDate, this.toDate), this.startTime, this.endTime);
+    return this.updateEntry();
+  }
+
+  createEntryWithWorkTime() {
+    this.workTime = this.workTime;
+    return this.updateEntry();
+  }
+
   checkStartAndEndTime() {
     if (this.loginService.loggedIn()) {
-      if (this.startTime === "" && this.endTime === "") {
-        this.startTime = "00:00";
-        this.endTime = "00:00";
-        this.updateEntry();
+      this.validDatePeriod = this.datesService.isValidDatePeriod(this.fromDate, this.toDate);
+      this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime);
+      if (this.validDatePeriod === false) {
+        alert("Invalid dates Period!");
       }
-      else if (!(this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime) && this.registryService.timeSpentRequirement.test(this.workTime) && this.registryService.timeRequirement.test(this.travelTime))) {
+      else if (this.fromDate === this.toDate && this.validTimePeriod === false) {
+        alert("Invalid time Period!");
+      }
+      else if ((this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime) && this.registryService.timeSpentRequirement.test(this.workTime) && this.registryService.timeRequirement.test(this.travelTime)) === false) {
         alert("Please check time format");
       }
       else {
-        this.workTime = null;
-        var timespent = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.travelTime);
-        this.workTime = this.timeSpentService.calculateWorktime(timespent, this.travelTime);
-        this.updateEntry();
+        var r = confirm('Clicking on OK you will take the worktime value');
+        if (r === true) {
+          this.startTime = "00:00";
+          this.endTime = "00:00";
+          this.createEntryWithWorkTime();
+        }
+        else {
+          this.createEntryWithStartAndEndTime();
+        }
       }
     } else {
       alert("Your token has expired. Please log in again!");
@@ -115,8 +137,8 @@ export class UpdateDialogComponent implements OnInit {
 
   public updateEntry() {
     return this.http.put(this.baseUrl + "/timeentries/" + this.rowID, {
-      startDateTime: this.startDate.substring(6, 10) + "-" + this.startDate.substring(3, 5) + "-" + this.startDate.substring(0, 2) + " " + this.startTime,
-      endDateTime: this.endDate.substring(6, 10) + "-" + this.endDate.substring(3, 5) + "-" + this.endDate.substring(0, 2) + " " + this.endTime,
+      startDateTime: this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2) + " " + this.startTime,
+      endDateTime: this.toDate.substring(6, 10) + "-" + this.toDate.substring(3, 5) + "-" + this.toDate.substring(0, 2) + " " + this.endTime,
       description: this.description.trim(),
       userprofileID: this.loginService.getLoggedUserID(),
       clientID: this._mySelectedClient,

@@ -1,5 +1,13 @@
 <h1 md-dialog-title>Edit Entry</h1>
+<label>
+    <em>Put start time and End time OR work time</em>
+    <br>
+    <em>Date format: dd.mm.2yyy</em>
+    <br>
+    <em>Hour format: hh:mm</em>
+</label>
 <div md-dialog-content (keydown)="keyDownFunction($event)">
+    <br>
     <table>
         <tr>
             <td>
@@ -35,8 +43,8 @@
         <tr>
             <td>
                 <md-input-container>
-                    <input mdInput placeholder="Start Date" #startdate [(ngModel)]="startDate">
-                </md-input-container>
+                    <input mdInput placeholder="Start Date" [(ngModel)]="fromDate">
+                </md-input-container>*&nbsp;
             </td>
             <td>
                 <md-input-container>
@@ -48,8 +56,8 @@
         <tr>
             <td>
                 <md-input-container>
-                    <input mdInput placeholder="End Date" #enddate [(ngModel)]="endDate">
-                </md-input-container>
+                    <input mdInput placeholder="End Date" [(ngModel)]="toDate">
+                </md-input-container>*&nbsp;
             </td>
             <td>
                 <md-input-container>

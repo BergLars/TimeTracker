@@ -86,6 +86,20 @@ export class TimespentService {
       sprintf("%02d:%02d", hourTimespent - hourTraveltime, minuteTimespent - minuteTraveltime);
   }
 
+  calculateWorktimeBetweenDates(numberOfHours, startTime, endTime) {
+    var hours = Math.abs(Number(endTime.substring(0, 2)) - Number(startTime.substring(0, 2)));
+    var workTimeHours, workTime;
+    if (Number(endTime.substring(3, 6)) < Number(startTime.substring(3, 6))) {
+      hours -= 1;
+      workTimeHours = Math.abs(numberOfHours - hours);
+      workTime = sprintf("%02d:%02d", Math.abs(numberOfHours - hours), (Number(endTime.substring(3, 6)) + 60) - Number(startTime.substring(3, 6)));
+    } else {
+      workTimeHours = Math.abs(numberOfHours - hours);
+      workTime = sprintf("%02d:%02d", Math.abs(numberOfHours - hours), Number(endTime.substring(3, 6)) - Number(startTime.substring(3, 6)));
+    }
+    return workTime;
+  }
+
   addCorrectTimeFormat(term) {
     return term.length < 5 ? '0' + term : term;
   }
@@ -150,5 +164,9 @@ export class TimespentService {
     return (totalMinutes > 59) ?
       sprintf("%02d:%02d", totalHours + Math.abs(totalMinutes / 60), totalMinutes % 60) :
       sprintf("%02d:%02d", totalHours, totalMinutes);
+  }
+
+  isValidTimePeriod(starttime, endtime) {
+    return moment(starttime, 'HH:mm').isSameOrBefore(moment(endtime, 'HH:mm'));;
   }
 }

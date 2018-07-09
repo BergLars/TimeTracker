@@ -31,9 +31,9 @@ export class UpdateDialogService {
         updateDialogComponent.selectedProjectID = row.projectID;
         updateDialogComponent.selectedTaskID = row.taskID;
         updateDialogComponent.selectedClientID = row.clientID;
-        updateDialogComponent.startDate = row.entryDate;
+        updateDialogComponent.fromDate = row.entryDate;
         updateDialogComponent.startTime = row.startTime;
-        updateDialogComponent.endDate = row.endDate;
+        updateDialogComponent.toDate = row.endDate;
         updateDialogComponent.endTime = row.endTime;
         updateDialogComponent.workTime = this.timeSpentService.addCorrectTimeFormat(row.worktime.value);
         updateDialogComponent.travelTime = this.timeSpentService.addCorrectTimeFormat(row.traveltime.value);
