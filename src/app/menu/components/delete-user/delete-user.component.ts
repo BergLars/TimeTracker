@@ -46,15 +46,15 @@ export class DeleteUserComponent implements OnInit {
   public deleteUser() {
     this.http.delete(this.baseUrl + "/userprofile/" + this.userID)
       .subscribe(
-      () => {
-        this.dialogRef.close(true);
-        this.openSnackBar('User ID: ' + this.userID, ', deleted !');
-      },
-      (error) => {
-        if (error.status === 500) {
-          alert('Internal server error !');
-        }
-      });
+        () => {
+          this.dialogRef.close(true);
+          this.openSnackBar('User ID: ' + this.userID, ', deleted !');
+        },
+        (error) => {
+          if (error.status === 500) {
+            alert('Internal server error !');
+          }
+        });
   }
 
   public confirmDeleteUser() {

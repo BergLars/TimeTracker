@@ -105,14 +105,13 @@ export class TimespentService {
   }
 
   calculateTotalTimeSpent(entries) {
-    let hours = 0;
-    let minutes = 0;
+    let hours;
+    let minutes;
     entries.forEach(element => {
       hours += +element.timeSpent.substring(0, 2);
       minutes += +element.timeSpent.substring(3, 6);
-
     });
-    let timeSpents = sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
+    let timeSpents = sprintf("%03d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
     return timeSpents;
   }
 

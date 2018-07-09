@@ -1,16 +1,13 @@
-import { Component, Input, OnInit, ViewContainerRef, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewContainerRef, ViewChild } from '@angular/core';
 import { Http } from '@angular/http';
-import { IUser, UserService, ITimeTrackingEntry, IProject, ITask, IClient, RegistryService, TimespentService } from '../../../data';
-import { MdDialog } from '@angular/material';
+import { IUser, ITimeTrackingEntry, IProject, ITask, IClient, RegistryService, TimespentService } from '../../../data';
 import { EntryDialogService } from './entry-dialog/entry-dialog.service';
 import { UpdateDialogService } from './update-dialog/update-dialog.service';
 import { DeleteEntryService } from './delete-entry/delete-entry.service';
 import { environment } from '../../../../environments/environment';
 import moment from 'moment/src/moment';
 import { EntriesService } from './entries.service';
-import { elementAt } from 'rxjs/operator/elementAt';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-import { window } from 'rxjs/operator/window';
 import * as _ from 'lodash';
 import { sscanf } from 'scanf';
 import { sprintf } from 'sprintf-js';
@@ -27,7 +24,6 @@ export class EntriesComponent implements OnInit {
   @Input() projects: IProject[] = [];
   @Input() project: IProject;
   @Input() tasks: ITask[] = [];
-  // @Input() descriptions = [];
   @Input() task: ITask;
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
@@ -53,9 +49,8 @@ export class EntriesComponent implements OnInit {
 
   private previousAllProjectsFilterFlag = true;
   private previousAllTasksFilterFlag = true;
-
   private previousAllClientsFilterFlag = true;
-  private previousAllDescriptionsFilterFlag = true;
+
 
   private columns = [
     { key: 'Description', id: 0 },
@@ -93,18 +88,18 @@ export class EntriesComponent implements OnInit {
   @Input() term: any;
   isValid: boolean = false;
   isChecked = false;
-  public isAdmin: boolean = false;
+  @Input() isAdmin: boolean = false;
+  @Input() selectedUser: any;
+  @Input() users: IUser[] = [];
 
   constructor(
     private entryDialogService: EntryDialogService,
     private deleteEntryService: DeleteEntryService,
     private viewContainerRef: ViewContainerRef,
-    private dialog: MdDialog,
     private http: Http,
     public registryService: RegistryService,
     public updateService: UpdateDialogService,
     public entriesService: EntriesService,
-    private elementRef: ElementRef,
     public loginService: LoginService,
     private timespentService: TimespentService) {
     this.registryService.entriesComponent = this;
@@ -115,6 +110,7 @@ export class EntriesComponent implements OnInit {
   ngOnInit() {
     this.defaultItem = this.createItems[0].key;
     this.isAdmin = this.loginService.isAdmin();
+    this.getUsers();
     this.loadEntries();
     this.updateFilterSelection();
   }
@@ -177,6 +173,17 @@ export class EntriesComponent implements OnInit {
       this.editing[row.$$index + cell] = false;
       this.unselectEntry();
     }, 100);
+  }
+
+  getUsers() {
+    if (this.loginService.loggedIn()) {
+      this.http.get(this.baseUrl + "/userprofile/all").map(res => res.json()).subscribe(
+        results => {
+          this.users = results;
+        });
+    } else {
+      alert("Your token has expired. Please log in again!");
+    }
   }
 
   updateFilterSelection() {
@@ -396,7 +403,14 @@ export class EntriesComponent implements OnInit {
       direction: this.sorts[this.selectedSort].key
     });
 
+    // if (this.selectedUser !== this.loginService.getLoggedUserID()) {
+    //   self.items = EntriesService.clonedEntries;
+    //   self.items = this.loadUserEntriesById(this.selectedUser);
+    //   self.items = this.entriesService.getEntries();
+    // }
+    // else {
     self.items = this.entriesService.getEntries();
+    // }
 
     setTimeout(() => {
       self.datatable.pageSize = self.limit;
@@ -427,6 +441,7 @@ export class EntriesComponent implements OnInit {
       this.selectedProjects[0] = -1;
       this.selectedTasks[0] = -1;
       this.selectedClients[0] = -1;
+      this.selectedUser = -1;
 
       if (!this.isChecked) {
         this.projectsSelectedPerDefault();
@@ -453,6 +468,27 @@ export class EntriesComponent implements OnInit {
       }
       this.refreshDatatable();
     });
+  }
+
+  displayEntriesByUser() {
+    this.items = this.loadUserEntriesById(this.selectedUser);
+  }
+
+  loadUserEntriesById(id) {
+    var entries: ITimeTrackingEntry[] = [];
+    if (id === -1) {
+      entries = _.map(EntriesService.clonedEntries, _.clone);
+      this.items = entries;
+    }
+    else {
+      EntriesService.clonedEntries.forEach(element => {
+        if (element.userprofileID === id) {
+          entries.push(element);
+        }
+      });
+      this.items = entries;
+    }
+    return this.items;
   }
 
   projectsSelectedPerDefault() {

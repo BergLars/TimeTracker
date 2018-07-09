@@ -23,6 +23,12 @@
                 <md-option class="data-filter-header clickOnAllTask" [value]="-1">All</md-option>
                 <md-option class="data-filter-header" *ngFor="let item of tasks" [value]='item.id'> {{ item.taskDescription }}</md-option>
             </md-select>
+            <span [hidden]="!isAdmin">
+                <md-select placeholder="User" [(ngModel)]="selectedUser" (change)="displayEntriesByUser();" id="userFilter">
+                    <md-option class="data-filter-header clickOnAllUsers" [value]="-1">All</md-option>
+                    <md-option class="data-filter-header" *ngFor="let item of users" [value]='item.id'> {{ item.userName }}</md-option>
+                </md-select>
+            </span>
         </span>
     </md-chip-list>
     <span class="flex"></span>

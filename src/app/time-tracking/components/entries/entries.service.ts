@@ -30,7 +30,7 @@ export class EntriesService {
   private projectsFilter = [];
   private clientsFilter = [];
   private tasksFilter = [];
-  private descriptionsFilter = [];
+  private isAdmin: boolean = false;
 
   private sortingColumn: string;
   private sortingDirection: string;
@@ -50,6 +50,7 @@ export class EntriesService {
     private http: Http,
     private registryService: RegistryService,
     private timeSpentService: TimespentService) {
+    this.isAdmin = this.loginService.isAdmin();
   }
 
   /**
@@ -193,7 +194,7 @@ export class EntriesService {
     return entries;
   }
 
-  private sortEntriesBy(propertyName: string, order: string) {
+  public sortEntriesBy(propertyName: string, order: string) {
     let sortedEntries;
     let sortHook = EntriesService.ascendingSortingHookTable[propertyName];
     sortedEntries = EntriesService.clonedEntries.sort(sortHook);
@@ -251,7 +252,6 @@ export class EntriesService {
                   this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
                     loadedEntries => {
                       var items = [];
-                      var count = 0;
 
                       loadedEntries.forEach(function (entry) {
                         entry.task = that.tasksDictionary[entry.taskID];
@@ -315,7 +315,6 @@ export class EntriesService {
                   this.http.get(this.baseUrl + "/timeentries/all").map(res => res.json()).subscribe(
                     loadedEntries => {
                       var items = [];
-                      var count = 0;
 
                       loadedEntries.forEach(function (entry) {
                         entry.task = that.tasksDictionary[entry.taskID];
@@ -448,11 +447,20 @@ export class EntriesService {
   }
 
   displaySidebarData() {
-    this.entriesAreLoaded().then(results => {
-      this.registryService.sidebarComponent.totalHoursWorkedW = this.totalHoursWorkedWeek(results);
-      this.registryService.sidebarComponent.totalHoursWorkedM = this.totalHoursWorkedMonth(results);
-      this.registryService.sidebarComponent.totalTimeSpent = this.timeSpentService.calculateTotalTimeSpent(results);
-    });
+    if (this.isAdmin) {
+      this.allEntriesAreLoaded().then(results => {
+        this.registryService.sidebarComponent.totalHoursWorkedW = this.totalHoursWorkedWeek(results);
+        this.registryService.sidebarComponent.totalHoursWorkedM = this.totalHoursWorkedMonth(results);
+        this.registryService.sidebarComponent.totalTimeSpent = this.timeSpentService.calculateTotalTimeSpent(results);
+      });
+    }
+    else {
+      this.entriesAreLoaded().then(results => {
+        this.registryService.sidebarComponent.totalHoursWorkedW = this.totalHoursWorkedWeek(results);
+        this.registryService.sidebarComponent.totalHoursWorkedM = this.totalHoursWorkedMonth(results);
+        this.registryService.sidebarComponent.totalTimeSpent = this.timeSpentService.calculateTotalTimeSpent(results);
+      });
+    }
   }
 
   totalHoursWorkedWeek(entries) {

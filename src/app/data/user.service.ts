@@ -48,7 +48,7 @@ export class UserService implements IDataservice {
 		return store.update(RESOURCE_NAME, id, { password: password, isAdmin: user['admin'], employmentDegree: user['employmentDegree'], username: user['username'] });
 	}
 
-	public createUser(username: string, password: string, employmentDegree: number, adminRole: boolean): Promise<IUser>{
+	public createUser(username: string, password: string, employmentDegree: number, adminRole: boolean): Promise<IUser> {
 		return store.create(RESOURCE_NAME, { userName: username, password: password, employmentDegree: employmentDegree, admin: adminRole },
 			{
 				endpoint: ENDPOINT_NAME,

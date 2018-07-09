@@ -35,7 +35,6 @@ export class TimeTrackingComponent implements OnInit {
     private viewContainerRef: ViewContainerRef,
     private entriesService: EntriesService,
     private registryService: RegistryService) {
-    
   }
 
   ngOnInit() {
@@ -45,19 +44,19 @@ export class TimeTrackingComponent implements OnInit {
   }
   public openCreateDialog() {
     this.registryService.entriesComponent.unselectEntry();
-    if (this.loginService.loggedIn()) {
+    if (this.loginService.loggedIn())  {
       this.createDialogService
-      .confirm('Create', this.viewContainerRef)
-      .subscribe(res => {
-        if (res) {
-          this.entriesService.entriesAreLoaded();
-        }
-      });  
+        .confirm('Create', this.viewContainerRef)
+        .subscribe(res => {
+          if (res) {
+            this.entriesService.entriesAreLoaded();
+          }
+        });
     } else {
       alert("Your token has expired. Please log in again!");
       this.loginService.logout();
     }
-    
+
   }
 
   public openEditDialog() {
