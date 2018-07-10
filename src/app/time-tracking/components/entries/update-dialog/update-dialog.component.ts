@@ -95,7 +95,6 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   createEntryWithStartAndEndTime() {
-    // var timespent = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.travelTime);
     this.workTime = this.timeSpentService.calculateWorktimeBetweenDates(this.datesService.convertDaysToHours(this.fromDate, this.toDate), this.startTime, this.endTime);
     return this.updateEntry();
   }

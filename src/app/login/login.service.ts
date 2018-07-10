@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Http, URLSearchParams, Headers, RequestOptions } from '@angular/http';
+import { Http, URLSearchParams, Headers } from '@angular/http';
 import { environment } from '../../environments/environment';
 import { store } from '../data/datastore';
-import { IDataservice, TimeTrackingEntryService, ITimeTrackingEntry, IUser, UserService } from '../data';
+import { IDataservice, IUser } from '../data';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
-import * as CryptoJS from 'crypto-js';
 import { tokenNotExpired } from 'angular2-jwt';
 
 
@@ -24,9 +22,7 @@ export class LoginService implements IDataservice {
 
 	constructor(
 		private http: Http,
-		private timeTrackingEntryService: TimeTrackingEntryService,
-		private router: Router,
-		private userService: UserService) {
+		private router: Router) {
 		// Define a Mapper for a "Project" resource
 		let resource = store.defineMapper(RESOURCE_NAME, {
 			basePath: this.baseUrl,

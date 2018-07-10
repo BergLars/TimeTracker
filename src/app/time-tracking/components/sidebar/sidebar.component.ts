@@ -1,8 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ITimeTrackingEntry, IStatistics, RegistryService, TimespentService } from '../../../data';
-import { EntriesService } from '../entries/entries.service';
+import { ITimeTrackingEntry, RegistryService, TimespentService } from '../../../data';
 import moment from 'moment/src/moment';
-import { elementAt } from 'rxjs/operator/elementAt';
 
 @Component({
   selector: 'app-sidebar',
@@ -19,13 +17,11 @@ export class SidebarComponent implements OnInit {
   @Input() currentMonth: any;
   @Input() weekNumber: any;
 
-  constructor(private entriesService: EntriesService, public registryService: RegistryService, public timespentService: TimespentService) {
+  constructor(public registryService: RegistryService, public timespentService: TimespentService) {
     this.registryService.sidebarComponent = this;
   }
   ngOnInit() {
     this.total = 'Total';
-    this.entriesService.getCurrentDayWeekMonth();
-    this.entriesService.displaySidebarData();
   }
 
   getNextWeekStart() {

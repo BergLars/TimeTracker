@@ -1,12 +1,11 @@
-import { Component, OnInit, Input, Renderer } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef, MdSnackBar } from '@angular/material';
-import { IProject, ITask, IUser, IClient, RegistryService } from '../../../data';
+import { IProject, ITask, IClient, RegistryService } from '../../../data';
 import { LoginService } from '../../../login';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs/Rx';
-import { CreateDialogService } from './create-dialog.service';
 
 @Component({
 	selector: 'app-create-dialog',
@@ -127,7 +126,7 @@ export class CreateDialogComponent implements OnInit {
 				projectName: this.newProjectName.trim()
 			}).subscribe(() => {
 				this.dialogRef.close(true);
-				this.registryService.entriesComponent.loadEntries();
+				// this.registryService.entriesComponent.loadEntries();
 				this.openSnackBar('Project ' + this.newProjectName.toUpperCase(), 'created !');
 			},
 				error => {
@@ -144,7 +143,7 @@ export class CreateDialogComponent implements OnInit {
 				taskDescription: this.newTaskDescription.trim()
 			}).subscribe(() => {
 				this.dialogRef.close(true);
-				this.registryService.entriesComponent.loadEntries();
+				// this.registryService.entriesComponent.loadEntries();
 				this.openSnackBar('Task ' + this.newTaskDescription.toUpperCase(), 'created !');
 			},
 				error => {
@@ -161,7 +160,7 @@ export class CreateDialogComponent implements OnInit {
 				clientName: this.newClientName.trim()
 			}).subscribe(() => {
 				this.dialogRef.close(true);
-				this.registryService.entriesComponent.loadEntries();
+				// this.registryService.entriesComponent.loadEntries();
 				this.openSnackBar('Client ' + this.newClientName.toUpperCase(), 'created !');
 			},
 				error => {
@@ -186,7 +185,7 @@ export class CreateDialogComponent implements OnInit {
 				.subscribe(
 					(data) => {
 						this.dialogRef.close(true);
-						this.registryService.entriesComponent.loadEntries();
+						// this.registryService.entriesComponent.loadEntries();
 						this.openSnackBar('User ' + this.username.toUpperCase(), 'created !');
 					},
 					(error) => {

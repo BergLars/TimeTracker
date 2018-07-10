@@ -269,6 +269,7 @@ export class EntriesService {
                       this.timeSpentService.calculateEntriesTimeSpent(items);
                       this.setColor(items);
                       EntriesService.clonedEntries = items;
+                      this.displaySidebarData();
 
                       resolve(items);
                     });
@@ -332,6 +333,7 @@ export class EntriesService {
                       this.timeSpentService.calculateEntriesTimeSpent(items);
                       this.setColor(items);
                       EntriesService.clonedEntries = items;
+                      this.displaySidebarData();
 
                       resolve(items);
                     });
@@ -447,20 +449,10 @@ export class EntriesService {
   }
 
   displaySidebarData() {
-    if (this.isAdmin) {
-      this.allEntriesAreLoaded().then(results => {
-        this.registryService.sidebarComponent.totalHoursWorkedW = this.totalHoursWorkedWeek(results);
-        this.registryService.sidebarComponent.totalHoursWorkedM = this.totalHoursWorkedMonth(results);
-        this.registryService.sidebarComponent.totalTimeSpent = this.timeSpentService.calculateTotalTimeSpent(results);
-      });
-    }
-    else {
-      this.entriesAreLoaded().then(results => {
-        this.registryService.sidebarComponent.totalHoursWorkedW = this.totalHoursWorkedWeek(results);
-        this.registryService.sidebarComponent.totalHoursWorkedM = this.totalHoursWorkedMonth(results);
-        this.registryService.sidebarComponent.totalTimeSpent = this.timeSpentService.calculateTotalTimeSpent(results);
-      });
-    }
+    this.registryService.sidebarComponent.totalHoursWorkedW = this.totalHoursWorkedWeek(EntriesService.clonedEntries);
+    this.registryService.sidebarComponent.totalHoursWorkedM = this.totalHoursWorkedMonth(EntriesService.clonedEntries);
+    this.registryService.sidebarComponent.totalTimeSpent = this.timeSpentService.calculateTotalTimeSpent(EntriesService.clonedEntries);
+
   }
 
   totalHoursWorkedWeek(entries) {

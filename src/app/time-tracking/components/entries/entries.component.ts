@@ -31,6 +31,7 @@ export class EntriesComponent implements OnInit {
   @ViewChild('mydatatable') datatable: DatatableComponent;
 
   @Input() items: ITimeTrackingEntry[] = [];
+  @Input() allEntries: ITimeTrackingEntry[] = [];
   selected = [];
   selectedRow: any;
   editMode: boolean = false;
@@ -103,16 +104,16 @@ export class EntriesComponent implements OnInit {
     public loginService: LoginService,
     private timespentService: TimespentService) {
     this.registryService.entriesComponent = this;
-    this.loadValuePerdefault();
-    this.entriesService.allEntriesAreLoaded();
   }
 
   ngOnInit() {
+    this.loadValuePerdefault();
     this.defaultItem = this.createItems[0].key;
     this.isAdmin = this.loginService.isAdmin();
-    this.getUsers();
-    this.loadEntries();
+    this.isAdmin ? this.loadAllEntries() : this.loadMyEntries();
     this.updateFilterSelection();
+    this.entriesService.getCurrentDayWeekMonth();
+    this.getUsers();
   }
 
   getSearchValue(term: string) {
@@ -371,6 +372,7 @@ export class EntriesComponent implements OnInit {
         if (this.result) {
           this.isChecked = true;
           this.loadEntries();
+          this.entriesService.displaySidebarData();
         }
       });
   }
@@ -403,14 +405,7 @@ export class EntriesComponent implements OnInit {
       direction: this.sorts[this.selectedSort].key
     });
 
-    // if (this.selectedUser !== this.loginService.getLoggedUserID()) {
-    //   self.items = EntriesService.clonedEntries;
-    //   self.items = this.loadUserEntriesById(this.selectedUser);
-    //   self.items = this.entriesService.getEntries();
-    // }
-    // else {
     self.items = this.entriesService.getEntries();
-    // }
 
     setTimeout(() => {
       self.datatable.pageSize = self.limit;
@@ -448,6 +443,7 @@ export class EntriesComponent implements OnInit {
         this.tasksSelectedPerDefault();
         this.clientsSelectedPerDefault();
       }
+      this.allEntries = EntriesService.clonedEntries;
       this.refreshDatatable();
     });
   }
@@ -466,22 +462,25 @@ export class EntriesComponent implements OnInit {
         this.tasksSelectedPerDefault();
         this.clientsSelectedPerDefault();
       }
+      this.allEntries = EntriesService.clonedEntries;
       this.refreshDatatable();
     });
   }
 
   displayEntriesByUser() {
     this.items = this.loadUserEntriesById(this.selectedUser);
+    EntriesService.clonedEntries = this.items;
   }
 
   loadUserEntriesById(id) {
     var entries: ITimeTrackingEntry[] = [];
+    EntriesService.clonedEntries = this.allEntries;
     if (id === -1) {
       entries = _.map(EntriesService.clonedEntries, _.clone);
       this.items = entries;
     }
     else {
-      EntriesService.clonedEntries.forEach(element => {
+      this.allEntries.forEach(element => {
         if (element.userprofileID === id) {
           entries.push(element);
         }
