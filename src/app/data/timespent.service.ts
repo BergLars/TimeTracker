@@ -107,8 +107,8 @@ export class TimespentService {
     return timeSpents;
   }
 
-  // Calcul total time spent of the current Week
-  public totalTimeSpentW(timeSpents) {
+  // Calcul total time spent of the current Month, week 4 past days and today
+  public sidebarTotalTimeSpent(timeSpents) {
     let hours = 0;
     let minutes = 0;
     timeSpents.forEach(element => {
@@ -117,44 +117,6 @@ export class TimespentService {
     });
     let result = sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
     return result;
-  }
-
-  // Calcul total time spent of the current Month
-  public totalTimeSpentMonth(timeSpents) {
-    let hours = 0;
-    let minutes = 0;
-    timeSpents.forEach(element => {
-      hours += +element.substring(0, 2);
-      minutes += +element.substring(3, 6);
-    });
-    let result = sprintf("%02d:%02d", hours + Math.abs(minutes / 60), minutes % 60);
-    return result;
-  }
-
-  calculateTimeSpent(starttime, endtime, traveltime) {
-    let hourStarttime = 0;
-    let minuteStarttime = 0;
-    let hourEndtime = 0;
-    let minuteEndtime = 0;
-    let hourTraveltime = 0;
-    let minuteTraveltime = 0;
-
-    // Get start end end time value
-    hourStarttime += +starttime.substring(0, 2);
-    minuteStarttime += +starttime.substring(3, 6);
-    hourEndtime += +endtime.substring(0, 2);
-    minuteEndtime += +endtime.substring(3, 6);
-
-    // Get travel time value
-    traveltime = this.addCorrectTimeFormat(traveltime);
-
-    hourTraveltime += +traveltime.substring(0, 2)
-    minuteTraveltime += +traveltime.substring(3, 6);
-    var totalMinutes = minuteStarttime + minuteEndtime + minuteTraveltime;
-    var totalHours = hourEndtime - hourStarttime + hourTraveltime;
-    return (totalMinutes > 59) ?
-      sprintf("%02d:%02d", totalHours + Math.abs(totalMinutes / 60), totalMinutes % 60) :
-      sprintf("%02d:%02d", totalHours, totalMinutes);
   }
 
   isValidTimePeriod(starttime, endtime) {

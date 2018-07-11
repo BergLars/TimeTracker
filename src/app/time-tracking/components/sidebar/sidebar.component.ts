@@ -9,9 +9,10 @@ import moment from 'moment/src/moment';
 })
 export class SidebarComponent implements OnInit {
   @Input() items: ITimeTrackingEntry[] = [];
-
   @Input() totalTimeSpent: any;
   public total: string;
+  @Input() totalHoursWorkedPast4D: any;
+  @Input() totalHoursWorkedT: any;
   @Input() totalHoursWorkedW: any;
   @Input() totalHoursWorkedM: any;
   @Input() currentMonth: any;

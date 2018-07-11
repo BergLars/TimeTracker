@@ -39,6 +39,7 @@ export class EntriesService {
   public endOfWeek: any;
   public startOfMonth: any;
   public endOfMonth: any;
+  public today: any;
   @Input() totalAvailableVacationDays: any;
 
   // Allow to sort items with a String value Asc
@@ -449,34 +450,54 @@ export class EntriesService {
   }
 
   displaySidebarData() {
+    this.registryService.sidebarComponent.totalHoursWorkedPast4D = this.totalHoursWorkedPast4days(EntriesService.clonedEntries);
+    this.registryService.sidebarComponent.totalHoursWorkedT = this.totalHoursWorkedToday(EntriesService.clonedEntries);
     this.registryService.sidebarComponent.totalHoursWorkedW = this.totalHoursWorkedWeek(EntriesService.clonedEntries);
     this.registryService.sidebarComponent.totalHoursWorkedM = this.totalHoursWorkedMonth(EntriesService.clonedEntries);
     this.registryService.sidebarComponent.totalTimeSpent = this.timeSpentService.calculateTotalTimeSpent(EntriesService.clonedEntries);
 
   }
 
-  totalHoursWorkedWeek(entries) {
+  totalHoursWorkedPast4days(entries) {
     let timeSpents = [];
     entries.forEach(element => {
       // Check if entry date is between the start and the end of the current Week
       // If yes, add it to an array
+      if (moment(element.entryDate, 'DD.MM.YYYY').isBetween(moment(this.today, 'DD.MM.YYYY').subtract(4, 'days'), moment(this.today, 'DD.MM.YYYY').add(1, 'days'))) {
+        timeSpents.push(element.timeSpent);
+      }
+    });
+    return this.timeSpentService.sidebarTotalTimeSpent(timeSpents);
+  }
+
+  totalHoursWorkedToday(entries) {
+    let timeSpents = [];
+    entries.forEach(element => {
+      if (moment(element.entryDate, 'DD.MM.YYYY').isSame(moment(this.today, 'DD.MM.YYYY'))) {
+        timeSpents.push(element.timeSpent);
+      }
+    });
+    return this.timeSpentService.sidebarTotalTimeSpent(timeSpents);
+  }
+
+  totalHoursWorkedWeek(entries) {
+    let timeSpents = [];
+    entries.forEach(element => {
       if (moment(element.entryDate, 'DD.MM.YYYY').isBetween(moment(this.startOfWeek, 'DD.MM.YYYY'), moment(this.endOfWeek, 'DD.MM.YYYY'))) {
         timeSpents.push(element.timeSpent);
       }
     });
-    return this.timeSpentService.totalTimeSpentW(timeSpents);
+    return this.timeSpentService.sidebarTotalTimeSpent(timeSpents);
   }
 
   totalHoursWorkedMonth(entries) {
     let timeSpents = [];
     entries.forEach(element => {
-      // Check if entry date is between the start and the end of the current Month
-      // If yes, add it to an array
       if (moment(element.entryDate, 'DD.MM.YYYY').isBetween(moment(this.startOfMonth, 'DD.MM.YYYY'), moment(this.endOfMonth, 'DD.MM.YYYY'))) {
         timeSpents.push(element.timeSpent);
       }
     });
-    return this.timeSpentService.totalTimeSpentMonth(timeSpents);
+    return this.timeSpentService.sidebarTotalTimeSpent(timeSpents);
   }
 
   getCurrentDayWeekMonth() {
@@ -485,8 +506,8 @@ export class EntriesService {
     this.endOfMonth = moment().endOf('month').subtract(1, 'days').format('DD.MM.YYYY');
     this.startOfWeek = moment().startOf('week').format('DD.MM.YYYY');
     this.endOfWeek = moment().endOf('week').format('DD.MM.YYYY');
-    const today = moment().format('DD.MM.YYYY');
-    this.registryService.sidebarComponent.weekNumber = moment(today, 'DD.MM.YYYY').isoWeek();
+    this.today = moment().format('DD.MM.YYYY');
+    this.registryService.sidebarComponent.weekNumber = moment(this.today, 'DD.MM.YYYY').isoWeek();
     this.totalAvailableVacationDays = '*_*';
   }
 }
