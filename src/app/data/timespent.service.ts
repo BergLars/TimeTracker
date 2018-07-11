@@ -34,23 +34,15 @@ export class TimespentService {
     let hours: any = Math.floor((totalDecimalEndTime / (60 * 60)));
     totalDecimalEndTime = totalDecimalEndTime - (hours * 60 * 60);
     let minutes: any = Math.floor((totalDecimalEndTime / 60));
+    hours = sprintf("%02d", hours);
+    minutes = sprintf("%02d", minutes);
 
-    if (hours < 10) {
-      hours = "0" + hours;
-    }
-    if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
     let numberOfDays = Math.floor(hours / 24);
     let hoursEndTime = hours % 24;
     let longEndDate = moment(row.startDateTime, 'YYYY-MM-DD HH:mm').add(numberOfDays, 'd');
     let validFormatEndDate = moment(longEndDate).format('YYYY-MM-DD');
-    if (hoursEndTime < 10) {
-      hours = "0" + hoursEndTime;
-    }
-    else {
-      hours = hoursEndTime;
-    }
+
+    hours = sprintf("%02d", hoursEndTime);
     let endTime = hours + ':' + minutes;
     row.startDateTime = row.startDateTime;
     row.endDateTime = validFormatEndDate + ' ' + endTime;
@@ -111,7 +103,7 @@ export class TimespentService {
       hours += +element.timeSpent.substring(0, 2);
       minutes += +element.timeSpent.substring(3, 6);
     });
-    let timeSpents = (hours + Math.floor(minutes / 60)) + ':' + minutes % 60;
+    let timeSpents = sprintf("%02d:%02d", (hours + Math.floor(minutes / 60)), minutes % 60);
     return timeSpents;
   }
 

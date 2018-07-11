@@ -471,6 +471,7 @@ export class EntriesComponent implements OnInit {
     this.items = this.loadUserEntriesById(this.selectedUser);
     EntriesService.clonedEntries = this.items;
     this.refreshDatatable();
+    this.entriesService.displaySidebarData();
   }
 
   loadUserEntriesById(id) {
