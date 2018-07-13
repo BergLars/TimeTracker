@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
-import { ITimeTrackingEntry, IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService, TimespentService, RegistryService, DatesService } from '../../../../data';
+import { IProject, ITask, IClient, ProjectService, TaskService, TimeTrackingEntryService, TimespentService, RegistryService, DatesService } from '../../../../data';
 import { environment } from '../../../../../environments/environment';
 import { LoginService } from '../../../../login';
 import { Http } from '@angular/http';
@@ -139,7 +139,7 @@ export class UpdateDialogComponent implements OnInit {
       startDateTime: this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2) + " " + this.startTime,
       endDateTime: this.toDate.substring(6, 10) + "-" + this.toDate.substring(3, 5) + "-" + this.toDate.substring(0, 2) + " " + this.endTime,
       description: this.description.trim(),
-      userprofileID: this.loginService.getLoggedUserID(),
+      userprofileID: this.registryService.entriesComponent.selectedUser,
       clientID: this._mySelectedClient,
       projectID: this._mySelectedProject,
       taskID: this._mySelectedTask,

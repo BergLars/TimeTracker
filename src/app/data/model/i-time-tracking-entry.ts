@@ -26,6 +26,6 @@ export interface ITimeTrackingEntry {
     projectName: string;
     taskID: number;
     taskDescription: string;
-    isBillable: boolean;
+    billable: boolean;
     isColored?: boolean;
 }

@@ -46,7 +46,6 @@ export class EntriesComponent implements OnInit {
   @Input() date: string;
   public editing = {};
   public result: any;
-  clickedProject: any;
 
   private previousAllProjectsFilterFlag = true;
   private previousAllTasksFilterFlag = true;
@@ -70,6 +69,10 @@ export class EntriesComponent implements OnInit {
     { key: 'Desc', id: 0 },
     { key: 'Asc', id: 1 }
   ];
+  private billables = [
+    { key: 'Billable', id: 0 },
+    { key: 'Not billable', id: 1 }
+  ];
   public createItems = [
     { key: 'None', id: 1 },
     { key: 'Client', id: 2 },
@@ -86,6 +89,7 @@ export class EntriesComponent implements OnInit {
 
   @Input() selectedColumn: any;
   @Input() selectedSort: any;
+  @Input() selectedBillable: any;
   @Input() term: any;
   isValid: boolean = false;
   isChecked = false;
@@ -406,6 +410,7 @@ export class EntriesComponent implements OnInit {
     });
 
     self.items = this.entriesService.getEntries();
+    this.selectedBillable = -1;
 
     setTimeout(() => {
       self.datatable.pageSize = self.limit;
@@ -437,6 +442,7 @@ export class EntriesComponent implements OnInit {
       this.selectedTasks[0] = -1;
       this.selectedClients[0] = -1;
       this.selectedUser = -1;
+      this.selectedBillable = -1;
 
       if (!this.isChecked) {
         this.projectsSelectedPerDefault();
@@ -456,6 +462,8 @@ export class EntriesComponent implements OnInit {
       this.selectedProjects[0] = -1;
       this.selectedTasks[0] = -1;
       this.selectedClients[0] = -1;
+      this.selectedBillable = -1;
+      this.selectedUser = this.loginService.getLoggedUserID();
 
       if (!this.isChecked) {
         this.projectsSelectedPerDefault();
@@ -472,6 +480,29 @@ export class EntriesComponent implements OnInit {
     EntriesService.clonedEntries = this.items;
     this.refreshDatatable();
     this.entriesService.displaySidebarData();
+  }
+
+  displayEntriesByBillable() {
+    var billableEntries: ITimeTrackingEntry[] = [];
+    var notBillableEntries: ITimeTrackingEntry[] = [];
+    this.items = EntriesService.clonedEntries;
+    this.items.forEach(element => {
+      if (element.billable === false) {
+        notBillableEntries.push(element);
+      }
+      else {
+        billableEntries.push(element);
+      }
+    });
+    if (this.selectedBillable === 0) {
+      this.items = billableEntries;
+    }
+    else if (this.selectedBillable === 1) {
+      this.items = notBillableEntries;
+    }
+    else {
+      this.items = EntriesService.clonedEntries;
+    }
   }
 
   loadUserEntriesById(id) {

@@ -220,10 +220,10 @@ div.mat-input-underline {
     font-size: 80%;
 }
     
-    #projectsFilter, #tasksFilter, #clientsFilter{
-        span.mat-select-value{
-            width: 40px;
-        }
+#projectsFilter, #tasksFilter, #clientsFilter, #userFilter, #billableFilter{
+    span.mat-select-value{
+        width: 40px;
+    }
   }
 
 .mat-select-value, .mat-input-container{
@@ -234,9 +234,6 @@ div.mat-input-underline {
     font-size: 16px !important;
     font-weight: normal !important
 }
-// .mat-input-infix{
-//     padding: 0px 0px 0px 0px !important;
-// }
 
 .clickable-icon{
     cursor: pointer;
