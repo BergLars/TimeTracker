@@ -3,7 +3,6 @@ export interface IUser {
 	password: string;
 	isAdmin: boolean;
 	username: string;
-	employmentDegree: number;
 
 	// TO DO
 	// readonly vacationDays: number;

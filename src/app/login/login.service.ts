@@ -33,9 +33,10 @@ export class LoginService implements IDataservice {
 	public request(username: string, password: string) {
 		let params = new URLSearchParams();
 		let url = this.baseUrl + ENDPOINT_NAME;
-		params.set('username', username);
-		params.set('password', password);
-		return this.http.get(url, { search: params }).map(res => res.json()).subscribe(
+		return this.http.post(url, { 
+			userName: username,
+			password: password
+		 }).map(res => res.json()).subscribe(
 			data => {
 				localStorage.setItem('Authorization', data.token);
 				this.http.get(this.baseUrl + "/userprofile").map(res => res.json()).subscribe(
