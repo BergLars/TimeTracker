@@ -1,5 +1,5 @@
 <h1 md-dialog-title>{{ title }}</h1>
-<div md-dialog-content class="hide-dialog-scrollbar" (keydown)="validateForm(newTaskDescription.value,newProjectName.value,newClientName.value,username.value,password.value,confirmPassword.value,employmentDegree.value,adminRole);keyDownFunction($event);">
+<div md-dialog-content class="hide-dialog-scrollbar" (keydown)="validateForm(newTaskDescription.value,newProjectName.value,newClientName.value,username.value,password.value,confirmPassword.value,adminRole);keyDownFunction($event);">
     <table>
         <tr>
             <td>Create new:</td>
@@ -34,7 +34,6 @@
             <td>
                 <label> Password length should be greater than 7.
                     <br>
-                    <br> Employment degree should be between 0.1 (10%) and 1 (100%).
                 </label>
                 <br>
                 <md-input-container>
@@ -58,13 +57,6 @@
         </tr>
         <tr [hidden]="item != USER">
             <td>
-                <md-input-container>
-                    <input id="employmentDegree" mdInput placeholder="Employment degree" #employmentDegree>
-                </md-input-container>
-            </td>
-        </tr>
-        <tr [hidden]="item != USER">
-            <td>
                 <md-checkbox #adminRole>Administrator</md-checkbox>
             </td>
         </tr>
@@ -72,6 +64,6 @@
     <br>
 </div>
 <div md-dialog-actions>
-    <button type="button" md-button (click)="validateForm(newTaskDescription.value,newProjectName.value,newClientName.value,username.value,password.value,confirmPassword.value,employmentDegree.value,adminRole);checkMandatoryFields();">OK</button>
+    <button type="button" md-button (click)="validateForm(newTaskDescription.value,newProjectName.value,newClientName.value,username.value,password.value,confirmPassword.value,adminRole);checkMandatoryFields();">OK</button>
     <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
 </div>
