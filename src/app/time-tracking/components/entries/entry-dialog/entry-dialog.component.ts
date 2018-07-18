@@ -132,7 +132,12 @@ export class EntryDialogComponent implements OnInit {
         alert("Invalid date Period!");
       }
       else if (this.fromDate === this.toDate && this.validTimePeriod === false) {
-        alert("Invalid time Period!");
+        if (this.startTime === '' && this.endTime === '') {
+          this.startTime = "00:00";
+          this.endTime = "00:00";
+        } else {
+          alert("Invalid time Period!");  
+        }
       }
       else if (((this.workTime === '' && (this.startTime === '' || this.endTime === ''))) === true) {
         alert("Check if woktime or start and end time are filled!");

@@ -112,7 +112,12 @@ export class UpdateDialogComponent implements OnInit {
         alert("Invalid dates Period!");
       }
       else if (this.fromDate === this.toDate && this.validTimePeriod === false) {
-        alert("Invalid time Period!");
+        if (this.startTime === '' && this.endTime === '') {
+          this.startTime = "00:00";
+          this.endTime = "00:00";
+        } else {
+          alert("Invalid time Period!");  
+        }
       }
       else if ((this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime) && this.registryService.timeSpentRequirement.test(this.workTime) && this.registryService.timeRequirement.test(this.travelTime)) === false) {
         alert("Please check time format");
