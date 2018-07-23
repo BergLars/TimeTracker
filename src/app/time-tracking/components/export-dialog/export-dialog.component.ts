@@ -70,7 +70,7 @@ export class ExportDialogComponent implements OnInit {
 		this.inputToDate = valueInputToDate.trim();
 		let fromDate = this.inputFromDate.substring(6, 10) + "-" + this.inputFromDate.substring(3, 5) + "-" + this.inputFromDate.substring(0, 2);
 		let toDate = this.inputToDate.substring(6, 10) + "-" + this.inputToDate.substring(3, 5) + "-" + this.inputToDate.substring(0, 2);
-		this.validDatePeriod = this.datesService.isValidDatePeriod(toDate, fromDate);
+		this.validDatePeriod = this.datesService.isValidDatePeriod(fromDate, toDate);
 	}
 
 	public readDatesOnInputField() {
@@ -85,7 +85,7 @@ export class ExportDialogComponent implements OnInit {
 			alert("Wrong date format !");
 		}
 		else if (!this.validDatePeriod) {
-			alert("Please a valid Period");
+			alert("Please select a valid period");
 		}
 		else {
 			this.dialogRef.close();
