@@ -1,12 +1,10 @@
-import { Observable } from 'rxjs/Rx';
-import { Injectable, Input, ViewContainerRef } from '@angular/core';
-import { ITimeTrackingEntry, IProject, ITask, IClient, RegistryService, TimespentService } from '../../../data';
+import { Injectable, Input } from '@angular/core';
+import { ITimeTrackingEntry, IProject, ITask, IClient, RegistryService, TimespentService, DatesService } from '../../../data';
 import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
 import { LoginService } from '../../../login';
 import moment from 'moment/src/moment';
 import * as _ from 'lodash';
-import { sprintf } from 'sprintf-js';
 
 @Injectable()
 export class EntriesService {
@@ -40,6 +38,7 @@ export class EntriesService {
   public startOfMonth: any;
   public endOfMonth: any;
   public today: any;
+  @Input() static dates = [];
   @Input() totalAvailableVacationDays: any;
 
   // Allow to sort items with a String value Asc
@@ -50,7 +49,8 @@ export class EntriesService {
     private loginService: LoginService,
     private http: Http,
     private registryService: RegistryService,
-    private timeSpentService: TimespentService) {
+    private timeSpentService: TimespentService,
+    public datesService: DatesService) {
     this.isAdmin = this.loginService.isAdmin();
   }
 
@@ -253,6 +253,7 @@ export class EntriesService {
                   this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
                     loadedEntries => {
                       var items = [];
+                      var dates = [];
 
                       loadedEntries.forEach(function (entry) {
                         entry.task = that.tasksDictionary[entry.taskID];
@@ -265,10 +266,19 @@ export class EntriesService {
                         entry.startTime = entry.startDateTime.substring(11, 16);
                         entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
                         entry.endTime = entry.endDateTime.substring(11, 16);
+                        dates.push(moment(entry.startDateTime).format('YYYY-MM-DD'));
                         items.push(entry);
                       });
                       this.timeSpentService.calculateEntriesTimeSpent(items);
                       this.setColor(items);
+                      EntriesService.dates = _.uniqWith(dates, _.isEqual);
+                      EntriesService.dates = _.sortBy(EntriesService.dates, function (dateObj) {
+                        return new Date(dateObj.value);
+                      });
+                      EntriesService.dates = EntriesService.dates;
+                      dates = this.datesService.uniqValue(dates);
+                      dates = this.datesService.sortBy(dates);
+                      EntriesService.dates = this.datesService.swissFormat(dates);
                       EntriesService.clonedEntries = items;
                       this.displaySidebarData();
 
@@ -317,6 +327,7 @@ export class EntriesService {
                   this.http.get(this.baseUrl + "/timeentries/all").map(res => res.json()).subscribe(
                     loadedEntries => {
                       var items = [];
+                      var dates = [];
 
                       loadedEntries.forEach(function (entry) {
                         entry.task = that.tasksDictionary[entry.taskID];
@@ -329,10 +340,15 @@ export class EntriesService {
                         entry.startTime = entry.startDateTime.substring(11, 16);
                         entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
                         entry.endTime = entry.endDateTime.substring(11, 16);
+                        dates.push(moment(entry.startDateTime).format('YYYY-MM-DD'));
                         items.push(entry);
                       });
                       this.timeSpentService.calculateEntriesTimeSpent(items);
                       this.setColor(items);
+                      dates = this.datesService.uniqValue(dates);
+                      dates = this.datesService.sortBy(dates);
+                      EntriesService.dates = this.datesService.swissFormat(dates);
+
                       EntriesService.clonedEntries = items;
                       this.displaySidebarData();
 

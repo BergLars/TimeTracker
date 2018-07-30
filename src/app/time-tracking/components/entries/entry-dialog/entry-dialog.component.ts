@@ -1,14 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { ITimeTrackingEntry, IClient, IProject, ITask, IUser, RegistryService, TimespentService, DatesService } from '../../../../data';
+import { IClient, IProject, ITask, IUser, RegistryService, TimespentService, DatesService } from '../../../../data';
 import { LoginService } from '../../../../login';
 import { Http } from '@angular/http';
 import { environment } from '../../../../../environments/environment';
 import moment from 'moment/src/moment';
 import { Observable } from 'rxjs/Rx';
-import { MdDialogRef, MdDatepickerModule, DateAdapter } from '@angular/material';
+import { MdDialogRef, DateAdapter } from '@angular/material';
 import { EntriesService } from '../entries.service';
-import { format } from 'path';
 
 @Component({
   selector: 'app-entry-dialog',

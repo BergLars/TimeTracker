@@ -86,6 +86,7 @@ export class EntriesComponent implements OnInit {
   @Input() selectedClients: any = [];
   @Input() selectedProjects: any = [];
   @Input() selectedTasks: any = [];
+  public selectedDates: any = [];
 
   @Input() selectedColumn: any;
   @Input() selectedSort: any;
@@ -95,6 +96,7 @@ export class EntriesComponent implements OnInit {
   isChecked = false;
   @Input() isAdmin: boolean = false;
   @Input() selectedUser: any;
+  @Input() selectedDate: any;
   @Input() users: IUser[] = [];
 
   constructor(
@@ -411,6 +413,7 @@ export class EntriesComponent implements OnInit {
 
     self.items = this.entriesService.getEntries();
     this.selectedBillable = -1;
+    this.selectedDate = 'All';
 
     setTimeout(() => {
       self.datatable.pageSize = self.limit;
@@ -438,11 +441,13 @@ export class EntriesComponent implements OnInit {
       this.clients = this.entriesService.sortedClients();
       this.projects = this.entriesService.sortedProjects();
       this.tasks = this.entriesService.sortedTasks();
+      this.selectedDates = EntriesService.dates;
       this.selectedProjects[0] = -1;
       this.selectedTasks[0] = -1;
       this.selectedClients[0] = -1;
       this.selectedUser = -1;
       this.selectedBillable = -1;
+      this.selectedDate = 'All';
 
       if (!this.isChecked) {
         this.projectsSelectedPerDefault();
@@ -459,11 +464,13 @@ export class EntriesComponent implements OnInit {
       this.clients = this.entriesService.sortedClients();
       this.projects = this.entriesService.sortedProjects();
       this.tasks = this.entriesService.sortedTasks();
+      this.selectedDates = EntriesService.dates;
       this.selectedProjects[0] = -1;
       this.selectedTasks[0] = -1;
       this.selectedClients[0] = -1;
       this.selectedBillable = -1;
       this.selectedUser = this.loginService.getLoggedUserID();
+      this.selectedDate = 'All';
 
       if (!this.isChecked) {
         this.projectsSelectedPerDefault();
@@ -485,7 +492,8 @@ export class EntriesComponent implements OnInit {
   displayEntriesByBillable() {
     var billableEntries: ITimeTrackingEntry[] = [];
     var notBillableEntries: ITimeTrackingEntry[] = [];
-    this.items = EntriesService.clonedEntries;
+    this.items = this.displayEntriesByDate();
+
     this.items.forEach(element => {
       if (element.billable === false) {
         notBillableEntries.push(element);
@@ -501,8 +509,24 @@ export class EntriesComponent implements OnInit {
       this.items = notBillableEntries;
     }
     else {
+      this.selectedDate = 'All';
       this.items = EntriesService.clonedEntries;
     }
+  }
+
+  displayEntriesByDate() {
+    var entriesBySelectedDate: ITimeTrackingEntry[] = [];
+    this.items = EntriesService.clonedEntries;
+    this.items.forEach(element => {
+      if (this.selectedDate === element.entryDate) {
+        entriesBySelectedDate.push(element);
+      }
+      this.items = entriesBySelectedDate;
+    });
+    if (this.selectedDate === 'All') {
+      this.items = EntriesService.clonedEntries;
+    }
+    return this.items;
   }
 
   loadUserEntriesById(id) {
@@ -594,7 +618,6 @@ export class EntriesComponent implements OnInit {
   clientsSelectedPerDefault() {
     var allClientsFilterFlag = this.selectedClients[0] === -1;
     let selectedClients = [];
-
 
     selectedClients = this.clients.map(function (client) {
       return client.id;

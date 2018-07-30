@@ -29,13 +29,17 @@
                     <md-option class="data-filter-header" *ngFor="let item of users" [value]='item.id'> {{ item.userName }}</md-option>
                 </md-select>
             </span>
-            <md-select placeholder="Billable" [(ngModel)]="selectedBillable" (change)="displayEntriesByBillable();" id="billableFilter">
+            <md-select placeholder="Date" [(ngModel)]="selectedDate" (change)="displayEntriesByDate($event);" id="dateFilter">
+                <md-option class="data-filter-header" *ngFor="let item of selectedDates" [value]='item.key'> {{ item.key }}</md-option>
+            </md-select>&nbsp;
+            <md-select placeholder="Billable" [(ngModel)]="selectedBillable" (change)="displayEntriesByBillable($event);" id="billableFilter">
                 <md-option class="data-filter-header clickOnAll" [value]="-1">All</md-option>
                 <md-option class="data-filter-header" *ngFor="let item of billables" [value]='item.id'> {{ item.key }}</md-option>
             </md-select>&nbsp;
         </span>
     </md-chip-list>
-    <span class="flex"></span>
+</md-toolbar>
+<md-toolbar>
     <md-chip-list>
         <span color="primary" class="filter-position">
             <md-select placeholder="Sort by Column" [(ngModel)]="selectedColumn" (change)="updateSortingSelection();" id="sortingColumn">
@@ -46,8 +50,7 @@
             </md-select>
         </span>
     </md-chip-list>
-</md-toolbar>
-<md-toolbar>
+    <span class="flex"></span>
     <md-input-container>
         <input mdInput id="search" value="" (keydown)="searchKeyDown($event)" #search placeholder="Search">
     </md-input-container>
