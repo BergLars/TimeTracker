@@ -19,8 +19,6 @@ export class DatesService {
   }
 
   public isValidDatePeriod(fromDate, toDate) {
-    fromDate = fromDate.substring(6, 10) + "-" + fromDate.substring(3, 5) + "-" + fromDate.substring(0, 2);
-    toDate = toDate.substring(6, 10) + "-" + toDate.substring(3, 5) + "-" + toDate.substring(0, 2);
     return moment(fromDate, 'YYYY-MM-DD').isSameOrBefore(moment(toDate, 'YYYY-MM-DD'));;
   }
 
