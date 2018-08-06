@@ -29,10 +29,10 @@
                     <md-option class="data-filter-header" *ngFor="let item of users" [value]='item.id'> {{ item.userName }}</md-option>
                 </md-select>
             </span>
-            <md-select placeholder="Date" [(ngModel)]="selectedDate" (change)="displayEntriesByDate($event);" id="dateFilter">
+            <md-select placeholder="Date" [(ngModel)]="selectedDate" (change)="displayEntriesByDate();" id="dateFilter">
                 <md-option class="data-filter-header" *ngFor="let item of selectedDates" [value]='item.key'> {{ item.key }}</md-option>
             </md-select>&nbsp;
-            <md-select placeholder="Billable" [(ngModel)]="selectedBillable" (change)="displayEntriesByBillable($event);" id="billableFilter">
+            <md-select placeholder="Billable" [(ngModel)]="selectedBillable" (change)="displayEntriesByBillable();" id="billableFilter">
                 <md-option class="data-filter-header clickOnAll" [value]="-1">All</md-option>
                 <md-option class="data-filter-header" *ngFor="let item of billables" [value]='item.id'> {{ item.key }}</md-option>
             </md-select>&nbsp;

@@ -196,6 +196,7 @@ export class EntriesComponent implements OnInit {
   }
 
   updateFilterSelection() {
+    this.selectedDate = 'All';
     this.projectsSelectedPerDefault();
     this.tasksSelectedPerDefault();
     this.clientsSelectedPerDefault();
@@ -405,7 +406,8 @@ export class EntriesComponent implements OnInit {
     this.entriesService.setFilteringBy({
       clients: this.selectedClients,
       projects: this.selectedProjects,
-      tasks: this.selectedTasks
+      tasks: this.selectedTasks,
+      selectedDate: this.selectedDate
     });
     // Take in acount the sorting
     this.entriesService.setSortingBy({
@@ -414,8 +416,6 @@ export class EntriesComponent implements OnInit {
     });
 
     self.items = this.entriesService.getEntries();
-    this.selectedBillable = -1;
-    this.selectedDate = 'All';
 
     setTimeout(() => {
       self.datatable.pageSize = self.limit;
@@ -491,19 +491,38 @@ export class EntriesComponent implements OnInit {
     this.entriesService.displaySidebarData();
   }
 
+  displayEntriesByDate() {
+    this.items = this.loadUserEntriesByDate(this.selectedDate);
+    EntriesService.clonedEntries = this.items;
+    this.refreshDatatable();
+    this.entriesService.displaySidebarData();
+  }
+
   displayEntriesByBillable() {
+    this.items = this.loadUserEntriesByBillable(this.selectedBillable);
+    EntriesService.clonedEntries = this.items;
+    this.refreshDatatable();
+    this.entriesService.displaySidebarData();
+  }
+
+  loadUserEntriesByBillable(value) {
     var billableEntries: ITimeTrackingEntry[] = [];
     var notBillableEntries: ITimeTrackingEntry[] = [];
-    this.items = this.displayEntriesByDate();
-
-    this.items.forEach(element => {
-      if (element.billable === false) {
-        notBillableEntries.push(element);
-      }
-      else {
-        billableEntries.push(element);
-      }
-    });
+    var entries: ITimeTrackingEntry[] = [];
+    if (value === -1) {
+      entries = _.map(this.loadUserEntriesById(this.selectedUser), _.clone);
+      this.items = entries;
+    }
+    else {
+      this.loadUserEntriesById(this.selectedUser).forEach(element => {
+        if (element.billable === false) {
+          notBillableEntries.push(element);
+        }
+        else {
+          billableEntries.push(element);
+        }
+      });
+    }
     if (this.selectedBillable === 0) {
       this.items = billableEntries;
     }
@@ -511,22 +530,7 @@ export class EntriesComponent implements OnInit {
       this.items = notBillableEntries;
     }
     else {
-      this.selectedDate = 'All';
-      this.items = EntriesService.clonedEntries;
-    }
-  }
-
-  displayEntriesByDate() {
-    var entriesBySelectedDate: ITimeTrackingEntry[] = [];
-    this.items = EntriesService.clonedEntries;
-    this.items.forEach(element => {
-      if (this.selectedDate === element.entryDate) {
-        entriesBySelectedDate.push(element);
-      }
-      this.items = entriesBySelectedDate;
-    });
-    if (this.selectedDate === 'All') {
-      this.items = EntriesService.clonedEntries;
+      this.items = this.loadUserEntriesById(this.selectedUser);
     }
     return this.items;
   }
@@ -541,6 +545,23 @@ export class EntriesComponent implements OnInit {
     else {
       this.allEntries.forEach(element => {
         if (element.userprofileID === id) {
+          entries.push(element);
+        }
+      });
+      this.items = entries;
+    }
+    return this.items;
+  }
+
+  loadUserEntriesByDate(date) {
+    var entries: ITimeTrackingEntry[] = [];
+    if (date === 'All') {
+      entries = _.map(this.loadUserEntriesById(this.selectedUser), _.clone);
+      this.items = entries;
+    }
+    else {
+      this.loadUserEntriesById(this.selectedUser).forEach(element => {
+        if (date === element.entryDate) {
           entries.push(element);
         }
       });

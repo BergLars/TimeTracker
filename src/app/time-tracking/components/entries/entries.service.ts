@@ -28,6 +28,8 @@ export class EntriesService {
   private projectsFilter = [];
   private clientsFilter = [];
   private tasksFilter = [];
+  private selectedDate: any;
+  private billable: any;
   private isAdmin: boolean = false;
 
   private sortingColumn: string;
@@ -191,6 +193,23 @@ export class EntriesService {
       return (self.clientsFilter.indexOf(entryClientId) != -1);
     });
 
+    // We filter by date
+    entries = entries.filter(function (timeEntry) {
+      let entryStartDate = moment(timeEntry.startDateTime).format('DD.MM.YYYY');
+      if (self.selectedDate === 'All') {
+        return entries;
+      }
+      else {
+        return (entryStartDate === self.selectedDate);
+      }
+    });
+
+    // We filter by billable
+    entries = entries.filter(function (timeEntry) {
+      let entryBillable = timeEntry.billable.valueOf();
+      return (entryBillable != self.billable);
+    });
+
     this.registryService.sidebarComponent.totalTimeSpent = this.timeSpentService.calculateTotalTimeSpent(entries);
     return entries;
   }
@@ -200,9 +219,7 @@ export class EntriesService {
     let sortHook = EntriesService.ascendingSortingHookTable[propertyName];
     sortedEntries = EntriesService.clonedEntries.sort(sortHook);
     sortedEntries = order === "Desc" ? sortedEntries.reverse() : sortedEntries;
-
     let filteredEntries = this.filterEntries(sortedEntries);
-
     return filteredEntries;
   }
 
@@ -210,6 +227,8 @@ export class EntriesService {
     this.projectsFilter = parameterObject["projects"];
     this.clientsFilter = parameterObject["clients"];
     this.tasksFilter = parameterObject["tasks"];
+    this.selectedDate = parameterObject["selectedDate"];
+    this.billable = parameterObject["selectedBillable"];
   }
 
   public setSortingBy(parameterObject) {
