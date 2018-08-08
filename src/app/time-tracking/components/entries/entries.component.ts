@@ -99,6 +99,7 @@ export class EntriesComponent implements OnInit {
   @Input() selectedDate: any;
   @Input() users: IUser[] = [];
   public sscanf = require('scanf');
+  public rowUserprofileID: any;
 
 
   constructor(
@@ -387,6 +388,7 @@ export class EntriesComponent implements OnInit {
   }
 
   openEditDialog(row) {
+    this.rowUserprofileID = row.userprofileID;
     this.updateService
       .confirm(this.viewContainerRef, row, this.projects, this.tasks, this.clients)
       .subscribe(res => {
