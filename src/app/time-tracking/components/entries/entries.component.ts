@@ -147,14 +147,14 @@ export class EntriesComponent implements OnInit {
         month = date[1];
         year = date[2];
         this.term = sprintf('%d-%02d-%02d', year, month, day);
-        this.loadSearched(this.term);
+        this.loadSearched(this.selectedUser, this.term);
       }
-      this.loadSearched(this.term);
+      this.loadSearched(this.selectedUser, this.term);
     }
   }
 
-  loadSearched(term) {
-    this.entriesService.searchBy(term).then(() => {
+  loadSearched(id, term) {
+    this.entriesService.searchBy(id, term).then(() => {
       this.refreshDatatable();
     });
   }

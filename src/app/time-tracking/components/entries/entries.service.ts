@@ -404,12 +404,12 @@ export class EntriesService {
     });
   }
 
-  searchBy(term): Promise<any> {
+  searchBy(id, term): Promise<any> {
     let that = this;
-    let url = this.baseUrl + "/timeentries/search?term=";
+    let url = this.baseUrl + "/timeentries/search?";
 
     return new Promise<any>((resolve, reject) => {
-      this.http.get(url + term).map(res => res.json()).subscribe(
+      this.http.get(url + "selectedUserID=" + id + "&term=" + term).map(res => res.json()).subscribe(
         loadedEntries => {
           var items = [];
 
