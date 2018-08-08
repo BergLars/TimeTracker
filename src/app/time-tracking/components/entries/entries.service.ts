@@ -82,8 +82,9 @@ export class EntriesService {
     * @param b
    */
   private static sortEntriesByDescriptionAsc = (a, b) => {
-    if (isNaN(a.description) || isNaN(b.description))
-      return a.description > b.description ? 1 : -1;
+    if (isNaN(a.description) || isNaN(b.description)) {
+      return a.description.toLowerCase() > b.description.toLowerCase() ? 1 : -1;
+    }
     return a.description - b.description;
   }
 
