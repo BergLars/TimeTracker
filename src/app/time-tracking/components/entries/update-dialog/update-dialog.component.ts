@@ -116,7 +116,7 @@ export class UpdateDialogComponent implements OnInit {
           this.startTime = "00:00";
           this.endTime = "00:00";
         } else {
-          alert("Invalid time Period!");  
+          alert("Invalid time Period!");
         }
       }
       else if ((this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime) && this.registryService.timeSpentRequirement.test(this.workTime) && this.registryService.timeRequirement.test(this.travelTime)) === false) {
@@ -144,7 +144,7 @@ export class UpdateDialogComponent implements OnInit {
       startDateTime: this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2) + " " + this.startTime,
       endDateTime: this.toDate.substring(6, 10) + "-" + this.toDate.substring(3, 5) + "-" + this.toDate.substring(0, 2) + " " + this.endTime,
       description: this.description.trim(),
-      userprofileID: this.registryService.entriesComponent.selectedUser,
+      userprofileID: this.registryService.entriesComponent.rowUserprofileID,
       clientID: this._mySelectedClient,
       projectID: this._mySelectedProject,
       taskID: this._mySelectedTask,
