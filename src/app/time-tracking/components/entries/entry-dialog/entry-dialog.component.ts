@@ -122,45 +122,28 @@ export class EntryDialogComponent implements OnInit {
     if (this.loginService.loggedIn()) {
       if (this.description === "" || this.description === undefined || this.toDate === undefined || this.fromDate === undefined || this.selectedProject === undefined || this.selectedClient === undefined || this.selectedTask === undefined) {
         alert("Please check if all fields are filled in");
-      }
-      else if ((this.registryService.dateRequirement.test(this.inputFromDate) && this.registryService.dateRequirement.test(this.inputToDate)) !== true) {
+      } else if ((this.registryService.dateRequirement.test(this.inputFromDate) && this.registryService.dateRequirement.test(this.inputToDate)) !== true) {
         alert("Please check date format");
-      }
-      else if (this.validDatePeriod === false) {
+      } else if (this.validDatePeriod === false) {
         alert("Invalid date Period!");
-      }
-      else if (this.fromDate === this.toDate && this.validTimePeriod === false) {
-        if (this.startTime === '' && this.endTime === '') {
-          this.startTime = "00:00";
-          this.endTime = "00:00";
-        } else {
-          alert("Invalid time Period!");  
-        }
-      }
-      else if (((this.workTime === '' && (this.startTime === '' || this.endTime === ''))) === true) {
+      } else if (((this.workTime === '' && (this.startTime === '' || this.endTime === ''))) === true) {
         alert("Check if woktime or start and end time are filled!");
-      }
-      else {
+      } else {
         if (this.travelTime === '') {
           this.travelTime = "00:00";
-        }
-        if (this.registryService.timeSpentRequirement.test(this.travelTime) === false) {
+        } if (this.registryService.timeSpentRequirement.test(this.travelTime) === false) {
           alert('Wrong travel time format');
-        }
-        if (this.startTime === '' || this.endTime === '') {
+        } if (this.startTime === '' || this.endTime === '') {
           this.startTime = "00:00";
           this.endTime = "00:00";
           return this.registryService.timeSpentRequirement.test(this.workTime) === false ? alert('Wrong work time format') : this.createEntryWithWorkTime();
-        }
-        if (this.workTime === '') {
+        } if (this.workTime === '') {
           return (this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime)) === false ? alert('Wrong start or end time format') : this.createEntryWithStartAndEndTime();
-        }
-        else {
+        } else {
           var r = confirm('Clicking on OK you will take the worktime value');
           if (r === true) {
             this.createEntryWithWorkTime();
-          }
-          else {
+          } else {
             this.createEntryWithStartAndEndTime();
           }
         }
