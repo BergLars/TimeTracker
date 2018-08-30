@@ -125,7 +125,7 @@ export class EntryDialogComponent implements OnInit {
       } else if ((this.registryService.dateRequirement.test(this.inputFromDate) && this.registryService.dateRequirement.test(this.inputToDate)) !== true) {
         alert("Please check date format");
       } else if (this.validDatePeriod === false) {
-        alert("Invalid date Period!");
+        alert("Invalid date period!");
       } else if (((this.workTime === '' && (this.startTime === '' || this.endTime === ''))) === true) {
         alert("Check if woktime or start and end time are filled!");
       } else {

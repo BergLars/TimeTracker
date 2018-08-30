@@ -167,10 +167,19 @@ export class UpdateDialogComponent implements OnInit {
         }
       });
   }
+
   public ok() {
     this.validDatePeriod = this.datesService.isValidDatePeriod(this.fromDate, this.toDate);
     this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime);
-    this.checkMandatoryFields();
+    if (this.validDatePeriod) {
+      if (this.validTimePeriod) {
+        this.checkMandatoryFields();
+      } else {
+        alert("Invalid time period!");
+      }
+    } else {
+      alert("Invalid date period!");
+    } 
   }
 
   keyDownFunction(event) {
