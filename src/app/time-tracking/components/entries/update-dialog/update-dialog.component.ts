@@ -100,6 +100,8 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   createEntryWithWorkTime() {
+    this.startTime = "00:00";
+    this.endTime = "00:00";
     this.workTime = this.workTime;
     return this.updateEntry();
   }
@@ -124,7 +126,12 @@ export class UpdateDialogComponent implements OnInit {
           this.endTime = "00:00";
           return this.registryService.timeSpentRequirement.test(this.workTime) === false ? alert('Wrong work time format') : this.createEntryWithWorkTime();
         } if (this.workTime === '') {
-          return (this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime)) === false ? alert('Wrong start or end time format') : this.createEntryWithStartAndEndTime();
+          if (this.validTimePeriod) {
+            return (this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime)) === false ? 
+                  alert('Wrong start or end time format') : this.createEntryWithStartAndEndTime();  
+          } else {
+            alert("Wrong start or end time format");
+          } 
         } else {
           var r = confirm('Clicking on OK you will take the worktime value');
           if (r === true) {
@@ -171,15 +178,8 @@ export class UpdateDialogComponent implements OnInit {
   public ok() {
     this.validDatePeriod = this.datesService.isValidDatePeriod(this.fromDate, this.toDate);
     this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime);
-    if (this.validDatePeriod) {
-      if (this.validTimePeriod) {
+
         this.checkMandatoryFields();
-      } else {
-        alert("Invalid time period!");
-      }
-    } else {
-      alert("Invalid date period!");
-    } 
   }
 
   keyDownFunction(event) {

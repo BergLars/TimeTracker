@@ -120,6 +120,7 @@ export class EntryDialogComponent implements OnInit {
 
   public checkMandatoryFields() {
     if (this.loginService.loggedIn()) {
+
       if (this.description === "" || this.description === undefined || this.toDate === undefined || this.fromDate === undefined || this.selectedProject === undefined || this.selectedClient === undefined || this.selectedTask === undefined) {
         alert("Please check if all fields are filled in");
       } else if ((this.registryService.dateRequirement.test(this.inputFromDate) && this.registryService.dateRequirement.test(this.inputToDate)) !== true) {
@@ -137,8 +138,13 @@ export class EntryDialogComponent implements OnInit {
           this.startTime = "00:00";
           this.endTime = "00:00";
           return this.registryService.timeSpentRequirement.test(this.workTime) === false ? alert('Wrong work time format') : this.createEntryWithWorkTime();
-        } if (this.workTime === '') {
-          return (this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime)) === false ? alert('Wrong start or end time format') : this.createEntryWithStartAndEndTime();
+        } if (this.workTime === '' ) {
+          if (this.validTimePeriod) {
+            return (this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime)) === false ? 
+                  alert('Wrong start or end time format') : this.createEntryWithStartAndEndTime();  
+          } else {
+            alert("Wrong start or end time format");
+          }          
         } else {
           var r = confirm('Clicking on OK you will take the worktime value');
           if (r === true) {
