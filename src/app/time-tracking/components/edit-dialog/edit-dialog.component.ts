@@ -202,15 +202,15 @@ export class EditDialogComponent implements OnInit {
 						this.dialogRef.close(true);
 						this.registryService.entriesComponent.loadEntries();
 					},
-					(error) => {
-						if (error.status === 400 || error.status === 404) {
-							alert('Please check if a project is selected!');
-							return Observable.of(undefined);
-						}
-						if (error.status === 500) {
-							alert('This project is used on entries. Cannot be deleted')
-						}
-					});
+						(error) => {
+							if (error.status === 400 || error.status === 404) {
+								alert('Please check if a project is selected!');
+								return Observable.of(undefined);
+							}
+							if (error.status === 500) {
+								alert('This project is used on entries. Cannot be deleted')
+							}
+						});
 			}
 			if (this.item == this.TASK) {
 				return this.http.delete(this.baseUrl + "/tasks/" + this.taskID)
@@ -218,15 +218,15 @@ export class EditDialogComponent implements OnInit {
 						this.dialogRef.close(true);
 						this.registryService.entriesComponent.loadEntries();
 					},
-					(error) => {
-						if (error.status === 400 || error.status === 404) {
-							alert('Please check if a task is selected!');
-							return Observable.of(undefined);
-						}
-						if (error.status === 500) {
-							alert('This task is used on entries. Cannot be deleted')
-						}
-					});
+						(error) => {
+							if (error.status === 400 || error.status === 404) {
+								alert('Please check if a task is selected!');
+								return Observable.of(undefined);
+							}
+							if (error.status === 500) {
+								alert('This task is used on entries. Cannot be deleted')
+							}
+						});
 			}
 			if (this.item == this.CLIENT) {
 				return this.http.delete(this.baseUrl + "/clients/" + this.clientID)
@@ -234,15 +234,15 @@ export class EditDialogComponent implements OnInit {
 						this.dialogRef.close(true);
 						this.registryService.entriesComponent.loadEntries();
 					},
-					(error) => {
-						if (error.status === 400 || error.status === 404) {
-							alert('Please check if a client is selected!');
-							return Observable.of(undefined);
-						}
-						if (error.status === 500) {
-							alert('This client is used on entries. Cannot be deleted')
-						}
-					});
+						(error) => {
+							if (error.status === 400 || error.status === 404) {
+								alert('Please check if a client is selected!');
+								return Observable.of(undefined);
+							}
+							if (error.status === 500) {
+								alert('This client is used on entries. Cannot be deleted')
+							}
+						});
 			}
 		} else {
 			alert("Your token has expired. Please log in again!");
