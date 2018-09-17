@@ -24,13 +24,13 @@ export class DatesService {
     return moment(formatedFromDate).isSameOrBefore(formatedToDate, 'YYYY-MM-DD', 'day');
   }
 
-  public convertDaysToHours(fromDate, toDate) {
-    var fromDateDay = +fromDate.substring(0, 2);
-    var toDateDay = +toDate.substring(0, 2);
-    var numberOfdays = toDateDay - fromDateDay;
-    var numberOfHours = numberOfdays * 24;
-    return numberOfHours;
+  public isSameDate(fromDate, toDate) {
+    let formatedFromDate = fromDate.substring(6, 10) + "-" + fromDate.substring(3, 5) + "-" + fromDate.substring(0, 2);
+    let formatedToDate = toDate.substring(6, 10) + "-" + toDate.substring(3, 5) + "-" + toDate.substring(0, 2);
+    let isSameDate: boolean;
+    return moment(formatedFromDate).isSame(formatedToDate, 'day');
   }
+
   /**
     * Sort by Start date
     * @param a

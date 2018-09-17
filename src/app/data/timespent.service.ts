@@ -129,7 +129,11 @@ export class TimespentService {
     return result;
   }
 
-  isValidTimePeriod(starttime, endtime) {
-    return moment(starttime, 'HH:mm').isSameOrBefore(moment(endtime, 'HH:mm'));;
+  isValidTimePeriod(starttime, endtime, isSameDate) {
+    if (isSameDate) {
+      return moment(starttime, 'HH:mm').isSameOrBefore(moment(endtime, 'HH:mm'));;  
+    } else {
+      return true;
+    }    
   }
 }

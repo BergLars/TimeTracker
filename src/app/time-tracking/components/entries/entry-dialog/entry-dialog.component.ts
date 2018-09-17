@@ -69,6 +69,7 @@ export class EntryDialogComponent implements OnInit {
   public validTimePeriod: boolean = false;
   @Input() validDate: boolean = false;
   public validDatePeriod: boolean;
+  public isSameDate: boolean;
 
   constructor(
     public dialogRef: MdDialogRef<EntryDialogComponent>,
@@ -102,7 +103,8 @@ export class EntryDialogComponent implements OnInit {
     this.workTime = valueWorkTime;
     this.isBillable = valueIsBillable.checked;
     this.validDatePeriod = this.datesService.isValidDatePeriod(this.inputFromDate, this.inputToDate);
-    this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime);
+    this.isSameDate = this.datesService.isSameDate(this.inputFromDate, this.inputToDate);
+    this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime, this.isSameDate);
   }
 
   public readDates(valueFrom: any, valueTo: any) {

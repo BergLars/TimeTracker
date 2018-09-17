@@ -67,6 +67,7 @@ export class UpdateDialogComponent implements OnInit {
   @Input() travelTime: any;
   public validDatePeriod: boolean = false;
   public validTimePeriod: boolean = false;
+  public isSameDate: boolean;
 
   constructor(
     public dialogRef: MdDialogRef<UpdateDialogComponent>,
@@ -179,7 +180,8 @@ export class UpdateDialogComponent implements OnInit {
 
   public ok() {
     this.validDatePeriod = this.datesService.isValidDatePeriod(this.fromDate, this.toDate);
-    this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime);
+    this.isSameDate = this.datesService.isSameDate(this.fromDate, this.toDate);
+    this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime, this.isSameDate);
 
      this.checkMandatoryFields();
   }
