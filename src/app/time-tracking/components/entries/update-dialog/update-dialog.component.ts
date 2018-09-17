@@ -94,8 +94,10 @@ export class UpdateDialogComponent implements OnInit {
     }
   }
 
-  createEntryWithStartAndEndTime() {
-    this.workTime = this.timeSpentService.calculateWorktimeBetweenDates(this.datesService.convertDaysToHours(this.fromDate, this.toDate), this.startTime, this.endTime);
+  createEntryWithStartAndEndTime() {    
+    let formatedStartDateTime = this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2) + " " + this.startTime;
+    let formatedEndDateTime = this.toDate.substring(6, 10) + "-" + this.toDate.substring(3, 5) + "-" + this.toDate.substring(0, 2) + " " + this.endTime;
+    this.workTime = this.timeSpentService.calculateWorktimeBetweenDates(formatedStartDateTime, formatedEndDateTime);
     return this.updateEntry();
   }
 
@@ -179,7 +181,7 @@ export class UpdateDialogComponent implements OnInit {
     this.validDatePeriod = this.datesService.isValidDatePeriod(this.fromDate, this.toDate);
     this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime);
 
-        this.checkMandatoryFields();
+     this.checkMandatoryFields();
   }
 
   keyDownFunction(event) {

@@ -78,17 +78,27 @@ export class TimespentService {
       sprintf("%02d:%02d", hourTimespent - hourTraveltime, minuteTimespent - minuteTraveltime);
   }
 
-  calculateWorktimeBetweenDates(numberOfHours, startTime, endTime) {
-    var hours = Math.abs(Number(endTime.substring(0, 2)) - Number(startTime.substring(0, 2)));
-    var workTimeHours, workTime;
-    if (Number(endTime.substring(3, 6)) < Number(startTime.substring(3, 6))) {
-      hours -= 1;
-      workTimeHours = Math.abs(numberOfHours - hours);
-      workTime = sprintf("%02d:%02d", Math.abs(numberOfHours - hours), (Number(endTime.substring(3, 6)) + 60) - Number(startTime.substring(3, 6)));
+  calculateWorktimeBetweenDates(startDateTime, endDateTime) {
+    var start = new moment(startDateTime);
+    var end = new moment(endDateTime);
+    var durationMS = moment.duration(end.diff(start));
+    var durationD = durationMS._data.days;
+    var durationDtoH;
+    if (durationD  > 0) {
+      durationDtoH = durationD  * 24;
     } else {
-      workTimeHours = Math.abs(numberOfHours - hours);
-      workTime = sprintf("%02d:%02d", Math.abs(numberOfHours - hours), Number(endTime.substring(3, 6)) - Number(startTime.substring(3, 6)));
+      durationDtoH = 0;
     }
+    var durationH = durationMS._data.hours + durationDtoH;
+    var durationMin = durationMS._data.minutes;
+    if (durationH < 10) {
+      durationH = "0" + durationH;
+    }
+    if (durationMin < 10) {
+      durationMin = "0" + durationMin;
+    }
+    var workTime = durationH + ":" + durationMin;
+
     return workTime;
   }
 

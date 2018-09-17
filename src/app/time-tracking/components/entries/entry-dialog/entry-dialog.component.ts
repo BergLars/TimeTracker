@@ -161,8 +161,9 @@ export class EntryDialogComponent implements OnInit {
   }
 
   createEntryWithStartAndEndTime() {
-    // var timespent = this.timeSpentService.calculateTimeSpent(this.startTime, this.endTime, this.travelTime);
-    this.workTime = this.timeSpentService.calculateWorktimeBetweenDates(this.datesService.convertDaysToHours(this.fromDate, this.toDate), this.startTime, this.endTime);
+    let formatedStartDateTime = this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2) + " " + this.startTime;
+    let formatedEndDateTime = this.toDate.substring(6, 10) + "-" + this.toDate.substring(3, 5) + "-" + this.toDate.substring(0, 2) + " " + this.endTime;
+    this.workTime = this.timeSpentService.calculateWorktimeBetweenDates(formatedStartDateTime, formatedEndDateTime);
     return this.newEntry();
   }
 
@@ -174,53 +175,6 @@ export class EntryDialogComponent implements OnInit {
   keyDownFunction(event) {
     if (event.key == 'Enter') {
       this.checkMandatoryFields();
-    }
-  }
-
-  public adjustEndDate() {
-    if (this.startTime > this.endTime) {
-      let toDate = this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2);
-      let hours = Number(this.workTime.substring(0, 2)) + Number(this.startTime.substring(0, 2));
-      let minutes = Number(this.workTime.substring(3, 6)) + Number(this.startTime.substring(3, 6));
-      let hourFromMinutes = Math.floor(minutes / 60);
-      let numberOfDays = Math.floor((hours + hourFromMinutes) / 24);
-      let entryEndDate = moment(toDate, 'YYYY-MM-DD').add(numberOfDays, 'd');
-      this.toDate = moment(entryEndDate).format('YYYY-MM-DD');
-    } else {
-      let toDate = this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2);
-      this.toDate = moment(toDate).format('YYYY-MM-DD');
-    }
-  }
-
-  public decimalToTime(t: any) {
-    // t is a decimal validTimePeriodue
-    if (this.isNumeric(t.toString()) === true) {
-      if (t >= 0.1) {
-        let decimalTime = parseFloat(t);
-        decimalTime = decimalTime * 60 * 60;
-        let hours: any = Math.floor((decimalTime / (60 * 60)));
-        decimalTime = decimalTime - (hours * 60 * 60);
-        let minutes: any = Math.floor((decimalTime / 60));
-        if (hours < 10) {
-          hours = "0" + hours;
-        }
-        if (minutes < 10) {
-          minutes = "0" + minutes;
-        }
-        this.workTime = hours + ":" + minutes;
-        let endT = moment() + moment.duration().add(this.workTime, 'HH:mm');
-        this.endTime = moment(endT).format('HH:mm');
-        this.newEntry();
-      } else {
-        alert('Wrong time format !');
-      }
-    } else if (t.toString().indexOf(':') !== -1) {
-      this.workTime = t;
-      let endT = moment() + moment.duration().add(this.workTime, 'HH:mm');
-      this.endTime = moment(endT).format('HH:mm');
-      this.newEntry();
-    } else {
-      alert('Wrong time format !');
     }
   }
 
