@@ -18,6 +18,7 @@ export class EntryDialogComponent implements OnInit {
   private _mySelectedClient: any;
   private _mySelectedTask: any;
   public title: string;
+  model: any = {};
 
   @Input() projects: IProject[] = [];
   @Input() clients: IClient[] = [];

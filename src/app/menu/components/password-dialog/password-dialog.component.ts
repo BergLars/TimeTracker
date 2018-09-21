@@ -12,10 +12,8 @@ import { EntriesService } from '../../../time-tracking/components/entries/entrie
 })
 export class PasswordDialogComponent implements OnInit {
 	public title: string;
-	public newPassword: string;
-	public confirmPassword: string;
-	public currentPassword: string;
 	public userID: number;
+	model: any = {};
 
 	constructor(
 		public dialogRef: MdDialogRef<PasswordDialogComponent>,
@@ -28,52 +26,31 @@ export class PasswordDialogComponent implements OnInit {
 		this.userID = this.loginService.getLoggedUserID();
 	}
 
-	public getValues(valueCurrentPass: string, valueNewPass: string, valueConfirmPass: string) {
-		this.currentPassword = valueCurrentPass;
-		this.newPassword = valueNewPass;
-		this.confirmPassword = valueConfirmPass;
-	}
-
-	checkMandatoryFields() {
+	private ok() {
 		if (this.loginService.loggedIn()) {
-			if (this.currentPassword === "" || this.newPassword === "" || this.confirmPassword === null) {
-				alert("Please check if all the fields are filled in !");
-			}
-			else {
-				this.updatePassword();
-			}
+			this.userService.updatePassword(encodeURIComponent(this.model.currentPassword), encodeURIComponent(this.model.newPassword), encodeURIComponent(this.model.confirmPassword)).map(res => res.json()).subscribe(
+				user => {
+					this.dialogRef.close(true);
+					this.loginService.logout();
+				},
+				error => {
+					if (error.status === 400 || error.status === 404) {
+						alert("Passwords are not the same !");
+						this.router.navigate(['timeentries']);
+					}
+					else if (error.status === 412) {
+						alert("Wrong current password or See password requirement !");
+						this.model.confirmPassword ="";
+						this.router.navigate(['timeentries']);
+					}
+					else if (error.status === 500) {
+						alert('Internal server error !')
+					}
+				}
+			);
 		} else {
-			alert("Your token has expired. Please log in again!");
-			this.dialogRef.close(true);
-			this.entriesService.entriesAreLoaded();
+			alert("Your token has expired. Please log in again");
+			this.loginService.logout();
 		}
-	}
-
-	public keyDownFunction(event) {
-		if (event.keyCode == 13) {
-			this.checkMandatoryFields();
-		}
-	}
-
-	private updatePassword() {
-		this.userService.updatePassword(encodeURIComponent(this.currentPassword), encodeURIComponent(this.newPassword), encodeURIComponent(this.confirmPassword)).map(res => res.json()).subscribe(
-			user => {
-				this.dialogRef.close(true);
-				this.loginService.logout();
-			},
-			error => {
-				if (error.status === 400 || error.status === 404) {
-					alert("Passwords are not the same !");
-					this.router.navigate(['timeentries']);
-				}
-				else if (error.status === 412) {
-					alert("Wrong current password or See password requirement !");
-					this.router.navigate(['timeentries']);
-				}
-				else if (error.status === 500) {
-					alert('Internal server error !')
-				}
-			}
-		);
 	}
 } 

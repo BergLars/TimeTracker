@@ -33,6 +33,7 @@ export class CreateDialogComponent implements OnInit {
 	public CLIENT: number = 3;
 	public USER: number = 4;
 	public isAdmin: boolean = false;
+	model: any = {};
 
 	public createItems = [
 		{ key: 'Task', id: 1 },

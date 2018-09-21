@@ -1,5 +1,6 @@
 <h1 md-dialog-title>{{ title }}</h1>
 <div md-dialog-content class="hide-dialog-scrollbar" (keydown)="validateForm(newTaskDescription.value,newProjectName.value,newClientName.value,username.value,password.value,confirmPassword.value,adminRole);keyDownFunction($event);">
+    <form name="form" (ngSubmit)="f.form.valid && ok()" #f="ngForm" novalidate>
     <table>
         <tr>
             <td>Create new:</td>
@@ -11,9 +12,14 @@
         </tr>
         <tr [hidden]="item != PROJECT">
             <td>
-                <md-input-container>
-                    <input id="newProjectName" mdInput placeholder="Project Name" #newProjectName>
-                </md-input-container>
+                <div class="form-group">
+                    <md-input-container>
+                        <!-- <input mdInput type="text" placeholder="Project Name" class="form-control" name="projectname" [(ngModel])="model.projectname" #projectname="ngModel"> -->
+                        <!-- <div *ngIf="f.submitted && projectname.invalid" class="invalid-feedback">
+                        <div *ngIf="projectname.errors.required">df</div> -->
+                    <!-- </div> -->
+                    </md-input-container>
+                </div>
             </td>
         </tr>
         <tr [hidden]="item != TASK">
@@ -62,6 +68,7 @@
         </tr>
     </table>
     <br>
+    </form>
 </div>
 <div md-dialog-actions>
     <button type="button" md-button (click)="validateForm(newTaskDescription.value,newProjectName.value,newClientName.value,username.value,password.value,confirmPassword.value,adminRole);checkMandatoryFields();">OK</button>

@@ -6,94 +6,124 @@
   <br>
   <em>Hour format: hh:mm</em>
 </label>
-<div md-dialog-content class="hide-dialog-scrollbar" (keydown)="readData(inputDescription.value, inputPlace.value, fromDate.value, inputFromDate.value, toDate.value, inputToDate.value, inputStartTime.value, inputEndTime.value, inputTravelTime.value, inputWorkTime.value, billable);readDatesOnInputField();readDates(fromDate,toDate);keyDownFunction($event);">
+ 
+<div md-dialog-content class="hide-dialog-scrollbar">
+  <form name="form" (ngSubmit)="f.form.valid && ok()" #f="ngForm" novalidate>
   <br>
-  <table>
-    <tr>
-      <td>
-        <md-input-container>
-          <input class="clickable-icon" #inputDescription mdInput placeholder="Description" [(ngModel)]="description">
-        </md-input-container>
-      </td>
-      <td>
-        <md-input-container>
-          <input class="clickable-icon" #inputPlace mdInput placeholder="Place" [(ngModel)]="place">
-        </md-input-container>
-      </td>
-    </tr>
-    <br>
-    <tr>
-      <td>
-        <md-select #project [(ngModel)]='selectedProject' placeholder="Project">
-          <md-option *ngFor="let project of projects" [value]='project.id'> {{ project.projectName }} </md-option>
-        </md-select>*
-      </td>
-      <td>
-        <md-select #client [(ngModel)]='selectedClient' placeholder="Client">
-          <md-option *ngFor="let client of clients" [value]='client.id'> {{ client.clientName }} </md-option>
-        </md-select>*
-      </td>
-      <td>
-        <md-select #task [(ngModel)]='selectedTask' placeholder="Task">
-          <md-option *ngFor="let task of tasks" [value]='task.id'> {{ task.taskDescription }}</md-option>
-        </md-select>*
-      </td>
-    </tr>
-    <br>
-    <tr>
-      <td>
-        <md-input-container>
-          <input mdInput placeholder="Start Date" #inputFromDate [mdDatepicker]="fromDate" id="inputFromDate">
-          <button mdSuffix [mdDatepickerToggle]="fromDate"></button>
-        </md-input-container>
-        <md-datepicker #fromDate></md-datepicker>*
-      </td>
-      <td>
-        &nbsp;
-        <md-input-container>
-          <input mdInput #inputStartTime placeholder="Start Time" [(ngModel)]="startTime">
-        </md-input-container>
-      </td>
-    </tr>
-    <br>
-    <tr>
-      <td>
-        <md-input-container>
-          <input mdInput placeholder="End Date" #inputToDate [mdDatepicker]="toDate" id="inputToDate">
-          <button mdSuffix [mdDatepickerToggle]="toDate"></button>
-        </md-input-container>
-        <md-datepicker #toDate></md-datepicker>*
-      </td>
-      <td>
-        &nbsp;
-        <md-input-container>
-          <input mdInput #inputEndTime placeholder="End Time" [(ngModel)]="endTime">
-        </md-input-container>
-      </td>
-    </tr>
-    <br>
-    <tr>
-      <td>
-        <md-input-container>
-          <input class="clickable-icon" #inputTravelTime mdInput placeholder="Travel time" [(ngModel)]="travelTime">
-        </md-input-container>
-      </td>
-      <td>
-        <md-input-container>
-          <input class="clickable-icon" #inputWorkTime mdInput placeholder="Work time" [(ngModel)]="workTime">
-        </md-input-container>
-      </td>
-    </tr>
-    <br>
-    <tr>
-      <td>
-        <md-checkbox #billable [(ngModel)]="isBillable" readonly> is Billable</md-checkbox>
-      </td>
-    </tr>
-  </table>
-</div>
-<div md-dialog-actions>
-  <button type="button" md-button (click)="readData(inputDescription.value, inputPlace.value, fromDate.value, inputFromDate.value, toDate.value, inputToDate.value, inputStartTime.value, inputEndTime.value, inputTravelTime.value, inputWorkTime.value, billable);readDatesOnInputField();readDates(fromDate,toDate);checkMandatoryFields();
-    ">OK</button>
-  <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
+
+    <table>
+      <tr>
+        <td>
+          <div class="form-group">
+            <md-input-container>
+              <input mdInput type="text" class="form-control" name="description" placeholder="Description" [(ngModel)]="model.description" #description="ngModel" required>
+              <div *ngIf="f.submitted && description.invalid" class="invalid-feedback">
+                <div *ngIf="username.errors.required">Please enter a description</div>
+              </div>
+              
+            </md-input-container>
+          </div>
+        </td>
+        <td>
+          <div class="form-group">
+            <md-input-container>
+              <input mdInput type="text" name="place" placeholder="Place" [(ngModel)]="model.place" #place="ngModel">
+            </md-input-container>
+          </div>
+        </td>
+      </tr>
+      <br>
+      <tr>
+        <td>
+          <div class="form-group">
+            <md-select  [(ngModel)]='selectedProject' placeholder="Project">
+              <md-option *ngFor="let project of projects" [value]='project.id'> {{ project.projectName }} </md-option>
+            </md-select>*
+          </div>
+        </td>
+        <td>
+          <md-select #client [(ngModel)]='selectedClient' placeholder="Client">
+            <md-option *ngFor="let client of clients" [value]='client.id'> {{ client.clientName }} </md-option>
+          </md-select>*
+        </td>
+        <td>
+          <md-select #task [(ngModel)]='selectedTask' placeholder="Task">
+            <md-option *ngFor="let task of tasks" [value]='task.id'> {{ task.taskDescription }}</md-option>
+          </md-select>*
+        </td>
+      </tr>
+      <br>
+      <tr>
+        <td>
+          <div class="form-group">
+              <md-input-container>
+                <input mdInput placeholder="Start Date" class="form-control" name="startdate" [(ngModel)]="model.startdate" [mdDatepicker]="fromDate" #username="ngModel">
+                <button mdSuffix [mdDatepickerToggle]="fromDate"></button>
+              </md-input-container>
+            <md-datepicker #fromDate></md-datepicker>*
+          </div>
+        </td>
+        <td>
+          &nbsp;
+          <div class="form-group">
+            <md-input-container>
+              <input mdInput type="time" placeholder="Start Time" class="form-control" name="starttime" [(ngModel)]="model.startTime" #starttime="ngModel">
+            </md-input-container>
+          </div>
+        </td>
+      </tr>
+      <br>
+      <tr>
+        <td>
+          <div class="form-group">
+            <md-input-container>
+              <input mdInput placeholder="End Date" #inputToDate [mdDatepicker]="toDate" id="inputToDate">
+              <button mdSuffix [mdDatepickerToggle]="toDate"></button>
+            </md-input-container>
+            <md-datepicker #toDate></md-datepicker>*
+          </div>
+        </td>
+        <td>
+          <div class="form-group">
+            <md-input-container>
+              <input mdInput type="time" placeholder="End time" class="form-control" name="endtime" [(ngModel)]="model.endTime" #endtime="ngModel">
+            </md-input-container>
+          </div>
+        </td>
+      </tr>
+      <br>
+      <tr>
+        <td>
+          <div class="form-group">
+            <md-input-container>
+              <input mdInput type="text" placeholder="Travel time" class="form-control" name="traveltime" [(ngModel)]="model.traveltime" #username="ngModel">
+            </md-input-container>
+          </div>
+        </td>
+        <td>
+          <div class="form-group">
+            <md-input-container>
+              <input mdInput type="text" placeholder="Work time" class="form-control" name="worktime" [(ngModel)]="model.worktime" #worktime="ngModel">
+            </md-input-container>
+          </div>
+        </td>
+      </tr>
+      <br>
+      <tr>
+        <td>
+          <md-checkbox #billable [(ngModel)]="isBillable" readonly> is Billable</md-checkbox>
+        </td>
+      </tr>
+    </table>
+    <div class="form-group">
+      <button md-button click>Anmelden</button>
+      <button md-button (click)="dialogRef.close()">Cancel</button>
+    </div>
+ <!--    <div md-dialog-actions>
+      <button type="button" md-button (click)="readData(inputDescription.value, inputPlace.value, fromDate.value, inputFromDate.value, toDate.value, inputToDate.value, inputStartTime.value, inputEndTime.value, inputTravelTime.value, inputWorkTime.value, billable);readDatesOnInputField();readDates(fromDate,toDate);checkMandatoryFields();
+        ">OK</button>
+      <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
+    </div> -->
+
+  </form>
 </div>
