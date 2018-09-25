@@ -74,7 +74,7 @@
                 *ngIf="!editing[row.$$index + '-project']">
                 {{row.projectName}}
             </span>
-            <select class="select-field" *ngIf="editing[row.$$index + '-project']" (mouseleave)="removeSelectFocus(row,'-project')" (change)="updateValue($event, 'project', value, row);">
+            <select class="select-field" *ngIf="editing[row.$$index + '-project']" (blur)="removeSelectFocus(row,'-project')" (change)="updateValue($event, 'project', value, row);">
                 <option *ngFor="let project of projects" [value]="project.id" [selected]="project.id == row.project.id ? 'selected':''">{{ project.projectName}}</option>
             </select>
         </ng-template>
@@ -85,7 +85,7 @@
                 *ngIf="!editing[row.$$index + '-client']">
                 {{row.clientName}}
             </span>
-            <select class="select-field" *ngIf="editing[row.$$index + '-client']" (mouseleave)="removeSelectFocus(row,'-client')" (change)="updateValue($event, 'client', value, row)">
+            <select class="select-field" *ngIf="editing[row.$$index + '-client']" (blur)="removeSelectFocus(row,'-client')" (change)="updateValue($event, 'client', value, row)">
                 <option *ngFor="let client of clients" [value]="client.id" [selected]="client.id == row.client.id ? 'selected':''">{{ client.clientName}}</option>
             </select>
         </ng-template>
@@ -96,7 +96,7 @@
                 *ngIf="!editing[row.$$index + '-task']">
                 {{row.taskDescription}}
             </span>
-            <select class="select-field" *ngIf="editing[row.$$index + '-task']" (mouseleave)="removeSelectFocus(row,'-task')" (change)="updateValue($event, 'task', value, row)">
+            <select class="select-field" *ngIf="editing[row.$$index + '-task']" (blur)="removeSelectFocus(row,'-task')" (change)="updateValue($event, 'task', value, row)">
                 <option *ngFor="let task of tasks" [value]="task.id" [selected]="task.id == row.task.id ? 'selected':''">{{ task.taskDescription }}</option>
             </select>
         </ng-template>
