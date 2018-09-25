@@ -68,6 +68,8 @@ export class UpdateDialogComponent implements OnInit {
   public validDatePeriod: boolean = false;
   public validTimePeriod: boolean = false;
   public isSameDate: boolean;
+  public defaultTimeValue: String = "00:00";
+
 
   constructor(
     public dialogRef: MdDialogRef<UpdateDialogComponent>,
@@ -121,12 +123,14 @@ export class UpdateDialogComponent implements OnInit {
         alert("Check if woktime or start and end time are filled!");
       } else {
         if (this.travelTime === '') {
-          this.travelTime = "00:00";
+          this.travelTime = this.defaultTimeValue;
         } if (this.registryService.timeSpentRequirement.test(this.travelTime) === false) {
           alert('Wrong travel time format');
-        } if (this.startTime === '' || this.endTime === '') {
-          this.startTime = "00:00";
-          this.endTime = "00:00";
+        } if (this.startTime === '' || this.endTime === '' || this.startTime === this.defaultTimeValue || this.endTime === this.defaultTimeValue) {
+          if (this.startTime === '' || this.endTime == '') {
+            this.startTime = this.defaultTimeValue;
+            this.endTime = this.defaultTimeValue; 
+          }          
           return this.registryService.timeSpentRequirement.test(this.workTime) === false ? alert('Wrong work time format') : this.createEntryWithWorkTime();
         } if (this.workTime === '') {
           if (this.validTimePeriod) {

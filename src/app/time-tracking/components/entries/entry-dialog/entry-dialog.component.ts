@@ -65,6 +65,7 @@ export class EntryDialogComponent implements OnInit {
   @Input() workTime: any;
   @Input() isBillable: boolean = false;
   public user: IUser;
+  public defaultTimeValue: String = "00:00";
 
   public validTimePeriod: boolean = false;
   @Input() validDate: boolean = false;
@@ -122,7 +123,6 @@ export class EntryDialogComponent implements OnInit {
 
   public checkMandatoryFields() {
     if (this.loginService.loggedIn()) {
-
       if (this.description === "" || this.description === undefined || this.toDate === undefined || this.fromDate === undefined || this.selectedProject === undefined || this.selectedClient === undefined || this.selectedTask === undefined) {
         alert("Please check if all fields are filled in");
       } else if ((this.registryService.dateRequirement.test(this.inputFromDate) && this.registryService.dateRequirement.test(this.inputToDate)) !== true) {
@@ -133,12 +133,14 @@ export class EntryDialogComponent implements OnInit {
         alert("Check if woktime or start and end time are filled!");
       } else {
         if (this.travelTime === '') {
-          this.travelTime = "00:00";
+          this.travelTime = this.defaultTimeValue;
         } if (this.registryService.timeSpentRequirement.test(this.travelTime) === false) {
           alert('Wrong travel time format');
-        } if (this.startTime === '' || this.endTime === '') {
-          this.startTime = "00:00";
-          this.endTime = "00:00";
+        } if (this.startTime === '' || this.endTime === '' || this.startTime === this.defaultTimeValue || this.endTime === this.defaultTimeValue) {
+          if (this.startTime === '' || this.endTime == '') {
+            this.startTime = this.defaultTimeValue;
+            this.endTime = this.defaultTimeValue; 
+          }
           return this.registryService.timeSpentRequirement.test(this.workTime) === false ? alert('Wrong work time format') : this.createEntryWithWorkTime();
         } if (this.workTime === '' ) {
           if (this.validTimePeriod) {

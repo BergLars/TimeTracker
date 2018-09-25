@@ -489,6 +489,7 @@ export class EntriesComponent implements OnInit {
   displayEntriesByUser() {
     this.items = this.loadUserEntriesById(this.selectedUser);
     EntriesService.clonedEntries = this.items;
+    EntriesService.displayByAll = this.items;
     this.refreshDatatable();
     this.entriesService.displaySidebarData();
   }
