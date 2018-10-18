@@ -1,39 +1,52 @@
 <h1 md-dialog-title>{{ title }}</h1>
-<div md-dialog-content class="hide-dialog-scrollbar" (keydown)="getValues(fromDate.value, inputFromDate.value, toDate.value, inputToDate.value);currentUserID(userprofile.value);keyDownFunction($event);">
-    <table>
-        <tr>
-            <td>
-                <md-input-container>
-                    <input mdInput [mdDatepicker]="fromDate" placeholder="From" #inputFromDate id="inputFromDate">
-                    <button mdSuffix [mdDatepickerToggle]="fromDate"></button>
-                </md-input-container>
-                <md-datepicker #fromDate></md-datepicker>* dd.mm.2yyy
-            </td>
-        </tr>
-        <br>
-        <tr>
-            <td>
-                <md-input-container>
-                    <input mdInput [mdDatepicker]="toDate" placeholder="To" #inputToDate id="inputToDate">
-                    <button mdSuffix [mdDatepickerToggle]="toDate"></button>
-                </md-input-container>
-                <md-datepicker #toDate></md-datepicker>*
-            </td>
-        </tr>
-        <br>
-        <tr [hidden]="!checkIfAdmin()">
-            <td>User: </td>
-            <td>
-                <select #userprofile>
-                    <option value="all" selected>all</option>
-                    <option *ngFor="let user of users" [value]='user.id'>{{ user.userName }}</option>
-                </select>
-            </td>
-        </tr>
-    </table>
-    <br>
-</div>
-<div md-dialog-actions>
-    <a md-button (click)="getValues(fromDate.value, inputFromDate.value, toDate.value, inputToDate.value);readDatesOnInputField();readDates(fromDate,toDate);currentUserID(userprofile.value);checkMandatoryFields();">OK</a>
-    <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
+<div md-dialog-content class="hide-dialog-scrollbar" >
+    <form name="form" (ngSubmit)="f.form.valid && readDates()" #f="ngForm" novalidate>
+        <table>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <md-input-container>
+                            <input mdInput placeholder="From" class="form-control" name="from" [(ngModel)]="model.from" [mdDatepicker]="fromDate"  #from="ngModel" required>
+                            <button mdSuffix [mdDatepickerToggle]="fromDate"></button>
+                            <md-datepicker #fromDate></md-datepicker>
+                            <div *ngIf="f.submitted && from.invalid" class="invalid-feedback">
+                                <div *ngIf="from.errors.required">Please enter a date</div>
+                            </div>
+                        </md-input-container>
+                        
+                    </div>
+                </td>
+            </tr>
+            <br>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <md-input-container>
+                            <input mdInput placeholder="To" class="form-control" name="to" [(ngModel)]="model.to" [mdDatepicker]="toDate" #to="ngModel" required>
+                            <button mdSuffix [mdDatepickerToggle]="toDate"></button>
+                            <md-datepicker #toDate></md-datepicker>
+                            <div *ngIf="f.submitted && to.invalid" class="invalid-feedback">
+                                <div *ngIf="to.errors.required">Please enter a date</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                </td>
+            </tr>
+            <br>
+            <tr [hidden]="!checkIfAdmin()">
+                <td>
+                    <div class="form-group">
+                        <md-select [(ngModel)]="model.userprofile" placeholder="User" name="userprofile">
+                            <md-option value="all" selected>All users</md-option>
+                            <md-option *ngFor="let user of users" [value]='user.id'>{{ user.userName }}</md-option>
+                        </md-select>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div class="form-group">
+            <button md-button name="click" click>OK</button>
+            <button md-button (click)="dialogRef.close()">Cancel</button>
+        </div>
+    </form>
 </div>

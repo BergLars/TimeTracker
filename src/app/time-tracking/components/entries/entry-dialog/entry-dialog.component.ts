@@ -54,18 +54,19 @@ export class EntryDialogComponent implements OnInit {
   public rowID: number;
   public userprofileID: any;
 
-  @Input() description: string;
+  // @Input() description: string;
   @Input() place: string;
   @Input() fromDate: any;
-  @Input() inputFromDate: string;
+  // @Input() inputFromDate: string;
   @Input() toDate: any;
-  @Input() inputToDate: string;
+  // @Input() inputToDate: string;
   @Input() startTime: any;
   @Input() endTime: any;
   @Input() travelTime: any;
   @Input() workTime: any;
   @Input() isBillable: boolean = false;
   public user: IUser;
+  private description: string;
 
   public validTimePeriod: boolean = false;
   @Input() validDate: boolean = false;
@@ -90,20 +91,26 @@ export class EntryDialogComponent implements OnInit {
     this.isBillable = !this.isBillable;
   }
 
-  public readData(descriptionValue: any, placeValue: any, valueDate: any, valueInputFromDate: any, valueToDate: any, valueInputToDate: any, valueStartTime: any, valueEndTime: any, valueTravelTime: any, valueWorkTime: any, valueIsBillable: any) {
-    this.description = descriptionValue;
-    this.place = placeValue;
-    this.fromDate = valueDate;
-    this.inputFromDate = valueInputFromDate;
-    this.toDate = valueToDate;
-    this.inputToDate = valueInputToDate;
-    this.startTime = valueStartTime;
-    this.endTime = valueEndTime;
-    this.travelTime = valueTravelTime;
-    this.workTime = valueWorkTime;
-    this.isBillable = valueIsBillable.checked;
-    this.validDatePeriod = this.datesService.isValidDatePeriod(this.inputFromDate, this.inputToDate);
+  public ok() {
+    this.fromDate = moment(this.model.startdate.toISOString()).format('YYYY-MM-DD');
+    this.toDate = moment(this.model.enddate.toISOString()).format('YYYY-MM-DD');
+    this.validDatePeriod = this.datesService.isValidDatePeriod(this.fromDate, this.toDate);
+  
+    
+    this.description = this.model.description;
+    this.place = this.model.place;
+    this.fromDate = this.model.fromDate;
+    // this.inputFromDate = this.model.startdate;
+    this.toDate = this.model.toDate;
+    // this.inputToDate = this.model.enddate;
+    this.startTime = this.model.startTime;
+    this.endTime = this.model.endTime;
+    this.travelTime = this.model.travelTime;
+    this.workTime = this.model.workTime;
+    this.isBillable = this.model.isBillable;
+    // this.validDatePeriod = this.datesService.isValidDatePeriod(this.inputFromDate, this.inputToDate);
     this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime);
+    // this.checkMandatoryFields();
   }
 
   public readDates(valueFrom: any, valueTo: any) {
@@ -116,16 +123,16 @@ export class EntryDialogComponent implements OnInit {
   }
 
   public readDatesOnInputField() {
-    this.validDate = this.datesService.isValidDate(this.inputFromDate, this.inputToDate);
+    // this.validDate = this.datesService.isValidDate(this.inputFromDate, this.inputToDate);
   }
 
   public checkMandatoryFields() {
     if (this.loginService.loggedIn()) {
 
-      if (this.description === "" || this.description === undefined || this.toDate === undefined || this.fromDate === undefined || this.selectedProject === undefined || this.selectedClient === undefined || this.selectedTask === undefined) {
+      if (this.selectedProject === undefined || this.selectedClient === undefined || this.selectedTask === undefined) {
         alert("Please check if all fields are filled in");
-      } else if ((this.registryService.dateRequirement.test(this.inputFromDate) && this.registryService.dateRequirement.test(this.inputToDate)) !== true) {
-        alert("Please check date format");
+      // } else if ((this.registryService.dateRequirement.test(this.inputFromDate) && this.registryService.dateRequirement.test(this.inputToDate)) !== true) {
+      //   alert("Please check date format");
       } else if (this.validDatePeriod === false) {
         alert("Invalid date period!");
       } else if (((this.workTime === '' && (this.startTime === '' || this.endTime === ''))) === true) {
@@ -178,52 +185,52 @@ export class EntryDialogComponent implements OnInit {
     }
   }
 
-  public adjustEndDate() {
-    if (this.startTime > this.endTime) {
-      let toDate = this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2);
-      let hours = Number(this.workTime.substring(0, 2)) + Number(this.startTime.substring(0, 2));
-      let minutes = Number(this.workTime.substring(3, 6)) + Number(this.startTime.substring(3, 6));
-      let hourFromMinutes = Math.floor(minutes / 60);
-      let numberOfDays = Math.floor((hours + hourFromMinutes) / 24);
-      let entryEndDate = moment(toDate, 'YYYY-MM-DD').add(numberOfDays, 'd');
-      this.toDate = moment(entryEndDate).format('YYYY-MM-DD');
-    } else {
-      let toDate = this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2);
-      this.toDate = moment(toDate).format('YYYY-MM-DD');
-    }
-  }
+  // public adjustEndDate() {
+  //   if (this.startTime > this.endTime) {
+  //     let toDate = this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2);
+  //     let hours = Number(this.workTime.substring(0, 2)) + Number(this.startTime.substring(0, 2));
+  //     let minutes = Number(this.workTime.substring(3, 6)) + Number(this.startTime.substring(3, 6));
+  //     let hourFromMinutes = Math.floor(minutes / 60);
+  //     let numberOfDays = Math.floor((hours + hourFromMinutes) / 24);
+  //     let entryEndDate = moment(toDate, 'YYYY-MM-DD').add(numberOfDays, 'd');
+  //     this.toDate = moment(entryEndDate).format('YYYY-MM-DD');
+  //   } else {
+  //     let toDate = this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2);
+  //     this.toDate = moment(toDate).format('YYYY-MM-DD');
+  //   }
+  // }
 
-  public decimalToTime(t: any) {
-    // t is a decimal validTimePeriodue
-    if (this.isNumeric(t.toString()) === true) {
-      if (t >= 0.1) {
-        let decimalTime = parseFloat(t);
-        decimalTime = decimalTime * 60 * 60;
-        let hours: any = Math.floor((decimalTime / (60 * 60)));
-        decimalTime = decimalTime - (hours * 60 * 60);
-        let minutes: any = Math.floor((decimalTime / 60));
-        if (hours < 10) {
-          hours = "0" + hours;
-        }
-        if (minutes < 10) {
-          minutes = "0" + minutes;
-        }
-        this.workTime = hours + ":" + minutes;
-        let endT = moment() + moment.duration().add(this.workTime, 'HH:mm');
-        this.endTime = moment(endT).format('HH:mm');
-        this.newEntry();
-      } else {
-        alert('Wrong time format !');
-      }
-    } else if (t.toString().indexOf(':') !== -1) {
-      this.workTime = t;
-      let endT = moment() + moment.duration().add(this.workTime, 'HH:mm');
-      this.endTime = moment(endT).format('HH:mm');
-      this.newEntry();
-    } else {
-      alert('Wrong time format !');
-    }
-  }
+  // public decimalToTime(t: any) {
+  //   // t is a decimal validTimePeriodue
+  //   if (this.isNumeric(t.toString()) === true) {
+  //     if (t >= 0.1) {
+  //       let decimalTime = parseFloat(t);
+  //       decimalTime = decimalTime * 60 * 60;
+  //       let hours: any = Math.floor((decimalTime / (60 * 60)));
+  //       decimalTime = decimalTime - (hours * 60 * 60);
+  //       let minutes: any = Math.floor((decimalTime / 60));
+  //       if (hours < 10) {
+  //         hours = "0" + hours;
+  //       }
+  //       if (minutes < 10) {
+  //         minutes = "0" + minutes;
+  //       }
+  //       this.workTime = hours + ":" + minutes;
+  //       let endT = moment() + moment.duration().add(this.workTime, 'HH:mm');
+  //       this.endTime = moment(endT).format('HH:mm');
+  //       this.newEntry();
+  //     } else {
+  //       alert('Wrong time format !');
+  //     }
+  //   } else if (t.toString().indexOf(':') !== -1) {
+  //     this.workTime = t;
+  //     let endT = moment() + moment.duration().add(this.workTime, 'HH:mm');
+  //     this.endTime = moment(endT).format('HH:mm');
+  //     this.newEntry();
+  //   } else {
+  //     alert('Wrong time format !');
+  //   }
+  // }
 
   private isNumeric(input) {
     var RE = /^-{0,1}\d*\.{0,1}\d+$/;
