@@ -9,18 +9,16 @@ export class DatesService {
   constructor(
     public registryService: RegistryService) { }
 
-  public currentDateValue(value: any) {
-    var validDate = moment(value._selected).format('L');
-    return validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
-  }
 
   public isValidDate(inputFromDate, inputToDate) {
     return this.registryService.dateRequirement.test(inputFromDate) && this.registryService.dateRequirement.test(inputToDate) ? true : false;
   }
 
   public isValidDatePeriod(fromDate, toDate) {
-    return moment(fromDate, 'YYYY-MM-DD').isSameOrBefore(moment(toDate, 'YYYY-MM-DD'));;
+   
+    return moment(fromDate).isSameOrBefore(toDate, 'YYYY-MM-DD', 'day');
   }
+
 
   public convertDaysToHours(fromDate, toDate) {
     var fromDateDay = +fromDate.substring(8, 10);
@@ -29,6 +27,11 @@ export class DatesService {
     var numberOfHours = numberOfdays * 24;
     return numberOfHours;
   }
+
+  public isSameDate(fromDate, toDate) {
+    return moment(fromDate).isSame(toDate, 'day');
+  }
+
   /**
     * Sort by Start date
     * @param a

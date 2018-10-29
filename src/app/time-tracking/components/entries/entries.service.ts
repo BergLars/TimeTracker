@@ -20,7 +20,7 @@ export class EntriesService {
   public projectsDictionary: any = {};
   public clientsDictionary: any = {};
   @Input() totalTimeSpent: any;
-
+  @Input() static displayByAll: ITimeTrackingEntry[] = [];
   @Input() static clonedEntries: ITimeTrackingEntry[] = [];
   @Input() filteredEntries: ITimeTrackingEntry[] = [];
   @Input() searchedEntries: ITimeTrackingEntry[] = [];
@@ -54,6 +54,7 @@ export class EntriesService {
     private timeSpentService: TimespentService,
     public datesService: DatesService) {
     this.isAdmin = this.loginService.isAdmin();
+    
   }
 
   /**
@@ -300,6 +301,7 @@ export class EntriesService {
                       dates = this.datesService.sortBy(dates);
                       EntriesService.dates = this.datesService.swissFormat(dates);
                       EntriesService.clonedEntries = items;
+                      EntriesService.displayByAll = items;
                       this.displaySidebarData();
 
                       resolve(items);
@@ -370,6 +372,7 @@ export class EntriesService {
                       EntriesService.dates = this.datesService.swissFormat(dates);
 
                       EntriesService.clonedEntries = items;
+                      EntriesService.displayByAll = items;
                       this.displaySidebarData();
 
                       resolve(items);
@@ -486,10 +489,10 @@ export class EntriesService {
   }
 
   displaySidebarData() {
-    this.registryService.sidebarComponent.totalHoursWorkedPast4D = this.totalHoursWorkedPast4days(EntriesService.clonedEntries);
-    this.registryService.sidebarComponent.totalHoursWorkedT = this.totalHoursWorkedToday(EntriesService.clonedEntries);
-    this.registryService.sidebarComponent.totalHoursWorkedW = this.totalHoursWorkedWeek(EntriesService.clonedEntries);
-    this.registryService.sidebarComponent.totalHoursWorkedM = this.totalHoursWorkedMonth(EntriesService.clonedEntries);
+    this.registryService.sidebarComponent.totalHoursWorkedPast4D = this.totalHoursWorkedPast4days(EntriesService.displayByAll);
+    this.registryService.sidebarComponent.totalHoursWorkedT = this.totalHoursWorkedToday(EntriesService.displayByAll);
+    this.registryService.sidebarComponent.totalHoursWorkedW = this.totalHoursWorkedWeek(EntriesService.displayByAll);
+    this.registryService.sidebarComponent.totalHoursWorkedM = this.totalHoursWorkedMonth(EntriesService.displayByAll);
     this.registryService.sidebarComponent.totalTimeSpent = this.timeSpentService.calculateTotalTimeSpent(EntriesService.clonedEntries);
 
   }
