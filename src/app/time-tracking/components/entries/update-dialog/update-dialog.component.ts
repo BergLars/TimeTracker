@@ -5,6 +5,7 @@ import { environment } from '../../../../../environments/environment';
 import { LoginService } from '../../../../login';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
+import moment from 'moment/src/moment';
 
 @Component({
   selector: 'app-update-dialog',
@@ -48,9 +49,6 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   public rowID: number;
-  @Input() selectedProjectID: any;
-  @Input() selectedTaskID: any;
-  @Input() selectedClientID: any;
   @Input() fromDate: any;
   @Input() startTime: any;
   public userprofileID: any;
@@ -81,21 +79,28 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._mySelectedProject = this.selectedProjectID;
-    this._mySelectedClient = this.selectedClientID;
-    this._mySelectedTask = this.selectedTaskID;
   }
 
-  checkMandatoryFields() {
-    if (this.description === "" || this.projectID === null || this.taskID === null || this.entryDate === " " || this.toDate === " " || this.workTime === " ") {
-      alert("Please check if all the fields are filled in");
+  public ok() {
+    this.fromDate = this.checkDate(this.fromDate);
+    this.toDate = this.checkDate(this.toDate);
+    this.validDatePeriod = this.datesService.isValidDatePeriod(this.fromDate, this.toDate);
+    this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime);
+    this.checkMandatoryFields();
+  }
+
+  checkDate(inputDate) {
+    if (this.registryService.dateRequirement.test(inputDate)) {
+      return inputDate.substring(6, 10) + "-" + inputDate.substring(3, 5) + "-" + inputDate.substring(0, 2);
     } else {
-      this.checkStartAndEndTime();
+      return moment(inputDate.toISOString()).format('YYYY-MM-DD');
     }
   }
 
   createEntryWithStartAndEndTime() {
-    this.workTime = this.timeSpentService.calculateWorktimeBetweenDates(this.datesService.convertDaysToHours(this.fromDate, this.toDate), this.startTime, this.endTime);
+    let formatedStartDateTime = this.fromDate + " " + this.startTime;
+    let formatedEndDateTime = this.toDate + " " + this.endTime;
+    this.workTime = this.timeSpentService.calculateWorktimeBetweenDates(formatedStartDateTime, formatedEndDateTime);
     return this.updateEntry();
   }
 
@@ -106,12 +111,10 @@ export class UpdateDialogComponent implements OnInit {
     return this.updateEntry();
   }
 
-  checkStartAndEndTime() {
+  checkMandatoryFields() {
     if (this.loginService.loggedIn()) {
-      if (this.description === "" || this.description === undefined || this.toDate === undefined || this.fromDate === undefined || this.selectedProject === undefined || this.selectedClient === undefined || this.selectedTask === undefined) {
+      if ( this.description === undefined || this.toDate === undefined || this.fromDate === undefined || this.selectedProject === undefined || this.selectedClient === undefined || this.selectedTask === undefined) {
         alert("Please check if all fields are filled in");
-      } else if ((this.registryService.dateRequirement.test(this.fromDate) && this.registryService.dateRequirement.test(this.toDate)) !== true) {
-        alert("Please check date format");
       } else if (this.validDatePeriod === false) {
         alert("Invalid date Period!");
       } else if (((this.workTime === '' && (this.startTime === '' || this.endTime === ''))) === true) {
@@ -149,8 +152,8 @@ export class UpdateDialogComponent implements OnInit {
 
   public updateEntry() {
     return this.http.put(this.baseUrl + "/timeentries/" + this.rowID, {
-      startDateTime: this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2) + " " + this.startTime,
-      endDateTime: this.toDate.substring(6, 10) + "-" + this.toDate.substring(3, 5) + "-" + this.toDate.substring(0, 2) + " " + this.endTime,
+      startDateTime: this.fromDate + " " + this.startTime,
+      endDateTime: this.toDate + " " + this.endTime,
       description: this.description.trim(),
       userprofileID: this.registryService.entriesComponent.rowUserprofileID,
       clientID: this._mySelectedClient,
@@ -173,13 +176,6 @@ export class UpdateDialogComponent implements OnInit {
           alert('Internal server error !')
         }
       });
-  }
-
-  public ok() {
-    this.validDatePeriod = this.datesService.isValidDatePeriod(this.fromDate, this.toDate);
-    this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime);
-
-        this.checkMandatoryFields();
   }
 
   keyDownFunction(event) {

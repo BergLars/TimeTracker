@@ -1,71 +1,74 @@
 <h1 md-dialog-title>{{ title }}</h1>
-<div md-dialog-content class="hide-dialog-scrollbar" (keydown)="validateForm(newTaskDescription.value,newProjectName.value,newClientName.value);keyDownFunction($event);">
+<div md-dialog-content class="hide-dialog-scrollbar" (keydown)="keyDownFunction($event);">
     <table>
         <tr>
-            <td>Edit a:</td>
             <td>
-                <select (change)="changeItemToBeCreated($event)" id="itemToBeCreated">
-                    <option *ngFor="let item of createItems" [value]="item.id">{{item.key}}</option>
-                </select>
+                <md-select placeholder="Edit a" name="item" (change)="changeItemToBeCreated($event)" >
+                    <md-option *ngFor="let item of createItems" [value]="item.id">{{item.key}}</md-option>
+                </md-select>
             </td>
         </tr>
         <br>
-        <tr [hidden]="item != PROJECT">
-            <td></td>
+        <tr>
             <td>
-                <select #project (change)="projectDropdown(project.value)" id="projectOptions">
-                    <option *ngFor="let item of projects" [value]="item.id">{{item.projectName}}</option>
-                </select>
+                <form name="projectForm" (ngSubmit)="fproject.projectForm.valid && ok()" #fproject="ngForm" [hidden]="item != PROJECT" novalidate>
+                    <div class="form-group">
+                        <md-select [(ngModel)]='projectID' name="projectOptions">
+                            <md-option *ngFor="let item of projects" [value]="item.id">{{item.projectName}}</md-option>
+                        </md-select>
+                        <br>    
+                        <md-input-container>
+                            <input mdInput type="text" placeholder="Project name" class="form-control" name="projectName" [(ngModel)]="model.projectName" #projectname="ngModel" required>
+                            <div *ngIf="fproject.submitted && projectName.invalid" class="invalid-feedback">
+                                <div *ngIf="projectName.errors.required">Please enter a project name</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                </form>
             </td>
         </tr>
-        <tr [hidden]="item != PROJECT">
-            <td></td>
+        <tr>
             <td>
-                <md-input-container>
-                    <input mdInput placeholder="Project Name" #newProjectName id="newProjectName">
-                </md-input-container>
+                <form name="taskForm" (ngSubmit)="ftask.taskForm.valid && ok()" #ftask="ngForm"  [hidden]="item != TASK" novalidate>
+                    <div class="form-group">
+                        <md-select [(ngModel)]='taskID' name="taskOptions">
+                            <md-option *ngFor="let item of tasks" [value]="item.id">{{item.taskDescription}}</md-option>
+                        </md-select>
+                        <br>
+                        <md-input-container>
+                            <input mdInput type="text" placeholder="Task description" class="form-control" name="taskDescription" [(ngModel)]="model.taskDescription" #taskDescription="ngModel" required>
+                            <div *ngIf="ftask.submitted && taskDescription.invalid" class="invalid-feedback">
+                                <div *ngIf="taskDescription.errors.required">Please enter a task name</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                </form>
             </td>
         </tr>
-        <tr [hidden]="item != TASK">
-            <td></td>
+        <tr>
             <td>
-                <select #task (change)="taskDropdown(task.value)" id="taskOptions">
-                    <option *ngFor="let item of tasks" [value]="item.id">{{item.taskDescription}}</option>
-                </select>
-            </td>
-        </tr>
-        <tr [hidden]="item != TASK">
-            <td></td>
-            <td>
-                <md-input-container>
-                    <input mdInput #newTaskDescription placeholder="Description" id="newTaskDescription">
-                </md-input-container>
-            </td>
-        </tr>
-
-        <tr [hidden]="item != CLIENT">
-            <td></td>
-            <td>
-                <select #client (change)="clientDropdown(client.value)" id="clientOptions">
-                    <option *ngFor="let item of clients" [value]="item.id">{{item.clientName}}</option>
-                </select>
-            </td>
-        </tr>
-
-        <tr [hidden]="item != CLIENT">
-            <td></td>
-            <td>
-                <md-input-container>
-                    <input mdInput #newClientName placeholder="Client Name" id="newClientName">
-                </md-input-container>
+                <form name="clientForm" (ngSubmit)="fclient.clientForm.valid && createClient()" #fclient="ngForm" novalidate [hidden]="item != CLIENT" novalidate>
+                    <div>
+                        <md-select [(ngModel)]="clientID" name="clientOptions">
+                            <md-option *ngFor="let item of clients" [value]="item.id">{{item.clientName}}</md-option>
+                        </md-select>
+                        <br>
+                        <md-input-container>
+                            <input mdInput type="text" placeholder="Client name" class="form-control" name="clientName" [(ngModel)]="model.clientName" #clientName="ngModel" required>
+                            <div *ngIf="fclient.submitted && clientName.invalid" class="invalid-feedback">
+                                <div *ngIf="clientName.errors.required">Please enter a client name</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                </form>
             </td>
         </tr>
     </table>
-</div>
-<div md-dialog-actions>
-    <button type="button" md-button (click)="validateForm(newTaskDescription.value,newProjectName.value,newClientName.value);checkMandatoryFields();">OK</button>
-    <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
-    <span (click)="deleteItem();">
-        <md-icon class="clickable-icon" id="deleteIcon">delete_forever</md-icon>
-    </span>
+    <div class="form-group">
+        <button md-button (click)="ok()">OK</button>
+        <button md-button (click)="dialogRef.close()">Cancel</button>
+        <span (click)="deleteItem();">
+            <md-icon class="clickable-icon" id="deleteIcon">delete_forever</md-icon>
+        </span>
+    </div>
 </div>

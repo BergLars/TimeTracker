@@ -23,8 +23,8 @@ export class DatesService {
   }
 
   public convertDaysToHours(fromDate, toDate) {
-    var fromDateDay = +fromDate.substring(0, 2);
-    var toDateDay = +toDate.substring(0, 2);
+    var fromDateDay = +fromDate.substring(8, 10);
+    var toDateDay = +toDate.substring(8, 10);
     var numberOfdays = toDateDay - fromDateDay;
     var numberOfHours = numberOfdays * 24;
     return numberOfHours;

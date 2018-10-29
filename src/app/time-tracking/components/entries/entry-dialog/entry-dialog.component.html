@@ -15,11 +15,10 @@
         <td>
           <div class="form-group">
             <md-input-container>
-              <input mdInput type="text" class="form-control" name="description" [(ngModel)]="model.description" #description="ngModel" required>
+              <input mdInput placeholder="Description" type="text" class="form-control" name="description" [(ngModel)]="model.description" #description="ngModel" required>
               <div *ngIf="f.submitted && description.invalid" class="invalid-feedback">
                 <div *ngIf="description.errors.required">Please enter a description</div>
-              </div>
-              
+              </div>              
             </md-input-container>
           </div>
         </td>
@@ -64,17 +63,17 @@
               <md-input-container>
                 <input mdInput placeholder="Start Date" class="form-control" name="startdate" [(ngModel)]="model.startdate" [mdDatepicker]="fromDate" #startdate="ngModel" required>
                 <button mdSuffix [mdDatepickerToggle]="fromDate"></button>
-                
+                <md-datepicker #fromDate></md-datepicker>
                 <div *ngIf="f.submitted && startdate.invalid" class="invalid-feedback">
                   <div *ngIf="startdate.errors.required">Please enter a start date</div>
                 </div>
-              </md-input-container><md-datepicker #fromDate></md-datepicker>
+              </md-input-container>
           </div>
         </td>
         <td>          
           <div class="form-group">
             <md-input-container>
-              <input mdInput type="text" placeholder="Start Time" class="form-control" name="starttime" [(ngModel)]="model.startTime" #starttime="ngModel">
+              <input mdInput type="text" placeholder="Start Time" class="form-control" name="starttime" [(ngModel)]="model.startTime" #starttime="ngModel" required="model.worktime== ''">
             </md-input-container>
           </div>
         </td>
@@ -118,19 +117,13 @@
       </tr>
       <tr>
         <td>
-          <md-checkbox #billable name="isBillable" [(ngModel)]="model.isBillable" readonly> is Billable</md-checkbox>
+          <md-checkbox #billable="ngModel" name="isBillable" [(ngModel)]="model.isBillable"> is Billable</md-checkbox>
         </td>
       </tr>
     </table>
     <div class="form-group">
-      <!-- <button md-button name="click" click>Anmelden</button> -->
-      <!-- <button md-button (click)="dialogRef.close()">Cancel</button> -->
+      <button md-button name="click" click>OK</button>
+      <button md-button (click)="dialogRef.close()">Cancel</button>
     </div>
-    <div md-dialog-actions>
-      <button type="button" md-button (click)="ok();readDatesOnInputField();readDates(fromDate,toDate);checkMandatoryFields();
-        ">OK</button>
-      <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
-    </div>
-
   </form>
 </div>

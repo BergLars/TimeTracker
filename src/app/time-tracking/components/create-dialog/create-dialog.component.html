@@ -1,16 +1,15 @@
 <h1 md-dialog-title>{{ title }}</h1>
 <div md-dialog-content class="hide-dialog-scrollbar">
-    <form name="form" (ngSubmit)="f.form.valid && ok()" #f="ngForm" novalidate>
+    <!-- <form name="form" (ngSubmit)="f.form.valid && ok()" #f="ngForm" novalidate> -->
         <table>
             <tr>
-                <td>Create new:</td>
                 <td>
-                    <select (change)="changeItemToBeCreated($event)" id="itemToBeCreated">
-                        <option *ngFor="let item of createItems" [value]="item.id">{{item.key}}</option>
-                    </select>
+                    <md-select placeholder="Create new"  name="item" (change)="changeItemToBeCreated($event)" >
+                        <md-option *ngFor="let item of createItems" [value]="item.id">{{item.key}}</md-option>
+                    </md-select>
                 </td>
             </tr>
-
+            <br>
             <tr>
                 <td>
                     <form name="taskForm" (ngSubmit)="ftask.taskForm.valid && ok()" #ftask="ngForm"  [hidden]="item != TASK" novalidate>
@@ -67,7 +66,7 @@
             </tr>
             <tr>
                 <td>
-                    <form name="userForm" (ngSubmit)="fuser.userForm.valid && ok()" #fuser="ngForm" novalidate  [hidden]="item != USER">
+                    <form name="userForm" (ngSubmit)="fuser.userForm.valid && checkUser()" #fuser="ngForm" novalidate  [hidden]="item != USER">
                             <tr>
                                 <td>
                                 <label> Password length should be greater than 7.
@@ -112,10 +111,9 @@
             </tr>   
 
         </table>
-        <br>
         <div class="form-group">
-            <button md-button click>OK</button>
+            <button md-button (click)="ok()">OK</button>
             <button md-button (click)="dialogRef.close()">Cancel</button>
         </div>
-    </form>
+    <!-- </form> -->
 </div>

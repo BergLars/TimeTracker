@@ -28,9 +28,9 @@ export class UpdateDialogService {
         updateDialogComponent.description = row.description;
         updateDialogComponent.rowID = row.id;
         updateDialogComponent.userprofileID = row.userprofileID;
-        updateDialogComponent.selectedProjectID = row.projectID;
-        updateDialogComponent.selectedTaskID = row.taskID;
-        updateDialogComponent.selectedClientID = row.clientID;
+        updateDialogComponent.selectedProject = row.projectID;
+        updateDialogComponent.selectedTask = row.taskID;
+        updateDialogComponent.selectedClient = row.clientID;
         updateDialogComponent.fromDate = row.entryDate;
         updateDialogComponent.startTime = row.startTime;
         updateDialogComponent.toDate = row.endDate;

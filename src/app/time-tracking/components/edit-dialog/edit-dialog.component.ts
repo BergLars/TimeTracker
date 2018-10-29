@@ -21,9 +21,9 @@ export class EditDialogComponent implements OnInit {
 	@Input() tasks: ITask[] = [];
 	@Input() clients: IClient[] = [];
 	public title: string;
-	public newTaskDescription: string;
-	public newProjectName: string;
-	public newClientName: string;
+	public taskDescription: string;
+	public projectName: string;
+	public clientName: string;
 	public projectID: any = null;
 	public clientID: any = null;
 	public taskID: any = null;
@@ -33,6 +33,7 @@ export class EditDialogComponent implements OnInit {
 	public CLIENT: number = 3;
 	public USER: number = 4;
 	public result: any;
+	public model: any = {};
 
 	constructor(
 		public dialogRef: MdDialogRef<EditDialogComponent>,
@@ -47,6 +48,7 @@ export class EditDialogComponent implements OnInit {
 	}
 
 	public createItems = [
+		{ key: 'Edit a', id: 0},
 		{ key: 'Task', id: 1 },
 		{ key: 'Project', id: 2 },
 		{ key: 'Client', id: 3 }
@@ -55,12 +57,12 @@ export class EditDialogComponent implements OnInit {
 	public item: number = this.createItems[0].id;
 
 	changeItemToBeCreated(event) {
-		this.item = event.target.value;
+		this.item = event.value;
 	}
 
 	public keyDownFunction(event) {
 		if (event.key == 'Enter') {
-			this.checkMandatoryFields();
+			this.ok();
 		}
 	}
 
@@ -68,34 +70,19 @@ export class EditDialogComponent implements OnInit {
 		this.editMode = !this.editMode;
 	}
 
-	public validateForm(valueDesc: string, valueProjName: string, valueClient: string) {
-		this.newTaskDescription = valueDesc;
-		this.newProjectName = valueProjName;
-		this.newClientName = valueClient;
-	}
-
-	public checkMandatoryFields() {
+	public ok() {
 		if (this.loginService.loggedIn()) {
-			if (this.item == this.PROJECT) {
-				if (this.newProjectName === "" || this.newProjectName === undefined) {
-					alert("Please check if all the fields are filled in");
-				} else {
-					this.createItem();
-				}
-			}
-			if (this.item == this.TASK) {
-				if (this.newTaskDescription === "" || this.newTaskDescription === undefined) {
-					alert("Please check if all the fields are filled in");
-				} else {
-					this.createItem();
-				}
-			}
-			if (this.item == this.CLIENT) {
-				if (this.newClientName === "" || this.newClientName === undefined) {
-					alert("Please check if all the fields are filled in");
-				} else {
-					this.createItem();
-				}
+			if (this.item == this.TASK && this.model.taskDescription !== undefined && this.model.taskDescription !== "" ) {
+				this.taskDescription = this.model.taskDescription;
+				this.createTask();
+			} else if (this.item == this.PROJECT && this.model.projectName !== undefined && this.model.projectName !== "") {
+				this.projectName = this.model.projectName;
+				this.createProject();
+			} else if (this.item == this.CLIENT && this.model.clientName !== undefined && this.model.clientName !== "") {
+				this.clientName = this.model.clientName;
+				this.createClient();
+			} else {
+				alert("Please check if you have selected an item and filled in all fields");
 			}
 		} else {
 			alert("Your token has expired. Please log in again!");
@@ -128,70 +115,58 @@ export class EditDialogComponent implements OnInit {
 		}
 	}
 
-	public clientDropdown(value: string): void {
-		this.clientID = value;
+	public createProject() {
+		return this.http.put(this.baseUrl + "/projects/" + this.projectID, {
+			projectName: this.projectName.trim()
+		}).subscribe(() => {
+			this.dialogRef.close(true);
+			this.registryService.entriesComponent.loadEntries();
+		},
+		error => {
+			if (error.response.status === 400 || error.response.status === 404) {
+				alert('Please check that fields are the correct input !');
+				return Observable.of(undefined);
+			}
+			if (error.response.status === 500) {
+				alert('Internal server error !')
+			}
+		});
+		
+	}
+	public createTask() {
+		return this.http.put(this.baseUrl + "/tasks/" + this.taskID, {
+			taskDescription: this.taskDescription.trim()
+		}).subscribe(() => {
+			this.dialogRef.close(true);
+			this.registryService.entriesComponent.loadEntries();
+		},
+		error => {
+			if (error.response.status === 400 || error.response.status === 404) {
+				alert('Please check that fields are the correct input !');
+				return Observable.of(undefined);
+			}
+			if (error.response.status === 500) {
+				alert('Internal server error !')
+			}
+		});
 	}
 
-	public projectDropdown(value: string): void {
-		this.projectID = value;
-	}
-
-	public taskDropdown(value: string): void {
-		this.taskID = value;
-	}
-
-	public createItem() {
-		if (this.item == this.PROJECT) {
-			return this.http.put(this.baseUrl + "/projects/" + this.projectID, {
-				projectName: this.newProjectName.trim()
-			}).subscribe(() => {
+	public createClient() {
+		return this.http.put(this.baseUrl + "/clients/" + this.clientID, {
+			clientName: this.clientName.trim()
+		}).subscribe(
+			() => {
 				this.dialogRef.close(true);
 				this.registryService.entriesComponent.loadEntries();
 			},
-				error => {
-					if (error.response.status === 400 || error.response.status === 404) {
-						alert('Please check that fields are the correct input !');
-						return Observable.of(undefined);
-					}
-					if (error.response.status === 500) {
-						alert('Internal server error !')
-					}
-				});
-		}
-		if (this.item == this.TASK) {
-			return this.http.put(this.baseUrl + "/tasks/" + this.taskID, {
-				taskDescription: this.newTaskDescription.trim()
-			}).subscribe(() => {
-				this.dialogRef.close(true);
-				this.registryService.entriesComponent.loadEntries();
-			},
-				error => {
-					if (error.response.status === 400 || error.response.status === 404) {
-						alert('Please check that fields are the correct input !');
-						return Observable.of(undefined);
-					}
-					if (error.response.status === 500) {
-						alert('Internal server error !')
-					}
-				});
-		}
-		if (this.item == this.CLIENT) {
-			return this.http.put(this.baseUrl + "/clients/" + this.clientID, {
-				clientName: this.newClientName.trim()
-			}).subscribe(
-				() => {
-					this.dialogRef.close(true);
-					this.registryService.entriesComponent.loadEntries();
-				},
-				error => {
-					if (error.response.status === 400 || error.response.status === 404) {
-						alert('Please check that fields are the correct input !');
-						return Observable.of(undefined);
-					} else if (error.response.status === 500) {
-						alert('Internal server error !');
-					}
-				});
-		}
+		error => {
+			if (error.response.status === 400 || error.response.status === 404) {
+				alert('Please check that fields are the correct input !');
+				return Observable.of(undefined);
+			} else if (error.response.status === 500) {
+				alert('Internal server error !');
+			}
+		});
 	}
 
 	public deleteItem() {

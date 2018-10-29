@@ -7,85 +7,109 @@
     <em>Hour format: hh:mm</em>
 </label>
 <div md-dialog-content (keydown)="keyDownFunction($event)">
+    <form name="form" (ngSubmit)="f.form.valid && ok()" #f="ngForm" novalidate>
     <br>
     <table>
         <tr>
             <td>
-                <md-input-container>
-                    <input class="clickable-icon" mdInput placeholder="Description" [(ngModel)]="description">
-                </md-input-container>
+                <div class="form-group">
+                    <md-input-container>
+                        <input mdInput placeholder="Description" type="text" class="form-control" name="description" [(ngModel)]="description" required>
+                    </md-input-container>
+                </div>
             </td>
             <td>
-                <md-input-container>
-                    <input class="clickable-icon" mdInput placeholder="Place" [(ngModel)]="place">
-                </md-input-container>
+                <div class="form-group">
+                    <md-input-container>
+                        <input mdInput placeholder="Place" type="text" class="form-control" name="place" [(ngModel)]="place" >
+                    </md-input-container>
+                </div>
             </td>
         </tr>
-        <br>
         <tr>
             <td>
-                <md-select #project [(ngModel)]='selectedProject' placeholder="Project">
+                <div class="form-group">
+                <md-select [(ngModel)]='selectedProject' placeholder="Project" name="project">
                     <md-option *ngFor="let project of projects" [value]='project.id'>{{ project.projectName }}</md-option>
                 </md-select>
+            </div>
             </td>
             <td>
-                <md-select #client [(ngModel)]='selectedClient' placeholder="Client">
+            <div class="form-group">
+                <md-select [(ngModel)]='selectedClient' placeholder="Client" name="client">
                     <md-option *ngFor="let client of clients" [value]='client.id'>{{ client.clientName }}</md-option>
                 </md-select>
+            </div>
             </td>
             <td>
-                <md-select #task [(ngModel)]='selectedTask' placeholder="Task">
+                <div class="form-group">
+                <md-select  [(ngModel)]='selectedTask' placeholder="Task" name="task">
                     <md-option *ngFor="let task of tasks" [value]='task.id'>{{ task.taskDescription }}</md-option>
                 </md-select>
-            </td>
-        </tr>
-        <br>
-        <tr>
-            <td>
-                <md-input-container>
-                    <input mdInput placeholder="Start Date" [(ngModel)]="fromDate">
-                </md-input-container>*&nbsp;
-            </td>
-            <td>
-                <md-input-container>
-                    <input mdInput placeholder="Start Time" #starttime [(ngModel)]="startTime">
-                </md-input-container>
-            </td>
-        </tr>
-        <br>
-        <tr>
-            <td>
-                <md-input-container>
-                    <input mdInput placeholder="End Date" [(ngModel)]="toDate">
-                </md-input-container>*&nbsp;
-            </td>
-            <td>
-                <md-input-container>
-                    <input mdInput placeholder="End Time" #endtime [(ngModel)]="endTime">
-                </md-input-container>
-            </td>
-        </tr>
-        <br>
-        <tr>
-            <td>
-                <md-input-container>
-                    <input class="clickable-icon" mdInput placeholder="Travel time" [(ngModel)]="travelTime">
-                </md-input-container>
-            </td>
-            <td>
-                <md-input-container>
-                    <input class="clickable-icon" mdInput placeholder="Work time" [(ngModel)]="workTime">
-                </md-input-container>
+            </div>
             </td>
         </tr>
         <tr>
             <td>
-                <md-checkbox [(ngModel)]="isBillable" readonly> is Billable</md-checkbox>
+                <div class="form-group">
+                    <md-input-container>
+                        <input mdInput placeholder="Start Date" class="form-control" name="fromDate" [(ngModel)]="fromDate" [mdDatepicker]="startdate" required>
+                        <button mdSuffix [mdDatepickerToggle]="startdate"></button>
+                        <md-datepicker #startdate></md-datepicker>
+                    </md-input-container>
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    <md-input-container>
+                        <input mdInput type="text" placeholder="Start Time" class="form-control" name="starttime" [(ngModel)]="startTime">
+                    </md-input-container>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-group">
+                    <md-input-container>
+                        <input mdInput placeholder="End Date" class="form-control" name="toDate" [(ngModel)]="toDate" [mdDatepicker]="enddate" required>
+                         <button mdSuffix [mdDatepickerToggle]="enddate"></button>
+                        <md-datepicker #enddate></md-datepicker>
+                    </md-input-container>
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    <md-input-container>
+                        <input mdInput type="text" placeholder="End time" class="form-control" name="endtime" [(ngModel)]="endTime">
+                    </md-input-container>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-group">
+                    <md-input-container>
+                        <input mdInput type="text" placeholder="Travel time" class="form-control" name="traveltime" [(ngModel)]="travelTime">
+                    </md-input-container>
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    <md-input-container>
+                        <input mdInput type="text" placeholder="Work time" class="form-control" name="worktime" [(ngModel)]="workTime">
+                    </md-input-container>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <md-checkbox name="isBillable" [(ngModel)]="isBillable"> is Billable</md-checkbox>
             </td>
         </tr>
     </table>
-    <br>
+    <div class="form-group">
+      <button md-button name="click" click>OK</button>
+      <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
+    </div>
+</form>
 </div>
-<div md-dialog-actions>
-    <button type="button" md-raised-button (click)="ok();">OK</button>
-    <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
