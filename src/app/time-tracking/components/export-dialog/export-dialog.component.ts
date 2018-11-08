@@ -102,7 +102,7 @@ export class ExportDialogComponent implements OnInit {
 		} else {
 			alert("Your token has expired. Please log in again!");
 			this.dialogRef.close(true);
-			this.entriesService.entriesAreLoaded();
+			this.entriesService.allEntriesAreLoaded();
 		}
 	}
 

@@ -40,6 +40,8 @@ export class EntriesService {
   public startOfMonth: any;
   public endOfMonth: any;
   public today: any;
+  private term: string = "toto";
+  private selectedUserID: any;
   @Input() static dates = [];
   @Input() totalAvailableVacationDays: any;
 
@@ -54,7 +56,6 @@ export class EntriesService {
     private timeSpentService: TimespentService,
     public datesService: DatesService) {
     this.isAdmin = this.loginService.isAdmin();
-    
   }
 
   /**
@@ -175,7 +176,7 @@ export class EntriesService {
 
   // Filter all entries with one or more parameter
   private filterEntries(entries) {
-    // We filter by 
+    // We filter by project
     let self = this;
     entries = entries.filter((timeEntry) => {
       let entryProjectId = timeEntry.projectID.valueOf();
@@ -193,17 +194,6 @@ export class EntriesService {
     entries = entries.filter(function (timeEntry) {
       let entryClientId = timeEntry.clientID.valueOf();
       return (self.clientsFilter.indexOf(entryClientId) != -1);
-    });
-
-    // We filter by date
-    entries = entries.filter(function (timeEntry) {
-      let entryStartDate = moment(timeEntry.startDateTime).format('DD.MM.YYYY');
-      if (self.selectedDate === 'All') {
-        return entries;
-      }
-      else {
-        return (entryStartDate === self.selectedDate);
-      }
     });
 
     // We filter by billable
@@ -229,7 +219,6 @@ export class EntriesService {
     this.projectsFilter = parameterObject["projects"];
     this.clientsFilter = parameterObject["clients"];
     this.tasksFilter = parameterObject["tasks"];
-    this.selectedDate = parameterObject["selectedDate"];
     this.billable = parameterObject["selectedBillable"];
   }
 
@@ -238,83 +227,21 @@ export class EntriesService {
     this.sortingDirection = parameterObject["direction"];
   }
 
-  public getEntries() {
-    return this.sortEntriesBy(this.sortingColumn, this.sortingDirection);
+  getSelectedUserID() {
+    return this.selectedUserID;
   }
 
-  entriesAreLoaded(): Promise<any> {
-    let that = this;
+  setSelectedUserID(userID) {
+    this.selectedUserID = userID;
+  }
 
-    return new Promise<any>((resolve, reject) => {
-      this.http.get(this.baseUrl + "/clients").map(res => res.json()).subscribe(
-        results => {
-          this.clients = results;
+  setSearchBy(term) {
+    this.term = term;
+  }
 
-          results.forEach(function (result) {
-            that.clientsDictionary[result.id] = result;
-          });
 
-          this.http.get(this.baseUrl + "/projects").map(res => res.json()).subscribe(
-            results => {
-              this.projects = results;
-
-              results.forEach(function (result) {
-                that.projectsDictionary[result.id] = result;
-              });
-
-              // We build the dictionary of tasks
-              this.http.get(this.baseUrl + "/tasks").map(res => res.json()).subscribe(
-                results => {
-                  this.tasks = results;
-
-                  results.forEach(function (result) {
-                    that.tasksDictionary[result.id] = result;
-                  });
-
-                  this.http.get(this.baseUrl + "/timeentries").map(res => res.json()).subscribe(
-                    loadedEntries => {
-                      var items = [];
-                      var dates = [];
-
-                      loadedEntries.forEach(function (entry) {
-                        entry.task = that.tasksDictionary[entry.taskID];
-                        entry.client = that.clientsDictionary[entry.clientID];
-                        entry.project = that.projectsDictionary[entry.projectID];
-                        entry.projectName = entry.project.projectName;
-                        entry.taskDescription = entry.task.taskDescription;
-                        entry.clientName = entry.client.clientName;
-                        entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
-                        entry.startTime = entry.startDateTime.substring(11, 16);
-                        entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
-                        entry.endTime = entry.endDateTime.substring(11, 16);
-                        dates.push(moment(entry.startDateTime).format('YYYY-MM-DD'));
-                        items.push(entry);
-                      });
-                      this.timeSpentService.calculateEntriesTimeSpent(items);
-                      this.setColor(items);
-                      EntriesService.dates = _.uniqWith(dates, _.isEqual);
-                      EntriesService.dates = _.sortBy(EntriesService.dates, function (dateObj) {
-                        return new Date(dateObj.value);
-                      });
-                      EntriesService.dates = EntriesService.dates;
-                      dates = this.datesService.uniqValue(dates);
-                      dates = this.datesService.sortBy(dates);
-                      EntriesService.dates = this.datesService.swissFormat(dates);
-                      EntriesService.clonedEntries = items;
-                      EntriesService.displayByAll = items;
-                      this.displaySidebarData();
-
-                      resolve(items);
-                    });
-                });
-            });
-        },
-        (err) => {
-          if (err.status === 500) {
-            this.loginService.logout();
-          }
-        });
-    });
+  public getEntries() {
+    return this.sortEntriesBy(this.sortingColumn, this.sortingDirection);
   }
 
   allEntriesAreLoaded(): Promise<any> {
@@ -346,7 +273,9 @@ export class EntriesService {
                     that.tasksDictionary[result.id] = result;
                   });
 
-                  this.http.get(this.baseUrl + "/timeentries/all").map(res => res.json()).subscribe(
+                  let searchedTerm = that.term || ""; 
+
+                  this.http.get(this.baseUrl + "/timeentries/search?term="+ searchedTerm +"&selectedUserID="+ this.selectedUserID).map(res => res.json()).subscribe(
                     loadedEntries => {
                       var items = [];
                       var dates = [];
@@ -405,41 +334,6 @@ export class EntriesService {
       else {
         entry.isColored = false;
       }
-    });
-  }
-
-  searchBy(id, term): Promise<any> {
-    let that = this;
-    let url = this.baseUrl + "/timeentries/search?";
-
-    return new Promise<any>((resolve, reject) => {
-      this.http.get(url + "selectedUserID=" + id + "&term=" + term).map(res => res.json()).subscribe(
-        loadedEntries => {
-          var items = [];
-
-          loadedEntries.forEach(function (entry) {
-            entry.task = that.tasksDictionary[entry.taskID];
-            entry.client = that.clientsDictionary[entry.clientID];
-            entry.project = that.projectsDictionary[entry.projectID];
-            entry.projectName = entry.project.projectName;
-            entry.taskDescription = entry.task.taskDescription;
-            entry.clientName = entry.client.clientName;
-            entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
-            entry.startTime = entry.startDateTime.substring(11, 16);
-            entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
-            entry.endTime = entry.endDateTime.substring(11, 16);
-            items.push(entry);
-          });
-          this.timeSpentService.calculateEntriesTimeSpent(items);
-          this.setColor(items);
-          EntriesService.clonedEntries = items;
-          resolve(items);
-        },
-        (err) => {
-          if (err.status === 500) {
-            this.loginService.logout();
-          }
-        });
     });
   }
 

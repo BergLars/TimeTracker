@@ -45,7 +45,7 @@ export class EntriesComponent implements OnInit {
   @Input() date: string;
   public editing = {};
   public result: any;
-
+  @Input() searchTerm: string;
   private previousAllProjectsFilterFlag = true;
   private previousAllTasksFilterFlag = true;
   private previousAllClientsFilterFlag = true;
@@ -119,10 +119,18 @@ export class EntriesComponent implements OnInit {
     this.loadValuePerdefault();
     this.defaultItem = this.createItems[0].key;
     this.isAdmin = this.loginService.isAdmin();
-    this.isAdmin ? this.loadAllEntries() : this.loadMyEntries();
-    this.updateFilterSelection();
     this.entriesService.getCurrentDayWeekMonth();
+    this.updateFilterSelection();
     this.getUsers();
+    this.entriesService.setSelectedUserID(this.loginService.getLoggedUserID());
+    this.selectedProjects[0] = -1;
+    this.selectedTasks[0] = -1;
+    this.selectedClients[0] = -1;
+    this.selectedBillable = -1;
+    this.selectedUser = this.entriesService.getSelectedUserID();
+    this.loadMyEntries();
+    this.refreshDatatable();
+    
   }
 
   getSearchValue(term: string) {
@@ -131,7 +139,6 @@ export class EntriesComponent implements OnInit {
 
     if (this.term === '') {
       this.isChecked = true;
-      this.loadEntries();
     }
     else {
       if (_.includes(this.term, exp)) {
@@ -148,16 +155,9 @@ export class EntriesComponent implements OnInit {
         month = date[1];
         year = date[2];
         this.term = sprintf('%d-%02d-%02d', year, month, day);
-        this.loadSearched(this.selectedUser, this.term);
       }
-      this.loadSearched(this.selectedUser, this.term);
     }
-  }
-
-  loadSearched(id, term) {
-    this.entriesService.searchBy(id, term).then(() => {
-      this.refreshDatatable();
-    });
+    this.loadEntries();
   }
 
   setSelectFocus(event, row, cell, value) {
@@ -197,11 +197,9 @@ export class EntriesComponent implements OnInit {
   }
 
   updateFilterSelection() {
-    this.selectedDate = 'All';
     this.projectsSelectedPerDefault();
     this.tasksSelectedPerDefault();
     this.clientsSelectedPerDefault();
-    this.refreshDatatable();
   }
 
   updateSortingSelection() {
@@ -404,14 +402,17 @@ export class EntriesComponent implements OnInit {
   private refreshDatatable() {
     let self = this;
 
-    // Take in acount the filtering
+    // Take in account the searched term
+    this.entriesService.setSearchBy(this.term);
+
+    // Take in account the filtering
     this.entriesService.setFilteringBy({
       clients: this.selectedClients,
       projects: this.selectedProjects,
       tasks: this.selectedTasks,
-      selectedDate: this.selectedDate
+      selectedBillable: this.isBillable
     });
-    // Take in acount the sorting
+    // Take in account the sorting
     this.entriesService.setSortingBy({
       column: this.columns[this.selectedColumn].key,
       direction: this.sorts[this.selectedSort].key
@@ -437,44 +438,16 @@ export class EntriesComponent implements OnInit {
    * Load entries per default
    */
   loadEntries() {
-    return this.isAdmin ? this.loadAllEntries() : this.loadMyEntries();
+    this.updateFilterSelection();
+    this.entriesService.setSearchBy(this.searchTerm);
+    return this.loadMyEntries();
   }
 
-  loadAllEntries() {
+  loadMyEntries() {
     this.entriesService.allEntriesAreLoaded().then(() => {
       this.clients = this.entriesService.sortedClients();
       this.projects = this.entriesService.sortedProjects();
       this.tasks = this.entriesService.sortedTasks();
-      this.selectedDates = EntriesService.dates;
-      this.selectedProjects[0] = -1;
-      this.selectedTasks[0] = -1;
-      this.selectedClients[0] = -1;
-      this.selectedUser = -1;
-      this.selectedBillable = -1;
-      this.selectedDate = 'All';
-
-      if (!this.isChecked) {
-        this.projectsSelectedPerDefault();
-        this.tasksSelectedPerDefault();
-        this.clientsSelectedPerDefault();
-      }
-      this.allEntries = EntriesService.clonedEntries;
-      this.refreshDatatable();
-    });
-  }
-
-  loadMyEntries() {
-    this.entriesService.entriesAreLoaded().then(() => {
-      this.clients = this.entriesService.sortedClients();
-      this.projects = this.entriesService.sortedProjects();
-      this.tasks = this.entriesService.sortedTasks();
-      this.selectedDates = EntriesService.dates;
-      this.selectedProjects[0] = -1;
-      this.selectedTasks[0] = -1;
-      this.selectedClients[0] = -1;
-      this.selectedBillable = -1;
-      this.selectedUser = this.loginService.getLoggedUserID();
-      this.selectedDate = 'All';
 
       if (!this.isChecked) {
         this.projectsSelectedPerDefault();

@@ -45,7 +45,6 @@ export class PasswordDialogComponent implements OnInit {
 		} else {
 			alert("Your token has expired. Please log in again!");
 			this.dialogRef.close(true);
-			this.entriesService.entriesAreLoaded();
 		}
 	}
 

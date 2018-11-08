@@ -49,7 +49,7 @@ export class TimeTrackingComponent implements OnInit {
         .confirm('Create', this.viewContainerRef)
         .subscribe(res => {
           if (res) {
-            this.entriesService.entriesAreLoaded();
+            this.entriesService.allEntriesAreLoaded();
           }
         });
     } else {
@@ -65,7 +65,7 @@ export class TimeTrackingComponent implements OnInit {
       .confirm('Edit', this.viewContainerRef)
       .subscribe(res => {
         if (res) {
-          this.entriesService.entriesAreLoaded();
+          this.entriesService.allEntriesAreLoaded();
         }
       });
   }
