@@ -1,5 +1,5 @@
 import { Injectable, Input } from '@angular/core';
-import { ITimeTrackingEntry, IProject, ITask, IClient, RegistryService, TimespentService, DatesService } from '../../../data';
+import { ITimeTrackingEntry, IProject, ITask, IClient, IUser, RegistryService, TimespentService, DatesService } from '../../../data';
 import { Http } from '@angular/http';
 import { environment } from '../../../../environments/environment';
 import { LoginService } from '../../../login';
@@ -16,9 +16,14 @@ export class EntriesService {
   @Input() task: ITask;
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
+  @Input() users: IUser[] = [];
+  @Input() user: IUser;
+  
   public tasksDictionary: any = {};
   public projectsDictionary: any = {};
   public clientsDictionary: any = {};
+  public usersDictionary: any = {};
+
   @Input() totalTimeSpent: any;
   @Input() static displayByAll: ITimeTrackingEntry[] = [];
   @Input() static clonedEntries: ITimeTrackingEntry[] = [];
@@ -28,8 +33,9 @@ export class EntriesService {
   private projectsFilter = [];
   private clientsFilter = [];
   private tasksFilter = [];
+  private usersFilter = [];
+  private billableFilter: any;
   private selectedDate: any;
-  private billable: any;
   private isAdmin: boolean = false;
 
   private sortingColumn: string;
@@ -40,7 +46,9 @@ export class EntriesService {
   public startOfMonth: any;
   public endOfMonth: any;
   public today: any;
-  private term: string = "toto";
+  private term: string = "";
+  private fromDate: string = "";
+  private toDate: string = "";
   private selectedUserID: any;
   @Input() static dates = [];
   @Input() totalAvailableVacationDays: any;
@@ -196,10 +204,19 @@ export class EntriesService {
       return (self.clientsFilter.indexOf(entryClientId) != -1);
     });
 
+    // We filter by user
+    entries = entries.filter(function (timeEntry) {
+      let userprofileID = timeEntry.userprofileID;
+      return (self.usersFilter.indexOf(userprofileID)  != -1);
+    });
+
     // We filter by billable
     entries = entries.filter(function (timeEntry) {
-      let entryBillable = timeEntry.billable.valueOf();
-      return (entryBillable != self.billable);
+      if (self.billableFilter === -1) return true;
+
+      let entryBillable = timeEntry.billable;
+
+      return (entryBillable != self.billableFilter);
     });
 
     this.registryService.sidebarComponent.totalTimeSpent = this.timeSpentService.calculateTotalTimeSpent(entries);
@@ -219,7 +236,8 @@ export class EntriesService {
     this.projectsFilter = parameterObject["projects"];
     this.clientsFilter = parameterObject["clients"];
     this.tasksFilter = parameterObject["tasks"];
-    this.billable = parameterObject["selectedBillable"];
+    this.usersFilter = parameterObject["users"];
+    this.billableFilter = parameterObject["isBillable"];
   }
 
   public setSortingBy(parameterObject) {
@@ -235,8 +253,10 @@ export class EntriesService {
     this.selectedUserID = userID;
   }
 
-  setSearchBy(term) {
+  setSearchBy(term, fromDate, toDate) {
     this.term = term;
+    this.fromDate = fromDate;
+    this.toDate = toDate;
   }
 
 
@@ -273,40 +293,53 @@ export class EntriesService {
                     that.tasksDictionary[result.id] = result;
                   });
 
-                  let searchedTerm = that.term || ""; 
+                  // We build a dictionary of users
+                  this.http.get(this.baseUrl + "/userprofile/all").map(res => res.json()).subscribe(
+                    results => {
+                      this.users = results;
 
-                  this.http.get(this.baseUrl + "/timeentries/search?term="+ searchedTerm +"&selectedUserID="+ this.selectedUserID).map(res => res.json()).subscribe(
-                    loadedEntries => {
-                      var items = [];
-                      var dates = [];
-
-                      loadedEntries.forEach(function (entry) {
-                        entry.task = that.tasksDictionary[entry.taskID];
-                        entry.client = that.clientsDictionary[entry.clientID];
-                        entry.project = that.projectsDictionary[entry.projectID];
-                        entry.projectName = entry.project.projectName;
-                        entry.taskDescription = entry.task.taskDescription;
-                        entry.clientName = entry.client.clientName;
-                        entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
-                        entry.startTime = entry.startDateTime.substring(11, 16);
-                        entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
-                        entry.endTime = entry.endDateTime.substring(11, 16);
-                        dates.push(moment(entry.startDateTime).format('YYYY-MM-DD'));
-                        items.push(entry);
+                      results.forEach(function (result) {
+                        that.usersDictionary[result.id] = result;
                       });
-                      this.timeSpentService.calculateEntriesTimeSpent(items);
-                      this.setColor(items);
-                      dates = this.datesService.uniqValue(dates);
-                      dates = this.datesService.sortBy(dates);
-                      EntriesService.dates = this.datesService.swissFormat(dates);
+                      
 
-                      EntriesService.clonedEntries = items;
-                      EntriesService.displayByAll = items;
-                      this.displaySidebarData();
+                      let searchedTerm = that.term || ""; 
+                      let fromDate = that.fromDate || "";
+                      let toDate = that.toDate || "";
 
-                      resolve(items);
+                      this.http.get(this.baseUrl + "/timeentries/search?term="+ searchedTerm + "&fromDate="+ fromDate + "&toDate="+ toDate).map(res => res.json()).subscribe(
+                        loadedEntries => {
+                          var items = [];
+                          var dates = [];
+
+                          loadedEntries.forEach(function (entry) {
+                            entry.task = that.tasksDictionary[entry.taskID];
+                            entry.client = that.clientsDictionary[entry.clientID];
+                            entry.project = that.projectsDictionary[entry.projectID];
+                            entry.projectName = entry.project.projectName;
+                            entry.taskDescription = entry.task.taskDescription;
+                            entry.clientName = entry.client.clientName;
+                            entry.entryDate = entry.startDateTime.substring(8, 10) + "." + entry.startDateTime.substring(5, 7) + "." + entry.startDateTime.substring(0, 4);
+                            entry.startTime = entry.startDateTime.substring(11, 16);
+                            entry.endDate = entry.endDateTime.substring(8, 10) + "." + entry.endDateTime.substring(5, 7) + "." + entry.endDateTime.substring(0, 4);
+                            entry.endTime = entry.endDateTime.substring(11, 16);
+                            dates.push(moment(entry.startDateTime).format('YYYY-MM-DD'));
+                            items.push(entry);
+                          });
+                          this.timeSpentService.calculateEntriesTimeSpent(items);
+                          this.setColor(items);
+                          dates = this.datesService.uniqValue(dates);
+                          dates = this.datesService.sortBy(dates);
+                          EntriesService.dates = this.datesService.swissFormat(dates);
+
+                          EntriesService.clonedEntries = items;
+                          EntriesService.displayByAll = items;
+                          this.displaySidebarData();
+
+                          resolve(items);
+                        });
                     });
-                });
+                  });
             });
         },
         (err) => {

@@ -26,6 +26,8 @@ export class EntriesComponent implements OnInit {
   @Input() task: ITask;
   @Input() clients: IClient[] = [];
   @Input() client: IClient;
+  @Input() users: IUser[] = [];
+
 
   @ViewChild('mydatatable') datatable: DatatableComponent;
 
@@ -49,6 +51,11 @@ export class EntriesComponent implements OnInit {
   private previousAllProjectsFilterFlag = true;
   private previousAllTasksFilterFlag = true;
   private previousAllClientsFilterFlag = true;
+  private previousAllUsersFilterFlag = true;
+  filterFromDate: any;
+  filterToDate: any;
+  @Input() fromDateValue: Date;
+  @Input() toDateValue: Date;
 
 
   private columns = [
@@ -85,6 +92,7 @@ export class EntriesComponent implements OnInit {
   @Input() selectedClients: any = [];
   @Input() selectedProjects: any = [];
   @Input() selectedTasks: any = [];
+  @Input() selectedUsers: any = [];
   public selectedDates: any = [];
 
   @Input() selectedColumn: any;
@@ -95,9 +103,8 @@ export class EntriesComponent implements OnInit {
   isChecked = false;
 
   @Input() isAdmin: boolean = false;
-  @Input() selectedUser: any;
   @Input() selectedDate: any;
-  @Input() users: IUser[] = [];
+
   public sscanf = require('scanf');
   public rowUserprofileID: any;
 
@@ -127,14 +134,14 @@ export class EntriesComponent implements OnInit {
     this.selectedTasks[0] = -1;
     this.selectedClients[0] = -1;
     this.selectedBillable = -1;
-    this.selectedUser = this.entriesService.getSelectedUserID();
+    this.selectedUsers[0] = -1; 
     this.loadMyEntries();
     this.refreshDatatable();
-    
   }
 
   getSearchValue(term: string) {
     this.term = term;
+
     let exp = '.';
 
     if (this.term === '') {
@@ -200,6 +207,7 @@ export class EntriesComponent implements OnInit {
     this.projectsSelectedPerDefault();
     this.tasksSelectedPerDefault();
     this.clientsSelectedPerDefault();
+    this.usersSelectedPerDefault();
   }
 
   updateSortingSelection() {
@@ -403,15 +411,17 @@ export class EntriesComponent implements OnInit {
     let self = this;
 
     // Take in account the searched term
-    this.entriesService.setSearchBy(this.term);
+    this.entriesService.setSearchBy(this.term, this.filterFromDate, this.filterToDate);
 
     // Take in account the filtering
     this.entriesService.setFilteringBy({
       clients: this.selectedClients,
       projects: this.selectedProjects,
       tasks: this.selectedTasks,
-      selectedBillable: this.isBillable
+      users: this.selectedUsers,
+      isBillable: this.selectedBillable
     });
+
     // Take in account the sorting
     this.entriesService.setSortingBy({
       column: this.columns[this.selectedColumn].key,
@@ -439,7 +449,10 @@ export class EntriesComponent implements OnInit {
    */
   loadEntries() {
     this.updateFilterSelection();
-    this.entriesService.setSearchBy(this.searchTerm);
+    (this.filterFromDate ? (this.registryService.dateFormatedReuquirement.test(this.filterFromDate) ? this.filterFromDate : this.filterFromDate = moment(this.filterFromDate.toISOString()).format('YYYY-MM-DD')) : this.filterFromDate);
+    (this.filterToDate ? (this.registryService.dateFormatedReuquirement.test(this.filterToDate) ? this.filterToDate : this.filterToDate = moment(this.filterToDate.toISOString()).format('YYYY-MM-DD')) : this.filterToDate);
+    
+    this.entriesService.setSearchBy(this.searchTerm, this.filterFromDate, this.filterToDate);
     return this.loadMyEntries();
   }
 
@@ -453,68 +466,18 @@ export class EntriesComponent implements OnInit {
         this.projectsSelectedPerDefault();
         this.tasksSelectedPerDefault();
         this.clientsSelectedPerDefault();
+        this.usersSelectedPerDefault();
       }
       this.allEntries = EntriesService.clonedEntries;
       this.refreshDatatable();
     });
   }
 
-  displayEntriesByUser() {
-    this.items = this.loadUserEntriesById(this.selectedUser);
-    EntriesService.clonedEntries = this.items;
-    EntriesService.displayByAll = this.items;
-    this.refreshDatatable();
-    this.entriesService.displaySidebarData();
-  }
-
-  displayEntriesByDate() {
-    this.items = this.loadUserEntriesByDate(this.selectedDate);
-    EntriesService.clonedEntries = this.items;
-    this.refreshDatatable();
-    this.entriesService.displaySidebarData();
-  }
-
-  displayEntriesByBillable() {
-    this.items = this.loadUserEntriesByBillable(this.selectedBillable);
-    EntriesService.clonedEntries = this.items;
-    this.refreshDatatable();
-    this.entriesService.displaySidebarData();
-  }
-
-  loadUserEntriesByBillable(value) {
-    var billableEntries: ITimeTrackingEntry[] = [];
-    var notBillableEntries: ITimeTrackingEntry[] = [];
-    var entries: ITimeTrackingEntry[] = [];
-    if (value === -1) {
-      entries = _.map(this.loadUserEntriesById(this.selectedUser), _.clone);
-      this.items = entries;
-    }
-    else {
-      this.loadUserEntriesById(this.selectedUser).forEach(element => {
-        if (element.billable === false) {
-          notBillableEntries.push(element);
-        }
-        else {
-          billableEntries.push(element);
-        }
-      });
-    }
-    if (this.selectedBillable === 0) {
-      this.items = billableEntries;
-    }
-    else if (this.selectedBillable === 1) {
-      this.items = notBillableEntries;
-    }
-    else {
-      this.items = this.loadUserEntriesById(this.selectedUser);
-    }
-    return this.items;
-  }
-
   loadUserEntriesById(id) {
     var entries: ITimeTrackingEntry[] = [];
     EntriesService.clonedEntries = this.allEntries;
-    if (id === -1) {
+
+    if (id[0] === -1) {
       entries = _.map(EntriesService.clonedEntries, _.clone);
       this.items = entries;
     }
@@ -532,11 +495,11 @@ export class EntriesComponent implements OnInit {
   loadUserEntriesByDate(date) {
     var entries: ITimeTrackingEntry[] = [];
     if (date === 'All') {
-      entries = _.map(this.loadUserEntriesById(this.selectedUser), _.clone);
+      entries = _.map(this.loadUserEntriesById(this.selectedUsers), _.clone);
       this.items = entries;
     }
     else {
-      this.loadUserEntriesById(this.selectedUser).forEach(element => {
+      this.loadUserEntriesById(this.selectedUsers).forEach(element => {
         if (date === element.entryDate) {
           entries.push(element);
         }
@@ -645,6 +608,44 @@ export class EntriesComponent implements OnInit {
     }
 
     this.previousAllClientsFilterFlag = allClientsFilterFlag;
+    this.refreshDatatable();
+  }
+
+  usersSelectedPerDefault() {
+    var allUsersFilterFlag = this.selectedUsers[0] === -1;
+    let selectedUsers = [];
+
+    selectedUsers = this.users.map(function (user) {
+      return user.id;
+    });
+
+    if (this.previousAllUsersFilterFlag < allUsersFilterFlag) {
+      this.selectedUsers = [-1].concat(selectedUsers);
+      this.previousAllUsersFilterFlag = allUsersFilterFlag;
+      this.refreshDatatable();
+      return;
+    }
+
+    if (this.previousAllUsersFilterFlag > allUsersFilterFlag) {
+      this.previousAllUsersFilterFlag = allUsersFilterFlag;
+      this.selectedUsers = [];
+      this.refreshDatatable();
+      return;
+    }
+
+    if (this.selectedUsers.length === (this.clients.length - (allUsersFilterFlag ? 1 : 0))) {
+      this.selectedUsers = [-1].concat(selectedUsers);
+      allUsersFilterFlag = true;
+    } else {
+      if (allUsersFilterFlag) this.selectedUsers = this.selectedUsers.slice(1);
+      allUsersFilterFlag = false;
+    }
+
+    this.previousAllUsersFilterFlag = allUsersFilterFlag;
+    this.refreshDatatable();
+  }
+
+  billableSelectedPerDefault() {
     this.refreshDatatable();
   }
 

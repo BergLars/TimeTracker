@@ -24,12 +24,12 @@
                 <md-option class="data-filter-header" *ngFor="let item of tasks" [value]='item.id'> {{ item.taskDescription }}</md-option>
             </md-select>
             <span [hidden]="!isAdmin">
-                <md-select placeholder="User" [(ngModel)]="selectedUser" (change)="displayEntriesByUser();" id="userFilter">
+                <md-select multiple placeholder="User" [(ngModel)]="selectedUsers" (change)="usersSelectedPerDefault();" id="userFilter">
                     <md-option class="data-filter-header clickOnAllUsers" [value]="-1">All</md-option>
                     <md-option class="data-filter-header" *ngFor="let item of users" [value]='item.id'> {{ item.userName }}</md-option>
                 </md-select>
             </span>
-            <md-select placeholder="Billable" [(ngModel)]="selectedBillable" (change)="displayEntriesByBillable();" id="billableFilter">
+            <md-select placeholder="Billable" [(ngModel)]="selectedBillable" (change)="billableSelectedPerDefault();" id="billableFilter">
                 <md-option class="data-filter-header clickOnAll" [value]="-1">All</md-option>
                 <md-option class="data-filter-header" *ngFor="let item of billables" [value]='item.id'> {{ item.key }}</md-option>
             </md-select>&nbsp;
@@ -49,7 +49,22 @@
     </md-chip-list>
     <span class="flex"></span>
     <md-input-container>
-        <input mdInput id="search" value="" (keydown)="searchKeyDown($event)" #search placeholder="Search" [(ngModel)]="searchTerm">
+        <input mdInput placeholder="From" #inputFromDate [mdDatepicker]="fromDate" id="inputFromDate" value="" [(ngModel)]="filterFromDate">
+        <button mdSuffix [mdDatepickerToggle]="fromDate"></button>
+        <md-datepicker #fromDate></md-datepicker>
+    </md-input-container>
+    &nbsp;
+    &nbsp;
+
+    <md-input-container>
+        <input mdInput placeholder="To" #inputToDate [mdDatepicker]="toDate" id="inputToDate" value="" [(ngModel)]="filterToDate">
+        <button mdSuffix [mdDatepickerToggle]="toDate"></button>
+        <md-datepicker #toDate></md-datepicker>
+    </md-input-container>
+    &nbsp;
+    &nbsp;
+    <md-input-container>
+        <input mdInput placeholder="Search" #search id="search" value="" (keydown)="searchKeyDown($event)"   [(ngModel)]="searchTerm">
     </md-input-container>
     <md-icon class="material-icons app-input-icon clickable-icon search" (click)="loadEntries();">search</md-icon>
 </md-toolbar>
@@ -115,8 +130,7 @@
                 {{ row.timeSpent }}
             </span>
             <input id="{{row.cellvalue + row.$$index}}" class="input-field timeSpent" (blur)="updateValue($event, 'timeSpent', value, row);removeSelectFocus(row,'-timeSpent')"
-                (keydown)="datatableKeyDown($event, 'timeSpent', value, row)" *ngIf="editing[row.$$index + '-timeSpent']
-            " type="text " [value]="value " />
+                (keydown)="datatableKeyDown($event, 'timeSpent', value, row)" *ngIf="editing[row.$$index + '-timeSpent']" type="text"/>
         </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Actions" sortable>
