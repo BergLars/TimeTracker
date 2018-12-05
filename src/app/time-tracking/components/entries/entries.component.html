@@ -49,22 +49,21 @@
     </md-chip-list>
     <span class="flex"></span>
     <md-input-container>
-        <input mdInput placeholder="From" #inputFromDate [mdDatepicker]="fromDate" id="inputFromDate" value="" [(ngModel)]="filterFromDate">
+        <input mdInput placeholder="From" #inputFromDate [mdDatepicker]="fromDate" id="inputFromDate" value="" (keydown)="getDates($event)" [(ngModel)]="filterFromDate">
         <button mdSuffix [mdDatepickerToggle]="fromDate"></button>
         <md-datepicker #fromDate></md-datepicker>
     </md-input-container>
     &nbsp;
     &nbsp;
-
     <md-input-container>
-        <input mdInput placeholder="To" #inputToDate [mdDatepicker]="toDate" id="inputToDate" value="" [(ngModel)]="filterToDate">
+        <input mdInput placeholder="To" #inputToDate [mdDatepicker]="toDate" id="inputToDate" value="" (keydown)="getDates($event)" [(ngModel)]="filterToDate">
         <button mdSuffix [mdDatepickerToggle]="toDate"></button>
         <md-datepicker #toDate></md-datepicker>
     </md-input-container>
     &nbsp;
     &nbsp;
     <md-input-container>
-        <input mdInput placeholder="Search" #search id="search" value="" (keydown)="searchKeyDown($event)"   [(ngModel)]="searchTerm">
+        <input mdInput placeholder="Search" #search id="search" value="" (keydown)="searchKeyDown($event)" [(ngModel)]="searchTerm">
     </md-input-container>
     <md-icon class="material-icons app-input-icon clickable-icon search" (click)="loadEntries();">search</md-icon>
 </md-toolbar>

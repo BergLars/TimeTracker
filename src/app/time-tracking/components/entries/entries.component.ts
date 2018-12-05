@@ -28,7 +28,6 @@ export class EntriesComponent implements OnInit {
   @Input() client: IClient;
   @Input() users: IUser[] = [];
 
-
   @ViewChild('mydatatable') datatable: DatatableComponent;
 
   @Input() items: ITimeTrackingEntry[] = [];
@@ -56,7 +55,6 @@ export class EntriesComponent implements OnInit {
   filterToDate: any;
   @Input() fromDateValue: Date;
   @Input() toDateValue: Date;
-
 
   private columns = [
     { key: 'Description', id: 0 },
@@ -654,6 +652,13 @@ export class EntriesComponent implements OnInit {
       this.updateValue(event, cell, cellValue, row);
     }
   }
+
+  getDates(event) {
+    if (event.key == 'Enter') {
+      this.loadEntries();
+    }
+  }
+
   searchKeyDown(event) {
     if (event.key == 'Enter') {
       this.getSearchValue(event.target.value);
