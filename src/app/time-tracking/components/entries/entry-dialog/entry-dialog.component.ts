@@ -18,6 +18,7 @@ export class EntryDialogComponent implements OnInit {
   private _mySelectedClient: any;
   private _mySelectedTask: any;
   public title: string;
+  model: any = {};
 
   @Input() projects: IProject[] = [];
   @Input() clients: IClient[] = [];
@@ -52,19 +53,16 @@ export class EntryDialogComponent implements OnInit {
 
   public rowID: number;
   public userprofileID: any;
-
-  @Input() description: string;
   @Input() place: string;
   @Input() fromDate: any;
-  @Input() inputFromDate: string;
   @Input() toDate: any;
-  @Input() inputToDate: string;
   @Input() startTime: any;
   @Input() endTime: any;
   @Input() travelTime: any;
   @Input() workTime: any;
   @Input() isBillable: boolean = false;
   public user: IUser;
+  private description: string;
   public defaultTimeValue: String = "00:00";
 
   public validTimePeriod: boolean = false;
@@ -91,48 +89,32 @@ export class EntryDialogComponent implements OnInit {
     this.isBillable = !this.isBillable;
   }
 
-  public readData(descriptionValue: any, placeValue: any, valueDate: any, valueInputFromDate: any, valueToDate: any, valueInputToDate: any, valueStartTime: any, valueEndTime: any, valueTravelTime: any, valueWorkTime: any, valueIsBillable: any) {
-    this.description = descriptionValue;
-    this.place = placeValue;
-    this.fromDate = valueDate;
-    this.inputFromDate = valueInputFromDate;
-    this.toDate = valueToDate;
-    this.inputToDate = valueInputToDate;
-    this.startTime = valueStartTime;
-    this.endTime = valueEndTime;
-    this.travelTime = valueTravelTime;
-    this.workTime = valueWorkTime;
-    this.isBillable = valueIsBillable.checked;
-    this.validDatePeriod = this.datesService.isValidDatePeriod(this.inputFromDate, this.inputToDate);
-    this.isSameDate = this.datesService.isSameDate(this.inputFromDate, this.inputToDate);
+  public ok() {
+    this.fromDate = moment(this.model.startdate.toISOString()).format('YYYY-MM-DD');
+    this.toDate = moment(this.model.enddate.toISOString()).format('YYYY-MM-DD');
+    this.validDatePeriod = this.datesService.isValidDatePeriod(this.fromDate, this.toDate);
+    this.description = this.model.description;
+    this.place = this.model.place;
+    this.startTime = this.model.startTime;
+    this.endTime = this.model.endTime;
+    this.travelTime = this.model.travelTime;
+    this.workTime = this.model.workTime;
+    this.isBillable = this.model.isBillable;
+        this.isSameDate = this.datesService.isSameDate(this.fromDate, this.toDate);
     this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime, this.isSameDate);
-  }
-
-  public readDates(valueFrom: any, valueTo: any) {
-    if (valueFrom._selected) {
-      this.fromDate = this.datesService.currentDateValue(valueFrom);
-    }
-    if (valueTo._selected) {
-      this.toDate = this.datesService.currentDateValue(valueTo);
-    }
-  }
-
-  public readDatesOnInputField() {
-    this.validDate = this.datesService.isValidDate(this.inputFromDate, this.inputToDate);
+    this.checkMandatoryFields();
   }
 
   public checkMandatoryFields() {
     if (this.loginService.loggedIn()) {
-      if (this.description === "" || this.description === undefined || this.toDate === undefined || this.fromDate === undefined || this.selectedProject === undefined || this.selectedClient === undefined || this.selectedTask === undefined) {
+      if (this.selectedProject === undefined || this.selectedClient === undefined || this.selectedTask === undefined) {
         alert("Please check if all fields are filled in");
-      } else if ((this.registryService.dateRequirement.test(this.inputFromDate) && this.registryService.dateRequirement.test(this.inputToDate)) !== true) {
-        alert("Please check date format");
       } else if (this.validDatePeriod === false) {
         alert("Invalid date period!");
-      } else if (((this.workTime === '' && (this.startTime === '' || this.endTime === ''))) === true) {
+      } else if (((this.workTime === undefined && (this.startTime === undefined || this.endTime === undefined))) === true) {
         alert("Check if woktime or start and end time are filled!");
       } else {
-        if (this.travelTime === '') {
+        if (this.travelTime === undefined) {
           this.travelTime = this.defaultTimeValue;
         } if (this.registryService.timeSpentRequirement.test(this.travelTime) === false) {
           alert('Wrong travel time format');
@@ -142,7 +124,7 @@ export class EntryDialogComponent implements OnInit {
             this.endTime = this.defaultTimeValue; 
           }
           return this.registryService.timeSpentRequirement.test(this.workTime) === false ? alert('Wrong work time format') : this.createEntryWithWorkTime();
-        } if (this.workTime === '' ) {
+        } if (this.workTime === undefined ) {
           if (this.validTimePeriod) {
             return (this.registryService.timeRequirement.test(this.startTime) && this.registryService.timeRequirement.test(this.endTime)) === false ? 
                   alert('Wrong start or end time format') : this.createEntryWithStartAndEndTime();  
@@ -165,8 +147,9 @@ export class EntryDialogComponent implements OnInit {
   }
 
   createEntryWithStartAndEndTime() {
-    let formatedStartDateTime = this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2) + " " + this.startTime;
-    let formatedEndDateTime = this.toDate.substring(6, 10) + "-" + this.toDate.substring(3, 5) + "-" + this.toDate.substring(0, 2) + " " + this.endTime;
+    let formatedStartDateTime = this.fromDate + " " + this.startTime;
+    let formatedEndDateTime = this.toDate + " " + this.endTime;
+
     this.workTime = this.timeSpentService.calculateWorktimeBetweenDates(formatedStartDateTime, formatedEndDateTime);
     return this.newEntry();
   }
@@ -189,8 +172,8 @@ export class EntryDialogComponent implements OnInit {
 
   public newEntry() {
     return this.http.post(this.baseUrl + "/timeentries", {
-      startDateTime: this.fromDate.substring(6, 10) + "-" + this.fromDate.substring(3, 5) + "-" + this.fromDate.substring(0, 2) + " " + this.startTime,
-      endDateTime: this.toDate.substring(6, 10) + "-" + this.toDate.substring(3, 5) + "-" + this.toDate.substring(0, 2) + " " + this.endTime,
+      startDateTime: this.fromDate+ " " + this.startTime,
+      endDateTime: this.toDate + " " + this.endTime,
       description: this.description,
       userprofileID: this.loginService.getLoggedUserID(),
       taskID: this.selectedTask,

@@ -18,19 +18,13 @@ export class ExportDialogComponent implements OnInit {
 	public title: string;
 	@Input() fromDate: any;
 	@Input() toDate: any;
-	@Input() myFilter: any;
-	public path: string;
-	public username: string;
 	public userID: any;
 	public exportURL: string;
 	@Input() users: IUser[] = [];
 	public validDatePeriod: boolean;
-	public validLength: boolean;
 	public baseUrl: string = environment.apiBaseUrl;
-	@Input() inputFromDate: string;
-	@Input() inputToDate: string;
 	@Input() validDate: boolean = false;
-	// @Input() date = new FormControl(new Date());
+	model: any = {};
 
 	constructor(
 		public dialogRef: MdDialogRef<ExportDialogComponent>,
@@ -46,45 +40,20 @@ export class ExportDialogComponent implements OnInit {
 		this.loadUsers();
 	}
 
-	public currentUserID(value: number): void {
-		this.userID = value;
-	}
-
 	public checkIfAdmin() {
 		return this.loginService.isAdmin();
 	}
 
-	public readDates(valueFrom: any, valueTo: any) {
-		if (valueFrom._selected) {
-			this.fromDate = this.datesService.currentDateValue(valueFrom);
-		}
-		if (valueTo._selected) {
-			this.fromDate = this.datesService.currentDateValue(valueTo);
-		}
+	public readDates() {
+		this.fromDate = moment(this.model.from.toISOString()).format('YYYY-MM-DD');
+		this.toDate = moment(this.model.to.toISOString()).format('YYYY-MM-DD');
+		this.validDatePeriod = this.datesService.isValidDatePeriod(this.fromDate, this.toDate);
+		this.userID = this.model.userprofile;
+		this.checkDates();
 	}
 
-	public getValues(valueFromDate: any, valueInputFromDate: any, valueToDate: any, valueInputToDate: any) {
-		this.fromDate = valueFromDate;
-		this.inputFromDate = valueInputFromDate.trim();
-		this.toDate = valueToDate;
-		this.inputToDate = valueInputToDate.trim();
-		let fromDate = this.inputFromDate.substring(6, 10) + "-" + this.inputFromDate.substring(3, 5) + "-" + this.inputFromDate.substring(0, 2);
-		let toDate = this.inputToDate.substring(6, 10) + "-" + this.inputToDate.substring(3, 5) + "-" + this.inputToDate.substring(0, 2);
-		this.validDatePeriod = this.datesService.isValidDatePeriod(fromDate, toDate);
-	}
-
-	public readDatesOnInputField() {
-		this.validDate = this.datesService.isValidDate(this.inputFromDate, this.inputToDate);
-	}
-
-	public checkMandatoryFields() {
-		if (this.inputFromDate === undefined || this.inputToDate === undefined || this.inputFromDate === '' || this.inputToDate === '') {
-			alert("Please check if all the fields are filled in");
-		}
-		else if (!this.validDate) {
-			alert("Wrong date format !");
-		}
-		else if (!this.validDatePeriod) {
+	public checkDates() {
+		 if (!this.validDatePeriod) {
 			alert("Please select a valid period");
 		}
 		else {
@@ -107,35 +76,23 @@ export class ExportDialogComponent implements OnInit {
 	}
 
 	refreshExportURL(id) {
-		this.inputFromDate.trim();
-		this.inputToDate.trim();
-		let fromDate = this.inputFromDate.substring(6, 10) + "-" + this.inputFromDate.substring(3, 5) + "-" + this.inputFromDate.substring(0, 2);
-		let toDate = this.inputToDate.substring(6, 10) + "-" + this.inputToDate.substring(3, 5) + "-" + this.inputToDate.substring(0, 2);
+		if (!this.loginService.isAdmin()) {
+			this.userID = id;
+		}
 		this.exportURL = this.baseUrl + "/export?fromDate=" +
-			fromDate +
+			this.fromDate +
 			"&toDate=" +
-			toDate +
-			"&userprofileID=" + id;
+			this.toDate +
+			"&userprofileID=" + this.userID;
 		window.open(this.exportURL, '_blank');
 	}
 
 	refreshExportAllURL() {
-		this.inputFromDate.trim();
-		this.inputToDate.trim();
-		let fromDate = this.inputFromDate.substring(6, 10) + "-" + this.inputFromDate.substring(3, 5) + "-" + this.inputFromDate.substring(0, 2);
-		let toDate = this.inputToDate.substring(6, 10) + "-" + this.inputToDate.substring(3, 5) + "-" + this.inputToDate.substring(0, 2);
 		this.exportURL = this.baseUrl + "/export/all?fromDate=" +
-			fromDate +
+			this.fromDate +
 			"&toDate=" +
-			toDate;
+			this.toDate;
 		window.open(this.exportURL, '_blank');
-	}
-
-	public keyDownFunction(event) {
-		if (event.key == 'Enter') {
-			this.readDatesOnInputField();
-			this.checkMandatoryFields();
-		}
 	}
 
 	public exportEntries() {

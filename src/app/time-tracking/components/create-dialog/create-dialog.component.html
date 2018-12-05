@@ -1,69 +1,119 @@
 <h1 md-dialog-title>{{ title }}</h1>
-<div md-dialog-content class="hide-dialog-scrollbar" (keydown)="validateForm(newTaskDescription.value,newProjectName.value,newClientName.value,username.value,password.value,confirmPassword.value,adminRole);keyDownFunction($event);">
-    <table>
-        <tr>
-            <td>Create new:</td>
-            <td>
-                <select (change)="changeItemToBeCreated($event)" id="itemToBeCreated">
-                    <option *ngFor="let item of createItems" [value]="item.id">{{item.key}}</option>
-                </select>
-            </td>
-        </tr>
-        <tr [hidden]="item != PROJECT">
-            <td>
-                <md-input-container>
-                    <input id="newProjectName" mdInput placeholder="Project Name" #newProjectName>
-                </md-input-container>
-            </td>
-        </tr>
-        <tr [hidden]="item != TASK">
-            <td>
-                <md-input-container>
-                    <input id="newTaskDescription" mdInput #newTaskDescription placeholder="Description">
-                </md-input-container>
-            </td>
-        </tr>
-        <tr [hidden]="item != CLIENT">
-            <td>
-                <md-input-container>
-                    <input id="newClientName" mdInput #newClientName placeholder="Client Name">
-                </md-input-container>
-            </td>
-        </tr>
-        <tr [hidden]="item != USER">
-            <td>
-                <label> Password length should be greater than 7.
-                    <br>
-                </label>
-                <br>
-                <md-input-container>
-                    <input id="username" mdInput placeholder="Username" #username>
-                </md-input-container>
-            </td>
-        </tr>
-        <tr [hidden]="item != USER">
-            <td>
-                <md-input-container>
-                    <input id="password" mdInput type="password" placeholder="Password" #password>
-                </md-input-container>
-            </td>
-        </tr>
-        <tr [hidden]="item != USER">
-            <td>
-                <md-input-container>
-                    <input id="confirmPassword" mdInput type="password" placeholder="Confirm password" #confirmPassword>
-                </md-input-container>
-            </td>
-        </tr>
-        <tr [hidden]="item != USER">
-            <td>
-                <md-checkbox #adminRole>Administrator</md-checkbox>
-            </td>
-        </tr>
-    </table>
-    <br>
-</div>
-<div md-dialog-actions>
-    <button type="button" md-button (click)="validateForm(newTaskDescription.value,newProjectName.value,newClientName.value,username.value,password.value,confirmPassword.value,adminRole);checkMandatoryFields();">OK</button>
-    <button type="button" md-button (click)="dialogRef.close()">Cancel</button>
+<div md-dialog-content class="hide-dialog-scrollbar">
+    <!-- <form name="form" (ngSubmit)="f.form.valid && ok()" #f="ngForm" novalidate> -->
+        <table>
+            <tr>
+                <td>
+                    <md-select placeholder="Create new"  name="item" (change)="changeItemToBeCreated($event)" >
+                        <md-option *ngFor="let item of createItems" [value]="item.id">{{item.key}}</md-option>
+                    </md-select>
+                </td>
+            </tr>
+            <br>
+            <tr>
+                <td>
+                    <form name="taskForm" (ngSubmit)="ftask.taskForm.valid && ok()" #ftask="ngForm"  [hidden]="item != TASK" novalidate>
+                        <div class="form-group">
+                            <tr>
+                                <td>
+                                    <md-input-container>
+                                         <input mdInput type="text" placeholder="Task description" class="form-control" name="taskDescription" [(ngModel)]="model.taskDescription" #taskDescription="ngModel" required>
+                                        <div *ngIf="ftask.submitted && taskDescription.invalid" class="invalid-feedback">
+                                            <div *ngIf="taskDescription.errors.required">Please enter a task name</div>
+                                        </div>
+                                    </md-input-container>
+                                </td>
+                            </tr>    
+                        </div>
+                    </form>   
+                </td>
+            </tr>
+             <tr>   
+                <td>
+                    <form name="projectForm" (ngSubmit)="fproject.projectForm.valid && ok()" #fproject="ngForm" novalidate [hidden]="item != PROJECT">
+                        <div class="form-group">
+                            <tr>
+                                <td>
+                                    <md-input-container>
+                                         <input mdInput type="text" placeholder="Project name" class="form-control" name="projectName" [(ngModel)]="model.projectName" #projectname="ngModel" required>
+                                        <div *ngIf="fproject.submitted && projectName.invalid" class="invalid-feedback">
+                                            <div *ngIf="projectName.errors.required">Please enter a project name</div>
+                                        </div>
+                                    </md-input-container>
+                                </td>
+                            </tr>    
+                        </div>
+                    </form>   
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <form name="clientForm" (ngSubmit)="fclient.clientForm.valid && ok()" #fclient="ngForm" novalidate [hidden]="item != CLIENT">
+                        <div class="form-group">
+                            <tr>
+                                <td>
+                                    <md-input-container>
+                                         <input mdInput type="text" placeholder="Client name" class="form-control" name="clientName" [(ngModel)]="model.clientName" #clientName="ngModel" required>
+                                        <div *ngIf="fclient.submitted && clientName.invalid" class="invalid-feedback">
+                                            <div *ngIf="clientName.errors.required">Please enter a client name</div>
+                                        </div>
+                                    </md-input-container>
+                                </td>
+                            </tr>    
+                        </div>
+                    </form> 
+                </td>  
+            </tr>
+            <tr>
+                <td>
+                    <form name="userForm" (ngSubmit)="fuser.userForm.valid && checkUser()" #fuser="ngForm" novalidate  [hidden]="item != USER">
+                            <tr>
+                                <td>
+                                <label> Password length should be greater than 7.
+                                <br>
+                                </label>
+                                <br>
+                                <md-input-container>
+                                    <input mdInput type="text" placeholder="Username" class="form-control" name="username" [(ngModel)]="model.username" #username="ngModel" required>
+                                    <div *ngIf="fuser.submitted && username.invalid" class="invalid-feedback">
+                                        <div *ngIf="username.errors.required">Please enter a username</div>
+                                    </div>
+                                </md-input-container>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <md-input-container>
+                                        <input mdInput type="password" placeholder="Password" class="form-control" name="password" [(ngModel)]="model.password" #password="ngModel" required>
+                                        <div *ngIf="fuser.submitted && password.invalid" class="invalid-feedback">
+                                            <div *ngIf="password.errors.required">Please enter a password</div>
+                                        </div>
+                                    </md-input-container>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <md-input-container>
+                                        <input mdInput type="password" placeholder="Confirm password" class="form-control" name="confirmPassword" [(ngModel)]="model.confirmPassword" #confirmPassword="ngModel" required>
+                                        <div *ngIf="fuser.submitted && confirmPassword.invalid" class="invalid-feedback">
+                                            <div *ngIf="confirmPassword.errors.required">Please repeat the password</div>
+                                        </div>
+                                    </md-input-container>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <md-checkbox name="isAdmin" [(ngModel)]="model.isAdmin">Administrator</md-checkbox>
+                                </td>
+                            </tr>    
+                    </form>
+                </td>
+            </tr>   
+
+        </table>
+        <div class="form-group">
+            <button md-button (click)="ok()">OK</button>
+            <button md-button (click)="dialogRef.close()">Cancel</button>
+        </div>
+    <!-- </form> -->
 </div>

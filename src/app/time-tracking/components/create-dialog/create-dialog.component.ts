@@ -19,9 +19,9 @@ export class CreateDialogComponent implements OnInit {
 	@Input() tasks: ITask[] = [];
 	@Input() clients: IClient[] = [];
 	public title: string;
-	public newTaskDescription: string;
-	public newProjectName: string;
-	public newClientName: string;
+	public taskDescription: string;
+	public projectName: string;
+	public clientName: string;
 	public user;
 	public username: string;
 	public password: string;
@@ -33,8 +33,10 @@ export class CreateDialogComponent implements OnInit {
 	public CLIENT: number = 3;
 	public USER: number = 4;
 	public isAdmin: boolean = false;
+	public model: any = {};
 
 	public createItems = [
+		{ key: 'Create New', id: 0},
 		{ key: 'Task', id: 1 },
 		{ key: 'Project', id: 2 },
 		{ key: 'Client', id: 3 },
@@ -58,56 +60,37 @@ export class CreateDialogComponent implements OnInit {
 	}
 
 	changeItemToBeCreated(event) {
-		this.item = event.target.value;
+		this.item = event.value;
+		console.log(event);
 	}
 
 	toggleEditMode() {
 		this.editMode = !this.editMode;
 	}
 
-	public validateForm(valueDesc: string, valueProjName: string, valueClient: string, valueUsername: string, valuePassw: string, valueConfirmPass: string, valueIsAdmin: any) {
-		this.newTaskDescription = valueDesc;
-		this.newProjectName = valueProjName;
-		this.newClientName = valueClient;
-		this.username = valueUsername;
-		this.password = valuePassw;
-		this.confirmPassword = valueConfirmPass;
-		this.adminRole = valueIsAdmin.checked;
-	}
-
-	public checkMandatoryFields() {
+	public ok() {
 		if (this.loginService.loggedIn()) {
-			if (this.item == this.PROJECT) {
-				if (this.newProjectName === "" || this.newProjectName === undefined) {
-					alert("Please check if all the fields are filled in");
-				} else {
-					this.createItem();
-				}
-			} else if (this.item == this.TASK) {
-				if (this.newTaskDescription === "" || this.newTaskDescription === undefined) {
-					alert("Please check if all the fields are filled in");
-				} else {
-					this.createItem();
-				}
-			} else if (this.item == this.CLIENT) {
-				if (this.newClientName === "" || this.newClientName === undefined) {
-					alert("Please check if all the fields are filled in");
-				} else {
-					this.createItem();
-				}
-			} else if (this.item == this.USER) {
-				if (this.username === "" || this.password === "" || this.confirmPassword === "" || this.adminRole === undefined) {
-					alert("Please check if all the fields are filled in");
-				}
-				else if (this.password.length < 8) {
-					alert("See password requirement !");
-				}
-				else if (this.password !== this.confirmPassword) {
-					alert("Passwords are not the same !")
-				}
-				else {
-					this.createItem();
-				}
+			if (this.item == this.TASK && this.model.taskDescription !== undefined && this.model.taskDescription !== "" ) {
+				this.taskDescription = this.model.taskDescription;
+				this.createTask();
+			}
+			if (this.item == this.PROJECT && this.model.projectName !== undefined && this.model.projectName !== "") {
+				this.projectName = this.model.projectName;
+				this.createProject();
+			}
+			if (this.item == this.CLIENT && this.model.clientName !== undefined && this.model.clientName !== "") {
+				this.clientName = this.model.clientName;
+				this.createClient;
+			}
+			if (this.item == this.USER && this.model.username !== undefined && this.model.username !== ""
+				&& this.password !== undefined && this.confirmPassword == undefined) {
+				this.username = this.model.username;
+				this.password = this.model.password;
+				this.confirmPassword = this.model.confirmPassword;
+				this.adminRole = this.model.isAdmin;
+				this.checkUser();
+			} else {
+				alert("Please check if you have selected an item and filled in all fields");
 			}
 		} else {
 			alert("Your token has expired. Please log in again!");
@@ -115,84 +98,101 @@ export class CreateDialogComponent implements OnInit {
 		}
 	}
 
-	public createItem() {
-		if (this.item == this.PROJECT) {
-			return this.http.post(this.baseUrl + "/projects", {
-				projectName: this.newProjectName.trim()
-			}).subscribe(() => {
-				this.dialogRef.close(true);
-				// this.registryService.entriesComponent.loadEntries();
-				this.openSnackBar('Project ' + this.newProjectName.toUpperCase(), 'created !');
-			},
-				error => {
-					if (error.response.status === 400 || error.response.status === 404) {
-						alert('Please check that fields are the correct input !');
-						return Observable.of(undefined);
-					}
-					if (error.response.status === 500) {
-						alert('Internal server error !')
-					}
-				});
-		} else if (this.item == this.TASK) {
-			return this.http.post(this.baseUrl + "/tasks", {
-				taskDescription: this.newTaskDescription.trim()
-			}).subscribe(() => {
-				this.dialogRef.close(true);
-				// this.registryService.entriesComponent.loadEntries();
-				this.openSnackBar('Task ' + this.newTaskDescription.toUpperCase(), 'created !');
-			},
-				error => {
-					if (error.response.status === 400 || error.response.status === 404) {
-						alert('Please check that fields are the correct input !');
-						return Observable.of(undefined);
-					}
-					if (error.response.status === 500) {
-						alert('Internal server error !')
-					}
-				});
-		} else if (this.item == this.CLIENT) {
-			return this.http.post(this.baseUrl + "/clients", {
-				clientName: this.newClientName.trim()
-			}).subscribe(() => {
-				this.dialogRef.close(true);
-				// this.registryService.entriesComponent.loadEntries();
-				this.openSnackBar('Client ' + this.newClientName.toUpperCase(), 'created !');
-			},
-				error => {
-					if (error.response.status === 400 || error.response.status === 404) {
-						alert('Please check that fields are the correct input !');
-						return Observable.of(undefined);
-					}
-					if (error.response.status === 500) {
-						alert('Internal server error !')
-					}
-				});
-		}
-
+	public checkUser() {
 		if (this.item == this.USER) {
-			return this.http.post(this.baseUrl + "/userprofile",
-				{
-					userName: this.username.trim(),
-					password: encodeURIComponent(this.password.trim()),
-					admin: this.adminRole
-				}).map(res => res.json())
-				.subscribe(
-					(data) => {
-						this.dialogRef.close(true);
-						// this.registryService.entriesComponent.loadEntries();
-						this.openSnackBar('User ' + this.username.toUpperCase(), 'created !');
-					},
-					(error) => {
-						if (error.status === 400 || error.status === 404) {
-							alert('Please check that all fields have the correct input !');
-						}
-						if (error.status === 409) {
-							alert('User already exists !');
-						}
-						if (error.status === 500) {
-							alert('Internal server error !')
-						}
-					});
+			if (this.password.length < 8) {
+				alert("See password requirement !");
+			}
+			else if (this.password !== this.confirmPassword) {
+				alert("Passwords are not the same !")
+			}
+			else {
+				this.createUser();
+			}
+		} 
+	}
+
+	public createTask() {
+		return this.http.post(this.baseUrl + "/tasks", {
+			taskDescription: this.taskDescription.trim()
+		}).subscribe(() => {
+			this.dialogRef.close(true);
+			// this.registryService.entriesComponent.loadEntries();
+			this.openSnackBar('Task ' + this.taskDescription.toUpperCase(), 'created !');
+		},
+		error => {
+			if (error.response.status === 400 || error.response.status === 404) {
+				alert('Please check that fields are the correct input !');
+				return Observable.of(undefined);
+			}
+			if (error.response.status === 500) {
+				alert('Internal server error !')
+			}
+		});
+	}
+
+	public createProject() {
+		return this.http.post(this.baseUrl + "/projects", {
+			projectName: this.projectName.trim()
+		}).subscribe(() => {
+			this.dialogRef.close(true);
+			// this.registryService.entriesComponent.loadEntries();
+			this.openSnackBar('Project ' + this.projectName.toUpperCase(), 'created !');
+		},
+		error => {
+			if (error.response.status === 400 || error.response.status === 404) {
+				alert('Please check that fields are the correct input !');
+				return Observable.of(undefined);
+			}
+			if (error.response.status === 500) {
+				alert('Internal server error !')
+			}
+		});
+	}
+
+	public createClient() {
+		return this.http.post(this.baseUrl + "/clients", {
+			clientName: this.clientName.trim()
+		}).subscribe(() => {
+			this.dialogRef.close(true);
+			// this.registryService.entriesComponent.loadEntries();
+			this.openSnackBar('Client ' + this.clientName.toUpperCase(), 'created !');
+		},
+		error => {
+			if (error.response.status === 400 || error.response.status === 404) {
+				alert('Please check that fields are the correct input !');
+				return Observable.of(undefined);
+			}
+			if (error.response.status === 500) {
+				alert('Internal server error !')
+			}
+		});
+	}
+
+	public createUser() {
+		if (this.item == this.USER) {
+			return this.http.post(this.baseUrl + "/userprofile", {
+			userName: this.username.trim(),
+			password: encodeURIComponent(this.password.trim()),
+			admin: this.adminRole
+		}).map(res => res.json())
+		.subscribe(
+			(data) => {
+				this.dialogRef.close(true);
+				// this.registryService.entriesComponent.loadEntries();
+				this.openSnackBar('User ' + this.username.toUpperCase(), 'created !');
+			},
+			(error) => {
+				if (error.status === 400 || error.status === 404) {
+					alert('Please check that all fields have the correct input !');
+				}
+				if (error.status === 409) {
+					alert('User already exists !');
+				}
+				if (error.status === 500) {
+					alert('Internal server error !')
+				}
+			});
 		}
 	}
 
@@ -202,7 +202,7 @@ export class CreateDialogComponent implements OnInit {
 
 	public keyDownFunction(event) {
 		if (event.key == 'Enter') {
-			this.checkMandatoryFields();
+			this.ok();
 		}
 	}
 

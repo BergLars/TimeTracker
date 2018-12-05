@@ -9,26 +9,27 @@ export class DatesService {
   constructor(
     public registryService: RegistryService) { }
 
-  public currentDateValue(value: any) {
-    var validDate = moment(value._selected).format('L');
-    return validDate.substring(3, 5) + "." + validDate.substring(0, 2) + "." + validDate.substring(6, 10);
-  }
 
   public isValidDate(inputFromDate, inputToDate) {
     return this.registryService.dateRequirement.test(inputFromDate) && this.registryService.dateRequirement.test(inputToDate) ? true : false;
   }
 
   public isValidDatePeriod(fromDate, toDate) {
-    let formatedFromDate = fromDate.substring(6, 10) + "-" + fromDate.substring(3, 5) + "-" + fromDate.substring(0, 2);
-    let formatedToDate = toDate.substring(6, 10) + "-" + toDate.substring(3, 5) + "-" + toDate.substring(0, 2);
-    return moment(formatedFromDate).isSameOrBefore(formatedToDate, 'YYYY-MM-DD', 'day');
+   
+    return moment(fromDate).isSameOrBefore(toDate, 'YYYY-MM-DD', 'day');
+  }
+
+
+  public convertDaysToHours(fromDate, toDate) {
+    var fromDateDay = +fromDate.substring(8, 10);
+    var toDateDay = +toDate.substring(8, 10);
+    var numberOfdays = toDateDay - fromDateDay;
+    var numberOfHours = numberOfdays * 24;
+    return numberOfHours;
   }
 
   public isSameDate(fromDate, toDate) {
-    let formatedFromDate = fromDate.substring(6, 10) + "-" + fromDate.substring(3, 5) + "-" + fromDate.substring(0, 2);
-    let formatedToDate = toDate.substring(6, 10) + "-" + toDate.substring(3, 5) + "-" + toDate.substring(0, 2);
-    let isSameDate: boolean;
-    return moment(formatedFromDate).isSame(formatedToDate, 'day');
+    return moment(fromDate).isSame(toDate, 'day');
   }
 
   /**
