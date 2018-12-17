@@ -118,8 +118,8 @@ export class EntryDialogComponent implements OnInit {
           this.travelTime = this.defaultTimeValue;
         } if (this.registryService.timeSpentRequirement.test(this.travelTime) === false) {
           alert('Wrong travel time format');
-        } if (this.startTime === '' || this.endTime === '' || this.startTime === this.defaultTimeValue || this.endTime === this.defaultTimeValue) {
-          if (this.startTime === '' || this.endTime == '') {
+        } if (this.startTime === undefined || this.endTime === undefined || this.startTime === this.defaultTimeValue || this.endTime === this.defaultTimeValue) {
+          if (this.startTime === undefined || this.endTime == undefined) {
             this.startTime = this.defaultTimeValue;
             this.endTime = this.defaultTimeValue; 
           }
