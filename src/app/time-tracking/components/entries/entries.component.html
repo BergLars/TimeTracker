@@ -66,6 +66,7 @@
         <input mdInput placeholder="Search" #search id="search" value="" (keydown)="searchKeyDown($event)" [(ngModel)]="searchTerm">
     </md-input-container>
     <md-icon class="material-icons app-input-icon clickable-icon search" (click)="loadEntries();">search</md-icon>
+    <md-icon class="material-icons app-input-icon clickable-icon close" (click)="removeFilters();">close</md-icon>
 </md-toolbar>
 <ngx-datatable #mydatatable class="material striped" [scrollbarH]="true" [rows]="items" [columnMode]="'force'" [headerHeight]="50"
     [footerHeight]="50" [sortType]="'multi'" [selected]="selected" [selectionType]="'single'" [limit]="limit" [count]="count"

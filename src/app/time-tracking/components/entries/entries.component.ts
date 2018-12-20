@@ -442,6 +442,23 @@ export class EntriesComponent implements OnInit {
     this.limit = this.limits[0].value;
   }
 
+  removeFilters() {
+    this.filterFromDate = undefined;
+    this.filterToDate = undefined;
+    this.searchTerm = undefined;
+    this.selectedClients[0] = -1;
+    this.clientsSelectedPerDefault();
+    this.selectedProjects[0] = -1;
+    this.projectsSelectedPerDefault();
+    this.selectedTasks[0] = -1;
+    this.tasksSelectedPerDefault();
+    this.selectedUsers[0] = -1;
+    this.usersSelectedPerDefault();
+    this.selectedBillable = -1;
+    this.billableSelectedPerDefault();
+    this.loadEntries();
+  }
+
   /**
    * Load entries per default
    */
@@ -631,7 +648,7 @@ export class EntriesComponent implements OnInit {
       return;
     }
 
-    if (this.selectedUsers.length === (this.clients.length - (allUsersFilterFlag ? 1 : 0))) {
+    if (this.selectedUsers.length === (this.users.length - (allUsersFilterFlag ? 1 : 0))) {
       this.selectedUsers = [-1].concat(selectedUsers);
       allUsersFilterFlag = true;
     } else {
