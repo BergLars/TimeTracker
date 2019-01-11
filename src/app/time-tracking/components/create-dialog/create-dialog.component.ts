@@ -73,17 +73,14 @@ export class CreateDialogComponent implements OnInit {
 			if (this.item == this.TASK && this.model.taskDescription !== undefined && this.model.taskDescription !== "" ) {
 				this.taskDescription = this.model.taskDescription;
 				this.createTask();
-			}
-			if (this.item == this.PROJECT && this.model.projectName !== undefined && this.model.projectName !== "") {
+			} else if (this.item == this.PROJECT && this.model.projectName !== undefined && this.model.projectName !== "") {
 				this.projectName = this.model.projectName;
 				this.createProject();
-			}
-			if (this.item == this.CLIENT && this.model.clientName !== undefined && this.model.clientName !== "") {
+			} else if (this.item == this.CLIENT && this.model.clientName !== undefined && this.model.clientName !== "") {
 				this.clientName = this.model.clientName;
-				this.createClient;
-			}
-			if (this.item == this.USER && this.model.username !== undefined && this.model.username !== ""
-				&& this.password !== undefined && this.confirmPassword == undefined) {
+				this.createClient();
+			} else if (this.item == this.USER && this.model.username !== undefined && this.model.username !== ""
+				&& this.model.password !== undefined && this.model.confirmPassword !== undefined) {
 				this.username = this.model.username;
 				this.password = this.model.password;
 				this.confirmPassword = this.model.confirmPassword;

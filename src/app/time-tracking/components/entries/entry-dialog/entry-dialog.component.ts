@@ -100,7 +100,7 @@ export class EntryDialogComponent implements OnInit {
     this.travelTime = this.model.travelTime;
     this.workTime = this.model.workTime;
     this.isBillable = this.model.isBillable;
-        this.isSameDate = this.datesService.isSameDate(this.fromDate, this.toDate);
+    this.isSameDate = this.datesService.isSameDate(this.fromDate, this.toDate);
     this.validTimePeriod = this.timeSpentService.isValidTimePeriod(this.startTime, this.endTime, this.isSameDate);
     this.checkMandatoryFields();
   }
