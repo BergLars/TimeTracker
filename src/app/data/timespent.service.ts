@@ -17,8 +17,13 @@ export class TimespentService {
       let minuteTraveltime = 0;
       worktime = this.addCorrectTimeFormat(worktime);
       traveltime = this.addCorrectTimeFormat(traveltime);
-      hourWorktime += +worktime.substring(0, 2);
-      minuteWorktime += +worktime.substring(3, 6);
+      if (worktime.length > 5) {
+        hourWorktime += +worktime.substring(0, 3);
+        minuteWorktime += +worktime.substring(4, 7);
+      } else {
+        hourWorktime += +worktime.substring(0, 2);
+        minuteWorktime += +worktime.substring(3, 6);
+      }
       hourTraveltime += +traveltime.substring(0, 2)
       minuteTraveltime += +traveltime.substring(3, 6);
       let realTime = sprintf("%02d:%02d", Math.floor((hourWorktime + hourTraveltime) + Math.abs((minuteWorktime + minuteTraveltime) / 60)), (minuteWorktime + minuteTraveltime) % 60);
@@ -60,6 +65,10 @@ export class TimespentService {
     let minuteTraveltime = 0;
 
     // Get time spent value
+    // if (timespent.length > 5) {
+    //   hourTimespent += +timespent.substring(0,3);
+    //   minuteTimespent += +timespent.substring(4,7);
+    // }
     hourTimespent += +timespent.substring(0, 2);
     minuteTimespent += +timespent.substring(3, 6);
 
@@ -110,8 +119,13 @@ export class TimespentService {
     let hours = 0;
     let minutes = 0;
     entries.forEach(element => {
-      hours += +element.timeSpent.substring(0, 2);
-      minutes += +element.timeSpent.substring(3, 6);
+      if (element.timeSpent.length > 5) {
+        hours += +element.timeSpent.substring(0, 3);
+        minutes += +element.timeSpent.substring(4, 7);  
+      } else {
+        hours += +element.timeSpent.substring(0, 2);
+        minutes += +element.timeSpent.substring(3, 6);
+      }
     });
     let timeSpents = sprintf("%02d:%02d", (hours + Math.floor(minutes / 60)), minutes % 60);
     return timeSpents;
