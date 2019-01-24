@@ -49,7 +49,11 @@ export class ExportDialogComponent implements OnInit {
 		this.toDate = moment(this.model.to.toISOString()).format('YYYY-MM-DD');
 		this.validDatePeriod = this.datesService.isValidDatePeriod(this.fromDate, this.toDate);
 		this.userID = this.model.userprofile;
+		if (this.userID === undefined) {
+			alert("Please select a user!");
+		} else {
 		this.checkDates();
+		}
 	}
 
 	public checkDates() {
