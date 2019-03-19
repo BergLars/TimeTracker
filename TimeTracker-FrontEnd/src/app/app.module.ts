@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { ComponentLoginComponent } from './component-login/component-login.component';
+import { DataTableComponent } from './data-table/data-table.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ComponentLoginComponent
+    ComponentLoginComponent,
+    DataTableComponent
   ],
   imports: [
     BrowserModule,
@@ -17,4 +19,6 @@ import { ComponentLoginComponent } from './component-login/component-login.compo
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+
+export class AppModule {
+}
