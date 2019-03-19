@@ -2,8 +2,8 @@
 
 -- DROP TABLE timetracker.client;
 
-CREATE TABLE timetracker.client
+CREATE TABLE timetracker_backend.client
 (
-    id INTEGER PRIMARY KEY,
-    name character varying(255) NOT NULL;
-)
+    cid INTEGER PRIMARY KEY,
+    name character varying(255) NOT NULL
+);
