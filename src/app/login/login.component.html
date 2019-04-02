@@ -1,8 +1,4 @@
 <md-card class ="app-input-section">
-    <a href="https://fluance.ch/en/" target="_blank">
-        <img src="assets/Logo.png" width="100px" />
-    </a>
-
     <form name="form" (ngSubmit)="f.form.valid && ok()" #f="ngForm" novalidate>
         <div class="form-group">
             <md-input-container>
@@ -11,7 +7,7 @@
                     <div *ngIf="username.errors.required">Please enter your username</div>
                 </div>
                 <md-placeholder>
-                    <md-icon class="material-icons app-input-icon">face</md-icon>Username
+                    Username
                 </md-placeholder>
             </md-input-container>
         </div> 
@@ -22,10 +18,13 @@
             <div *ngIf="f.submitted && password.invalid" class="invalid-feedback">
                 <div *ngIf="password.errors.required">Please enter your password</div>
             </div>
+            <md-placeholder>
+                Password
+            </md-placeholder>
         </md-input-container>
         </div>
         <div class="form-group">
-            <button md-button  click>Anmelden</button>
+            <button md-button  click>Login</button>
         </div>
     </form>
 </md-card>

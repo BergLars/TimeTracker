@@ -1,0 +1,23 @@
+label[for="password"] {
+    display: none;
+}
+
+.md-input-container {
+    width: 75%;
+    input {
+        border: 1px solid blue;
+    }
+}
+
+.md-placeholder {
+    color: blue;
+}
+
+.mat-button {
+    width: 75;
+    border: 1px solid lightgray;
+}
+
+.md-input-underline {
+    display: none;
+}

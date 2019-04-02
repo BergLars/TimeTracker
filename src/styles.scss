@@ -280,3 +280,52 @@ div.mat-input-underline {
   .datatable-header-cell-label{
       cursor: default;
   }
+
+
+
+//login
+label[for="password"] {
+    display: none;
+}
+
+.mat-input-container {
+    max-width: 300px;
+    width: 75%;
+    input {
+      border-radius: 0;
+      border: 1px solid blue;
+    }
+}
+
+md-placeholder {
+    color: blue;
+    padding: 0 10px;
+}
+.mat-placeholder-required {
+  display: none;
+}
+
+.mat-button {
+    max-width: 300px;
+    width: 75%;
+    border: 1px solid lightgray !important;
+    border-radius: 0;
+    color: blue !important;
+}
+
+.mat-input-underline {
+    display: none;
+}
+
+.app-input-section.mat-card {
+  border: 1px solid blue;
+}
+
+//toolbar
+.mat-toolbar-row {
+  > span {
+      display: inline-block;
+      min-width: 100%;
+      text-align: center;
+  }
+}
