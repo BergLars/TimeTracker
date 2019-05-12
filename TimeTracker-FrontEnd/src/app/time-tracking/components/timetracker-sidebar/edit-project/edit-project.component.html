@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>{{ title }}</h1>
+<div mat-dialog-content>
+   <mat-select  [(ngModel)]='selectedProject' placeholder="Project" name="project">
+      	<mat-option *ngFor="let project of projects" [value]='project.id'> {{ project.projectName }} </mat-option>
+    </mat-select>
+    <br>
+    <br>
+    <input matInput placeholder="New Projectname" type=text name="newProjectName" [(ngModel)]="model.newProjectName" #newProjectName="ngModel">
+
+
+    <div class="form-group">
+        <button mat-button (click)="ok();">OK</button>
+        <button mat-button (click)="dialogRef.close()">Cancel</button>
+    </div>
+</div>

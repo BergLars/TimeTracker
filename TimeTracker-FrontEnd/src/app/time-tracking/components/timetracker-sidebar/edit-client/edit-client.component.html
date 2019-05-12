@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>{{ title }}</h1>
+<div mat-dialog-content>
+   <mat-select  [(ngModel)]='selectedClient' placeholder="client" name="client">
+        <mat-option *ngFor="let client of clients" [value]='client.id'> {{ client.clientName }} </mat-option>
+    </mat-select>
+    <br>
+    <br>
+    <input matInput placeholder="New Clientname" type=text name="newClientName" [(ngModel)]="model.newClientName" #newClientName="ngModel">
+
+
+    <div class="form-group">
+        <button mat-button (click)="ok();">OK</button>
+        <button mat-button (click)="dialogRef.close()">Cancel</button>
+    </div>
+</div>
