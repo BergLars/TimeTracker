@@ -166,7 +166,7 @@ public class UserProfileController {
 			boolean isValid = LoginHelper.validateJWT(request.getHeader("Authorization"), userID);
 			
 			if (isValid) {
-				userprofileRepository.delete(id);
+				userprofileRepository.deleteUser(id);
 				return new ResponseEntity<>(id, HttpStatus.ACCEPTED);
 			} else {
 				return new ResponseEntity<>("Invalid authorization", HttpStatus.UNAUTHORIZED);

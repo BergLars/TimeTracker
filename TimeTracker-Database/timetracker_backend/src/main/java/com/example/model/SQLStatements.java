@@ -41,7 +41,7 @@ public class SQLStatements {
 
 	// ---------------------------------- PROJECT
 	public static final String GET_PROJECT_BY_ID = "SELECT * FROM " + MappingsConfig.TABLE_NAMES.get("Project")
-			+ "WHERE pid = ?";
+			+ " WHERE pid = ?";
 	
 	public static final String UPDATE_PROJECT_BY_ID = "UPDATE " + MappingsConfig.TABLE_NAMES.get("Project")
 			+ " SET projectname = ?, projectowner = ? WHERE pid = ?";
@@ -52,6 +52,9 @@ public class SQLStatements {
 	public static final String DELETE_PROJECT = "DELETE FROM " + MappingsConfig.TABLE_NAMES.get("Project")
 			+ " WHERE pid = ?";
 	// ---------------------------------- CLIENT
+	public static final String GET_CLIENT_BY_ID = "SELECT * FROM " + MappingsConfig.TABLE_NAMES.get("Client")
+				+ " WHERE cid = ?";
+	
 	public static final String UPDATE_CLIENT_BY_ID = "UPDATE " + MappingsConfig.TABLE_NAMES.get("Client")
 				+ " SET name = ? WHERE cid = ?";
 

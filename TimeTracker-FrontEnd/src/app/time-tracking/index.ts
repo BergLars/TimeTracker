@@ -5,7 +5,12 @@ export * from './components/entries/entry-dialog/entry-dialog.component';
 export * from './components/entries/entries.service';
 export * from './components/entries/update-dialog/update-dialog.service';
 export * from './components/entries/update-dialog/update-dialog.component';
-// export * from './components/search/search-dialog.component';
+export * from './components/timetracker-sidebar/timetracker-sidebar.component';
+export * from './components/timetracker-sidebar/edit-project/edit-project.component';
+export * from './components/timetracker-sidebar/edit-project/edit-project.service';
+
+export * from './components/timetracker-sidebar/edit-client/edit-client.component';
+export * from './components/timetracker-sidebar/edit-client/edit-client.service';
 export * from './time-tracking.component';
 export * from './components/entries/delete-entry/delete-entry.component';
 export * from './components/entries/entry-dialog/entry-dialog.service';

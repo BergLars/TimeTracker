@@ -1,13 +1,10 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
-// Use the Full path instead of using index.ts path
 import { CreateDialogService } from '../time-tracking/components/create-dialog/create-dialog.service';
 import { ExportDialogService } from '../time-tracking/components/export-dialog/export-dialog.service';
-
 import { EntriesService } from '../time-tracking/components/entries/entries.service';
 import { EntriesComponent } from '../time-tracking/components/entries/entries.component';
 import { LoginService } from '../login/login.service';
-
 import { Router } from '@angular/router';
 import moment from 'moment/src/moment';
 

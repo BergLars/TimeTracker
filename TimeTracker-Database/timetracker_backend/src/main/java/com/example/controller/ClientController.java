@@ -106,7 +106,7 @@ public class ClientController {
 			boolean isValid = LoginHelper.validateJWT(request.getHeader("Authorization"), userID);
 			if (isValid) {
 				if (userprofileRepository.checkIfAdmin(userID)) {
-					Client oldClient = clientRepository.findOne(id);
+					Client oldClient = clientRepository.findClientByID(id);
 					if (oldClient == null) {
 						return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 					}

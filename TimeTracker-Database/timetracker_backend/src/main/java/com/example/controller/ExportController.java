@@ -85,8 +85,9 @@ public class ExportController {
 			builder.append("\"\n");
  
 	        for (TimeEntry timeEntry : timeEntries) {
-	        	project = projectRepository.findOne((long) timeEntry.getProjectID());
-				userEntries = userprofileRepository.findOne((long)timeEntry.getUserprofileID());
+	        	project = projectRepository.getProjectByID((long) timeEntry.getProjectID());
+	        	client = clientRepository.findClientByID((long) timeEntry.getClientID());
+				userEntries = userprofileRepository.findUserByID((long)timeEntry.getUserprofileID());
 	        	
 				builder
 	            .append("\"")
@@ -97,8 +98,6 @@ public class ExportController {
 	            .append(timeEntry.getWorktime())
 	            .append("\"|\"")
 	            .append(client.getClientName())
-	            .append("\"|\"")
-	            .append(project.getProjectName())
 	            .append("\"|\"")
 	            .append(project.getProjectName())
 	            .append("\"\n");
@@ -155,8 +154,9 @@ public class ExportController {
 			builder.append("\"\n");
  
 	        for (TimeEntry timeEntry : timeEntries) {
-	        	project = projectRepository.findOne((long) timeEntry.getProjectID());
-				userEntries = userprofileRepository.findOne((long)timeEntry.getUserprofileID());
+	        	project = projectRepository.getProjectByID((long) timeEntry.getProjectID());
+	        	client = clientRepository.findClientByID((long) timeEntry.getClientID());
+				userEntries = userprofileRepository.findUserByID((long)timeEntry.getUserprofileID());
 	        	
 				builder
 	            .append("\"")
@@ -167,8 +167,6 @@ public class ExportController {
 	            .append(timeEntry.getWorktime())
 	            .append("\"|\"")
 	            .append(client.getClientName())
-	            .append("\"|\"")
-	            .append(project.getProjectName())
 	            .append("\"|\"")
 	            .append(project.getProjectName())
 	            .append("\"|\"")

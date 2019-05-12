@@ -35,9 +35,14 @@ import {
     CreateDialogService,
     ExportDialogComponent,
     ExportDialogService,
+    TimetrackerSidebarComponent,
     EntriesService,
     UpdateDialogComponent,
-    UpdateDialogService
+    UpdateDialogService,
+    EditClientComponent,
+    EditClientService,
+    EditProjectComponent,
+    EditProjectService
 } from './time-tracking';
 import { routes } from './routes';
 import { LoginComponent, LoginService } from './login';
@@ -50,6 +55,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DeDateAdapter } from './dateAdapter';
 import { DeleteUserComponent } from './menu/components/delete-user/delete-user.component';
 import { DeleteUserService } from './menu/components/delete-user/delete-user.service';
+
 
 @NgModule({
     declarations: [
@@ -66,7 +72,10 @@ import { DeleteUserService } from './menu/components/delete-user/delete-user.ser
         PasswordDialogComponent,
         CreateDialogComponent,
         DeleteUserComponent,
-        UpdateDialogComponent
+        UpdateDialogComponent,
+        TimetrackerSidebarComponent,
+        EditProjectComponent,
+        EditClientComponent
     ],
     entryComponents: [
         EntryDialogComponent,
@@ -75,7 +84,9 @@ import { DeleteUserService } from './menu/components/delete-user/delete-user.ser
         CreateDialogComponent,
         ExportDialogComponent,
         DeleteUserComponent,
-        UpdateDialogComponent
+        UpdateDialogComponent,
+        EditProjectComponent,
+        EditClientComponent
     ],
     imports: [
         NgxDatatableModule,
@@ -111,6 +122,8 @@ import { DeleteUserService } from './menu/components/delete-user/delete-user.ser
         EntriesService,
         DeleteUserService,
         UpdateDialogService,
+        EditProjectService,
+        EditClientService,
         {
             provide: Http,
             useFactory: httpFactory,

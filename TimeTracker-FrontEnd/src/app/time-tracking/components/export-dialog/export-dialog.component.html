@@ -38,7 +38,7 @@
         </tr>
     </table>
     <div class="form-group">
-        <button mat-button name="click" click>OK</button>
+        <button mat-button (click)="readDates();" click>OK</button>
         <button mat-button (click)="dialogRef.close()">Cancel</button>
     </div>
 </div>

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.model.Client;
 import com.example.model.SQLStatements;
+import com.example.model.UserProfile;
 import com.nurkiewicz.jdbcrepository.JdbcRepository;
 import com.nurkiewicz.jdbcrepository.RowUnmapper;
 import com.nurkiewicz.jdbcrepository.TableDescription;
@@ -40,6 +41,11 @@ public class ClientRepository extends JdbcRepository<Client, Long> {
 			return mapping;
 		}
 	};
+	
+	public Client findClientByID(long id) {
+		Client client = getJdbcOperations().queryForObject(SQLStatements.GET_CLIENT_BY_ID, ROW_MAPPER, id);
+		return client;
+	}
 	
 	public void updateClient(long client_id, String name){
 		getJdbcOperations().update(SQLStatements.UPDATE_CLIENT_BY_ID, name, client_id);
