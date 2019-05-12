@@ -12,3 +12,5 @@ Und Backend Projekt importieren und dannach ausführen.
 NPM runterladen mit Node https://nodejs.org/en/download/
 Mit Command Line ins Frontend navigieren und npm install ausführen.
 Anschliessend ng serve ausführen. Das Projekt sollte jetzt auf http://localhost:4200 aufzurufen sein.
+
+In docs/Systemtest.docx ist unser Systemtest.
