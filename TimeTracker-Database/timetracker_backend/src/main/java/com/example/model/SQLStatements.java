@@ -28,10 +28,10 @@ public class SQLStatements {
 			+ " (userprofile_id, project_id, description, entrydate, worktime, client_id) VALUES (?,?,?,?,?,?)";
 
 	public static final String UPDATE_ENTRY_BY_ID = "UPDATE " + MappingsConfig.TABLE_NAMES.get("TimeEntry")
-			+ " SET userprofile_id = ?, project_id = ?, description = ?, entrydate = ?, worktime = ?, client_id = ? where id = ?";
+			+ " SET userprofile_id = ?, project_id = ?, description = ?, entrydate = ?, worktime = ?, client_id = ? where tid = ?";
 
 	public static final String DELETE_ENTRY = "DELETE FROM " + MappingsConfig.TABLE_NAMES.get("TimeEntry")
-			+ " WHERE id = ?";
+			+ " WHERE tid = ?";
 	
 	public static final String FIND_ENTRIES_BY_DATES = "SELECT * FROM " + MappingsConfig.TABLE_NAMES.get("TimeEntry")
 	+ " WHERE entryDate::date between to_date(?, 'YYYY-MM-DD') and to_date(?, 'YYYY-MM-DD') AND userprofile_id = ? order by entryDate asc";

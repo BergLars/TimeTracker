@@ -3,7 +3,7 @@
 
 CREATE TABLE timetracker_backend.timeentry
 (
-    tid integer PRIMARY KEY,
+    tid SERIAL PRIMARY KEY,
     userprofile_id integer NOT NULL,
     project_id integer NOT NULL,
     description varchar(40) NOT NULL,

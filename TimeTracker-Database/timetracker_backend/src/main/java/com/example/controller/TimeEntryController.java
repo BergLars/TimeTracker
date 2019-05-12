@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import java.security.InvalidKeyException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,6 +91,7 @@ public class TimeEntryController {
 			long userID = LoginHelper.getUserId(request.getHeader("Authorization"));
 			boolean isValid = LoginHelper.validateJWT(request.getHeader("Authorization"), userID);
 			
+			
 			if (isValid) {
 				timeEntryRepository.updateTimeEntry(
 						timeEntry.getUserprofileID(), 
@@ -117,7 +119,7 @@ public class TimeEntryController {
 			boolean isValid = LoginHelper.validateJWT(request.getHeader("Authorization"), userID);
 			
 			if (isValid) {
-				timeEntryRepository.delete(id);
+				timeEntryRepository.deleteEntry(id);
 				return new ResponseEntity<>( id, HttpStatus.ACCEPTED);	
 			} else {
 				return new ResponseEntity<>("Invalid authorization", HttpStatus.UNAUTHORIZED);

@@ -4,7 +4,7 @@
 
 CREATE TABLE timetracker_backend.project
 (
-    pid integer PRIMARY KEY,
+    pid SERIAL PRIMARY KEY,
     projectname VARCHAR(40),
     projectOwner VARCHAR(40)
 );

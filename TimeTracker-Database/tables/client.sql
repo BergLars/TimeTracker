@@ -4,6 +4,6 @@
 
 CREATE TABLE timetracker_backend.client
 (
-    cid INTEGER PRIMARY KEY,
+    cid SERIAL PRIMARY KEY,
     name character varying(255) NOT NULL
 );

@@ -2,6 +2,8 @@ package com.example.repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,20 +34,34 @@ public class TimeEntryRepository extends JdbcRepository<TimeEntry, Long> {
 
 	public static final RowMapper<TimeEntry> ROW_MAPPER = new RowMapper<TimeEntry>() {
 		public TimeEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
-			return new TimeEntry(rs.getLong("id"), 
-					rs.getInt("userprofile_id"), 
-					rs.getInt("project_id"), 
-					rs.getString("description"), 
-					rs.getDate("entrydate"), 
-					(PGInterval) rs.getObject("worktime"), 
-					rs.getInt("client_id"));
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+	        String dateInString = rs.getString("entrydate");
+	        Date date;
+	        try {
+
+	            date = formatter.parse(dateInString);
+	            
+	            return new TimeEntry(rs.getLong("tid"), 
+						rs.getInt("userprofile_id"), 
+						rs.getInt("project_id"), 
+						rs.getString("description"), 
+						date, 
+						(PGInterval) rs.getObject("worktime"), 
+						rs.getInt("client_id"));
+
+	        } catch (ParseException e) {
+	            e.printStackTrace();
+	        }
+	        
+			return null;
 		}
 	};
 
 	public static final RowUnmapper<TimeEntry> ROW_UNMAPPER = new RowUnmapper<TimeEntry>() {
 		public Map<String, Object> mapColumns(TimeEntry timeentry) {
 			Map<String, Object> mapping = new LinkedHashMap<String, Object>();
-			mapping.put("id", timeentry.getId());
+			mapping.put("tid", timeentry.getId());
 			mapping.put("userprofile_id", timeentry.getUserprofileID());
 			mapping.put("project_id", timeentry.getProjectID());			
 			mapping.put("description", timeentry.getDescription());
@@ -78,10 +94,10 @@ public class TimeEntryRepository extends JdbcRepository<TimeEntry, Long> {
 		int update = getJdbcOperations().update(SQLStatements.UPDATE_ENTRY_BY_ID, 
 				userprofile_id, 
 				project_id, 
-				client_id,
 				description, 
 				entryDate, 
 				worktime, 
+				client_id,
 				id);
 		return update;
 	}
@@ -94,7 +110,7 @@ public class TimeEntryRepository extends JdbcRepository<TimeEntry, Long> {
 		return getJdbcOperations().query(SQLStatements.FIND_ALL_ENTRIES_BY_DATES, ROW_MAPPER, fromDate, toDate);
 	}
 
-	public void delete(int id) {
+	public void deleteEntry(long id) {
 		getJdbcOperations().update(SQLStatements.DELETE_ENTRY, id);
 	}
 }
