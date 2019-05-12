@@ -84,7 +84,7 @@ public class UserProfileController {
 	public ResponseEntity<?> findByID( HttpServletRequest request ) throws KeyException {
 		try {
 			long userID = LoginHelper.getUserId(request.getHeader("Authorization"));
-			UserProfile userprofile = userprofileRepository.findOne(userID);
+			UserProfile userprofile = userprofileRepository.findUserByID(userID);
 			boolean isValid = LoginHelper.validateJWT(request.getHeader("Authorization"), userID);
 			
 			if (isValid) {
@@ -139,7 +139,7 @@ public class UserProfileController {
 			boolean isValid = LoginHelper.validateJWT(request.getHeader("Authorization"), userID);
 			
 			if (isValid) {
-				UserProfile oldUserProfile = userprofileRepository.findOne(userID);
+				UserProfile oldUserProfile = userprofileRepository.findUserByID(userID);
 				if (oldUserProfile == null) {
 					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 				}
@@ -178,11 +178,11 @@ public class UserProfileController {
 		}
 	}
 	@CrossOrigin(origins = SpringStartApplication.CORS_ORIGINS)
-	@RequestMapping(value = "updatePassword", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/updatePassword", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<?> updatePassword(HttpServletRequest request, @RequestParam String currentPassword, @RequestParam String newPassword, @RequestParam String confirmPassword) {
 		try {
 			long id = LoginHelper.getUserId(request.getHeader("Authorization"));
-			UserProfile person = userprofileRepository.findOne(id);
+			UserProfile person = userprofileRepository.findUserByID(id);
 			boolean isValid = LoginHelper.validateJWT(request.getHeader("Authorization"), id);
 			
 			if (!isValid) return new ResponseEntity<>("Invalid authorization", HttpStatus.UNAUTHORIZED);

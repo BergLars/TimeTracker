@@ -1,0 +1,10 @@
+<mat-menu #appMenu="matMenu">
+    <button mat-menu-item (click)="openChangePasswordDialog()">Change password</button>
+    <div [hidden]="!isAdmin">
+        <button mat-menu-item (click)="openDeleteUserDialog()">Delete user</button>
+    </div>
+    <button mat-menu-item (click)="logout()">Logout</button>
+</mat-menu>
+<button mat-icon-button [matMenuTriggerFor]="appMenu" id="accountCircle">
+    <mat-icon (click)="checkIfAdmin()">account_circle</mat-icon>
+</button>

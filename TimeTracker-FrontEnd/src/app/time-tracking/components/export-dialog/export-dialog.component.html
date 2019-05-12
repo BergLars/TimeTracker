@@ -1,0 +1,44 @@
+<h1 mat-dialog-title>{{ title }}</h1>
+<div mat-dialog-content class="hide-dialog-scrollbar" >
+    <table>
+        <tr>
+            <td>
+                <div class="form-group">
+                    <mat-form-field>
+                        <input matInput placeholder="From" class="form-control" name="from" [(ngModel)]="model.from" [matDatepicker]="fromDate"  #from="ngModel" >
+                        <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+                        <mat-datepicker #fromDate></mat-datepicker>
+                    </mat-form-field>
+                    
+                </div>
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td>
+                <div class="form-group">
+                    <mat-form-field>
+                        <input matInput placeholder="To" class="form-control" name="to" [(ngModel)]="model.to" [matDatepicker]="toDate" #to="ngModel" >
+                        <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+                        <mat-datepicker #toDate></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </td>
+        </tr>
+        <br>
+        <tr [hidden]="!checkIfAdmin()">
+            <td>
+                <div class="form-group">
+                    <mat-select [(ngModel)]="model.userprofile" placeholder="User" name="userprofile">
+                        <mat-option value="all" selected>All users</mat-option>
+                        <mat-option *ngFor="let user of users" [value]='user.id'>{{ user.userName }}</mat-option>
+                    </mat-select>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="form-group">
+        <button mat-button name="click" click>OK</button>
+        <button mat-button (click)="dialogRef.close()">Cancel</button>
+    </div>
+</div>

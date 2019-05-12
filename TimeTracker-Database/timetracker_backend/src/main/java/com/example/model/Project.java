@@ -12,16 +12,12 @@ public class Project implements Persistable<Long>{
     
     private String projectOwner;
     
-    private long clientID;
-    
-    
 	public Project() { }
  
-    public Project(long pid, String projectName, String projectOwner, long clientID) {
+    public Project(long pid, String projectName, String projectOwner) {
        this.pid = pid;
        this.projectName = projectName;
        this.projectOwner = projectOwner;
-       this.clientID = clientID;
     }
 
 	@Override
@@ -45,14 +41,6 @@ public class Project implements Persistable<Long>{
 		this.projectOwner = projectOwner;
 	}
 	
-	public long getClientID() {
-		return clientID;
-	}
-	
-	public void setClientID(long clientID) {
-		this.clientID = clientID;
-	}
-
 	@Override
 	public boolean isNew() {
 		// TODO Handle this in the future in the controller

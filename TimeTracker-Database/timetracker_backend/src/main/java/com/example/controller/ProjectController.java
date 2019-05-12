@@ -56,7 +56,7 @@ public class ProjectController {
 			long userID = LoginHelper.getUserId(request.getHeader("Authorization"));
 			boolean isValid = LoginHelper.validateJWT(request.getHeader("Authorization"), userID);
 			if (isValid) {
-				Project project = projectRepository.findOne((long)id);
+				Project project = projectRepository.getProjectByID((long)id);
 				return new ResponseEntity<>(project, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>("Invalid authorization", HttpStatus.UNAUTHORIZED);
@@ -97,7 +97,7 @@ public class ProjectController {
 			long userID = LoginHelper.getUserId(request.getHeader("Authorization"));
 			boolean isValid = LoginHelper.validateJWT(request.getHeader("Authorization"), userID);
 			if (isValid) {
-				projectRepository.updateProject(id, project.getProjectName(), project.getProjectOwner(), project.getClientID());
+				projectRepository.updateProject(id, project.getProjectName(), project.getProjectOwner());
 				return new ResponseEntity<>(project, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>("Invalid authorization", HttpStatus.UNAUTHORIZED);

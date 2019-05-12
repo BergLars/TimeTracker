@@ -29,7 +29,7 @@ public class UserProfileRepository extends JdbcRepository<UserProfile, Long> {
 
 	public static final RowMapper<UserProfile> ROW_MAPPER = new RowMapper<UserProfile>() {
 		public UserProfile mapRow(ResultSet rs, int rowNum) throws SQLException {
-			return new UserProfile(rs.getLong("id"), 
+			return new UserProfile(rs.getLong("uid"), 
 					rs.getString("username"), 
 					rs.getString("name"), 
 					rs.getString("password"), 
@@ -40,7 +40,7 @@ public class UserProfileRepository extends JdbcRepository<UserProfile, Long> {
 	public static final RowUnmapper<UserProfile> ROW_UNMAPPER = new RowUnmapper<UserProfile>() {
 		public Map<String, Object> mapColumns(UserProfile userprofile) {
 			Map<String, Object> mapping = new LinkedHashMap<String, Object>();
-			mapping.put("id", userprofile.getId());
+			mapping.put("uid", userprofile.getId());
 			mapping.put("username", userprofile.getUserName());
 			mapping.put("name", userprofile.getName());
 			mapping.put("password", userprofile.getPassword());
@@ -84,4 +84,10 @@ public class UserProfileRepository extends JdbcRepository<UserProfile, Long> {
 		UserProfile person = getJdbcOperations().queryForObject(SQLStatements.FIND_PERSON_BY_USERNAME, ROW_MAPPER, username);
 		return person;
 	}
+	
+	public UserProfile findUserByID(long id) {
+		UserProfile person = getJdbcOperations().queryForObject(SQLStatements.FIND_PERSON_BY_ID, ROW_MAPPER, id);
+		return person;
+	}
+	
 }

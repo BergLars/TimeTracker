@@ -1,14 +1,8 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div class="container">
-  <div class="row">
-    <div class="col-sm-12">
-        <h4>{{title}}</h4>
-    </div>
-    <div class="col-sm-12">
-        <input type="text" class="form-control" [(ngModel)]="title">
-    </div>
-  </div>
+<mat-toolbar color="primary">
+    <span>{{title}}</span>
+    <span class="flex"></span>
+    <app-user></app-user>
+</mat-toolbar>
+<div class="tt-container">
+    <router-outlet></router-outlet>
 </div>
-
-
-

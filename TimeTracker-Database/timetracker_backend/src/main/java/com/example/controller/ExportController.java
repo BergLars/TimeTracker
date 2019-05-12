@@ -1,13 +1,9 @@
 package com.example.controller;
 
 import java.nio.charset.CharacterCodingException;
-import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.SpringStartApplication;
 import com.example.model.Client;
 import com.example.model.Project;
-import com.example.model.Task;
 import com.example.model.TimeEntry;
 import com.example.model.UserProfile;
 import com.example.repository.ClientRepository;
 import com.example.repository.ProjectRepository;
-import com.example.repository.TaskRepository;
 import com.example.repository.TimeEntryRepository;
 import com.example.repository.UserProfileRepository; 
 
@@ -39,10 +33,6 @@ public class ExportController {
 	@Autowired
 	ProjectRepository projectRepository;
 	Project project;
-	
-	@Autowired
-	TaskRepository taskRepository;
-	Task task;
 	
 	@Autowired
 	UserProfileRepository userprofileRepository;
@@ -58,7 +48,7 @@ public class ExportController {
 			HttpHeaders headers = new HttpHeaders();
 			StringBuilder filenameBuilder = new StringBuilder();
 			List<TimeEntry> timeEntries = timeEntryRepository.findAllByDates(fromDate, toDate, userprofileID);
-			user = userprofileRepository.findOne((long) userprofileID);
+			user = userprofileRepository.findUserByID((long) userprofileID);
 			
 			String fromDateHeader = fromDate.substring(8, 10)+"."+ fromDate.substring(5, 7)+"." + fromDate.substring(0, 4);
 			String toDateHeader = toDate.substring(8, 10)+"."+ toDate.substring(5, 7)+"." + toDate.substring(0, 4);
@@ -77,11 +67,9 @@ public class ExportController {
 			headers.add(HttpHeaders.CONTENT_DISPOSITION, filename);
 			headers.add(HttpHeaders.CONTENT_TYPE, "text/csv");
 			
-			String taskName = "Task name";
+			String taskName = "Project name";
 			String description = "Description";
 			String entryDate = "Entry date";
-			String startTime = "Start time";
-			String endTime = "End time";
 			String workTime = "Work time";
 			
 			
@@ -91,17 +79,13 @@ public class ExportController {
 			builder.append("\"|\"");
 			builder.append(StringUtils.capitalize(entryDate));
 			builder.append("\"|\"");
-			builder.append(StringUtils.capitalize(startTime));
-			builder.append("\"|\"");
-			builder.append(StringUtils.capitalize(endTime));
-			builder.append("\"|\"");
 			builder.append(StringUtils.capitalize(workTime));
 			builder.append("\"|\"");
 			builder.append(StringUtils.capitalize(taskName));
 			builder.append("\"\n");
  
 	        for (TimeEntry timeEntry : timeEntries) {
-	        	task = taskRepository.findOne((long) timeEntry.getTaskID());
+	        	project = projectRepository.findOne((long) timeEntry.getProjectID());
 				userEntries = userprofileRepository.findOne((long)timeEntry.getUserprofileID());
 	        	
 				builder
@@ -110,18 +94,13 @@ public class ExportController {
 	            .append("\"|\"")
 	            .append(timeEntry.getEntryDate())
 	            .append("\"|\"")
-	            .append(timeEntry.getStartTime())
-	            .append("\"|\"")
-	            .append(timeEntry.getEndTime())
-	            .append("\"|\"")
 	            .append(timeEntry.getWorktime())
-	            .append("\"|\"")
 	            .append("\"|\"")
 	            .append(client.getClientName())
 	            .append("\"|\"")
 	            .append(project.getProjectName())
 	            .append("\"|\"")
-	            .append(task.getTaskName())
+	            .append(project.getProjectName())
 	            .append("\"\n");
 	            
 	        } 
@@ -158,10 +137,8 @@ public class ExportController {
 			
 			String description = "Description";
 			String entryDate = "Entry date";
-			String startTime = "Start time";
-			String endTime = "End time";
 			String workTime = "Work time";
-			String taskName = "Task name";
+			String projectName = "Project name";
 			String username = "Username";
 			
 			StringBuilder builder = new StringBuilder();
@@ -170,19 +147,15 @@ public class ExportController {
 			builder.append("\"|\"");
 			builder.append(StringUtils.capitalize(entryDate));
 			builder.append("\"|\"");
-			builder.append(StringUtils.capitalize(startTime));
-			builder.append("\"|\"");
-			builder.append(StringUtils.capitalize(endTime));
-			builder.append("\"|\"");
 			builder.append(StringUtils.capitalize(workTime));
 			builder.append("\"|\"");
-			builder.append(StringUtils.capitalize(taskName));
+			builder.append(StringUtils.capitalize(projectName));
 			builder.append("\"|\"");
 			builder.append(StringUtils.capitalize(username));
 			builder.append("\"\n");
  
 	        for (TimeEntry timeEntry : timeEntries) {
-	        	task = taskRepository.findOne((long) timeEntry.getTaskID());
+	        	project = projectRepository.findOne((long) timeEntry.getProjectID());
 				userEntries = userprofileRepository.findOne((long)timeEntry.getUserprofileID());
 	        	
 				builder
@@ -191,18 +164,13 @@ public class ExportController {
 	            .append("\"|\"")
 	            .append(entryDate)
 	            .append("\"|\"")
-	            .append(startTime)
-	            .append("\"|\"")
-	            .append(endTime)
-	            .append("\"|\"")
 	            .append(timeEntry.getWorktime())
-	            .append("\"|\"")
 	            .append("\"|\"")
 	            .append(client.getClientName())
 	            .append("\"|\"")
 	            .append(project.getProjectName())
 	            .append("\"|\"")
-	            .append(task.getTaskName())
+	            .append(project.getProjectName())
 	            .append("\"|\"")
 	            .append(userEntries.getUserName())
 	            .append("\"\n");

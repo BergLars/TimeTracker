@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>{{ title }}</h1>
+<div mat-dialog-content class="hide-dialog-scrollbar" (keydown)="userDropdown(userprofile.value);deleteUser();keyDownFunction($event);">
+  <table>
+    <tr>
+      <td>User:&nbsp;</td>
+      <br>
+      <td>
+        <select #userprofile>
+          <option *ngFor="let user of users" [value]='user.id'>{{ user.userName }}</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+</div>
+<div mat-dialog-actions>
+  <button type="button" mat-button (click)="userDropdown(userprofile.value);confirmDeleteUser();">OK</button>
+  <button type="button" mat-button (click)="dialogRef.close() ">Cancel</button>
+</div>

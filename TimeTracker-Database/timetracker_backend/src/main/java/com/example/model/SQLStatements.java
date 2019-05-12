@@ -18,17 +18,17 @@ public class SQLStatements {
 			+ MappingsConfig.TABLE_NAMES.get("UserProfile") + " WHERE uid = ?";
 	
 	public static final String FIND_PERSON_BY_USERNAME = "SELECT * FROM " 
-			+ MappingsConfig.TABLE_NAMES.get("UserProfile") + "WHERE username = ?";
+			+ MappingsConfig.TABLE_NAMES.get("UserProfile") + " WHERE username = ?";
 	
 	// ----------------------------------ENTRY
 	public static final String FIND_ENTRIES_BY_USERPROFILEID = "SELECT COUNT(*) OVER() AS nb_records, * FROM "
 			+ MappingsConfig.TABLE_NAMES.get("TimeEntry") + " WHERE userprofile_id = ?";
 	
 	public static final String CREATE_ENTRY = "INSERT INTO " + MappingsConfig.TABLE_NAMES.get("TimeEntry")
-			+ " (userprofile_id, task_id, description, entrydate, starttime, endtime, worktime VALUES (?,?,?,?,?,?, ?)";
+			+ " (userprofile_id, project_id, description, entrydate, worktime, client_id) VALUES (?,?,?,?,?,?)";
 
 	public static final String UPDATE_ENTRY_BY_ID = "UPDATE " + MappingsConfig.TABLE_NAMES.get("TimeEntry")
-			+ " SET userprofile_id = ?, task_id = ?, description = ?, entrydate = ?, starttime = ?, endtime = ?, worktime = ? where tid = ?";
+			+ " SET userprofile_id = ?, project_id = ?, description = ?, entrydate = ?, worktime = ?, client_id = ? where id = ?";
 
 	public static final String DELETE_ENTRY = "DELETE FROM " + MappingsConfig.TABLE_NAMES.get("TimeEntry")
 			+ " WHERE id = ?";
@@ -39,21 +39,15 @@ public class SQLStatements {
 	public static final String FIND_ALL_ENTRIES_BY_DATES = "SELECT * FROM " + MappingsConfig.TABLE_NAMES.get("TimeEntry")
 	+ " WHERE entryDate::date between to_date(?, 'YYYY-MM-DD') and to_date(?, 'YYYY-MM-DD') order by entryDate asc";
 
-	// ---------------------------------- TASK
-	public static final String UPDATE_TASK_BY_ID = "UPDATE " + MappingsConfig.TABLE_NAMES.get("Task")
-			+ " SET taskname = ?, project_id = ? WHERE tid = ?";
-
-	public static final String CREATE_TASK = "INSERT INTO " + MappingsConfig.TABLE_NAMES.get("Task")
-			+ " (taskname, project_id) VALUES (?,?)";
-
-	public static final String DELETE_TASK = "DELETE FROM " + MappingsConfig.TABLE_NAMES.get("Task") + " WHERE tid = ?";
-
 	// ---------------------------------- PROJECT
+	public static final String GET_PROJECT_BY_ID = "SELECT * FROM " + MappingsConfig.TABLE_NAMES.get("Project")
+			+ "WHERE pid = ?";
+	
 	public static final String UPDATE_PROJECT_BY_ID = "UPDATE " + MappingsConfig.TABLE_NAMES.get("Project")
-			+ " SET projectname = ?, projectowner = ?, client_id = ? WHERE pid = ?";
+			+ " SET projectname = ?, projectowner = ? WHERE pid = ?";
 
 	public static final String CREATE_PROJECT = "INSERT INTO " + MappingsConfig.TABLE_NAMES.get("Project")
-			+ " (projectName, projectowner, client_id) VALUES (?,?,?) ";
+			+ " (projectName, projectowner) VALUES (?,?) ";
 
 	public static final String DELETE_PROJECT = "DELETE FROM " + MappingsConfig.TABLE_NAMES.get("Project")
 			+ " WHERE pid = ?";

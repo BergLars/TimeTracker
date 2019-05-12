@@ -1,0 +1,15 @@
+<div class="layout-column">
+  <mat-toolbar color="primary">
+    <span id="today">Today - {{currentDate}}</span>
+    <span class="flex"></span>
+    <span>
+      <button mat-raised-button color="primary" (click)="openCreateDialog()">CREATE</button>
+      <button mat-raised-button color="primary" (click)="openExportDialog()">EXPORT</button>
+    </span>
+  </mat-toolbar>
+  <div class="ftt-content">
+    <mat-card>
+      <app-entries></app-entries>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<h1 mat-dialog-title>{{ title }}</h1>
+<div mat-dialog-content class="hide-dialog-scrollbar">
+  <br>
+    <table>
+      <tr>
+        <td>
+          <div class="form-group">
+            <mat-form-field>
+              <input matInput placeholder="Description" type="text" class="form-control" name="description" [(ngModel)]="model.description" #description="ngModel">           
+            </mat-form-field>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="form-group">
+            <mat-select  [(ngModel)]='selectedProject' placeholder="Project" name="project">
+              <mat-option *ngFor="let project of projects" [value]='project.id'> {{ project.projectName }} </mat-option>
+            </mat-select>
+          </div>
+        </td>
+        <td>
+          <div class="form-group">
+            <mat-select #client [(ngModel)]='selectedClient' placeholder="Client" name="client">
+              <mat-option *ngFor="let client of clients" [value]='client.id'> {{ client.clientName }} </mat-option>
+            </mat-select>
+          </div>
+        </td>
+      </tr>
+      <br>
+      <tr>
+        <td>
+          <div class="form-group">
+              <mat-form-field>
+                <input matInput placeholder="Entry Date" class="form-control" name="entryDate" [(ngModel)]="model.entryDate" [matDatepicker]="inputDate" #entryDate="ngModel">
+                <mat-datepicker-toggle matSuffix [for]="inputDate"></mat-datepicker-toggle>
+                <mat-datepicker #inputDate></mat-datepicker>
+              </mat-form-field>
+          </div>
+        </td>
+        <td>
+          <div class="form-group">
+            <mat-form-field>
+              <input matInput type="text" placeholder="Work time" class="form-control" name="worktime" [(ngModel)]="model.workTime" #worktime="ngModel">
+            </mat-form-field>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <button mat-button (click)="ok();">OK</button>
+    <button mat-button (click)="dialogRef.close()">Cancel</button>
+</div>

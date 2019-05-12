@@ -18,13 +18,13 @@ public class TimeEntry implements Persistable<Long> {
 
 	private int userprofileID;
 	
-	private long taskID;
+	private long projectID;
 	
+	private long clientID;
+	
+	@JsonSerialize(using = JsonDateSerializer.class)
+	@JsonDeserialize(using = JsonDateDeserializer.class)
 	private Date entryDate;
-	
-	private FluancePGInterval startTime;
-	
-	private FluancePGInterval endTime;
 	
 	private String description;
 	
@@ -32,23 +32,13 @@ public class TimeEntry implements Persistable<Long> {
 	
 	public TimeEntry() {}
 
-	public TimeEntry(long teid, int userprofileID, int taskID, String description, Date entryDate, PGInterval startTime, PGInterval endTime, PGInterval worktime) {
+	public TimeEntry(long teid, int userprofileID, int projectID, String description, Date entryDate, PGInterval worktime, int clientID) {
 		this.teid = teid;
 		this.userprofileID = userprofileID;
-		this.taskID = taskID;
+		this.projectID = projectID;
+		this.clientID = clientID;
 		this.description = description;
 		this.entryDate = entryDate;
-		try {
-			this.startTime = new FluancePGInterval(startTime.getValue());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		try {
-			this.endTime = new FluancePGInterval(endTime.getValue());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
 		try {
 			this.worktime = new FluancePGInterval(worktime.getValue());
 		} catch (SQLException e) {
@@ -69,14 +59,21 @@ public class TimeEntry implements Persistable<Long> {
 		this.userprofileID = userprofileID;
 	}
 	
-	public long getTaskID() {
-		return taskID;
+	public long getProjectID() {
+		return projectID;
 	}
 
-	public void setTaskID(long taskID) {
-		this.taskID = taskID;
+	public void setProjectID(long projectID) {
+		this.projectID = projectID;
+	}
+	
+	public long getClientID() {
+		return clientID;
 	}
 
+	public void setClientID(long clientID) {
+		this.clientID = clientID;
+	}
 
 	public String getDescription() {
 		return description;
@@ -94,23 +91,6 @@ public class TimeEntry implements Persistable<Long> {
 		this.entryDate = entryDate;
 	}
 	
-	
-	public FluancePGInterval getStartTime() {
-		return startTime;
-	}
-	
-	public void setStartTime(FluancePGInterval startTime) {
-		this.startTime = startTime;
-	}
-	
-	public FluancePGInterval getEndTime() {
-		return endTime;
-	}
-	
-	public void setEndtime(FluancePGInterval endTime) {
-		this.endTime = endTime;
-	}
-	
 	public FluancePGInterval getWorktime() {
 		return worktime;
 	}
@@ -118,7 +98,6 @@ public class TimeEntry implements Persistable<Long> {
 	public void setWorktime(FluancePGInterval worktime) {
 		this.worktime = worktime;
 	}
-
 
 	@Override
 	public boolean isNew() {

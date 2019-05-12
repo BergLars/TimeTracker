@@ -36,28 +36,6 @@ public class TimeEntryController {
 	TimeEntryRepository timeEntryRepository;
 	@Autowired
 	UserProfileRepository userprofileRepository;
-	
-//	@CrossOrigin(origins = SpringStartApplication.CORS_ORIGINS)
-//	@RequestMapping(value ="/{id}", method = RequestMethod.GET, produces="application/json")
-//	public ResponseEntity<?> findById(@PathVariable long id, HttpServletRequest request) throws InvalidKeyException{
-//		try{
-//			long userID = LoginHelper.getUserId(request.getHeader("Authorization"));
-//			boolean isValid = LoginHelper.validateJWT(request.getHeader("Authorization"), userID);
-//			
-//			if (isValid) {
-//				TimeEntry timeentry = timeEntryRepository.findOne(id);
-//				return new ResponseEntity<>(timeentry, HttpStatus.OK);	
-//			} else {
-//				return new ResponseEntity<>("Invalid authorization", HttpStatus.UNAUTHORIZED);
-//			}
-//		}catch(IllegalArgumentException e){
-//			e.printStackTrace();
-//			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//		}catch(Exception e){
-//			e.printStackTrace();
-//			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
 
 	@CrossOrigin(origins = SpringStartApplication.CORS_ORIGINS)
 	@RequestMapping(value ="", method = RequestMethod.GET, produces="application/json")
@@ -115,11 +93,10 @@ public class TimeEntryController {
 			if (isValid) {
 				timeEntryRepository.updateTimeEntry(
 						timeEntry.getUserprofileID(), 
-						timeEntry.getTaskID(), 
+						timeEntry.getProjectID(), 
+						timeEntry.getClientID(),
 						timeEntry.getDescription(), 
-						timeEntry.getEntryDate(), 
-						timeEntry.getStartTime(), 
-						timeEntry.getEndTime(), 
+						timeEntry.getEntryDate(),
 						timeEntry.getWorktime(),
 						id);
 				return new ResponseEntity<>(timeEntry, HttpStatus.OK);

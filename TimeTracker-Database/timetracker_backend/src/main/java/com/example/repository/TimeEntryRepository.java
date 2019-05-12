@@ -11,7 +11,7 @@ import org.postgresql.util.PGInterval;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import com.example.model.MappingsConfig;
+
 import com.example.model.SQLStatements;
 import com.example.model.TimeEntry;
 import com.nurkiewicz.jdbcrepository.JdbcRepository;
@@ -20,7 +20,7 @@ import com.nurkiewicz.jdbcrepository.TableDescription;
 
 @Component
 public class TimeEntryRepository extends JdbcRepository<TimeEntry, Long> {
-	public static TaskRepository taskRepository;
+	public static ProjectRepository taskRepository;
 	
 	public TimeEntryRepository() {
 		this("timeentry");
@@ -34,12 +34,11 @@ public class TimeEntryRepository extends JdbcRepository<TimeEntry, Long> {
 		public TimeEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
 			return new TimeEntry(rs.getLong("id"), 
 					rs.getInt("userprofile_id"), 
-					rs.getInt("task_id"), 
+					rs.getInt("project_id"), 
 					rs.getString("description"), 
 					rs.getDate("entrydate"), 
-					(PGInterval) rs.getObject("starttime"), 
-					(PGInterval) rs.getObject("endtime"), 
-					(PGInterval) rs.getObject("worktime"));
+					(PGInterval) rs.getObject("worktime"), 
+					rs.getInt("client_id"));
 		}
 	};
 
@@ -48,12 +47,11 @@ public class TimeEntryRepository extends JdbcRepository<TimeEntry, Long> {
 			Map<String, Object> mapping = new LinkedHashMap<String, Object>();
 			mapping.put("id", timeentry.getId());
 			mapping.put("userprofile_id", timeentry.getUserprofileID());
-			mapping.put("task_id", timeentry.getTaskID());
+			mapping.put("project_id", timeentry.getProjectID());			
 			mapping.put("description", timeentry.getDescription());
 			mapping.put("entrydate", timeentry.getEntryDate());
-			mapping.put("starttime", timeentry.getStartTime());
-			mapping.put("endtime", timeentry.getEndTime());
 			mapping.put("worktime", timeentry.getWorktime());
+			mapping.put("client_id", timeentry.getClientID());
 			
 			return mapping;
 		}
@@ -67,24 +65,22 @@ public class TimeEntryRepository extends JdbcRepository<TimeEntry, Long> {
 	public TimeEntry createTimeEntry(TimeEntry timeEntry) {
 		getJdbcOperations().update(SQLStatements.CREATE_ENTRY, 
 				timeEntry.getUserprofileID(),
-				timeEntry.getTaskID(), 
+				timeEntry.getProjectID(), 
 				timeEntry.getDescription(),
 				timeEntry.getEntryDate(), 
-				timeEntry.getStartTime(), 
-				timeEntry.getEndTime(), 
-				timeEntry.getWorktime());
+				timeEntry.getWorktime(),
+				timeEntry.getClientID());
 		return timeEntry;
 	}
 
-	public int updateTimeEntry(long userprofile_id, long task_id, String description, 
-			Date entryDate, PGInterval starttime, PGInterval endtime, PGInterval worktime, long id) {
+	public int updateTimeEntry(long userprofile_id, long project_id, long client_id, String description, 
+			Date entryDate, PGInterval worktime, long id) {
 		int update = getJdbcOperations().update(SQLStatements.UPDATE_ENTRY_BY_ID, 
 				userprofile_id, 
-				task_id, 
+				project_id, 
+				client_id,
 				description, 
 				entryDate, 
-				starttime, 
-				endtime, 
 				worktime, 
 				id);
 		return update;

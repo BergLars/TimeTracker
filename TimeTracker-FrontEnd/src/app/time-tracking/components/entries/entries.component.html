@@ -1,0 +1,57 @@
+<mat-toolbar>
+    <button mat-raised-button color="primary" (click)="openDialog()">NEW ENTRY</button>
+</mat-toolbar>
+
+<ngx-datatable #mydatatable class="material striped" [scrollbarH]="true" [rows]="items" [columnMode]="'force'" [headerHeight]="50"
+    [footerHeight]="50" [sortType]="'multi'" [selected]="selected" [selectionType]="'single'" [limit]="limit" [count]="count"
+    (select)='selectEntry($event)'>
+    <ngx-datatable-column name="Description" sortable>
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <span hot-table class="clickable-icon inline-field-width" title="Click to edit" (click)="clickOnFirstChild($event, row, '-description');">
+            {{ row.description }}
+            </span>
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Project Name" sortable>
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <span class="clickable-icon inline-field-width" title="Double click to select" (click)="setSelectFocus($event, row, '-project', 'select');">
+                {{row.projectName}}
+            </span>
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Client Name" sortable>
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <span class="clickable-icon inline-field-width" title="Double click to select" (click)="setSelectFocus($event, row, '-client', 'select');">
+                {{row.clientName}}
+            </span>
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Entry Date" sortable>
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <span class="clickable-icon inline-field-width" title="Click to edit" (click)="clickOnFirstChild($event, row, '-date');">
+                {{ row.entryDate }}</span>
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Work Time" sortable>
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <span class="clickable-icon inline-field-width" title="Click to edit " (click)="clickOnFirstChild($event, row, '-worktime');"
+                [ngClass]="{'colored': row.isColored === true}">
+                {{ row.worktime }}
+            </span>
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Actions" sortable>
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <div [hidden]="!isSelected(row)">
+                <div [hidden]="editMode">
+                    <span (click)="openEditDialog(row)">
+                        <mat-icon class="clickable-icon">description</mat-icon>
+                    </span>
+                    <span (click)="openDeleteDialog(row)">
+                        <mat-icon class="clickable-icon">delete_forever</mat-icon>
+                    </span>
+                </div>
+            </div>
+        </ng-template>
+    </ngx-datatable-column>
+</ngx-datatable>
